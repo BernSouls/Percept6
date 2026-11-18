@@ -1,0 +1,1494 @@
+"""matching/relation_walker.py -- [STAGE 6 / TRACK M] a correspondence grown
+along measured relations.
+
+THE CONTRACT (the stage-6 brief, M2; constants pre-registered in
+diagnostics/results/phase6_preregistration.md, section 6 and Amendment 4).
+
+  * A pair of nodes is admitted BECAUSE a relation around it agrees: it is
+    reached from an already admitted pair along two edges of ONE relation
+    class whose measured axes agree.  Signature similarity is a GATE (same
+    lens type, graded similarity at least NODE_FLOOR and within NODE_MARGIN
+    of the node's best similarity in the other graph -- the pre-registered
+    D3 rule, pinned in tests_matcher/test_relation_walker.py); it adds to no
+    score.  SIGNATURE_GATE is the ATTRIBUTE gate (the attribute comparison
+    inside the score), NOT the node gate: the two were different numbers
+    under one name, and the contract said the wrong one.
+  * Only the FRAME (matching/relation_frame.py) is grown.  ATTRIBUTES are
+    attached afterwards through same-place CO_LOCATED edges.  There is no
+    position prior, and CO_LOCATED / proximity edges are never growth edges.
+  * An axis that is not measured on both edges weighs nothing either way; an
+    edge with no measured axis is not a relation this walker can test.
+  * SEEDS are a small fixed number of pairs that share rare relation tokens.
+  * ORDER: features admitted on an admitted pair of boundaries keep their arc
+    order (up to the direction the boundary is walked in, which is a gauge).
+  * One-to-one, deterministic (every tie is broken by a canonical node key
+    -- lens, class, relation, quantized bins -- and only then by the node
+    ids, which are stable integers and never depend on the hash seed; the
+    ids are therefore the LAST tie-break, between two nodes whose canonical
+    keys are identical, not the primary one), budgeted.
+  * SCORE: Jaccard on preserved relations over the mapped part.  Below the
+    minimum support the pair of graphs is UNSUPPORTED and has no score.
+
+THE SWITCH.  `match_evidence` is the one dispatch point:
+P.MATCH_RELATION_WALKER off (default) -> `memory.cores.evidence_score`,
+called with the same arguments and returning what it returns (the old path,
+untouched); on -> this walker.  `evidence_score` itself gains no term.
+
+Nothing here reads a position, an activation or a weight.
+"""
+from __future__ import annotations
+
+import heapq
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Tuple
+
+import parameters as P
+from core.schema import (
+    CIRCULAR_EDGE_CYCLE_LENGTHS,
+    EdgeParamsMixture,
+    reverse_edge_params,
+)
+from core.types import LEGACY_TO_CATEGORY, EdgeCategory, EdgeType, is_undirected_edge
+from matching.relation_frame import (ATTRIBUTE_LENS_TYPES, is_frame,
+                                  measured_axes)
+
+# ---------------------------------------------------------------------------
+# the pre-registered constants
+# ---------------------------------------------------------------------------
+#: the signature gate: same lens type and graded similarity at least this
+SIGNATURE_GATE: float = 0.5
+#: number of seeds
+N_SEEDS: int = 8
+#: a relation token is RARE when at most this many nodes carry it, in each graph
+RARE_TOKEN_MAX_NODES: int = 2
+#: a seed shares at least this many rare tokens
+SEED_MIN_SHARED_TOKENS: int = 2
+#: two measured values agree when their bins differ by at most this
+BIN_TOLERANCE: float = 1.0
+#: ---------------------------------------------------------------------------
+#: [Amendment 7 / D0-D5] the constants fixed BEFORE any of them was measured
+#: ---------------------------------------------------------------------------
+#: D0: the weight of each half of the objective (equal; see the pre-registration)
+W_NODE: float = 1.0
+W_RELATION: float = 1.0
+#: D2: a shared axis further apart than this (in bins) contradicts; less only
+#: lowers the agreement.  A quarter of a turn on an 8-bin axis.
+CONTRADICTION_MARGIN: float = 4.0
+#: D3: the node gate is relative: above an absolute floor, and within a margin
+#: of the node's best similarity in the other graph
+NODE_FLOOR: float = 0.30
+NODE_MARGIN: float = 0.25
+#: D4: how many already admitted features on a pair of boundaries must keep
+#: their order with a pair before the order itself proposes it
+ORDER_PROPOSAL_MIN: int = 3
+#: D5: beam width, in seed sets
+BEAM_WIDTH: int = 4
+#: pairs examined (signature similarities computed) <= this share of
+#: |FRAME_q| x |FRAME_r| ...
+BUDGET_FRACTION: float = 0.05
+#: ... but never fewer than this many looks per node of the smaller frame (on
+#: a small frame 5 % of the product is less than one look per node: 13 nodes
+#: would get 8 pairs), and never more than the product itself
+BUDGET_FLOOR_PER_NODE: int = 8
+#: minimum support: this many frame pairs AND this share of the smaller frame
+MIN_SUPPORT_PAIRS: int = 8
+MIN_SUPPORT_FRACTION: float = 0.10
+
+
+#: below this many pairs the whole matrix is cheaper than any fraction of it
+SMALL_FRAME_PRODUCT: int = 1000
+
+#: ---------------------------------------------------------------------------
+#: [Amendment 7.21] ABLATION FLAGS.  Every one is True by default, which is
+#: exactly the pre-registered walker; a diagnostic may set one False to report
+#: which mechanism moved which number.  Nothing in the pipeline sets them.
+#: ---------------------------------------------------------------------------
+#: ---------------------------------------------------------------------------
+#: [STAGE 7 / PHASE 3] ADMISSION BY STRENGTH.  Pre-registered in 7.32, BEFORE
+#: the run.  A proposal's own agreement (`_agreement`, one value per proposal)
+#: is compared with the best agreement offered by ANY rival on the same node
+#: when it is popped.  Both arms are OFF until the pre-registered default rule
+#: (7.32) names one, so this adds nothing to the behaviour until then.
+#: ---------------------------------------------------------------------------
+#: Arm A, relative only: admit within this much of the best rival agreement.
+#: ONE BIN, of four -- the widest tolerance that still separates two proposals
+#: by more than the quantisation unit the walker declares elsewhere
+#: (BIN_TOLERANCE = 1.0).  The quantity is declared in BINS because that is the
+#: unit 7.32 fixed it in; `_agreement` already divides by CONTRADICTION_MARGIN,
+#: so `_admitted` converts (one bin = 1/4 of the agreement scale).  The first
+#: run of Phase 3 compared 1.0 of AGREEMENT against agreements that live in
+#: [0, 1], i.e. a margin the width of the whole scale, and Arm A could not
+#: reject a single proposal -- that run is in the report, superseded.
+ADMIT_RELATIVE: bool = False
+ADMIT_MARGIN: float = 1.0        # in BINS
+#: Arm B: Arm A AND an absolute floor.  0.5 = agreeing within 2 of the 4 bins on
+#: every shared axis; the smallest floor STRICTER than the node gate the
+#: pipeline already applies (NODE_FLOOR = 0.30).
+ADMIT_FLOOR_ON: bool = False
+ADMIT_FLOOR: float = 0.5
+#: THE SEED RULE.  [STAGE 7 / PHASE 2, pre-registration 7.31]  True: seeds from
+#: topological tokens (D1).  False: the rule D1 replaced, seeds by relations
+#: that agree within one bin.
+#:
+#: DEFAULT IS False -- THE MEASURED RULE -- and the reason is measured, not
+#: chosen: on the nine registered pairs, against renderer truth (same physical
+#: role, the M3-6 criterion), the topological rule seeds at precision 0.421
+#: (3.0 right, 4.6 wrong per pair) and the measured rule at 0.639 (2.8 right,
+#: 2.8 wrong), with the mapping that grows from them reaching role F1 0.383 and
+#: 0.444.  The pre-registered rule (7.31) was "measured becomes the default iff
+#: its seed precision is higher on at least 6 of the 9 pairs"; it was higher on
+#: 8, lower on 0, equal on 1.  diagnostics/results/phase7_p2_seeds.txt.
+#: The topological rule is KEPT behind this flag, unchanged.
+SEED_TOPOLOGICAL: bool = False
+#: D2: only a contradiction past the margin vetoes
+CONTRADICTION_VETO: bool = True
+#: D3: the node gate relative to the node's best rival (False: the floor alone)
+GATE_RELATIVE: bool = True
+#: D4: the arc order proposes (False: admission only by a measured relation)
+#:
+#: [STAGE 9 / CLUSTER A3] The switch now delivers what it says.  It used to
+#: gate only the order's PROPOSALS while the order VETO (`order_ok`) was
+#: applied unconditionally, so `False` changed nothing at all: the walk's
+#: numbers were identical with the switch on and off (measured on the nine
+#: registered pairs).  The veto now sits behind the switch as well, so
+#: `False` means exactly what the comment says: the order neither proposes
+#: nor vetoes, and admission is by a measured relation alone.
+#:
+#: The DEFAULT is unchanged (True), so nothing shipped moves.  What the order
+#: is worth on this workload is measured and stated, not assumed: the
+#: PROPOSAL side is dead here (the numbers do not move when it is switched
+#: off), and the VETO side costs 0.019 mean recall when it is removed
+#: (diagnostics/results/phase8_arm15_order_gate.txt).
+ORDER_PROPOSES: bool = True
+#: D5: the beam over seed sets (False: one hypothesis from the whole seed list)
+BEAM: bool = True
+
+
+def budget(frame_q: int, frame_r: int) -> int:
+    """How many pairs one walk may examine.
+
+    Amendment 7.13: a SMALL frame (product <= 1000, i.e. fewer than ~32 nodes
+    a side) may examine the whole matrix -- the dense matrix there is cheaper
+    than the bookkeeping, and 5 % of it is less than one look per node, which
+    left the frontier starving (measured: a 13 x 13 pin graph, 104 looks,
+    growth stopped at 9 of 13 nodes).  Above it the pre-registered rule
+    stands: 5 % of the product, floored at 8 looks per node of the smaller
+    frame, never more than the product."""
+    product = frame_q * frame_r
+    if product <= SMALL_FRAME_PRODUCT:
+        return product
+    return min(product, max(int(BUDGET_FRACTION * product),
+                            BUDGET_FLOOR_PER_NODE * min(frame_q, frame_r)))
+
+
+def is_growth_edge_type(et: Any) -> bool:
+    """A relation the walker may grow along: any declared edge type that is
+    not PROXIMITY in the repository's own category table (CO_LOCATED, CONTACT,
+    TOPOLOGY, DEGREE, CROSS_SCALE_IDENTITY are).  An undeclared type is not."""
+    cat = et if isinstance(et, EdgeCategory) else LEGACY_TO_CATEGORY.get(et)
+    return cat is not None and cat is not EdgeCategory.PROXIMITY
+
+
+def _etype_name(et: Any) -> str:
+    return str(getattr(et, "name", et))
+
+
+def _node_key(lens: str, sig: Any) -> Tuple:
+    """Canonical identity of a node: what it IS, never its id."""
+    return (lens, str(getattr(sig, "class_", "")), str(getattr(sig, "relation", "")),
+            tuple(float(v) for v in (getattr(sig, "quantized", ()) or ())))
+
+
+#: [STAGE 9 / CLUSTER C] THE RELATION CLASS KEY.
+#:
+#: Two relations may be compared only when they share a class: the same edge
+#: type, the same direction, and -- until this switch -- the same LENS TYPE
+#: of their far ends.  The far-lens component was over-strict: a contour and
+#: a peak-chain are different kinds of node, but a relation of the same type
+#: hanging off either is still the same kind of relation, and refusing to
+#: compare them throws away most of the graph.
+#:
+#: Measured (stage 8, arm 4, on the nine registered pairs): dropping it
+#: raises the recall on SIX of the nine (0.750 -> 0.779, 0.532 -> 0.576,
+#: 0.593 -> 0.616, 0.051 -> 0.085, 0.137 -> 0.169, 0.411 -> 0.432; two pairs
+#: fall) and the mean F1 from 0.444 to 0.455.  The pre-registered rule for
+#: arm 4 was "recall up on at least 4 of the 9", so the far-lens component
+#: is DROPPED BY DEFAULT (this switch keeps it for anyone who wants the old
+#: behaviour).
+CLASS_KEY_FAR_LENS: bool = False
+
+
+def _match_key(cls: Tuple[str, str, str]) -> Tuple:
+    """The key two relations must share to be compared.
+
+    With ``CLASS_KEY_FAR_LENS`` off (the default since Cluster C3) the far
+    node's lens type is not part of the key; the FULL class stays on the half
+    itself, so the topological token (D1) is unchanged."""
+    if CLASS_KEY_FAR_LENS:
+        return cls
+    return (cls[0], cls[1])
+
+
+#: [RW4] THE CLASS-LABELLED INFORMATION MAY NOT REACH THE CORRESPONDENCE.
+#:
+#: `parameters.VOCAB_MI_TABLE` holds, per relation type, the mutual
+#: information between the type's MEASURED PATTERN and the CLASS LABEL -- it
+#: was measured on a labelled corpus against renderer truth.  Reading it into
+#: a correspondence injects class-label information into an unsupervised
+#: match, which the module's own contract forbids ("no learned weights, no
+#: class labels in the correspondence").
+#:
+#: The two switches that consume it (`VOCAB_MI_GATE`, which decides whether a
+#: pair may be admitted at all, and `MI_WEIGHTED_GROWTH`, which decides the
+#: order of the growth -- the correspondence itself) are therefore INERT
+#: unless this guard is explicitly turned on.  The guard is off by default:
+#: with it off the class information cannot reach the correspondence at all,
+#: and the walker behaves exactly as it did with the two switches off.
+#:
+#: NEEDS parameters/_text.py::MATCH_WALKER_ALLOW_CLASS_MI -- the switch
+#: itself has to be declared (the reader below falls back to False, so the
+#: tree behaves as intended until it is).
+CLASS_MI_ALLOWED: bool = bool(getattr(P, "MATCH_WALKER_ALLOW_CLASS_MI", False))
+
+
+def _mi_of(rname: str) -> float:
+    """[STAGE 9 / THE REDESIGN] The measured INFORMATIVENESS of a relation
+    type: the joint-pattern class information of its measured pattern, in
+    bits (`parameters.VOCAB_MI_TABLE`; the stage-8 arm-13 measurement).
+
+    A type ABSENT from the table has MI -1.0: the growth serves it after
+    every measured type.  The table is a library constant, so the value does
+    not depend on a diagnostics artefact being present at run time.
+
+    [RW4] THE TABLE IS CLASS-LABELLED, so it is read ONLY when the explicit
+    guard is on.  With the guard off this returns -1.0 for every type and the
+    class information cannot reach the correspondence.
+    """
+    if not CLASS_MI_ALLOWED:
+        return -1.0
+    table = getattr(P, "VOCAB_MI_TABLE", None) or {}
+    try:
+        return float(table.get(rname, -1.0))
+    except (TypeError, ValueError):
+        return -1.0
+
+
+def _demoted_type(rname: str) -> bool:
+    """[STAGE 9 / CLUSTER C2] Is this relation type demoted?
+
+    The demotion rule, pre-registered: a relation type whose measured JOINT
+    class information is below the node-signature slot MI (0.52 bits) cannot
+    be a PRIMARY growth edge -- it may support an admission, but it may not
+    open one.  The table is `parameters.VOCAB_MI_TABLE`; with the table
+    empty (the gate has not been run) nothing is demoted.
+
+    [RW4] The table is class-labelled, so it is read ONLY when the explicit
+    guard is on.  With the guard off nothing is demoted.
+    """
+    if not CLASS_MI_ALLOWED:
+        return False
+    table = getattr(P, "VOCAB_MI_TABLE", None) or {}
+    if not table or rname not in table:
+        return False
+    try:
+        mi = float(table[rname])
+    except (TypeError, ValueError):
+        return False
+    return mi < float(getattr(P, "VOCAB_MI_THRESHOLD", 0.52))
+
+
+@dataclass(frozen=True)
+class _Half:
+    """One relation as seen from one of its two ends."""
+    cls: Tuple[str, str, str]          # (edge type, 'o' / 'i' / 'u', lens type of the far node)
+    far: int
+    bins: Tuple[Tuple[int, float], ...]     # (axis, bin) of every measured axis
+    cycles: Tuple[Tuple[int, int], ...]     # (axis, cycle) of the circular ones
+    ordinal: Optional[float]
+    etype: Any
+
+    def token(self) -> Tuple:
+        return (self.cls, self.bins)
+
+
+def _slack(a: _Half, b: _Half) -> Optional[int]:
+    """None when the two relations do NOT agree; otherwise the number of
+    shared measured axes on which they differ by one bin (0 = identical).
+
+    Agreement: at least one axis measured on BOTH, and every such axis within
+    BIN_TOLERANCE bins (circular axes wrapped).  An axis measured on one side
+    only weighs nothing."""
+    da = dict(a.bins)
+    cyc = dict(a.cycles)
+    shared = 0
+    slack = 0
+    for ax, vb in b.bins:
+        va = da.get(ax)
+        if va is None:
+            continue
+        shared += 1
+        d = abs(va - vb)
+        c = cyc.get(ax)
+        if c:
+            d = min(d, c - d)
+        if d > BIN_TOLERANCE + 1e-9:
+            return None
+        if d > 1e-9:
+            slack += 1
+    return slack if shared else None
+
+
+def _agreement(a: _Half, b: _Half) -> Optional[float]:
+    """Graded agreement of two relations, or None when no axis is shared.
+
+    Agreement of ONE shared axis = max(0, 1 - |difference in bins| /
+    CONTRADICTION_MARGIN), circular axes wrapped.  The relation's value is the
+    mean over its shared axes.  (D0 / 7.0.)"""
+    da = dict(a.bins)
+    cyc = dict(a.cycles)
+    vals = []
+    for ax, vb in b.bins:
+        va = da.get(ax)
+        if va is None:
+            continue
+        d = abs(va - vb)
+        c = cyc.get(ax)
+        if c:
+            d = min(d, c - d)
+        vals.append(max(0.0, 1.0 - d / CONTRADICTION_MARGIN))
+    return (sum(vals) / len(vals)) if vals else None
+
+
+def _contradicts(a: _Half, b: _Half) -> bool:
+    """D2: does any axis measured on BOTH disagree by more than the margin?"""
+    da = dict(a.bins)
+    cyc = dict(a.cycles)
+    for ax, vb in b.bins:
+        va = da.get(ax)
+        if va is None:
+            continue
+        d = abs(va - vb)
+        c = cyc.get(ax)
+        if c:
+            d = min(d, c - d)
+        if d > CONTRADICTION_MARGIN + 1e-9:
+            return True
+    return False
+
+
+def _dominant(ep: Any) -> Any:
+    if isinstance(ep, EdgeParamsMixture):
+        return ep.dominant if ep.protos else None
+    return ep
+
+
+class _Index:
+    """One graph, prepared: the frame, the relations seen from each node, the
+    attributes at each node.  Every list is in canonical order."""
+
+    def __init__(self, sg: Any, sigs: Dict[int, Tuple[str, Any]]) -> None:
+        self.lens = {n: lt for n, (lt, _s) in sigs.items()}
+        self.sig = {n: s for n, (_lt, s) in sigs.items()}
+        self.key = {n: _node_key(self.lens[n], self.sig[n]) for n in sigs}
+        self.frame = sorted((n for n in sigs if is_frame(self.lens[n])),
+                            key=lambda n: (self.key[n], n))
+        frame = set(self.frame)
+        # [STAGE 9 / CLUSTER C4] The CORRESPONDENCE MEMBERS: the frame, plus
+        # (when ATTRIBUTES_IN_CORRESPONDENCE is on) the attribute nodes.  The
+        # attribute-side relations -- COLOR_OPPONENT_BORDER carries 0.817 bits
+        # of joint class information on the local corpus, the most of any
+        # relation type -- are then growable instead of being unreachable
+        # because the FRAME/ATTRIBUTE partition puts their ends outside it.
+        self.members = list(self.frame)
+        if getattr(P, "ATTRIBUTES_IN_CORRESPONDENCE", False):
+            self.members = sorted(
+                (n for n in sigs
+                 if is_frame(self.lens[n]) or self.lens[n] in ATTRIBUTE_LENS_TYPES),
+                key=lambda n: (self.key[n], n))
+        member = set(self.members)
+        self.half: Dict[int, Dict[Tuple, List[_Half]]] = {n: {} for n in self.members}
+        #: [STAGE 9 / CLUSTER C3] the SAME halves, indexed by the MATCH key
+        #: (edge type + direction, and the far lens only when
+        #: CLASS_KEY_FAR_LENS is on).  `half` keeps the FULL class, so the
+        #: topological token (D1) is byte-identical to before.
+        self.match: Dict[int, Dict[Tuple, List[_Half]]] = {n: {} for n in self.members}
+        #: (a, b, edge type name) -> the relation as seen from a
+        self.pair: Dict[Tuple[int, int, str], _Half] = {}
+        #: measured growth edges, once each: (s, d, edge type name)
+        self.edges: List[Tuple[int, int, str]] = []
+        #: feature -> {host: arc position}, host -> {feature: arc position}
+        self.on_host: Dict[int, Dict[int, float]] = {}
+        self.hosts: Dict[int, Dict[int, float]] = {}
+        #: frame node -> {attribute lens type: [attribute nodes]}
+        self.attrs: Dict[int, Dict[str, List[int]]] = {}
+        self.unmeasured_edges = 0
+        params = getattr(sg, "edge_params", None) or {}
+        for s, d, et in sorted(sg.edges, key=lambda e: (e[0], e[1], _etype_name(e[2]))):
+            if s == d or s not in self.lens or d not in self.lens:
+                continue
+            if et == EdgeType.CO_LOCATED:
+                for a, b in ((s, d), (d, s)):
+                    if a in frame and b not in frame:
+                        self.attrs.setdefault(a, {}).setdefault(self.lens[b], []).append(b)
+                continue
+            if s not in member or d not in member or not is_growth_edge_type(et):
+                continue
+            ep = _dominant(params.get((s, d, et)))
+            axes = measured_axes(ep)
+            if not axes:
+                self.unmeasured_edges += 1
+                continue
+            name = _etype_name(et)
+            und = is_undirected_edge(et)
+            cyc = CIRCULAR_EDGE_CYCLE_LENGTHS.get(getattr(ep, "class_", ""), {})
+
+            def half(ep_seen, far, direction):
+                ax = measured_axes(ep_seen)
+                return _Half(
+                    cls=(name, direction, self.lens[far]), far=far,
+                    bins=tuple((i, float(ep_seen.quantized[i])) for i in ax),
+                    cycles=tuple(sorted((i, int(c)) for i, c in cyc.items() if i in ax)),
+                    ordinal=getattr(ep_seen, "ordinal", None), etype=et)
+
+            hs = half(ep, d, "u" if und else "o")
+            hd = half(reverse_edge_params(ep) if und else ep, s, "u" if und else "i")
+            if (s, d, name) in self.pair:
+                continue                      # an undirected edge stored both ways
+            self.half[s].setdefault(hs.cls, []).append(hs)
+            self.half[d].setdefault(hd.cls, []).append(hd)
+            self.match[s].setdefault(_match_key(hs.cls), []).append(hs)
+            self.match[d].setdefault(_match_key(hd.cls), []).append(hd)
+            self.pair[(s, d, name)] = hs
+            if und:
+                self.pair[(d, s, name)] = hd
+            self.edges.append((s, d, name))
+            if et == EdgeType.BOUNDARY_ATTACHMENT and hs.ordinal is not None:
+                self.on_host.setdefault(d, {})[s] = float(hs.ordinal)
+                self.hosts.setdefault(s, {})[d] = float(hs.ordinal)
+        for n in self.members:
+            for cls in self.half[n]:
+                self.half[n][cls].sort(key=lambda h: (self.key[h.far], h.bins, h.far))
+            for cls in self.match[n]:
+                self.match[n][cls].sort(key=lambda h: (self.key[h.far], h.bins, h.far))
+        # [Amendment 7 / D1] THE TOPOLOGICAL TOKEN of every relation as seen
+        # from this node: no bins, no similarity.
+        self.tok: Dict[int, Dict[Tuple, List[_Half]]] = {n: {} for n in self.members}
+        for n in self.members:
+            for cls in self.half[n]:
+                for h in self.half[n][cls]:
+                    kind, direction, far_lens = cls
+                    t = (self.lens[n], kind, direction, far_lens,
+                         len(self.half.get(h.far, {})), self.closed(h.far))
+                    self.tok[n].setdefault(t, []).append(h)
+        self.degree = {n: sum(len(v) for v in self.half[n].values()) for n in self.members}
+        for n in self.attrs:
+            for lt in self.attrs[n]:
+                self.attrs[n][lt] = sorted(set(self.attrs[n][lt]),
+                                           key=lambda a: (self.key[a], a))
+
+    def closed(self, host: int) -> bool:
+        """A PEAK_CHAIN and a Contour keep their closure flag by NAME."""
+        lens = self.lens.get(host)
+        if lens not in ("PEAK_CHAIN", "Contour"):
+            return False
+        from core.slots import slot_values
+        sig = self.sig.get(host)
+        cls = "PEAK_CHAIN" if lens == "PEAK_CHAIN" else "CONTOUR"
+        vals = slot_values(sig, cls, ("closure",))
+        return bool(vals) and float(vals[0]) >= 0.5
+
+
+def _order_consistent(pairs: List[Tuple[float, float]], cyclic: bool) -> bool:
+    """Is one arc order kept on both boundaries, up to the walking direction?
+
+    `pairs` = (arc position on the query boundary, on the reference boundary)
+    of the features admitted on one pair of boundaries.
+    OPEN boundary: every two features with distinct positions on both sides
+    must be in the same relative order on both (all pairs one way), or in the
+    opposite order on both (all pairs the other way: the boundary is walked
+    backwards, which is a gauge, not a difference).  A mix is a reversal.
+    CLOSED boundary: the same up to a rotation of the origin.
+    Features at one position on either side constrain nothing."""
+    if len(pairs) < 3:
+        return True
+    if not cyclic:
+        sign = 0
+        n = len(pairs)
+        for i in range(n):
+            a0, b0 = pairs[i]
+            for j in range(i + 1, n):
+                a1, b1 = pairs[j]
+                if a0 == a1 or b0 == b1:
+                    continue
+                s = 1 if (a1 - a0) * (b1 - b0) > 0.0 else -1
+                if sign == 0:
+                    sign = s
+                elif s != sign:
+                    return False
+        return True
+    # closed: drop repeated positions, then the reference positions read in
+    # query order must be a rotation of a rising or of a falling sequence
+    seen_a, seen_b, pts = set(), set(), []
+    for a0, b0 in sorted(pairs):
+        if a0 in seen_a or b0 in seen_b:
+            continue
+        seen_a.add(a0)
+        seen_b.add(b0)
+        pts.append(b0)
+    n = len(pts)
+    if n < 4:
+        return True
+    falls = sum(1 for i in range(n) if pts[(i + 1) % n] < pts[i])
+    rises = n - falls
+    return falls <= 1 or rises <= 1
+
+
+@dataclass
+class WalkResult:
+    mapping: Dict[int, int] = field(default_factory=dict)       # frame: query -> reference
+    seeds: List[Tuple[int, int]] = field(default_factory=list)
+    supported: bool = False
+    score: Optional[float] = None
+    preserved: int = 0
+    relations_q: int = 0
+    relations_r: int = 0
+    attributes_shared: int = 0
+    frame_q: int = 0
+    frame_r: int = 0
+    examined: int = 0            # signature similarities computed
+    edge_checks: int = 0         # relation pairs compared
+    budget: int = 0
+    budget_exhausted: bool = False
+    order_rejections: int = 0
+    gate_rejections: int = 0
+    contradicts: int = 0
+    #: [STAGE 7 / PHASE 3] candidates POPPED from the proposal heap (the fan-out)
+    pops: int = 0
+    #: [STAGE 7 / PHASE 3] proposals rejected by an admission arm
+    admission_rejections: int = 0
+    #: [STAGE 9 / THE REDESIGN] proposals refused because the edge they were
+    #: REACHED BY does not agree (the unit conjunction): the node gate passed,
+    #: the traversed edge did not.
+    unit_rejections: int = 0
+    #: the terms of the Amendment-7 objective of this mapping
+    terms: Dict[str, Any] = field(default_factory=dict)
+    #: [7.33 (a)] Q * |M| / min(frame_q, frame_r), the score that can arbitrate
+    #: across node sets.  REPORTED ONLY: nothing in the pipeline selects on it.
+    score_for_class: float = 0.0
+    #: the hypotheses of the beam: seed count, mapped, Q
+    beam: List[Dict[str, Any]] = field(default_factory=list)
+    #: every graded signature similarity this walk PAID for, by pair
+    seen: Dict[Tuple[int, int], float] = field(default_factory=dict)
+    #: [RW5] the node pairs the seed search compared.  The search is
+    #: charged to the walk's budget and this is the bill.
+    seed_checks: int = 0
+    dense: int = 0               # |nodes_q| x |nodes_r|, the old matcher's matrix
+    #: the admissions in order: (query node, reference node, "seed" or the
+    #: relation classes that supported it).  For diagnostics; decides nothing.
+    log: List[Tuple[int, int, Any]] = field(default_factory=list)
+
+
+def _record_support(sup_d: Dict[Any, Tuple[float, bool]], sup: Any,
+                    slack: float, measured: bool) -> None:
+    """Record ONE proposal's evidence for a pair (Amendment 7.19).
+
+    `sup_d` maps a support (the admitted pair the proposal came through) to
+    (slack, measured).  An ORDER proposal carries NO measured slack: it may
+    open a support that no measurement opened (then it records (0.0, False)),
+    it may never lower a measured slack, and a measurement arriving later
+    REPLACES a weak entry instead of being minimized into it.  Two measured
+    proposals through the same support keep the smaller slack.
+    """
+    prev = sup_d.get(sup)
+    if prev is None:
+        sup_d[sup] = (slack, measured)
+        return
+    prev_slack, prev_measured = prev
+    if measured and not prev_measured:
+        sup_d[sup] = (slack, True)          # the measurement is the evidence now
+    elif measured and prev_measured:
+        sup_d[sup] = (min(prev_slack, slack), True)
+    elif not prev_measured:
+        sup_d[sup] = (min(prev_slack, slack), False)   # two order backings: no slack either way
+
+
+def _measured_slack(sup_d: Dict[Any, Tuple[float, bool]]) -> float:
+    """The slack the MEASUREMENTS give a pair: 0 when there are none.  The
+    serving order must not read that 0 as perfect agreement -- that is what
+    the tier in `_serve_key` is for."""
+    return sum(sl for sl, measured in sup_d.values() if measured)
+
+
+def _serve_key(how: Any, n_support: int, slack: float, sim: float,
+               key_q: Tuple, key_r: Tuple, u: int, v: int,
+               mi: float = 0.0) -> Tuple:
+    """The order proposals are served in (Amendment 4.1 + 7.18).
+
+    TIER first: an order proposal is weaker evidence than a measured relation
+    and is served only when no measured proposal is pending -- otherwise a
+    proposal with no slack of its own would outrank every measurement.
+    Then, within a tier, the 4.1 rank: more supporting pairs first; less total
+    slack first; the more similar signature; the canonical keys (which are
+    arbitrary with respect to the measurement); the node ids last of all.
+
+    [STAGE 9 / THE REDESIGN] MI_WEIGHTED_GROWTH inserts the proposal's
+    measured INFORMATIVENESS (the joint-pattern class information of the most
+    informative relation type that proposed it, in bits) immediately after the
+    tier, so that within the measured tier the walker grows along the more
+    informative relation first.  The supporting-pair count stays as the third
+    key.  The MI is NEGATED so that a larger MI sorts first.  With the switch
+    off the key is byte-identical to before (mi = 0.0 contributes nothing).
+    """
+    tier = 1 if (isinstance(how, tuple) and how and how[0] == "order") else 0
+    return (tier, -mi, -n_support, slack, -sim, key_q, key_r, u, v)
+
+
+def _choose(hypotheses: List["WalkResult"]) -> "WalkResult":
+    """[D5 / 7.11] which hypothesis is the walk's answer.
+
+    Q alone prefers a small mapping that is very similar to a large one that
+    is slightly less similar (it is a mean, not a sum).  Among hypotheses that
+    both pass the support floor the larger mapping wins; Q decides between
+    hypotheses that do not both pass it.  Ties go to the earlier seed set.
+
+    [LEAD / NOT A DEFECT] The preference for the larger mapping is the
+    PRE-REGISTERED rule 7.11 and it is pinned
+    (tests_matcher/test_relation_walker.py::test_the_beam_choice_prefers_
+    the_larger_mapping_over_a_higher_q), so it is left as it is.  Its
+    JUSTIFICATION is stale: it says "Q is a mean", which was true before
+    7.39 -- R is now the QUERY's own relation mass over its whole frame, so
+    a mapping that reaches less of the frame leaves more of the denominator
+    unpaid and Q falls with it.  The rule is kept; the reason for it should
+    be re-read before it is relied on.
+    """
+    supported = [h for h in hypotheses if len(h.mapping) >= MIN_SUPPORT_PAIRS
+                 and len(h.mapping) >= MIN_SUPPORT_FRACTION * min(h.frame_q, h.frame_r)]
+    pool = supported or hypotheses
+    best = pool[0]
+    for h in pool[1:]:
+        if supported:
+            if (len(h.mapping), h.terms["q"]) > (len(best.mapping), best.terms["q"] + 1e-12):
+                best = h
+        elif h.terms["q"] > best.terms["q"] + 1e-12:
+            best = h
+    return best
+
+
+def _cached(res: "WalkResult", u: int, v: int) -> float:
+    """A similarity already charged to a hypothesis' budget (the objective
+    never spends: it reads what the growth paid for)."""
+    return float(res.seen.get((u, v), 0.0))
+
+
+class _Sim:
+    """Graded signature similarity with ONE budget for the whole walk."""
+
+    def __init__(self, gq: "_Index", gr: "_Index", res: WalkResult) -> None:
+        from matching.structural_similarity import _sig_sim
+        self._f = _sig_sim
+        self.gq, self.gr, self.res = gq, gr, res
+        #: every similarity this hypothesis has PAID for (its own budget)
+        self.cache: Dict[Tuple[int, int], float] = res.seen
+
+    def __call__(self, u: int, v: int) -> Optional[float]:
+        got = self.cache.get((u, v))
+        if got is not None:
+            return got
+        if self.gq.lens[u] != self.gr.lens[v]:
+            self.cache[(u, v)] = 0.0
+            return 0.0
+        if self.res.examined >= self.res.budget:
+            self.res.budget_exhausted = True
+            return None
+        self.res.examined += 1
+        got = float(self._f(self.gq.sig[u], self.gr.sig[v]))
+        self.cache[(u, v)] = got
+        return got
+
+
+def _node_gate(sim: Optional[float], best: float) -> bool:
+    """[D3] relative node gate: above the floor and within a margin of the
+    node's best similarity in the other graph.  With GATE_RELATIVE off the
+    gate is the floor alone (the pre-D3 gate)."""
+    if sim is None or sim <= NODE_FLOOR:
+        return False
+    return sim >= best - NODE_MARGIN if GATE_RELATIVE else True
+
+
+def _admitted(a: Optional[float], best: float) -> bool:
+    """[STAGE 7 / PHASE 3] an admission arm's verdict on one proposal.
+
+    `a` is the proposal's own agreement (its evidence), `best` the best any
+    rival of the same query node has offered.  Arm A allows a proposal within
+    ADMIT_MARGIN of the best; Arm B also demands the absolute floor.  A
+    proposal with NO agreement at all (an order proposal) is admitted: the arms
+    filter on evidence, they do not require it, which is the pre-registered
+    scope (7.32).
+    """
+    if a is None:
+        return True
+    # ADMIT_MARGIN is in BINS; agreement is in [0, 1] with 1 = 0 bins apart
+    if a < best - ADMIT_MARGIN / CONTRADICTION_MARGIN:
+        return False
+    if ADMIT_FLOOR_ON and a < ADMIT_FLOOR:
+        return False
+    return True
+
+
+def _seeds(gq: "_Index", gr: "_Index", sim: _Sim,
+           res: WalkResult) -> List[Tuple[int, int]]:
+    """[D1] SEEDS from TOPOLOGICAL tokens only, ranked by node similarity.
+
+    A token is (lens type, edge type, direction, far lens type, the far node's
+    degree in the growth graph, whether the far node is closed): no bins, no
+    similarity.  A rare token is carried by at most RARE_TOKEN_MAX_NODES
+    nodes in each graph; a pair shares at least SEED_MIN_SHARED_TOKENS of
+    them.  Seeds are one-to-one, ranked by (rare tokens shared, tokens
+    shared, node similarity, canonical keys) -- Amendment 7.9."""
+    def carriers(g: "_Index") -> Dict[Tuple, List[int]]:
+        out: Dict[Tuple, List[int]] = {}
+        for n in g.frame:
+            for t in g.tok[n]:
+                out.setdefault(t, []).append(n)
+        return out
+
+    if not SEED_TOPOLOGICAL:
+        return _seeds_by_measurement(gq, gr, sim, res)
+
+    cq, cr = carriers(gq), carriers(gr)
+    shared: Dict[Tuple[int, int], int] = {}
+    rare: Dict[Tuple[int, int], int] = {}
+    for t in sorted(cq):
+        if t not in cr:
+            continue
+        is_rare = (len(cq[t]) <= RARE_TOKEN_MAX_NODES and len(cr[t]) <= RARE_TOKEN_MAX_NODES)
+        for u in cq[t]:
+            for v in cr[t]:
+                shared[(u, v)] = shared.get((u, v), 0) + 1
+                if is_rare:
+                    rare[(u, v)] = rare.get((u, v), 0) + 1
+    cands = []
+    for (u, v), n in sorted(shared.items()):
+        if n < SEED_MIN_SHARED_TOKENS:
+            continue
+        s = sim(u, v)
+        if s is None or s <= NODE_FLOOR:
+            continue
+        cands.append((-rare.get((u, v), 0), -n, -s, gq.key[u], gr.key[v], u, v))
+    cands.sort()
+    out: List[Tuple[int, int]] = []
+    used_q, used_r = set(), set()
+    for _nr, _n, _s, _ku, _kv, u, v in cands:
+        if len(out) >= N_SEEDS:
+            break
+        if u in used_q or v in used_r:
+            continue
+        out.append((u, v))
+        used_q.add(u)
+        used_r.add(v)
+    return out
+
+
+def _seeds_by_measurement(gq: "_Index", gr: "_Index", sim: "_Sim",
+                          res: WalkResult) -> List[Tuple[int, int]]:
+    """[Amendment 4 / 7.21 ablation] seeds from relations that AGREE within one
+    bin: a pair of frame nodes shares a relation class in which some relation
+    agrees on every axis measured on both.  Ranked by (agreeing relations,
+    node similarity, canonical keys), one-to-one.  This is the rule D1
+    replaced; it is kept so a report can say what D1 changed, and it is used
+    only when SEED_TOPOLOGICAL is off.
+
+    (It was written with `gr.half.get(cls)`, a class looked up in a table keyed
+    by NODE: it returned None for every pair and produced no seed at all.  That
+    is what the first D1 ablation row measured -- the fallback, not the old
+    rule.  Fixed here and the row is re-run.)
+    """
+    agree: Dict[Tuple[int, int], int] = {}
+    # [RW5] THE SEED SEARCH IS BUDGETED.  It scans the whole cross product
+    # of the two frames and compares every shared class's halves, and NONE of
+    # that work was charged to the budget: the walk could spend an unbounded
+    # amount of time before it had looked at a single signature.  The scan
+    # now stops when the walk's own budget is spent, and says so.
+    max_scan = max(1, int(res.budget))
+    scanned = 0
+    stop = False
+    for u in gq.members:
+        for v in gr.members:
+            scanned += 1
+            if scanned > max_scan:
+                stop = True
+                break
+            n = 0
+            for cls, mine in gq.match[u].items():
+                theirs = gr.match[v].get(cls)
+                if not theirs:
+                    continue
+                if any(_slack(hu, hv) is not None for hu in mine for hv in theirs):
+                    n += 1
+            if n:
+                agree[(u, v)] = n
+        if stop:
+            break
+    if stop:
+        res.budget_exhausted = True
+    res.seed_checks = scanned
+    cands = []
+    for (u, v), n in sorted(agree.items()):
+        s = sim(u, v)
+        if s is None or s <= NODE_FLOOR:
+            continue
+        cands.append((-n, -s, gq.key[u], gr.key[v], u, v))
+    cands.sort()
+    out: List[Tuple[int, int]] = []
+    used_u, used_v = set(), set()
+    for _n, _s, _ku, _kv, u, v in cands:
+        if len(out) >= N_SEEDS:
+            break
+        if u in used_u or v in used_v:
+            continue
+        used_u.add(u)
+        used_v.add(v)
+        out.append((u, v))
+    return out
+
+
+def _grow(gq: "_Index", gr: "_Index", sim: _Sim, res: WalkResult,
+          seeds: List[Tuple[int, int]]) -> WalkResult:
+    """One hypothesis: one-to-one growth from `seeds` (D0-D4).
+
+    Admission is proposed by a relation (D2) or by the order of an admitted
+    boundary pair (D4); a proposal is admitted when the node gate (D3) passes
+    and no shared axis contradicts (D2).  Order still holds on every admitted
+    boundary pair (D4's own test, 4.7)."""
+    out = WalkResult(frame_q=res.frame_q, frame_r=res.frame_r, dense=res.dense,
+                     budget=res.budget, seeds=list(seeds))
+    map_q: Dict[int, int] = {}
+    map_r: Dict[int, int] = {}
+    rejected: set = set()
+    #: the best similarity the reference frame offers each query node
+    best: Dict[int, float] = {}
+
+    def note(u: int, v: int, s: float) -> None:
+        if s > best.get(u, -1.0):
+            best[u] = s
+
+    def order_ok(u: int, v: int) -> bool:
+        for hq, aq in sorted(gq.on_host.get(u, {}).items()):
+            hr = map_q.get(hq)
+            if hr is None:
+                continue
+            ar = gr.on_host.get(v, {}).get(hr)
+            if ar is None:
+                continue
+            pts = [(aq, ar)]
+            for f, af in gq.hosts.get(hq, {}).items():
+                g = map_q.get(f)
+                if g is None or f == u:
+                    continue
+                ag = gr.hosts.get(hr, {}).get(g)
+                if ag is not None:
+                    pts.append((af, ag))
+            if not _order_consistent(pts, gq.closed(hq) and gr.closed(hr)):
+                return False
+        pts = []
+        for f, af in gq.hosts.get(u, {}).items():
+            g = map_q.get(f)
+            if g is None:
+                continue
+            ag = gr.hosts.get(v, {}).get(g)
+            if ag is not None:
+                pts.append((af, ag))
+        return _order_consistent(pts, gq.closed(u) and gr.closed(v))
+
+    support: Dict[Tuple[int, int], Dict[Tuple[int, int], Tuple[float, bool]]] = {}
+    #: [STAGE 9 / THE REDESIGN] does the pair have a ROUTE whose traversed
+    #: edge agrees?  (A proposal through an edge that disagrees is proposed
+    #: but not admitted under UNIT_ADMISSION.)
+    consistent_route: Dict[Tuple[int, int], bool] = {}
+    #: [STAGE 9 / THE REDESIGN] the most informative relation type that
+    #: proposed each pair (its joint MI in bits).
+    pair_mi: Dict[Tuple[int, int], float] = {}
+    #: [STAGE 9 / CLUSTER C2] which KIND of relation supported a pair: a
+    #: "strong" one (its measured joint MI is at or above the node-signature
+    #: slot MI) or a "demoted" one.
+    support_kind: Dict[Tuple[int, int], set] = {}
+    via: Dict[Tuple[int, int], List[Tuple]] = {}
+    heap: List[Tuple] = []
+    #: [STAGE 7 / PHASE 3] the agreement each proposal carried, by pair, and the
+    #: best agreement any rival of a QUERY node has offered yet
+    agreement: Dict[Tuple[int, int], float] = {}
+    best_agree: Dict[int, float] = {}
+
+    def propose(u: int, v: int, sup: Tuple[int, int], slack: float, how: Tuple,
+                measured: bool = True, consistent: bool = True) -> None:
+        if u in map_q or v in map_r or (u, v) in rejected:
+            return
+        s = sim(u, v)
+        if s is None:
+            return
+        note(u, v, s)
+        sup_d = support.setdefault((u, v), {})
+        _record_support(sup_d, sup, slack, measured)          # 7.19
+        via.setdefault((u, v), []).append(how)
+        # [STAGE 9 / THE REDESIGN] THE UNIT.  A proposal is a node pair
+        # TOGETHER WITH the edge it was reached by; `consistent` says whether
+        # that traversed edge agrees on every axis measured on both sides
+        # (within BIN_TOLERANCE).  A pair is admitted under UNIT_ADMISSION
+        # only if at least one of its routes agrees -- the pair is ONE pair,
+        # reached by possibly several routes, and it is admitted on the
+        # strength of the route that agrees.
+        if consistent:
+            consistent_route[(u, v)] = True
+        # [STAGE 9 / THE REDESIGN] the proposal's INFORMATIVENESS: the joint
+        # class information of the most informative relation type that
+        # proposed it.  A type absent from the table has MI -1.0.
+        if measured and isinstance(how, tuple) and how:
+            mi = _mi_of(str(how[0]))
+            if mi > pair_mi.get((u, v), -1.0):
+                pair_mi[(u, v)] = mi
+        if measured and sup is not None:
+            # [STAGE 9 / CLUSTER C2] the KIND of the supporting relation:
+            # a demoted type (measured joint MI below the node-signature slot
+            # MI) may support an admission but never open one.
+            rname = how[0] if isinstance(how, tuple) and how else ""
+            kinds = support_kind.setdefault((u, v), set())
+            kinds.add("demoted" if _demoted_type(rname) else "strong")
+        if measured and sup is not None:
+            # [PHASE 3] the agreement this proposal carries: `slack` is
+            # 1 - agreement for a measured proposal.  An ORDER proposal carries
+            # no measurement and is therefore not ranked against the arms.
+            a = 1.0 - float(slack)
+            if a > agreement.get((u, v), -1.0):
+                agreement[(u, v)] = a
+            if a > best_agree.get(u, -1.0):
+                best_agree[u] = a
+        # [STAGE 9 / THE REDESIGN] the MI enters the serving key ONLY when
+        # MI_WEIGHTED_GROWTH is on; with it off the key is byte-identical to
+        # the walker's own (the extra element is 0.0 for every proposal).
+        _mi = pair_mi.get((u, v), 0.0) if P.MI_WEIGHTED_GROWTH else 0.0
+        heapq.heappush(heap, _serve_key(how, len(sup_d), _measured_slack(sup_d), s,
+                                        gq.key[u], gr.key[v], u, v, mi=_mi))
+
+    def order_propose(hq: int, hr: int) -> None:
+        """[D4] two admitted boundaries with enough admitted features in order
+        propose the features attached to both."""
+        if not ORDER_PROPOSES:
+            return
+        fa, fb = gq.hosts.get(hq, {}), gr.hosts.get(hr, {})
+        if not fa or not fb:
+            return
+        pts = [(af, fb[map_q[f]]) for f, af in fa.items()
+               if f in map_q and map_q[f] in fb]
+        if len(pts) < ORDER_PROPOSAL_MIN:
+            return
+        for f, af in sorted(fa.items()):
+            if f in map_q:
+                continue
+            for g, ag in sorted(fb.items(), key=lambda kv: (gr.key[kv[0]], kv[0])):
+                if g in map_r:
+                    continue
+                if not _order_consistent(pts + [(af, ag)],
+                                         gq.closed(hq) and gr.closed(hr)):
+                    continue
+                propose(f, g, (hq, hr), 0.0, ("order", hq, hr), measured=False,
+                        consistent=bool(P.UNIT_ADMISSION_ORDER_OK))
+
+    def contradicted(u: int, v: int) -> bool:
+        """[D2 / 7.16-7.17] the veto is on the PAIR, not on the one relation
+        that proposed it: a node whose attachment axis is seven bins away is
+        not admitted because its successor gap happens to agree.
+
+        Two ways to contradict, and no others:
+          * a relation whose FAR END is already mapped to the other relation's
+            far end contradicts (the correspondence there is established);
+          * a class the two nodes share in which EVERY pair of relations
+            contradicts (no reading of the class agrees at all)."""
+        for cls in sorted(gq.match[u]):
+            theirs = gr.match[v].get(cls)
+            if not theirs:
+                continue
+            any_agrees = False
+            for hu in gq.match[u][cls]:
+                for hv in theirs:
+                    bad = _contradicts(hu, hv)
+                    if map_q.get(hu.far) == hv.far and bad:
+                        return True
+                    if not bad:
+                        any_agrees = True
+            if not any_agrees:
+                return True
+        return False
+
+    def admit(u: int, v: int, how: Any) -> None:
+        map_q[u] = v
+        map_r[v] = u
+        out.mapping = dict(sorted(map_q.items()))
+        out.log.append((u, v, how))
+        for cls in sorted(gq.match[u]):
+            theirs = gr.match[v].get(cls)
+            if not theirs:
+                continue
+            for hu in gq.match[u][cls]:
+                if hu.far in map_q:
+                    continue
+                for hv in theirs:
+                    if hv.far in map_r or (hu.far, hv.far) in rejected:
+                        continue
+                    s = sim(hu.far, hv.far)
+                    if s is None:
+                        continue
+                    note(hu.far, hv.far, s)
+                    if s <= NODE_FLOOR:
+                        out.gate_rejections += 1
+                        continue
+                    out.edge_checks += 1
+                    agree = _agreement(hu, hv) or 0.0
+                    # [STAGE 9 / THE REDESIGN] the traversed edge's
+                    # CONSISTENCY: the two halves agree on every axis
+                    # measured on both sides, within BIN_TOLERANCE.  The
+                    # unit is the node TOGETHER WITH this edge.
+                    propose(hu.far, hv.far, (u, v), 1.0 - agree, cls,
+                            consistent=_slack(hu, hv) is not None)
+        # [D4] the boundary the new pair may have completed
+        for hq in (u,):
+            hr = map_q.get(hq)
+            if hr is not None:
+                order_propose(hq, hr)
+        for fq, hq in gq.hosts.get(u, {}).items():
+            hr = map_q.get(hq)
+            if hr is not None and fq in map_q:
+                order_propose(hq, hr)
+
+    for u, v in seeds:
+        if CONTRADICTION_VETO and contradicted(u, v):
+            out.contradicts += 1
+            rejected.add((u, v))
+            continue
+        # [RW1] THE SEED'S OWN SIMILARITY IS ALWAYS COMPUTED.  It used to
+        # be computed only under ADMIT_BY_JOINT, so with the flag off the
+        # seed pair was never scored: the objective's node term (S) reads
+        # what the growth PAID FOR, so the seed read 0.0 there while it
+        # still counted in the denominator -- a seed LOWERED the objective
+        # it was supposed to raise.  (Measured: on the 13-node pin graph
+        # S read 9.0 instead of 13.0 and the self-match scored 0.889
+        # instead of 1.0.)  Computing it here puts it in the hypothesis'
+        # cache, where the objective reads it.
+        s_seed = sim(u, v)
+        if s_seed is None:
+            # the budget is spent: a seed that cannot be scored cannot be
+            # admitted on evidence
+            out.gate_rejections += 1
+            continue
+        if P.ADMIT_BY_JOINT:
+            # [STAGE 9 / CLUSTER C1] A SEED is an admission too: it must
+            # satisfy the same joint-agreement rule.  (The node signature is
+            # a compatibility gate here, never the reason.)  The seed's own
+            # evidence is the BEST joint agreement among the classes the two
+            # ends share.
+            if (s_seed <= NODE_FLOOR
+                    or gq.lens[u] != gr.lens[v]):
+                out.gate_rejections += 1
+                continue
+            a_seed = None
+            for cls, mine in gq.match[u].items():
+                theirs = gr.match[v].get(cls)
+                if not theirs:
+                    continue
+                for hu in mine:
+                    for hv in theirs:
+                        g_ag = _agreement(hu, hv)
+                        if g_ag is not None and (a_seed is None or g_ag > a_seed):
+                            a_seed = g_ag
+            if a_seed is None or a_seed < P.JOIN_THRESHOLD:
+                out.admission_rejections += 1
+                rejected.add((u, v))
+                continue
+            if P.ADMIT_BY_JOINT_REL:
+                best_a = best_agree.get(u)
+                if best_a is not None and a_seed < best_a - P.JOIN_MARGIN:
+                    out.admission_rejections += 1
+                    rejected.add((u, v))
+                    continue
+        if ORDER_PROPOSES and not order_ok(u, v):
+            out.order_rejections += 1
+            rejected.add((u, v))
+            continue
+        admit(u, v, "seed")
+
+    while heap:
+        _tier, _mi, _neg, _slack_sum, _nsim, _ku, _kv, u, v = heapq.heappop(heap)
+        out.pops += 1
+        if u in map_q or v in map_r or (u, v) in rejected:
+            continue
+        sup_d = support.get((u, v))
+        if not sup_d or _neg != -len(sup_d) or _slack_sum != _measured_slack(sup_d):
+            continue
+        s = sim(u, v)
+        if P.UNIT_ADMISSION:
+            # [STAGE 9 / THE REDESIGN] THE UNIT CONJUNCTION.  The pair is a
+            # node TOGETHER WITH the edge it was reached by.  It is admitted
+            # only if BOTH the node gate passes AND the traversed edge agrees
+            # (every axis measured on both sides, within BIN_TOLERANCE) --
+            # neither alone is sufficient.  The node gate is evaluated first
+            # so that a pair the node gate refuses is counted as such.
+            if not _node_gate(s, best.get(u, 0.0)):
+                out.gate_rejections += 1
+                continue
+            if not consistent_route.get((u, v), False):
+                out.unit_rejections += 1
+                rejected.add((u, v))
+                continue
+        elif P.ADMIT_BY_JOINT:
+            # [STAGE 9 / CLUSTER C1] ADMISSION BY JOINT RELATION AGREEMENT.
+            # The relation's joint agreement is the admission reason; the node
+            # signature is a COMPATIBILITY gate only (same lens class and the
+            # floor) and is never the reason.  The node-side RELATIVE gate is
+            # not applied here: a rank, not a reason.
+            if s is None or s <= NODE_FLOOR or gq.lens[u] != gr.lens[v]:
+                out.gate_rejections += 1
+                continue
+            a = agreement.get((u, v))
+            if a is None or a < P.JOIN_THRESHOLD:
+                out.admission_rejections += 1
+                rejected.add((u, v))
+                continue
+            if P.ADMIT_BY_JOINT_REL:
+                best_a = best_agree.get(u)
+                if best_a is not None and a < best_a - P.JOIN_MARGIN:
+                    out.admission_rejections += 1
+                    rejected.add((u, v))
+                    continue
+        elif not _node_gate(s, best.get(u, 0.0)):
+            out.gate_rejections += 1
+            continue
+        if P.VOCAB_MI_GATE:
+            # [STAGE 9 / CLUSTER C2] A relation type whose measured joint MI
+            # is below the node-signature slot MI may SUPPORT an admission but
+            # may not OPEN one: a proposal whose only support is such a type
+            # is not admitted.
+            kinds = support_kind.get((u, v))
+            if kinds and kinds <= {"demoted"}:
+                out.admission_rejections += 1
+                rejected.add((u, v))
+                continue
+        if ADMIT_RELATIVE and not _admitted(agreement.get((u, v)), best_agree.get(u, 0.0)):
+            out.admission_rejections += 1
+            rejected.add((u, v))
+            continue
+        if contradicted(u, v):
+            out.contradicts += 1
+            rejected.add((u, v))
+            continue
+        if ORDER_PROPOSES and not order_ok(u, v):
+            out.order_rejections += 1
+            rejected.add((u, v))
+            continue
+        admit(u, v, tuple(sorted(set(x if not isinstance(x, tuple) else x[0]
+                                     for x in via.get((u, v), ())))))
+    out.mapping = dict(sorted(map_q.items()))
+    return out
+
+
+def walk(Q: Any, R: Any, q_sigs: Dict[int, Tuple[str, Any]],
+         r_sigs: Dict[int, Tuple[str, Any]]) -> WalkResult:
+    """[Amendment 7] One walk: seeds (D1), a beam of hypotheses over seed
+    prefixes (D5), the objective (D0) choosing among them.
+
+    [Amendment 7.22] The budget is PER HYPOTHESIS, not shared by the beam:
+    four hypotheses against one budget of 7.6 starved all four (measured: the
+    self-match examined == budget on 16 of 18 scenes and mapped 0.29 of FRAME
+    where the pre-D0 walker mapped 0.83; the M3-6 median spent 1427 of 1470
+    against 300-700 of 900-2000 before).  Each hypothesis is a walk of its own
+    and gets the whole pre-registered budget; the cost of the beam is their
+    sum and is reported as such."""
+    gq, gr = _Index(Q, q_sigs), _Index(R, r_sigs)
+    res = WalkResult(frame_q=len(gq.members), frame_r=len(gr.members),
+                     dense=len(q_sigs) * len(r_sigs))
+    res.budget = budget(len(gq.members), len(gr.members))
+    seed_res = WalkResult(frame_q=len(gq.members), frame_r=len(gr.members),
+                          budget=res.budget)
+    seeds = _seeds(gq, gr, _Sim(gq, gr, seed_res), seed_res)
+    res.examined += seed_res.examined
+    res.budget_exhausted |= seed_res.budget_exhausted
+    hypotheses: List[WalkResult] = []
+    seen_prefix = set()
+    # [Amendment 7.10] the beam's four seed sets: the first seed, two
+    # intermediate prefixes and the whole seed list (fewer when fewer seeds).
+    # They are grown LARGEST FIRST.  (Before 7.22 the budget was shared by the
+    # beam and this order kept the intended hypothesis from being starved by
+    # its own alternatives; since 7.22 each hypothesis gets the whole budget,
+    # so the order is kept for determinism, not for starvation.)
+    n_seed = len(seeds)
+    ks = sorted({1, max(1, n_seed // 3), max(1, (2 * n_seed) // 3), n_seed},
+                reverse=True) if n_seed else [0]
+    if not BEAM:
+        ks = [n_seed]
+    beam_cost = 0
+    for k in ks[:BEAM_WIDTH]:
+        prefix = tuple(seeds[:k])
+        if prefix in seen_prefix:
+            continue
+        seen_prefix.add(prefix)
+        hyp_res = WalkResult(frame_q=len(gq.members), frame_r=len(gr.members),
+                            budget=res.budget)
+        h = _grow(gq, gr, _Sim(gq, gr, hyp_res), hyp_res, list(prefix))
+        h.terms = objective(h.mapping, gq, gr,
+                            lambda u, v: _cached(hyp_res, u, v))
+        beam_cost += hyp_res.examined
+        res.edge_checks += h.edge_checks
+        res.budget_exhausted |= hyp_res.budget_exhausted
+        h.budget = hyp_res.budget
+        h.examined = hyp_res.examined
+        h.budget_exhausted = hyp_res.budget_exhausted
+        hypotheses.append(h)
+    if not hypotheses:
+        hyp_res = WalkResult(frame_q=len(gq.members), frame_r=len(gr.members),
+                            budget=res.budget)
+        hypotheses = [_grow(gq, gr, _Sim(gq, gr, hyp_res), hyp_res, [])]
+        hypotheses[0].terms = objective({}, gq, gr, lambda u, v: 0.0)
+        beam_cost += hyp_res.examined
+    res.examined += beam_cost
+    # [STAGE 7 / PHASE 3] the fan-out and the arm's rejections are paid by the
+    # HYPOTHESES, so they are summed over the beam like the similarity bill.
+    res.pops = sum(getattr(h, "pops", 0) for h in hypotheses)
+    res.admission_rejections = sum(getattr(h, "admission_rejections", 0) for h in hypotheses)
+    # [STAGE 9 / THE REDESIGN] the unit refusals are paid by the hypotheses
+    # too, and are summed over the beam like the similarity bill.
+    res.unit_rejections = sum(getattr(h, "unit_rejections", 0) for h in hypotheses)
+    # [Amendment 7.11] the choice among the beam's hypotheses
+    best = _choose(hypotheses)
+    # the reported walk is the best hypothesis, with the shared cost counts
+    out = WalkResult(frame_q=best.frame_q, frame_r=best.frame_r, dense=res.dense,
+                     budget=res.budget, seeds=best.seeds, mapping=best.mapping,
+                     log=best.log, examined=res.examined, edge_checks=res.edge_checks,
+                     budget_exhausted=res.budget_exhausted,
+                     order_rejections=best.order_rejections,
+                     gate_rejections=best.gate_rejections,
+                     contradicts=best.contradicts, terms=best.terms,
+                     pops=res.pops, admission_rejections=res.admission_rejections,
+                     unit_rejections=res.unit_rejections)
+    # [ONE OBJECTIVE] the chosen hypothesis was scored with the real graded
+    # similarity in the loop above.  _score() must not overwrite those terms
+    # with a constant-similarity objective; keep the terms that selected the
+    # mapping and only use _score for support/coverage counters.
+    prior_terms = dict(out.terms)
+    _score(out, gq, gr, lambda u, v: 1.0)
+    # [RW4b] THE RESTORE IS UNCONDITIONAL.  It used to be guarded by
+    # `if prior_terms:`, so an empty terms dict left the constant-
+    # similarity objective standing as the walk's score.  The terms of the
+    # hypothesis that selected the mapping are always the ones reported.
+    out.terms = prior_terms
+    out.score = float(prior_terms.get("q", 0.0)) if out.supported else None
+    # [RW4c] THE PAID-FOR SIMILARITIES TRAVEL WITH THE RESULT.  `seen` is
+    # documented as "every graded signature similarity this walk PAID FOR,
+    # by pair" and it was always empty: the walk built a new result and
+    # never copied the chosen hypothesis' cache into it.
+    out.seen = dict(best.seen)
+    out.seed_checks = sum(int(getattr(h, "seed_checks", 0)) for h in hypotheses)
+    out.score_for_class = score_for_class(out.terms, out.frame_q, out.frame_r)
+    out.beam = [{"seeds": len(h.seeds), "mapped": len(h.mapping), "q": h.terms["q"],
+                 "order_rejections": h.order_rejections,
+                 "examined": h.examined} for h in hypotheses]
+    return out
+
+
+def objective(mapping: Dict[int, int], gq: "_Index", gr: "_Index",
+              similarity: Any) -> Dict[str, Any]:
+    """The Amendment-7 objective of ANY one-to-one mapping of frame nodes.
+
+    Q = (W_NODE * S + W_RELATION * (P + A))
+        / (W_NODE * |M| + W_RELATION * (R + G)),
+    the terms as stated in 7.0, G being the number of (mapped pair, attribute
+    lens type) units A is summed over (Amendment 7.8: without it a mapping
+    with many attributes could score above 1).  `similarity(u, v)` supplies the graded
+    signature similarity of a pair (it may be cached, budgeted or unbounded;
+    the OBJECTIVE never gates)."""
+    m = dict(mapping)
+    inv = {v: u for u, v in m.items()}
+    s_node = 0.0
+    for u, v in sorted(m.items()):
+        if gq.lens[u] != gr.lens[v]:
+            return {"q": 0.0, "mapped": len(m), "S": 0.0, "P": 0.0, "A": 0.0, "R": 0,
+                    "jaccard": 0.0}
+        s_node += float(similarity(u, v))
+
+    def edge_id(g: "_Index", s_: int, d_: int, name: str) -> Tuple:
+        und = g.pair[(s_, d_, name)].cls[1] == "u"
+        return (min(s_, d_), max(s_, d_), name) if und else (s_, d_, name)
+
+    p_mass = 0.0
+    p_candidates = 0
+    # Amendment 7.14: the two graphs' node ids are DIFFERENT spaces, so the
+    # union of 7.0 cannot be a set union of edge keys.  It is counted: (edges
+    # with at least one end in M) + (edges with at least one end in the image
+    # of M) - (edges with both ends mapped, the P candidates).
+    #
+    # [STAGE 7 / PHASE 4(b), Amendments 7.33 and 7.39] THIS COUNT IS NO LONGER
+    # THE DENOMINATOR.  It is kept and reported: it is the union form every
+    # stage-6 number was stated under.  The relation denominator is now the
+    # QUERY's own relation mass over its whole frame (`r_frame`, below).
+    n_q_any = n_r_any = 0
+    for s_, d_, name in gq.edges:
+        if s_ in m and d_ in m:
+            p_candidates += 1
+            n_q_any += 1
+            hr = gr.pair.get((m[s_], m[d_], name))
+            if hr is None:
+                continue
+            g = _agreement(gq.pair[(s_, d_, name)], hr)
+            if g is not None:
+                p_mass += g
+        elif s_ in m or d_ in m:
+            n_q_any += 1
+    for s_, d_, name in gr.edges:
+        if s_ in inv and d_ in inv:
+            n_r_any += 1
+        elif s_ in inv or d_ in inv:
+            n_r_any += 1
+    r_union = n_q_any + n_r_any - p_candidates
+
+    a_mass = 0.0
+    a_units = 0
+    for u, v in sorted(m.items()):
+        aq, ar = gq.attrs.get(u, {}), gr.attrs.get(v, {})
+        for lt in sorted(set(aq) | set(ar)):
+            a_units += 1
+            mine, theirs = aq.get(lt, []), ar.get(lt, [])
+            if not mine or not theirs:
+                continue
+            finer = mine if len(mine) <= len(theirs) else theirs
+            coarse = theirs if finer is mine else mine
+            hits = 0
+            for x in finer:
+                best = 0.0
+                for y in coarse:
+                    sim = _attr_similarity(gq if finer is mine else gr,
+                                           gr if finer is mine else gq, x, y)
+                    best = max(best, sim)
+                if best >= NODE_FLOOR:
+                    hits += 1
+            a_mass += hits / len(finer)
+
+    # [7.39] the query's own relation mass, both ends in the FRAME: a node the
+    # mapping does not reach is a MISSED relation, not an absent one.  Selected
+    # by the closed-sub-mapping test, where the union form let a closed region
+    # score 8 of 22 cases at or above the whole mapping and this form did not.
+    frame_q = set(gq.members)
+    r_frame = sum(1 for s_, d_, _n in gq.edges if s_ in frame_q and d_ in frame_q)
+    # [RW3] THE REPORTED JACCARD IS A JACCARD.  It was the query's recall
+    # (the preserved mass over the query's relation mass) under the name of
+    # the union measure the module's contract promises: the reference side's
+    # relations took no part in it at all.  The reference's own relation
+    # mass is counted here (it is reported, not charged: the SCORE's
+    # denominator R stays the query's own mass, which is the pre-registered
+    # 7.39 rule and is pinned).
+    frame_r = set(gr.members)
+    r_ref = sum(1 for s_, d_, _n in gr.edges if s_ in frame_r and d_ in frame_r)
+
+    num = W_NODE * s_node + W_RELATION * (p_mass + a_mass)
+    # Amendment 7.8: the attribute units are in the denominator too, the same
+    # (mapped pair, lens type) units the attribute mass is summed over, so the
+    # objective stays in [0, 1].
+    den = W_NODE * len(m) + W_RELATION * (r_frame + a_units)
+    union = r_frame + r_ref - p_mass
+    jac = (p_mass / union) if union > 0 else 0.0
+    return {"q": (num / den) if den > 0 else 0.0, "mapped": len(m),
+            "S": s_node, "P": p_mass, "A": a_mass, "R": r_frame,
+            "A_units": a_units, "p_candidates": p_candidates, "jaccard": jac,
+            "R_union": r_union}
+
+
+def score_for_class(terms: Dict[str, Any], frame_q: int, frame_r: int) -> float:
+    """[Stage 7 / Phase 4(a), Amendment 7.33] Q paid for the share of the
+    SMALLER frame the mapping covers.
+
+        score_for_class = Q * |M| / min(frame_q, frame_r)
+
+    No constant is tuned: the factor is read off the two frames.  Raw Q is a
+    mean over the union of the terms the mapping contains, so a small closed
+    mapping can outscore a large honest one; this factor charges a mapping for
+    the frame it does not reach.  REPORTED ONLY -- `match_evidence` still
+    returns raw Q, and no default is flipped on it.
+    """
+    m = int(terms.get("mapped", 0))
+    smaller = max(1, min(frame_q, frame_r))
+    # a mapping cannot cover MORE than the smaller frame: without the clamp the
+    # factor exceeds 1 whenever |M| > min(frame_q, frame_r), which is possible
+    # (|M| is one-to-one but the frames are not the same size), and the score
+    # would read 1.0 * 10 / 4 for a perfect mapping of a 10-node frame against
+    # a 4-node one.
+    return float(terms.get("q", 0.0)) * min(m / smaller, 1.0)
+
+
+def _score(res: WalkResult, gq: "_Index", gr: "_Index", similarity: Any) -> None:
+    """The walk's own score: the 7.0 objective of the mapping it produced, and
+    the support floor.  (Kept beside the walker's terms for the report: the
+    preserved mass, the relation counts it was computed from.)"""
+    m = res.mapping
+    inv = {v: u for u, v in m.items()}
+    preserved = n_q = n_r = 0
+    void_r = set()
+    for s_, d_, name in gq.edges:
+        if s_ not in m or d_ not in m:
+            continue
+        hq = gq.pair[(s_, d_, name)]
+        hr = gr.pair.get((m[s_], m[d_], name))
+        if hr is None:
+            n_q += 1
+            continue
+        sl = _slack(hq, hr)
+        if sl is None and not ({i for i, _v in hq.bins} & {i for i, _v in hr.bins}):
+            und = hq.cls[1] == "u"
+            void_r.add((min(m[s_], m[d_]), max(m[s_], m[d_]), name) if und
+                       else (m[s_], m[d_], name))
+            continue
+        n_q += 1
+        if sl is not None:
+            preserved += 1
+    for s_, d_, name in gr.edges:
+        if s_ not in inv or d_ not in inv:
+            continue
+        und = gr.pair[(s_, d_, name)].cls[1] == "u"
+        key = (min(s_, d_), max(s_, d_), name) if und else (s_, d_, name)
+        if key in void_r:
+            continue
+        n_r += 1
+    shared_attr = 0
+    for u, v in m.items():
+        aq, ar = gq.attrs.get(u, {}), gr.attrs.get(v, {})
+        for lt in sorted(set(aq) | set(ar)):
+            if lt in aq and lt in ar and any(
+                    _attr_similarity(gq, gr, a, b) >= SIGNATURE_GATE
+                    for a in aq[lt] for b in ar[lt]):
+                shared_attr += 1
+    res.preserved, res.relations_q, res.relations_r = preserved, n_q, n_r
+    res.attributes_shared = shared_attr
+    smaller = min(res.frame_q, res.frame_r)
+    res.supported = (len(m) >= MIN_SUPPORT_PAIRS
+                     and len(m) >= MIN_SUPPORT_FRACTION * smaller)
+    terms = objective(m, gq, gr, similarity)
+    res.terms = terms
+    res.score = float(terms["q"]) if res.supported else None
+
+
+def _attr_similarity(gq: _Index, gr: _Index, a: int, b: int) -> float:
+    from matching.structural_similarity import _sig_sim
+    if gq.lens[a] != gr.lens[b]:
+        return 0.0
+    return float(_sig_sim(gq.sig[a], gr.sig[b]))
+
+
+def match_evidence(Q: Any, C: Any, q_sigs: Dict[int, Tuple[str, Any]],
+                   c_sigs: Dict[int, Tuple[str, Any]],
+                   trace: Optional[Dict[str, Any]] = None
+                   ) -> Tuple[Optional[float], Dict[int, int]]:
+    """THE ONE SWITCH.  Off (default): `memory.cores.evidence_score`, the old
+    matcher, with the same arguments and its own return value.  On: the
+    relation walker; the score is None when the pair is UNSUPPORTED."""
+    if not bool(getattr(P, "MATCH_RELATION_WALKER", False)):
+        from memory.cores import evidence_score
+        return evidence_score(Q, C, q_sigs, c_sigs, trace=trace)
+    res = walk(Q, C, q_sigs, c_sigs)
+    if trace is not None:
+        trace["relation_walk"] = res
+    return res.score, dict(res.mapping)

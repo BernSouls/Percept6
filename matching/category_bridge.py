@@ -1,0 +1,394 @@
+"""matching/category_bridge.py -- legacy -> U30 projection (Ruling 1).
+
+A legacy core stores bins in the EDGE_SCHEMAS layout.  A v2 edge stores bins
+in the U30 layout of the SAME name but a DIFFERENT arity and different slot
+units.  Matching therefore cannot compare the two bin tuples directly: the
+legacy edge is DE-BINNED to the physical values its bins name
+(`edge_slot_value`) and re-quantised through `u30_edge_params`, which puts it
+on the category's axes.
+
+Provenance travels with the projected params (`provenance="legacy"`).  When a
+legacy projection and a native v2 edge describe the same `(src, dst,
+category)`, the NATIVE edge wins and the projection is dropped, so a
+half-migrated graph cannot double-count an edge.
+
+Deliberately NOT wired into `_mcs_accumulate`: the live matcher still uses the
+legacy layout.  `project_edges` is the cutover seam; see
+`diagnostics/_matcher_e2e_test.py` for the legacy-core vs v2-query gate.
+"""
+from __future__ import annotations
+
+import math
+from collections import Counter
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+
+from core.schema import (
+    EDGE_SCHEMAS,
+    U30_EDGE_UNIT_TABLE,
+    UNKNOWN,
+    EdgeParams,
+    edge_params,
+    edge_slot_value,
+    u30_edge_params,
+)
+
+#: Every legacy class has an EXPLICIT disposition: either it projects onto a
+#: U30 category here, or it is listed in NO_U30_EQUIVALENT with a reason.  A
+#: class in neither set is a bug, and `_selftest` refuses it, so a newly added
+#: legacy class cannot silently fall through to 0.0.
+LEGACY_TO_CATEGORY: Dict[str, str] = {
+    # continuity family
+    "EDGE_CONTOUR_CONTINUITY": "CONTINUITY",
+    "EDGE_ORIENTATION_CONTINUITY": "CONTINUITY",
+    "EDGE_ORIENTATION_BEND": "CONTINUITY",
+    "EDGE_CURVATURE_SIGN_CONTINUITY": "CONTINUITY",
+    "EDGE_COCIRCULAR": "CONTINUITY",
+    "EDGE_AMODAL_LINK": "CONTINUITY",
+    "EDGE_SHARED_BOUNDARY": "CONTINUITY",
+    # containment family
+    "EDGE_CURVE_CONTAINMENT": "CONTAINMENT",
+    "EDGE_PART_CONTAINMENT": "CONTAINMENT",
+    "EDGE_REGION_CONTENT": "CONTAINMENT",
+    "EDGE_BORDER_OWNERSHIP": "CONTAINMENT",
+    # junction family
+    "EDGE_JUNCTION_CONTOUR": "JUNCTION",
+    "EDGE_ORIENTATION_JUNCTION": "JUNCTION",
+    # proximity family
+    "EDGE_CO_LOCATED": "PROXIMITY",
+    # occlusion / depth-cue family
+    "EDGE_OCCLUSION": "OCCLUSION",
+    # [R-D1-alignment] CONTACT is a pure spatial-proximity class (failed-owner,
+    # front-line, valley between mated edges etc.), never a depth order. The
+    # U30 ruling (core/types.py EdgeType.CONTACT -> EdgeCategory.PROXIMITY)
+    # puts it in PROXIMITY; the legacy bridge previously sent it to OCCLUSION
+    # and the matcher's denominator learned to read 268 flat proximity edges
+    # as structural occlusion evidence.
+    "EDGE_CONTACT": "PROXIMITY",
+    "EDGE_BINOCULAR_DISPARITY": "OCCLUSION",
+    "EDGE_LINE_TERMINATION": "OCCLUSION",
+    # surface / material family
+    "EDGE_SURFACE_FOLD": "SURFACE",
+    "EDGE_MOTION_OPPOSITION": "SURFACE",
+    "EDGE_SURFACE_GROUPING": "MATERIAL",
+    "EDGE_TEXTURE_BOUNDARY": "MATERIAL",
+    "EDGE_COLOR_OPPONENT_BORDER": "MATERIAL",
+    # shape family
+    "EDGE_SYMMETRY": "SHAPE",
+    "EDGE_CURVATURE": "SHAPE",
+    "EDGE_CONCENTRICITY": "SHAPE",
+    "EDGE_RADIALITY": "SHAPE",
+    "EDGE_SPIRALITY": "SHAPE",
+    "EDGE_CROSS_SCALE_IDENTITY": "SHAPE",
+}
+
+#: Classes with NO U30 equivalent, and why.  They are still bridged in the
+#: sense that the decision is explicit: a cross-ontology comparison against
+#: one of these is a genuine contradiction, not an accident.
+NO_U30_EQUIVALENT: Dict[str, str] = {
+    "EDGE_PARALLEL": "no shared axis with PROXIMITY (perp/stagger/convergence)",
+    "EDGE_CO_MOTION": "no U30 motion axis",
+    "EDGE_CONTOUR_ORIENTATION": "single orientation scalar; no CONTAINMENT axis",
+    "EDGE_JUNCTION_ORIENTATION": "single orientation scalar; no JUNCTION axis",
+    # [STAGE 6] the three measured relations have no U30 axis of their own
+    "EDGE_BOUNDARY_ATTACHMENT": "arc position / tangent angle on a host; no CONTAINMENT axis",
+    "EDGE_BOUNDARY_SUCCESSOR": "arc gap and unsigned turn between members; no CONTINUITY axis",
+    "EDGE_ILLUSORY_INDUCER": "inducer gap and alignment; no CONTINUITY axis",
+}
+
+#: Only slots whose NAMES differ need an entry; everything else projects by
+#: the identical name.  A name absent from both sides is passed as None, which
+#: `u30_edge_params` stores as UNKNOWN ("no measurement"), never as a value.
+#:
+#: [D1] THE TABLE IS COMPLETE.  It covered ten classes, and FOURTEEN of the
+#: twenty-nine bridged classes projected with EVERY slot UNKNOWN: the
+#: measurement was silently lost, and `bridge_similarity` then returned
+#: 0.0 -- "no common ontology" scored as "these two relations contradict",
+#: which is the failure the module's own STAGE-10/B7 note forbids.  The
+#: entries below map the U30 slot name to the LEGACY slot name that carries
+#: the same physical quantity; a legacy slot with no honest counterpart is
+#: left unmapped (UNKNOWN) rather than given a slot it does not mean.
+_SLOT_ALIASES: Dict[str, Dict[str, str]] = {
+    # ---- CONTINUITY: gap, turn_angle, perp_offset, curv_agree ----
+    "EDGE_CONTOUR_CONTINUITY": {
+        "gap": "dist", "turn_angle": "turn", "curv_agree": "curv_agree"},
+    "EDGE_ORIENTATION_CONTINUITY": {
+        "gap": "dist", "turn_angle": "turn", "perp_offset": "perp"},
+    "EDGE_ORIENTATION_BEND": {
+        "gap": "spatial_dist", "turn_angle": "angle_delta"},
+    "EDGE_CURVATURE_SIGN_CONTINUITY": {
+        "gap": "dist", "curv_agree": "curv_diff"},
+    "EDGE_COCIRCULAR": {"gap": "dist"},
+    "EDGE_AMODAL_LINK": {"gap": "gap"},
+    "EDGE_SHARED_BOUNDARY": {"gap": "dist"},
+    # ---- CONTAINMENT: rel_dist, polar_angle, scale_ratio,
+    #      ownership_strength, side ----
+    # (EDGE_CURVE_CONTAINMENT and EDGE_PART_CONTAINMENT carry the identical
+    # names and need no entry.)
+    "EDGE_BORDER_OWNERSHIP": {"ownership_strength": "owner_signed",
+                              "rel_dist": "dist"},
+    # ---- JUNCTION: angle_delta, topo_class, arm_count ----
+    "EDGE_JUNCTION_CONTOUR": {"topo_class": "topology_class"},
+    # (EDGE_ORIENTATION_JUNCTION carries angle_delta under that name.)
+    # ---- PROXIMITY: distance, bearing, scale_ratio ----
+    "EDGE_CO_LOCATED": {"scale_ratio": "scale_ratio"},
+    # [R-D1-alignment] CONTACT lands in PROXIMITY: `dist` (the separation of
+    #  the two entities, median-spacings) -> `distance`, and `normal_angle`
+    #  (the contact normal, axial pi) -> `bearing`.  The legacy `depth_step`
+    #  slot is an ordinal depth-difference rank, not a log2 size ratio, so it
+    #  has no honest slot on these axes and stays unmapped (UNKNOWN in the
+    #  projected params).
+    "EDGE_CONTACT": {"distance": "dist", "bearing": "normal_angle"},
+    # ---- OCCLUSION: depth_diff, source_cue, strength, relation ----
+    # [D2] The legacy OCCLUSION class names the SAME category as the U30 one,
+    #  so the bridge is BYPASSED for it (core/schema.py routes on the class
+    #  name, not on the ontology) and the two are compared positionally
+    #  across two different ontologies.  NEEDS core/schema.py::
+    #  EdgeParams.similarity -- the cross-ontology decision must be driven
+    #  by `ontology`, not by `class_`.
+    "EDGE_OCCLUSION": {"depth_diff": "depth", "source_cue": "source",
+                       "strength": "stack_depth"},
+    "EDGE_BINOCULAR_DISPARITY": {"depth_diff": "disparity",
+                                 "strength": "depth_straddle"},
+    "EDGE_LINE_TERMINATION": {"strength": "sharpness",
+                              "relation": "junction_type"},
+    # ---- MATERIAL: chrom_diff, lum_diff, tex_diff ----
+    "EDGE_SURFACE_GROUPING": {"chrom_diff": "color_dist",
+                              "tex_diff": "tex_dist",
+                              "lum_diff": "contrast_step"},
+    "EDGE_TEXTURE_BOUNDARY": {"chrom_diff": "chroma_diff"},
+    "EDGE_COLOR_OPPONENT_BORDER": {"lum_diff": "contrast"},
+    # ---- SHAPE: sym_score, radial_ratio, curvature ----
+    "EDGE_SYMMETRY": {"sym_score": "sym_score"},
+    "EDGE_CONCENTRICITY": {"radial_ratio": "radial_ratio"},
+    "EDGE_CURVATURE": {"curvature": "curv_rate"},
+    "EDGE_RADIALITY": {"radial_ratio": "hub_ratio"},
+    "EDGE_SPIRALITY": {"radial_ratio": "expansion"},
+    "EDGE_CROSS_SCALE_IDENTITY": {"sym_score": "similarity"},
+    # ---- SURFACE: normal_angle, material_diff, slant_diff, motion_kin ----
+    "EDGE_SURFACE_FOLD": {"normal_angle": "fold_axis",
+                          "slant_diff": "dihedral"},
+    "EDGE_MOTION_OPPOSITION": {"normal_angle": "boundary_angle",
+                               "motion_kin": "speed"},
+}
+
+
+def _with_provenance(ep: EdgeParams, label: str,
+                     like: Optional[EdgeParams] = None) -> EdgeParams:
+    """Copy the evidence fields (sign, confidence) from the original edge.
+
+    A projection keeps the physics: an occlusion edge with sign=-1 must stay
+    gating after it lands on the U30 axes.
+    """
+    src = like or ep
+    return EdgeParams(
+        class_=ep.class_, quantized=ep.quantized, sign=src.sign,
+        confidence=src.confidence, identity_slots=ep.identity_slots,
+        population=ep.population, ontology=ep.ontology, provenance=label,
+        # The producer's class is preserved across the U30 projection.  Without
+        # it a proximity flood and true occlusion evidence would be
+        # indistinguishable after both land on their U30 category, and the
+        # matcher could not keep a proximity flood from non-ignorable
+        # structural relations.
+        origin=(getattr(src, "origin", "") or getattr(src, "class_", "")))
+
+
+def _slot_name(slot: Any) -> str:
+    """The slot's tag, whichever attribute the Slot dataclass exposes."""
+    for attr in ("name", "tag", "label"):
+        value = getattr(slot, attr, None)
+        if isinstance(value, str):
+            return value
+    return ""
+
+
+def project_edge(ep: Optional[EdgeParams]) -> Optional[EdgeParams]:
+    """One legacy `EdgeParams` -> its U30 category projection, or None."""
+    if ep is None:
+        return None
+    cat = LEGACY_TO_CATEGORY.get(ep.class_)
+    if cat is None:
+        return None
+    target = "EDGE_" + cat
+    specs = U30_EDGE_UNIT_TABLE.get(target)
+    legacy = EDGE_SCHEMAS.get(ep.class_)
+    if not specs or not legacy:
+        return None
+    alias = _SLOT_ALIASES.get(ep.class_, {})
+    by_name = {_slot_name(s): i for i, s in enumerate(legacy)}
+    values: Dict[str, Optional[float]] = {}
+    for slot in specs:
+        src = alias.get(slot.name, slot.name)
+        idx = by_name.get(src)
+        if idx is None or idx >= len(ep.quantized):
+            values[slot.name] = None
+            continue
+        b = ep.quantized[idx]
+        if b == UNKNOWN or not math.isfinite(float(b)):
+            values[slot.name] = None
+        else:
+            values[slot.name] = edge_slot_value(ep.class_, src, float(b))
+    return _with_provenance(u30_edge_params(target, values), "legacy", like=ep)
+
+
+def _category_name(key: Any) -> str:
+    name = getattr(key, "name", None) or str(key)
+    return name if name.startswith("EDGE_") else "EDGE_" + name
+
+
+def merge_projected(
+    params: Dict[Any, EdgeParams],
+) -> Tuple[Dict[Any, EdgeParams], Dict[str, int]]:
+    """Project legacy edges, then let a native edge win a key collision.
+
+    `params` keys are opaque edge keys; the returned dict is keyed by
+    `(src, dst, category_name)` because the category IS the identity of a v2
+    edge.  Native params are those already on the U30 ontology.
+    """
+    merged: Dict[Any, EdgeParams] = {}
+    stats = Counter()
+    for key, ep in params.items():
+        if len(key) < 3:
+            # [D4] a key too short to name an edge is DROPPED, and it used
+            # to be dropped SILENTLY: the count did not appear in the
+            # statistics, so a caller could not see that edges had been
+            # lost.
+            stats["malformed_key"] += 1
+            continue
+        src, dst, et = key[0], key[1], key[2]
+        native = getattr(ep, "ontology", "") == "U30"
+        # [D3] The `or None` could never fire: `"EDGE_" + ""` is "EDGE_",
+        # which is truthy, so the unmapped case was caught by the `== "EDGE_"`
+        # test below and the expression said something it did not do.  The
+        # name is built only when the class HAS a category.
+        cat = (_category_name(et) if native
+               else ("EDGE_" + LEGACY_TO_CATEGORY[ep.class_]
+                     if ep.class_ in LEGACY_TO_CATEGORY else None))
+        if not cat or cat == "EDGE_":
+            stats["unmapped"] += 1
+            continue
+        if not native:
+            ep = project_edge(ep)
+            if ep is None:
+                stats["unmapped"] += 1
+                continue
+        mk = (src, dst, cat)
+        if mk in merged and merged[mk].provenance != "legacy":
+            stats["native_wins"] += 1
+            continue
+        if mk in merged:
+            stats["legacy_replaced"] += 1
+        merged[mk] = ep
+        stats["native" if native else "legacy"] += 1
+    return merged, dict(stats)
+
+
+def _is_all_unknown(ep: Optional[EdgeParams]) -> bool:
+    """Is every slot of this projection UNKNOWN (no measurement at all)?"""
+    if ep is None:
+        return True
+    for v in ep.quantized:
+        if v == UNKNOWN:
+            continue
+        try:
+            if math.isfinite(float(v)):
+                return False
+        except (TypeError, ValueError):
+            continue
+    return True
+
+
+def bridge_similarity(a: EdgeParams, b: EdgeParams,
+                      use_confidence: bool = True) -> Optional[float]:
+    """Compare across ontologies by projecting the legacy side(s) to U30.
+
+    Called from `EdgeParams.similarity` ONLY when the class names differ.  A
+    pair that lands on the same U30 category is compared on that category's
+    axes with the graded metric.
+
+    [STAGE 10 / AUDIT B7] **INCOMPARABLE IS NOT CONTRADICTORY.**  The three
+    stage-6 relations (EDGE_BOUNDARY_ATTACHMENT, EDGE_BOUNDARY_SUCCESSOR,
+    EDGE_ILLUSORY_INDUCER) have no U30 equivalent and project to None.  The
+    old code returned 0.0 for them, i.e. "no common ontology" was scored as
+    "these two relations contradict" -- and a relation that simply has no
+    counterpart was made to look like evidence AGAINST a match.  The
+    incomparability is now returned as None, and the caller must SKIP the
+    relation rather than score it 0.
+
+    [D1] A PROJECTION WITH NO MEASUREMENT IS INCOMPARABLE TOO.  A legacy
+    edge whose slots have no honest U30 counterpart projects to an
+    all-UNKNOWN tuple; comparing that against a native edge is not a
+    comparison, and scoring it 0.0 made "nothing was measured" read as
+    "the two relations disagree".
+    """
+    pa = a if getattr(a, "ontology", "") == "U30" else project_edge(a)
+    pb = b if getattr(b, "ontology", "") == "U30" else project_edge(b)
+    if pa is None or pb is None or pa.class_ != pb.class_:
+        # INCOMPARABLE (no common ontology) -- not a contradiction.
+        return None
+    if _is_all_unknown(pa) or _is_all_unknown(pb):
+        # nothing was measured on one side: not a comparison
+        return None
+    if len(pa.quantized) != len(pb.quantized):
+        return 0.0
+    return float(pa.similarity(pb, use_confidence=use_confidence))
+
+
+def category_counts(keys: Iterable[Any]) -> Counter:
+    return Counter(_category_name(k if not isinstance(k, tuple) else k[2])
+                   for k in keys)
+
+
+def category_count_can_contain(q_keys: Iterable[Any],
+                               c_keys: Iterable[Any]) -> bool:
+    """Naive upper bound: the core must have at least as many edges of every
+    category as the query.  Necessary (not sufficient) for full containment.
+    """
+    qc = category_counts(q_keys)
+    cc = category_counts(c_keys)
+    return all(n <= cc.get(cat, 0) for cat, n in qc.items())
+
+
+def _selftest() -> None:
+    # Gate: every legacy class has an explicit disposition.
+    missing = set(EDGE_SCHEMAS) - set(LEGACY_TO_CATEGORY) - set(NO_U30_EQUIVALENT)
+    decided = set(LEGACY_TO_CATEGORY) & set(NO_U30_EQUIVALENT)
+    assert not missing and not decided, (sorted(missing), sorted(decided))
+    for cat in LEGACY_TO_CATEGORY.values():
+        assert ("EDGE_" + cat) in U30_EDGE_UNIT_TABLE, cat
+    legacy = edge_params("EDGE_CONTOUR_CONTINUITY",
+                         {"dist": 2.0, "turn": 3.0, "curv_agree": 1.0})
+    proj = project_edge(legacy)
+    assert proj is not None and proj.class_ == "EDGE_CONTINUITY"
+    assert proj.ontology == "U30" and proj.provenance == "legacy"
+    assert len(proj.quantized) == 4 and proj.population
+    native = u30_edge_params("EDGE_CONTINUITY",
+                             {"gap": 2.0, "turn_angle": 3.0,
+                              "perp_offset": 1.0, "curv_agree": 1.0})
+    merged, stats = merge_projected({
+        ("a", "b", "EDGE_CONTOUR_CONTINUITY"): legacy,
+        ("a", "b", "EDGE_CONTINUITY"): native,
+    })
+    assert len(merged) == 1, stats
+    assert stats.get("native_wins", 0) + stats.get("legacy_replaced", 0) == 1, stats
+    only = next(iter(merged.values()))
+    assert only.provenance != "legacy" and only.class_ == "EDGE_CONTINUITY"
+    # A legacy-only core survives on its own.
+    merged2, _ = merge_projected({("a", "b", "EDGE_CONTOUR_CONTINUITY"): legacy})
+    assert next(iter(merged2.values())).provenance == "legacy"
+    # Cutover: the legacy edge and the v2 edge of the derived category meet
+    # through `similarity` even though their class names differ.
+    assert 0.0 < legacy.similarity(native) <= 1.0, legacy.similarity(native)
+    other_cat = u30_edge_params("EDGE_JUNCTION",
+                                {"angle_delta": None, "topo_class": None,
+                                 "arm_count": None})
+    assert legacy.similarity(other_cat) == 0.0
+    # Count bound: 5 query JUNCTIONs cannot fit a core with 3.
+    assert category_count_can_contain(
+        ["EDGE_JUNCTION"] * 3, ["EDGE_JUNCTION"] * 3 + ["EDGE_SURFACE"])
+    assert not category_count_can_contain(
+        ["EDGE_JUNCTION"] * 5, ["EDGE_JUNCTION"] * 3)
+    print("category_bridge self-test: OK")
+
+
+if __name__ == "__main__":
+    _selftest()
