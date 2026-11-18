@@ -77,7 +77,9 @@ _FRONTEND_SOURCE_FILES = ("orchestration/binder.py",
 _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       "BINDER_COMPLETE_POSITION_MAP",
                       "GRAPH_STAGE6_RELATIONS",
-                      "ATTACHMENT_EVERY_NAMED_HOST")
+                      "ATTACHMENT_EVERY_NAMED_HOST",
+                      "FE_L3_SPINE", "FE_L4_JUNCTIONS",
+                      "FE_L6_ADDRESS")
 
 _log = logging.getLogger("eth80_frontend")
 
@@ -298,6 +300,7 @@ def build_graph(image: np.ndarray, name: str = "",
                           self_binders=None, derived=None, cg=cg)
         channels_by_step: List[Dict[str, Any]] = []
         for t in range(n_steps):
+            v4_emitted = False
             if t > 0:
                 # [STAGE 6 / 0a] close the previous presentation in
                 # Pipeline.step's order: the weight EMA, then the binder.
@@ -421,6 +424,9 @@ def build_graph(image: np.ndarray, name: str = "",
                         binder.bind_intra_step(t, frozenset(out))
                         binder.note_tier_positions(anchor_positions)
                         binder.emit_pending_edges("v4")
+                        v4_emitted = True
+        if not v4_emitted:
+            binder.emit_pending_edges("v4")
 
         # D_bind_all, in the pipeline's fixed union order
         D_v2 = (list(tier_dets.get("Contour", []))

@@ -164,16 +164,19 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
     separate = bool(getattr(P, "MATCH_SEPARATE_TERM_NORMALIZATION", False))
     exclude_isolated = bool(getattr(
         P, "MATCH_EXCLUDE_ISOLATED_FROM_CORRESPONDENCE", False))
+    # [B8] EXCLUSION IS A DOWN-WEIGHT, NOT A DELETION.  Removing isolated
+    # nodes from na/nb made an edgeless graph pair produce an EMPTY alignment:
+    # every class then scored 0 and argmax fell to the alphabetical tie-break
+    # (the "no-edges 0.1250" artefact).  The correspondence domain is now the
+    # SAME for every arm; exclusion is the declared isolated-node weight, and
+    # a floor keeps the node term measurable when neither graph has edges.
+    na, nb = sorted(a.nodes), sorted(b.nodes)
     if exclude_isolated:
-        def _active(g):
-            deg = {}
-            for s, d, _et in g.edges:
-                deg[s] = deg.get(s, 0) + 1
-                deg[d] = deg.get(d, 0) + 1
-            return [n for n in g.nodes if deg.get(n, 0) > 0]
-        na, nb = sorted(_active(a)), sorted(_active(b))
+        isolated_floor = float(getattr(P, "MATCH_EXCLUDE_ISOLATED_FLOOR", 0.5))
+        isolated_w = min(float(getattr(P, "MATCH_ISOLATED_NODE_WEIGHT", 1.0)),
+                         isolated_floor)
     else:
-        na, nb = sorted(a.nodes), sorted(b.nodes)
+        isolated_w = float(getattr(P, "MATCH_ISOLATED_NODE_WEIGHT", 1.0))
     deg_a = {}
     for s0, d0, _et0 in a.edges:
         deg_a[s0] = deg_a.get(s0, 0) + 1
@@ -182,7 +185,7 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
     for s0, d0, _et0 in b.edges:
         deg_b[s0] = deg_b.get(s0, 0) + 1
         deg_b[d0] = deg_b.get(d0, 0) + 1
-    isolated_w = float(getattr(P, "MATCH_ISOLATED_NODE_WEIGHT", 1.0))
+    # isolated_w is bound above with the [B8] down-weight rule.
     @lru_cache(maxsize=None)
     def node_sim(u,v):
         x,y=sigs_a.get(u),sigs_b.get(v)
@@ -195,11 +198,20 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
     unmatched_cost = float(P.MATCH_UNMATCHED_COST)
     if bool(getattr(P, "MATCH_UNMATCHED_COST_DERIVED", False)):
         # [F2] c = mean positive node similarity over the same-lens candidate
-        # matrix.  This is the objective's own null: a pair below the average
-        # candidate is a weaker explanation than leaving both nodes unmatched.
+        # matrix.  [B9] THE PRICE MUST BE ON q's SCALE.  A relative criterion
+        # (the mean of the raw similarities) compared against
+        # q = sim*(1-beta) + beta*rel made every >=1-side-edgeless pair
+        # unmatchable at high beta with the isolated down-weight on
+        # (q = 0.125*sim < c=0.15 collapsed a mapping from 229 to 56 nodes).
+        # node_sim is memoized (B3), and the price is scaled by exactly the
+        # coefficients q applies to a node similarity, so the comparison is
+        # a cost accounting in the objective's own units.
         positive = [s for u in na for v in nb
                     if (s := node_sim(u, v)) > 0.0]
-        unmatched_cost = (math.fsum(positive) / len(positive)) if positive else 0.0
+        price_scale = ((1.0 - float(P.MATCH_SYSTEMATICITY_WEIGHT))
+                       * isolated_w)
+        unmatched_cost = ((math.fsum(positive) / len(positive)) * price_scale
+                          if positive else 0.0)
 
     @lru_cache(maxsize=None)
     def edge_sim(x,y,u,v,et):

@@ -1,0 +1,62 @@
+{
+  "combined_higher_family_degree": 0.6551724137931035,
+  "corpus": "ETH-80 (PRIMARY; 8 scenes across classes 1 and 2)",
+  "degree_gap_investigation": {
+    "COCIRCULAR": {
+      "edge_count": 29,
+      "mean_degree_contribution": 0.025,
+      "preservation_2px": 0.0
+    },
+    "CONTOUR_CONTINUITY": {
+      "edge_count": 125,
+      "mean_degree_contribution": 0.10775862068965517,
+      "preservation_2px": 0.875
+    },
+    "CURVE_CONTAINMENT": {
+      "edge_count": 63,
+      "mean_degree_contribution": 0.054310344827586204,
+      "preservation_2px": 0.0
+    },
+    "JUNCTION_CONTOUR": {
+      "edge_count": 100,
+      "mean_degree_contribution": 0.08620689655172414,
+      "preservation_2px": 0.0
+    },
+    "ORIENTATION_JUNCTION": {
+      "edge_count": 414,
+      "mean_degree_contribution": 0.3568965517241379,
+      "preservation_2px": 0.8177777777777778
+    },
+    "PARALLEL": {
+      "edge_count": 29,
+      "mean_degree_contribution": 0.025,
+      "preservation_2px": 0.0
+    }
+  },
+  "family_gates": {
+    "CONTOUR_CONTINUITY": {
+      "gate_pass": false,
+      "preservation_rate": 0.875,
+      "preserved": 28,
+      "same_vs_diff_auc": 0.5234375,
+      "status": "DROPPED",
+      "total_surviving_endpoints": 32
+    },
+    "ORIENTATION_JUNCTION": {
+      "gate_pass": false,
+      "preservation_rate": 0.8177777777777778,
+      "preserved": 184,
+      "same_vs_diff_auc": 0.4869791666666667,
+      "status": "DROPPED",
+      "total_surviving_endpoints": 225
+    }
+  },
+  "protocol": "ETH-80 PRIMARY family gates + STEP 0b + degree-gap investigation",
+  "scenes_count": 8,
+  "step0b_loss_classification": {
+    "(a) not_emitted": 43,
+    "(b) emitted_different_type": 2,
+    "(d) preserved": 212
+  },
+  "total_content_nodes": 2320
+}

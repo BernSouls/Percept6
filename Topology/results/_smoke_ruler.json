@@ -1,0 +1,3438 @@
+{
+  "correction": "static is 42.6% of detections (3168/7431 at +2px); 47.6% was Position's share OF THE STATICS",
+  "definition": {
+    "exists_minus_static": "same-lens counterpart within 8px, neither window",
+    "gone": "no same-lens counterpart within 8px (wrap-aware expected position)",
+    "note": "+1px excluded from the tracked/static split (hypotheses inseparable at 1.5px)",
+    "static": "|dx| <= 1.5px, exclusive",
+    "tracked": "|dx - shift| <= 1.5px, exclusive (nearer hypothesis wins; tie -> static)"
+  },
+  "different_object_null_192": null,
+  "eth80": {
+    "image": "/home/user/Percept6/data/ETH-80-master/1/2/apple2-022-000.png",
+    "rows": [
+      {
+        "equivariance_all_sites": {
+          "median": null,
+          "n": 0,
+          "p10": null,
+          "p90": null
+        },
+        "expected": 855,
+        "flat_static_by_lens": {},
+        "lens": [
+          {
+            "exists_minus_static": 0,
+            "expected": 132,
+            "gone": 0,
+            "lens": "CONTOUR_PEAK",
+            "residual": 0,
+            "static": 132,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 105,
+            "gone": 0,
+            "lens": "TextureBoundary",
+            "residual": 0,
+            "static": 105,
+            "stream": "attribute_higher",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 102,
+            "gone": 0,
+            "lens": "Position",
+            "residual": 0,
+            "static": 102,
+            "stream": "sheet",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 80,
+            "gone": 0,
+            "lens": "Boundary",
+            "residual": 0,
+            "static": 80,
+            "stream": "sheet",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 75,
+            "gone": 0,
+            "lens": "ContourFragment",
+            "residual": 0,
+            "static": 75,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 71,
+            "gone": 0,
+            "lens": "BorderOwnership",
+            "residual": 0,
+            "static": 71,
+            "stream": "attribute_higher",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 57,
+            "gone": 0,
+            "lens": "Orientation",
+            "residual": 0,
+            "static": 57,
+            "stream": "sheet",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 55,
+            "gone": 0,
+            "lens": "Color",
+            "residual": 0,
+            "static": 55,
+            "stream": "sheet",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 34,
+            "gone": 0,
+            "lens": "Texture",
+            "residual": 0,
+            "static": 34,
+            "stream": "sheet",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 31,
+            "gone": 0,
+            "lens": "EndStopped",
+            "residual": 0,
+            "static": 31,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 28,
+            "gone": 0,
+            "lens": "PEAK_CHAIN",
+            "residual": 0,
+            "static": 28,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 18,
+            "gone": 0,
+            "lens": "Corner",
+            "residual": 0,
+            "static": 18,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 17,
+            "gone": 0,
+            "lens": "Contour",
+            "residual": 0,
+            "static": 17,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 16,
+            "gone": 0,
+            "lens": "Surface",
+            "residual": 0,
+            "static": 16,
+            "stream": "attribute_higher",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 16,
+            "gone": 0,
+            "lens": "RegionShape",
+            "residual": 0,
+            "static": 16,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 12,
+            "gone": 0,
+            "lens": "CurveComplex",
+            "residual": 0,
+            "static": 12,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 3,
+            "gone": 0,
+            "lens": "Polarity",
+            "residual": 0,
+            "static": 3,
+            "stream": "sheet",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 2,
+            "gone": 0,
+            "lens": "IllusoryContour",
+            "residual": 0,
+            "static": 2,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 1,
+            "gone": 0,
+            "lens": "Onset",
+            "residual": 0,
+            "static": 1,
+            "stream": "sheet",
+            "track": 0
+          }
+        ],
+        "occupancy": {
+          "emit_sites_base": 417,
+          "emit_sites_shift": 417,
+          "jaccard_emit": 1.0,
+          "sheet_emit_sites_base": 210,
+          "sheet_emit_sites_shift": 210,
+          "sheet_jaccard_emit": 1.0,
+          "total_sites": 256
+        },
+        "patch_split": {},
+        "residual_total": 0,
+        "shift": 0,
+        "static_count": 855,
+        "stream_totals": {
+          "attribute_higher": {
+            "exists_minus_static": 0,
+            "expected": 192,
+            "gone": 0,
+            "static": 192,
+            "track": 0
+          },
+          "content": {
+            "exists_minus_static": 0,
+            "expected": 331,
+            "gone": 0,
+            "static": 331,
+            "track": 0
+          },
+          "sheet": {
+            "exists_minus_static": 0,
+            "expected": 332,
+            "gone": 0,
+            "static": 332,
+            "track": 0
+          },
+          "unregistered": {
+            "exists_minus_static": 0,
+            "expected": 0,
+            "gone": 0,
+            "static": 0,
+            "track": 0
+          }
+        },
+        "stride": {
+          "site_pairs": 417,
+          "x": {
+            "distinct": 163,
+            "max": 248.0,
+            "min": 8.0,
+            "spacing_hist": {
+              "0": 32,
+              "1": 90,
+              "2": 21,
+              "3": 9,
+              "4": 4,
+              "6": 2,
+              "7": 2,
+              "16": 2
+            }
+          },
+          "y": {
+            "distinct": 160,
+            "max": 248.0,
+            "min": 8.0,
+            "spacing_hist": {
+              "0": 40,
+              "1": 80,
+              "2": 24,
+              "3": 5,
+              "4": 2,
+              "5": 3,
+              "7": 1,
+              "10": 1,
+              "14": 1,
+              "16": 2
+            }
+          }
+        }
+      },
+      {
+        "equivariance_all_sites": {
+          "median": 0.018427777135739693,
+          "n": 256,
+          "p10": 0.01121643653782337,
+          "p90": 0.03127239107823876
+        },
+        "expected": 855,
+        "flat_static_by_lens": {},
+        "lens": [
+          {
+            "exists_minus_static": 3,
+            "expected": 132,
+            "gone": 2,
+            "lens": "CONTOUR_PEAK",
+            "residual": 0,
+            "static": 2,
+            "stream": "content",
+            "track": 125
+          },
+          {
+            "exists_minus_static": 2,
+            "expected": 105,
+            "gone": 2,
+            "lens": "TextureBoundary",
+            "residual": 0,
+            "static": 32,
+            "stream": "attribute_higher",
+            "track": 69
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 102,
+            "gone": 3,
+            "lens": "Position",
+            "residual": 0,
+            "static": 94,
+            "stream": "sheet",
+            "track": 4
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 80,
+            "gone": 14,
+            "lens": "Boundary",
+            "residual": 0,
+            "static": 54,
+            "stream": "sheet",
+            "track": 12
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 75,
+            "gone": 0,
+            "lens": "ContourFragment",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 75
+          },
+          {
+            "exists_minus_static": 8,
+            "expected": 71,
+            "gone": 6,
+            "lens": "BorderOwnership",
+            "residual": 0,
+            "static": 3,
+            "stream": "attribute_higher",
+            "track": 54
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 57,
+            "gone": 11,
+            "lens": "Orientation",
+            "residual": 0,
+            "static": 46,
+            "stream": "sheet",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 55,
+            "gone": 22,
+            "lens": "Color",
+            "residual": 0,
+            "static": 22,
+            "stream": "sheet",
+            "track": 11
+          },
+          {
+            "exists_minus_static": 2,
+            "expected": 34,
+            "gone": 7,
+            "lens": "Texture",
+            "residual": 0,
+            "static": 13,
+            "stream": "sheet",
+            "track": 12
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 31,
+            "gone": 6,
+            "lens": "EndStopped",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 25
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 28,
+            "gone": 1,
+            "lens": "PEAK_CHAIN",
+            "residual": 0,
+            "static": 5,
+            "stream": "content",
+            "track": 21
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 18,
+            "gone": 3,
+            "lens": "Corner",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 14
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 17,
+            "gone": 3,
+            "lens": "Contour",
+            "residual": 0,
+            "static": 14,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 16,
+            "gone": 1,
+            "lens": "Surface",
+            "residual": 0,
+            "static": 5,
+            "stream": "attribute_higher",
+            "track": 10
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 16,
+            "gone": 0,
+            "lens": "RegionShape",
+            "residual": 0,
+            "static": 3,
+            "stream": "content",
+            "track": 13
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 12,
+            "gone": 3,
+            "lens": "CurveComplex",
+            "residual": 0,
+            "static": 9,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 3,
+            "gone": 1,
+            "lens": "Polarity",
+            "residual": 0,
+            "static": 1,
+            "stream": "sheet",
+            "track": 1
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 2,
+            "gone": 0,
+            "lens": "IllusoryContour",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 2
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 1,
+            "gone": 0,
+            "lens": "Onset",
+            "residual": 0,
+            "static": 1,
+            "stream": "sheet",
+            "track": 0
+          }
+        ],
+        "occupancy": {
+          "emit_sites_base": 417,
+          "emit_sites_shift": 405,
+          "jaccard_emit": 0.2549618320610687,
+          "sheet_emit_sites_base": 210,
+          "sheet_emit_sites_shift": 207,
+          "sheet_jaccard_emit": 0.6547619047619048,
+          "total_sites": 256
+        },
+        "patch_split": {
+          "changed_both": 99,
+          "changed_patch_identical_sig": 205
+        },
+        "residual_total": 0,
+        "shift": 2,
+        "static_count": 304,
+        "stream_totals": {
+          "attribute_higher": {
+            "exists_minus_static": 10,
+            "expected": 192,
+            "gone": 9,
+            "static": 40,
+            "track": 133
+          },
+          "content": {
+            "exists_minus_static": 5,
+            "expected": 331,
+            "gone": 18,
+            "static": 33,
+            "track": 275
+          },
+          "sheet": {
+            "exists_minus_static": 3,
+            "expected": 332,
+            "gone": 58,
+            "static": 231,
+            "track": 40
+          },
+          "unregistered": {
+            "exists_minus_static": 0,
+            "expected": 0,
+            "gone": 0,
+            "static": 0,
+            "track": 0
+          }
+        },
+        "stride": {
+          "site_pairs": 173,
+          "x": {
+            "distinct": 22,
+            "max": 248.0,
+            "min": 8.0,
+            "spacing_hist": {
+              "0": 1,
+              "1": 1,
+              "4": 2,
+              "5": 1,
+              "8": 2,
+              "11": 1,
+              "12": 2,
+              "16": 11
+            }
+          },
+          "y": {
+            "distinct": 25,
+            "max": 248.0,
+            "min": 8.0,
+            "spacing_hist": {
+              "1": 2,
+              "2": 2,
+              "3": 1,
+              "4": 3,
+              "5": 1,
+              "6": 1,
+              "8": 1,
+              "10": 1,
+              "14": 1,
+              "15": 1,
+              "16": 10
+            }
+          }
+        }
+      },
+      {
+        "equivariance_all_sites": {
+          "median": 0.021565417260551896,
+          "n": 256,
+          "p10": 0.011620720352514716,
+          "p90": 0.04078225920361596
+        },
+        "expected": 855,
+        "flat_static_by_lens": {},
+        "lens": [
+          {
+            "exists_minus_static": 3,
+            "expected": 132,
+            "gone": 1,
+            "lens": "CONTOUR_PEAK",
+            "residual": 0,
+            "static": 2,
+            "stream": "content",
+            "track": 126
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 105,
+            "gone": 2,
+            "lens": "TextureBoundary",
+            "residual": 0,
+            "static": 26,
+            "stream": "attribute_higher",
+            "track": 77
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 102,
+            "gone": 9,
+            "lens": "Position",
+            "residual": 0,
+            "static": 88,
+            "stream": "sheet",
+            "track": 4
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 80,
+            "gone": 19,
+            "lens": "Boundary",
+            "residual": 0,
+            "static": 48,
+            "stream": "sheet",
+            "track": 12
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 75,
+            "gone": 0,
+            "lens": "ContourFragment",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 75
+          },
+          {
+            "exists_minus_static": 7,
+            "expected": 71,
+            "gone": 5,
+            "lens": "BorderOwnership",
+            "residual": 0,
+            "static": 3,
+            "stream": "attribute_higher",
+            "track": 56
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 57,
+            "gone": 21,
+            "lens": "Orientation",
+            "residual": 0,
+            "static": 36,
+            "stream": "sheet",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 55,
+            "gone": 27,
+            "lens": "Color",
+            "residual": 0,
+            "static": 17,
+            "stream": "sheet",
+            "track": 10
+          },
+          {
+            "exists_minus_static": 2,
+            "expected": 34,
+            "gone": 7,
+            "lens": "Texture",
+            "residual": 0,
+            "static": 13,
+            "stream": "sheet",
+            "track": 12
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 31,
+            "gone": 9,
+            "lens": "EndStopped",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 21
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 28,
+            "gone": 2,
+            "lens": "PEAK_CHAIN",
+            "residual": 0,
+            "static": 4,
+            "stream": "content",
+            "track": 22
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 18,
+            "gone": 3,
+            "lens": "Corner",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 14
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 17,
+            "gone": 8,
+            "lens": "Contour",
+            "residual": 0,
+            "static": 9,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 16,
+            "gone": 1,
+            "lens": "Surface",
+            "residual": 0,
+            "static": 4,
+            "stream": "attribute_higher",
+            "track": 11
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 16,
+            "gone": 0,
+            "lens": "RegionShape",
+            "residual": 0,
+            "static": 2,
+            "stream": "content",
+            "track": 14
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 12,
+            "gone": 5,
+            "lens": "CurveComplex",
+            "residual": 0,
+            "static": 7,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 3,
+            "gone": 0,
+            "lens": "Polarity",
+            "residual": 0,
+            "static": 1,
+            "stream": "sheet",
+            "track": 2
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 2,
+            "gone": 0,
+            "lens": "IllusoryContour",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 2
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 1,
+            "gone": 0,
+            "lens": "Onset",
+            "residual": 0,
+            "static": 1,
+            "stream": "sheet",
+            "track": 0
+          }
+        ],
+        "occupancy": {
+          "emit_sites_base": 417,
+          "emit_sites_shift": 404,
+          "jaccard_emit": 0.24018126888217523,
+          "sheet_emit_sites_base": 210,
+          "sheet_emit_sites_shift": 203,
+          "sheet_jaccard_emit": 0.6259842519685039,
+          "total_sites": 256
+        },
+        "patch_split": {
+          "changed_both": 93,
+          "changed_patch_identical_sig": 168
+        },
+        "residual_total": 0,
+        "shift": 3,
+        "static_count": 261,
+        "stream_totals": {
+          "attribute_higher": {
+            "exists_minus_static": 7,
+            "expected": 192,
+            "gone": 8,
+            "static": 33,
+            "track": 144
+          },
+          "content": {
+            "exists_minus_static": 5,
+            "expected": 331,
+            "gone": 28,
+            "static": 24,
+            "track": 274
+          },
+          "sheet": {
+            "exists_minus_static": 5,
+            "expected": 332,
+            "gone": 83,
+            "static": 204,
+            "track": 40
+          },
+          "unregistered": {
+            "exists_minus_static": 0,
+            "expected": 0,
+            "gone": 0,
+            "static": 0,
+            "track": 0
+          }
+        },
+        "stride": {
+          "site_pairs": 163,
+          "x": {
+            "distinct": 22,
+            "max": 248.0,
+            "min": 8.0,
+            "spacing_hist": {
+              "0": 1,
+              "1": 1,
+              "3": 1,
+              "4": 2,
+              "7": 1,
+              "9": 1,
+              "12": 3,
+              "16": 11
+            }
+          },
+          "y": {
+            "distinct": 24,
+            "max": 248.0,
+            "min": 8.0,
+            "spacing_hist": {
+              "1": 2,
+              "2": 1,
+              "3": 2,
+              "4": 2,
+              "5": 2,
+              "7": 1,
+              "14": 1,
+              "15": 1,
+              "16": 11
+            }
+          }
+        }
+      },
+      {
+        "equivariance_all_sites": {
+          "median": 0.028121910191712573,
+          "n": 256,
+          "p10": 0.011540092312174698,
+          "p90": 0.0848825712341256
+        },
+        "expected": 855,
+        "flat_static_by_lens": {},
+        "lens": [
+          {
+            "exists_minus_static": 7,
+            "expected": 132,
+            "gone": 5,
+            "lens": "CONTOUR_PEAK",
+            "residual": 0,
+            "static": 2,
+            "stream": "content",
+            "track": 118
+          },
+          {
+            "exists_minus_static": 28,
+            "expected": 105,
+            "gone": 3,
+            "lens": "TextureBoundary",
+            "residual": 0,
+            "static": 0,
+            "stream": "attribute_higher",
+            "track": 74
+          },
+          {
+            "exists_minus_static": 7,
+            "expected": 102,
+            "gone": 14,
+            "lens": "Position",
+            "residual": 0,
+            "static": 78,
+            "stream": "sheet",
+            "track": 3
+          },
+          {
+            "exists_minus_static": 23,
+            "expected": 80,
+            "gone": 17,
+            "lens": "Boundary",
+            "residual": 0,
+            "static": 26,
+            "stream": "sheet",
+            "track": 14
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 75,
+            "gone": 0,
+            "lens": "ContourFragment",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 75
+          },
+          {
+            "exists_minus_static": 8,
+            "expected": 71,
+            "gone": 7,
+            "lens": "BorderOwnership",
+            "residual": 0,
+            "static": 0,
+            "stream": "attribute_higher",
+            "track": 56
+          },
+          {
+            "exists_minus_static": 17,
+            "expected": 57,
+            "gone": 21,
+            "lens": "Orientation",
+            "residual": 0,
+            "static": 19,
+            "stream": "sheet",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 15,
+            "expected": 55,
+            "gone": 19,
+            "lens": "Color",
+            "residual": 0,
+            "static": 12,
+            "stream": "sheet",
+            "track": 9
+          },
+          {
+            "exists_minus_static": 7,
+            "expected": 34,
+            "gone": 7,
+            "lens": "Texture",
+            "residual": 0,
+            "static": 8,
+            "stream": "sheet",
+            "track": 12
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 31,
+            "gone": 9,
+            "lens": "EndStopped",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 21
+          },
+          {
+            "exists_minus_static": 6,
+            "expected": 28,
+            "gone": 1,
+            "lens": "PEAK_CHAIN",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 21
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 18,
+            "gone": 6,
+            "lens": "Corner",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 11
+          },
+          {
+            "exists_minus_static": 4,
+            "expected": 17,
+            "gone": 9,
+            "lens": "Contour",
+            "residual": 0,
+            "static": 4,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 3,
+            "expected": 16,
+            "gone": 2,
+            "lens": "Surface",
+            "residual": 0,
+            "static": 0,
+            "stream": "attribute_higher",
+            "track": 11
+          },
+          {
+            "exists_minus_static": 2,
+            "expected": 16,
+            "gone": 0,
+            "lens": "RegionShape",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 14
+          },
+          {
+            "exists_minus_static": 2,
+            "expected": 12,
+            "gone": 6,
+            "lens": "CurveComplex",
+            "residual": 0,
+            "static": 4,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 3,
+            "gone": 1,
+            "lens": "Polarity",
+            "residual": 0,
+            "static": 1,
+            "stream": "sheet",
+            "track": 1
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 2,
+            "gone": 0,
+            "lens": "IllusoryContour",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 2
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 1,
+            "gone": 0,
+            "lens": "Onset",
+            "residual": 0,
+            "static": 1,
+            "stream": "sheet",
+            "track": 0
+          }
+        ],
+        "occupancy": {
+          "emit_sites_base": 417,
+          "emit_sites_shift": 393,
+          "jaccard_emit": 0.23100303951367782,
+          "sheet_emit_sites_base": 210,
+          "sheet_emit_sites_shift": 194,
+          "sheet_jaccard_emit": 0.5598455598455598,
+          "total_sites": 256
+        },
+        "patch_split": {
+          "changed_both": 48,
+          "changed_patch_identical_sig": 107
+        },
+        "residual_total": 0,
+        "shift": 8,
+        "static_count": 155,
+        "stream_totals": {
+          "attribute_higher": {
+            "exists_minus_static": 39,
+            "expected": 192,
+            "gone": 12,
+            "static": 0,
+            "track": 141
+          },
+          "content": {
+            "exists_minus_static": 23,
+            "expected": 331,
+            "gone": 36,
+            "static": 10,
+            "track": 262
+          },
+          "sheet": {
+            "exists_minus_static": 69,
+            "expected": 332,
+            "gone": 79,
+            "static": 145,
+            "track": 39
+          },
+          "unregistered": {
+            "exists_minus_static": 0,
+            "expected": 0,
+            "gone": 0,
+            "static": 0,
+            "track": 0
+          }
+        },
+        "stride": {
+          "site_pairs": 119,
+          "x": {
+            "distinct": 18,
+            "max": 232.0,
+            "min": 8.0,
+            "spacing_hist": {
+              "1": 1,
+              "4": 1,
+              "6": 2,
+              "15": 1,
+              "16": 12
+            }
+          },
+          "y": {
+            "distinct": 19,
+            "max": 248.0,
+            "min": 8.0,
+            "spacing_hist": {
+              "1": 1,
+              "6": 1,
+              "8": 2,
+              "10": 1,
+              "15": 1,
+              "16": 12
+            }
+          }
+        }
+      },
+      {
+        "equivariance_all_sites": {
+          "median": 0.0,
+          "n": 208,
+          "p10": 0.0,
+          "p90": 0.0
+        },
+        "expected": 855,
+        "flat_static_by_lens": {},
+        "lens": [
+          {
+            "exists_minus_static": 15,
+            "expected": 132,
+            "gone": 16,
+            "lens": "CONTOUR_PEAK",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 101
+          },
+          {
+            "exists_minus_static": 21,
+            "expected": 105,
+            "gone": 16,
+            "lens": "TextureBoundary",
+            "residual": 0,
+            "static": 0,
+            "stream": "attribute_higher",
+            "track": 68
+          },
+          {
+            "exists_minus_static": 4,
+            "expected": 102,
+            "gone": 95,
+            "lens": "Position",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 3
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 80,
+            "gone": 39,
+            "lens": "Boundary",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 40
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 75,
+            "gone": 6,
+            "lens": "ContourFragment",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 69
+          },
+          {
+            "exists_minus_static": 7,
+            "expected": 71,
+            "gone": 15,
+            "lens": "BorderOwnership",
+            "residual": 0,
+            "static": 0,
+            "stream": "attribute_higher",
+            "track": 49
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 57,
+            "gone": 13,
+            "lens": "Orientation",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 43
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 55,
+            "gone": 14,
+            "lens": "Color",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 41
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 34,
+            "gone": 2,
+            "lens": "Texture",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 31
+          },
+          {
+            "exists_minus_static": 3,
+            "expected": 31,
+            "gone": 8,
+            "lens": "EndStopped",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 20
+          },
+          {
+            "exists_minus_static": 4,
+            "expected": 28,
+            "gone": 4,
+            "lens": "PEAK_CHAIN",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 20
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 18,
+            "gone": 6,
+            "lens": "Corner",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 11
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 17,
+            "gone": 9,
+            "lens": "Contour",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 8
+          },
+          {
+            "exists_minus_static": 2,
+            "expected": 16,
+            "gone": 5,
+            "lens": "Surface",
+            "residual": 0,
+            "static": 0,
+            "stream": "attribute_higher",
+            "track": 9
+          },
+          {
+            "exists_minus_static": 2,
+            "expected": 16,
+            "gone": 1,
+            "lens": "RegionShape",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 13
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 12,
+            "gone": 5,
+            "lens": "CurveComplex",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 7
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 3,
+            "gone": 2,
+            "lens": "Polarity",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 1
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 2,
+            "gone": 0,
+            "lens": "IllusoryContour",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 2
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 1,
+            "gone": 1,
+            "lens": "Onset",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 0
+          }
+        ],
+        "occupancy": {
+          "emit_sites_base": 417,
+          "emit_sites_shift": 386,
+          "jaccard_emit": 0.22970903522205208,
+          "sheet_emit_sites_base": 210,
+          "sheet_emit_sites_shift": 202,
+          "sheet_jaccard_emit": 0.5547169811320755,
+          "total_sites": 256
+        },
+        "patch_split": {},
+        "residual_total": 0,
+        "shift": 16,
+        "static_count": 0,
+        "stream_totals": {
+          "attribute_higher": {
+            "exists_minus_static": 30,
+            "expected": 192,
+            "gone": 36,
+            "static": 0,
+            "track": 126
+          },
+          "content": {
+            "exists_minus_static": 25,
+            "expected": 331,
+            "gone": 55,
+            "static": 0,
+            "track": 251
+          },
+          "sheet": {
+            "exists_minus_static": 7,
+            "expected": 332,
+            "gone": 166,
+            "static": 0,
+            "track": 159
+          },
+          "unregistered": {
+            "exists_minus_static": 0,
+            "expected": 0,
+            "gone": 0,
+            "static": 0,
+            "track": 0
+          }
+        },
+        "stride": {
+          "site_pairs": 0,
+          "x": {
+            "distinct": 0,
+            "max": null,
+            "min": null,
+            "spacing_hist": {}
+          },
+          "y": {
+            "distinct": 0,
+            "max": null,
+            "min": null,
+            "spacing_hist": {}
+          }
+        }
+      },
+      {
+        "equivariance_all_sites": {
+          "median": 0.0,
+          "n": 192,
+          "p10": 0.0,
+          "p90": 0.0
+        },
+        "expected": 855,
+        "flat_static_by_lens": {},
+        "lens": [
+          {
+            "exists_minus_static": 13,
+            "expected": 132,
+            "gone": 30,
+            "lens": "CONTOUR_PEAK",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 89
+          },
+          {
+            "exists_minus_static": 31,
+            "expected": 105,
+            "gone": 27,
+            "lens": "TextureBoundary",
+            "residual": 0,
+            "static": 0,
+            "stream": "attribute_higher",
+            "track": 47
+          },
+          {
+            "exists_minus_static": 6,
+            "expected": 102,
+            "gone": 40,
+            "lens": "Position",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 56
+          },
+          {
+            "exists_minus_static": 5,
+            "expected": 80,
+            "gone": 38,
+            "lens": "Boundary",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 37
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 75,
+            "gone": 16,
+            "lens": "ContourFragment",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 59
+          },
+          {
+            "exists_minus_static": 9,
+            "expected": 71,
+            "gone": 16,
+            "lens": "BorderOwnership",
+            "residual": 0,
+            "static": 0,
+            "stream": "attribute_higher",
+            "track": 46
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 57,
+            "gone": 18,
+            "lens": "Orientation",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 39
+          },
+          {
+            "exists_minus_static": 2,
+            "expected": 55,
+            "gone": 15,
+            "lens": "Color",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 38
+          },
+          {
+            "exists_minus_static": 1,
+            "expected": 34,
+            "gone": 7,
+            "lens": "Texture",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 26
+          },
+          {
+            "exists_minus_static": 6,
+            "expected": 31,
+            "gone": 21,
+            "lens": "EndStopped",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 4
+          },
+          {
+            "exists_minus_static": 6,
+            "expected": 28,
+            "gone": 8,
+            "lens": "PEAK_CHAIN",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 14
+          },
+          {
+            "exists_minus_static": 4,
+            "expected": 18,
+            "gone": 8,
+            "lens": "Corner",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 6
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 17,
+            "gone": 9,
+            "lens": "Contour",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 8
+          },
+          {
+            "exists_minus_static": 2,
+            "expected": 16,
+            "gone": 7,
+            "lens": "Surface",
+            "residual": 0,
+            "static": 0,
+            "stream": "attribute_higher",
+            "track": 7
+          },
+          {
+            "exists_minus_static": 3,
+            "expected": 16,
+            "gone": 3,
+            "lens": "RegionShape",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 10
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 12,
+            "gone": 8,
+            "lens": "CurveComplex",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 4
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 3,
+            "gone": 2,
+            "lens": "Polarity",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 1
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 2,
+            "gone": 2,
+            "lens": "IllusoryContour",
+            "residual": 0,
+            "static": 0,
+            "stream": "content",
+            "track": 0
+          },
+          {
+            "exists_minus_static": 0,
+            "expected": 1,
+            "gone": 1,
+            "lens": "Onset",
+            "residual": 0,
+            "static": 0,
+            "stream": "sheet",
+            "track": 0
+          }
+        ],
+        "occupancy": {
+          "emit_sites_base": 417,
+          "emit_sites_shift": 374,
+          "jaccard_emit": 0.22067901234567902,
+          "sheet_emit_sites_base": 210,
+          "sheet_emit_sites_shift": 199,
+          "sheet_jaccard_emit": 0.5318352059925093,
+          "total_sites": 256
+        },
+        "patch_split": {},
+        "residual_total": 0,
+        "shift": 32,
+        "static_count": 0,
+        "stream_totals": {
+          "attribute_higher": {
+            "exists_minus_static": 42,
+            "expected": 192,
+            "gone": 50,
+            "static": 0,
+            "track": 100
+          },
+          "content": {
+            "exists_minus_static": 32,
+            "expected": 331,
+            "gone": 105,
+            "static": 0,
+            "track": 194
+          },
+          "sheet": {
+            "exists_minus_static": 14,
+            "expected": 332,
+            "gone": 121,
+            "static": 0,
+            "track": 197
+          },
+          "unregistered": {
+            "exists_minus_static": 0,
+            "expected": 0,
+            "gone": 0,
+            "static": 0,
+            "track": 0
+          }
+        },
+        "stride": {
+          "site_pairs": 0,
+          "x": {
+            "distinct": 0,
+            "max": null,
+            "min": null,
+            "spacing_hist": {}
+          },
+          "y": {
+            "distinct": 0,
+            "max": null,
+            "min": null,
+            "spacing_hist": {}
+          }
+        }
+      }
+    ]
+  },
+  "renderer": [
+    {
+      "rows": [
+        {
+          "equivariance_all_sites": {
+            "median": null,
+            "n": 0,
+            "p10": null,
+            "p90": null
+          },
+          "expected": 407,
+          "flat_static_by_lens": {},
+          "lens": [
+            {
+              "exists_minus_static": 0,
+              "expected": 102,
+              "gone": 0,
+              "lens": "Position",
+              "residual": 0,
+              "static": 102,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 87,
+              "gone": 0,
+              "lens": "Boundary",
+              "residual": 0,
+              "static": 87,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 57,
+              "gone": 0,
+              "lens": "Orientation",
+              "residual": 0,
+              "static": 57,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 0,
+              "lens": "ContourFragment",
+              "residual": 0,
+              "static": 22,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 0,
+              "lens": "Texture",
+              "residual": 0,
+              "static": 22,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 20,
+              "gone": 0,
+              "lens": "BorderOwnership",
+              "residual": 0,
+              "static": 20,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 18,
+              "gone": 0,
+              "lens": "EndStopped",
+              "residual": 0,
+              "static": 18,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 16,
+              "gone": 0,
+              "lens": "CONTOUR_PEAK",
+              "residual": 0,
+              "static": 16,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 12,
+              "gone": 0,
+              "lens": "Contour",
+              "residual": 0,
+              "static": 12,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 10,
+              "gone": 0,
+              "lens": "CurveComplex",
+              "residual": 0,
+              "static": 10,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 8,
+              "gone": 0,
+              "lens": "TextureBoundary",
+              "residual": 0,
+              "static": 8,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 6,
+              "gone": 0,
+              "lens": "Corner",
+              "residual": 0,
+              "static": 6,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 0,
+              "lens": "Color",
+              "residual": 0,
+              "static": 5,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 0,
+              "lens": "Junction",
+              "residual": 0,
+              "static": 5,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 0,
+              "lens": "PEAK_CHAIN",
+              "residual": 0,
+              "static": 4,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 0,
+              "lens": "RegionShape",
+              "residual": 0,
+              "static": 4,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 0,
+              "lens": "T",
+              "residual": 0,
+              "static": 3,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 0,
+              "lens": "Polarity",
+              "residual": 0,
+              "static": 3,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 2,
+              "gone": 0,
+              "lens": "Surface",
+              "residual": 0,
+              "static": 2,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 1,
+              "gone": 0,
+              "lens": "Onset",
+              "residual": 0,
+              "static": 1,
+              "stream": "sheet",
+              "track": 0
+            }
+          ],
+          "occupancy": {
+            "emit_sites_base": 233,
+            "emit_sites_shift": 233,
+            "jaccard_emit": 1.0,
+            "sheet_emit_sites_base": 183,
+            "sheet_emit_sites_shift": 183,
+            "sheet_jaccard_emit": 1.0,
+            "total_sites": 256
+          },
+          "patch_split": {},
+          "residual_total": 0,
+          "shift": 0,
+          "static_count": 407,
+          "stream_totals": {
+            "attribute_higher": {
+              "exists_minus_static": 0,
+              "expected": 30,
+              "gone": 0,
+              "static": 30,
+              "track": 0
+            },
+            "content": {
+              "exists_minus_static": 0,
+              "expected": 100,
+              "gone": 0,
+              "static": 100,
+              "track": 0
+            },
+            "sheet": {
+              "exists_minus_static": 0,
+              "expected": 277,
+              "gone": 0,
+              "static": 277,
+              "track": 0
+            },
+            "unregistered": {
+              "exists_minus_static": 0,
+              "expected": 0,
+              "gone": 0,
+              "static": 0,
+              "track": 0
+            }
+          },
+          "stride": {
+            "site_pairs": 233,
+            "x": {
+              "distinct": 37,
+              "max": 186.0,
+              "min": 6.0,
+              "spacing_hist": {
+                "0": 3,
+                "1": 7,
+                "2": 2,
+                "3": 3,
+                "4": 2,
+                "5": 4,
+                "6": 6,
+                "7": 2,
+                "11": 3,
+                "12": 4
+              }
+            },
+            "y": {
+              "distinct": 36,
+              "max": 186.0,
+              "min": 6.0,
+              "spacing_hist": {
+                "0": 3,
+                "1": 7,
+                "2": 4,
+                "3": 4,
+                "4": 3,
+                "6": 2,
+                "7": 1,
+                "8": 1,
+                "9": 1,
+                "10": 1,
+                "12": 8
+              }
+            }
+          }
+        },
+        {
+          "equivariance_all_sites": {
+            "median": 0.0,
+            "n": 256,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "expected": 407,
+          "flat_static_by_lens": {
+            "Boundary": 43,
+            "Color": 1,
+            "Contour": 2,
+            "CurveComplex": 1,
+            "Junction": 1,
+            "Onset": 1,
+            "Orientation": 30,
+            "Polarity": 1,
+            "Position": 88,
+            "Texture": 8
+          },
+          "lens": [
+            {
+              "exists_minus_static": 0,
+              "expected": 102,
+              "gone": 0,
+              "lens": "Position",
+              "residual": 0,
+              "static": 102,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 87,
+              "gone": 27,
+              "lens": "Boundary",
+              "residual": 0,
+              "static": 55,
+              "stream": "sheet",
+              "track": 5
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 57,
+              "gone": 13,
+              "lens": "Orientation",
+              "residual": 0,
+              "static": 44,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 0,
+              "lens": "ContourFragment",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 22
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 8,
+              "lens": "Texture",
+              "residual": 0,
+              "static": 13,
+              "stream": "sheet",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 20,
+              "gone": 5,
+              "lens": "BorderOwnership",
+              "residual": 0,
+              "static": 8,
+              "stream": "attribute_higher",
+              "track": 7
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 18,
+              "gone": 5,
+              "lens": "EndStopped",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 13
+            },
+            {
+              "exists_minus_static": 3,
+              "expected": 16,
+              "gone": 4,
+              "lens": "CONTOUR_PEAK",
+              "residual": 0,
+              "static": 5,
+              "stream": "content",
+              "track": 4
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 12,
+              "gone": 8,
+              "lens": "Contour",
+              "residual": 0,
+              "static": 4,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 10,
+              "gone": 7,
+              "lens": "CurveComplex",
+              "residual": 0,
+              "static": 3,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 8,
+              "gone": 8,
+              "lens": "TextureBoundary",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 6,
+              "gone": 6,
+              "lens": "Corner",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 1,
+              "lens": "Color",
+              "residual": 0,
+              "static": 3,
+              "stream": "sheet",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 4,
+              "lens": "Junction",
+              "residual": 0,
+              "static": 1,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 4,
+              "lens": "PEAK_CHAIN",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 4,
+              "lens": "RegionShape",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 3,
+              "lens": "T",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 2,
+              "lens": "Polarity",
+              "residual": 0,
+              "static": 1,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 2,
+              "gone": 2,
+              "lens": "Surface",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 1,
+              "gone": 0,
+              "lens": "Onset",
+              "residual": 0,
+              "static": 1,
+              "stream": "sheet",
+              "track": 0
+            }
+          ],
+          "occupancy": {
+            "emit_sites_base": 233,
+            "emit_sites_shift": 226,
+            "jaccard_emit": 0.5506756756756757,
+            "sheet_emit_sites_base": 183,
+            "sheet_emit_sites_shift": 181,
+            "sheet_jaccard_emit": 0.7669902912621359,
+            "total_sites": 256
+          },
+          "patch_split": {
+            "changed_both": 18,
+            "changed_patch_identical_sig": 22,
+            "patch_identical": 200
+          },
+          "residual_total": 0,
+          "shift": 2,
+          "static_count": 240,
+          "stream_totals": {
+            "attribute_higher": {
+              "exists_minus_static": 0,
+              "expected": 30,
+              "gone": 15,
+              "static": 8,
+              "track": 7
+            },
+            "content": {
+              "exists_minus_static": 3,
+              "expected": 100,
+              "gone": 45,
+              "static": 13,
+              "track": 39
+            },
+            "sheet": {
+              "exists_minus_static": 0,
+              "expected": 277,
+              "gone": 51,
+              "static": 219,
+              "track": 7
+            },
+            "unregistered": {
+              "exists_minus_static": 0,
+              "expected": 0,
+              "gone": 0,
+              "static": 0,
+              "track": 0
+            }
+          },
+          "stride": {
+            "site_pairs": 167,
+            "x": {
+              "distinct": 22,
+              "max": 186.0,
+              "min": 6.0,
+              "spacing_hist": {
+                "1": 4,
+                "5": 2,
+                "6": 2,
+                "11": 2,
+                "12": 11
+              }
+            },
+            "y": {
+              "distinct": 20,
+              "max": 186.0,
+              "min": 6.0,
+              "spacing_hist": {
+                "1": 2,
+                "2": 1,
+                "4": 1,
+                "8": 1,
+                "9": 1,
+                "11": 1,
+                "12": 12
+              }
+            }
+          }
+        },
+        {
+          "equivariance_all_sites": {
+            "median": 0.0,
+            "n": 256,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "expected": 407,
+          "flat_static_by_lens": {
+            "Boundary": 41,
+            "Color": 1,
+            "Contour": 2,
+            "Corner": 1,
+            "CurveComplex": 1,
+            "Junction": 2,
+            "Onset": 1,
+            "Orientation": 31,
+            "Polarity": 1,
+            "Position": 87,
+            "Texture": 8
+          },
+          "lens": [
+            {
+              "exists_minus_static": 0,
+              "expected": 102,
+              "gone": 1,
+              "lens": "Position",
+              "residual": 0,
+              "static": 100,
+              "stream": "sheet",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 87,
+              "gone": 29,
+              "lens": "Boundary",
+              "residual": 0,
+              "static": 53,
+              "stream": "sheet",
+              "track": 5
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 57,
+              "gone": 15,
+              "lens": "Orientation",
+              "residual": 0,
+              "static": 42,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 0,
+              "lens": "ContourFragment",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 22
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 9,
+              "lens": "Texture",
+              "residual": 0,
+              "static": 12,
+              "stream": "sheet",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 1,
+              "expected": 20,
+              "gone": 5,
+              "lens": "BorderOwnership",
+              "residual": 0,
+              "static": 2,
+              "stream": "attribute_higher",
+              "track": 12
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 18,
+              "gone": 2,
+              "lens": "EndStopped",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 16
+            },
+            {
+              "exists_minus_static": 4,
+              "expected": 16,
+              "gone": 6,
+              "lens": "CONTOUR_PEAK",
+              "residual": 0,
+              "static": 1,
+              "stream": "content",
+              "track": 5
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 12,
+              "gone": 8,
+              "lens": "Contour",
+              "residual": 0,
+              "static": 4,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 10,
+              "gone": 7,
+              "lens": "CurveComplex",
+              "residual": 0,
+              "static": 3,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 8,
+              "gone": 8,
+              "lens": "TextureBoundary",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 6,
+              "gone": 5,
+              "lens": "Corner",
+              "residual": 0,
+              "static": 1,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 0,
+              "lens": "Color",
+              "residual": 0,
+              "static": 3,
+              "stream": "sheet",
+              "track": 2
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 3,
+              "lens": "Junction",
+              "residual": 0,
+              "static": 2,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 4,
+              "lens": "PEAK_CHAIN",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 4,
+              "lens": "RegionShape",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 3,
+              "lens": "T",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 2,
+              "lens": "Polarity",
+              "residual": 0,
+              "static": 1,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 2,
+              "gone": 2,
+              "lens": "Surface",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 1,
+              "gone": 0,
+              "lens": "Onset",
+              "residual": 0,
+              "static": 1,
+              "stream": "sheet",
+              "track": 0
+            }
+          ],
+          "occupancy": {
+            "emit_sites_base": 233,
+            "emit_sites_shift": 227,
+            "jaccard_emit": 0.5384615384615384,
+            "sheet_emit_sites_base": 183,
+            "sheet_emit_sites_shift": 179,
+            "sheet_jaccard_emit": 0.748792270531401,
+            "total_sites": 256
+          },
+          "patch_split": {
+            "changed_both": 11,
+            "changed_patch_identical_sig": 15,
+            "patch_identical": 199
+          },
+          "residual_total": 0,
+          "shift": 3,
+          "static_count": 225,
+          "stream_totals": {
+            "attribute_higher": {
+              "exists_minus_static": 1,
+              "expected": 30,
+              "gone": 15,
+              "static": 2,
+              "track": 12
+            },
+            "content": {
+              "exists_minus_static": 4,
+              "expected": 100,
+              "gone": 42,
+              "static": 11,
+              "track": 43
+            },
+            "sheet": {
+              "exists_minus_static": 0,
+              "expected": 277,
+              "gone": 56,
+              "static": 212,
+              "track": 9
+            },
+            "unregistered": {
+              "exists_minus_static": 0,
+              "expected": 0,
+              "gone": 0,
+              "static": 0,
+              "track": 0
+            }
+          },
+          "stride": {
+            "site_pairs": 157,
+            "x": {
+              "distinct": 18,
+              "max": 186.0,
+              "min": 6.0,
+              "spacing_hist": {
+                "1": 1,
+                "5": 1,
+                "6": 1,
+                "12": 14
+              }
+            },
+            "y": {
+              "distinct": 18,
+              "max": 186.0,
+              "min": 6.0,
+              "spacing_hist": {
+                "1": 1,
+                "2": 1,
+                "9": 1,
+                "12": 14
+              }
+            }
+          }
+        },
+        {
+          "equivariance_all_sites": {
+            "median": 0.0,
+            "n": 256,
+            "p10": 0.0,
+            "p90": 0.06597068861674363
+          },
+          "expected": 407,
+          "flat_static_by_lens": {
+            "Boundary": 35,
+            "Color": 1,
+            "Contour": 2,
+            "Junction": 1,
+            "Onset": 1,
+            "Orientation": 18,
+            "Polarity": 1,
+            "Position": 79,
+            "Texture": 7
+          },
+          "lens": [
+            {
+              "exists_minus_static": 4,
+              "expected": 102,
+              "gone": 5,
+              "lens": "Position",
+              "residual": 0,
+              "static": 93,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 19,
+              "expected": 87,
+              "gone": 19,
+              "lens": "Boundary",
+              "residual": 0,
+              "static": 44,
+              "stream": "sheet",
+              "track": 5
+            },
+            {
+              "exists_minus_static": 26,
+              "expected": 57,
+              "gone": 5,
+              "lens": "Orientation",
+              "residual": 0,
+              "static": 26,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 0,
+              "lens": "ContourFragment",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 22
+            },
+            {
+              "exists_minus_static": 4,
+              "expected": 22,
+              "gone": 7,
+              "lens": "Texture",
+              "residual": 0,
+              "static": 10,
+              "stream": "sheet",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 2,
+              "expected": 20,
+              "gone": 6,
+              "lens": "BorderOwnership",
+              "residual": 0,
+              "static": 2,
+              "stream": "attribute_higher",
+              "track": 10
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 18,
+              "gone": 3,
+              "lens": "EndStopped",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 15
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 16,
+              "gone": 5,
+              "lens": "CONTOUR_PEAK",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 11
+            },
+            {
+              "exists_minus_static": 1,
+              "expected": 12,
+              "gone": 7,
+              "lens": "Contour",
+              "residual": 0,
+              "static": 4,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 10,
+              "gone": 9,
+              "lens": "CurveComplex",
+              "residual": 0,
+              "static": 1,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 8,
+              "gone": 8,
+              "lens": "TextureBoundary",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 1,
+              "expected": 6,
+              "gone": 3,
+              "lens": "Corner",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 2
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 1,
+              "lens": "Color",
+              "residual": 0,
+              "static": 3,
+              "stream": "sheet",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 1,
+              "expected": 5,
+              "gone": 3,
+              "lens": "Junction",
+              "residual": 0,
+              "static": 1,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 4,
+              "lens": "PEAK_CHAIN",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 4,
+              "lens": "RegionShape",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 3,
+              "lens": "T",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 2,
+              "lens": "Polarity",
+              "residual": 0,
+              "static": 1,
+              "stream": "sheet",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 2,
+              "gone": 2,
+              "lens": "Surface",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 1,
+              "gone": 0,
+              "lens": "Onset",
+              "residual": 0,
+              "static": 1,
+              "stream": "sheet",
+              "track": 0
+            }
+          ],
+          "occupancy": {
+            "emit_sites_base": 233,
+            "emit_sites_shift": 231,
+            "jaccard_emit": 0.5570469798657718,
+            "sheet_emit_sites_base": 183,
+            "sheet_emit_sites_shift": 186,
+            "sheet_jaccard_emit": 0.7405660377358491,
+            "total_sites": 256
+          },
+          "patch_split": {
+            "changed_both": 15,
+            "changed_patch_identical_sig": 22,
+            "patch_identical": 149
+          },
+          "residual_total": 0,
+          "shift": 6,
+          "static_count": 186,
+          "stream_totals": {
+            "attribute_higher": {
+              "exists_minus_static": 2,
+              "expected": 30,
+              "gone": 16,
+              "static": 2,
+              "track": 10
+            },
+            "content": {
+              "exists_minus_static": 3,
+              "expected": 100,
+              "gone": 41,
+              "static": 6,
+              "track": 50
+            },
+            "sheet": {
+              "exists_minus_static": 53,
+              "expected": 277,
+              "gone": 39,
+              "static": 178,
+              "track": 7
+            },
+            "unregistered": {
+              "exists_minus_static": 0,
+              "expected": 0,
+              "gone": 0,
+              "static": 0,
+              "track": 0
+            }
+          },
+          "stride": {
+            "site_pairs": 141,
+            "x": {
+              "distinct": 16,
+              "max": 174.0,
+              "min": 6.0,
+              "spacing_hist": {
+                "1": 1,
+                "11": 1,
+                "12": 13
+              }
+            },
+            "y": {
+              "distinct": 18,
+              "max": 186.0,
+              "min": 6.0,
+              "spacing_hist": {
+                "1": 1,
+                "2": 1,
+                "10": 1,
+                "11": 1,
+                "12": 13
+              }
+            }
+          }
+        },
+        {
+          "equivariance_all_sites": {
+            "median": 0.0,
+            "n": 208,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "expected": 407,
+          "flat_static_by_lens": {},
+          "lens": [
+            {
+              "exists_minus_static": 4,
+              "expected": 102,
+              "gone": 97,
+              "lens": "Position",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 2,
+              "expected": 87,
+              "gone": 42,
+              "lens": "Boundary",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 43
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 57,
+              "gone": 19,
+              "lens": "Orientation",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 38
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 0,
+              "lens": "ContourFragment",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 22
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 6,
+              "lens": "Texture",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 16
+            },
+            {
+              "exists_minus_static": 3,
+              "expected": 20,
+              "gone": 8,
+              "lens": "BorderOwnership",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 9
+            },
+            {
+              "exists_minus_static": 1,
+              "expected": 18,
+              "gone": 4,
+              "lens": "EndStopped",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 13
+            },
+            {
+              "exists_minus_static": 3,
+              "expected": 16,
+              "gone": 6,
+              "lens": "CONTOUR_PEAK",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 7
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 12,
+              "gone": 8,
+              "lens": "Contour",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 4
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 10,
+              "gone": 7,
+              "lens": "CurveComplex",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 3
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 8,
+              "gone": 8,
+              "lens": "TextureBoundary",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 6,
+              "gone": 4,
+              "lens": "Corner",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 2
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 4,
+              "lens": "Color",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 3,
+              "lens": "Junction",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 2
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 4,
+              "lens": "PEAK_CHAIN",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 4,
+              "lens": "RegionShape",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 3,
+              "lens": "T",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 2,
+              "lens": "Polarity",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 2,
+              "gone": 2,
+              "lens": "Surface",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 1,
+              "gone": 1,
+              "lens": "Onset",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 0
+            }
+          ],
+          "occupancy": {
+            "emit_sites_base": 233,
+            "emit_sites_shift": 220,
+            "jaccard_emit": 0.5,
+            "sheet_emit_sites_base": 183,
+            "sheet_emit_sites_shift": 177,
+            "sheet_jaccard_emit": 0.6513761467889908,
+            "total_sites": 256
+          },
+          "patch_split": {},
+          "residual_total": 0,
+          "shift": 12,
+          "static_count": 0,
+          "stream_totals": {
+            "attribute_higher": {
+              "exists_minus_static": 3,
+              "expected": 30,
+              "gone": 18,
+              "static": 0,
+              "track": 9
+            },
+            "content": {
+              "exists_minus_static": 4,
+              "expected": 100,
+              "gone": 43,
+              "static": 0,
+              "track": 53
+            },
+            "sheet": {
+              "exists_minus_static": 6,
+              "expected": 277,
+              "gone": 171,
+              "static": 0,
+              "track": 100
+            },
+            "unregistered": {
+              "exists_minus_static": 0,
+              "expected": 0,
+              "gone": 0,
+              "static": 0,
+              "track": 0
+            }
+          },
+          "stride": {
+            "site_pairs": 0,
+            "x": {
+              "distinct": 0,
+              "max": null,
+              "min": null,
+              "spacing_hist": {}
+            },
+            "y": {
+              "distinct": 0,
+              "max": null,
+              "min": null,
+              "spacing_hist": {}
+            }
+          }
+        },
+        {
+          "equivariance_all_sites": {
+            "median": 0.0,
+            "n": 192,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "expected": 407,
+          "flat_static_by_lens": {},
+          "lens": [
+            {
+              "exists_minus_static": 4,
+              "expected": 102,
+              "gone": 43,
+              "lens": "Position",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 55
+            },
+            {
+              "exists_minus_static": 5,
+              "expected": 87,
+              "gone": 52,
+              "lens": "Boundary",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 30
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 57,
+              "gone": 24,
+              "lens": "Orientation",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 33
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 0,
+              "lens": "ContourFragment",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 22
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 22,
+              "gone": 8,
+              "lens": "Texture",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 14
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 20,
+              "gone": 12,
+              "lens": "BorderOwnership",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 8
+            },
+            {
+              "exists_minus_static": 1,
+              "expected": 18,
+              "gone": 7,
+              "lens": "EndStopped",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 10
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 16,
+              "gone": 5,
+              "lens": "CONTOUR_PEAK",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 11
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 12,
+              "gone": 11,
+              "lens": "Contour",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 10,
+              "gone": 9,
+              "lens": "CurveComplex",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 8,
+              "gone": 8,
+              "lens": "TextureBoundary",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 6,
+              "gone": 4,
+              "lens": "Corner",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 2
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 1,
+              "lens": "Color",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 4
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 5,
+              "gone": 4,
+              "lens": "Junction",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 4,
+              "lens": "PEAK_CHAIN",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 4,
+              "gone": 4,
+              "lens": "RegionShape",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 2,
+              "lens": "T",
+              "residual": 0,
+              "static": 0,
+              "stream": "content",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 3,
+              "gone": 2,
+              "lens": "Polarity",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 1
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 2,
+              "gone": 2,
+              "lens": "Surface",
+              "residual": 0,
+              "static": 0,
+              "stream": "attribute_higher",
+              "track": 0
+            },
+            {
+              "exists_minus_static": 0,
+              "expected": 1,
+              "gone": 1,
+              "lens": "Onset",
+              "residual": 0,
+              "static": 0,
+              "stream": "sheet",
+              "track": 0
+            }
+          ],
+          "occupancy": {
+            "emit_sites_base": 233,
+            "emit_sites_shift": 228,
+            "jaccard_emit": 0.440625,
+            "sheet_emit_sites_base": 183,
+            "sheet_emit_sites_shift": 178,
+            "sheet_jaccard_emit": 0.6409090909090909,
+            "total_sites": 256
+          },
+          "patch_split": {},
+          "residual_total": 0,
+          "shift": 24,
+          "static_count": 0,
+          "stream_totals": {
+            "attribute_higher": {
+              "exists_minus_static": 0,
+              "expected": 30,
+              "gone": 22,
+              "static": 0,
+              "track": 8
+            },
+            "content": {
+              "exists_minus_static": 1,
+              "expected": 100,
+              "gone": 50,
+              "static": 0,
+              "track": 49
+            },
+            "sheet": {
+              "exists_minus_static": 9,
+              "expected": 277,
+              "gone": 131,
+              "static": 0,
+              "track": 137
+            },
+            "unregistered": {
+              "exists_minus_static": 0,
+              "expected": 0,
+              "gone": 0,
+              "static": 0,
+              "track": 0
+            }
+          },
+          "stride": {
+            "site_pairs": 0,
+            "x": {
+              "distinct": 0,
+              "max": null,
+              "min": null,
+              "spacing_hist": {}
+            },
+            "y": {
+              "distinct": 0,
+              "max": null,
+              "min": null,
+              "spacing_hist": {}
+            }
+          }
+        }
+      ],
+      "scene": "single_box",
+      "split": "CAL"
+    }
+  ],
+  "shifts_eth80": [
+    0,
+    2,
+    3,
+    8,
+    16,
+    32
+  ],
+  "shifts_renderer": [
+    0,
+    2,
+    3,
+    6,
+    12,
+    24
+  ],
+  "streams": {
+    "attribute_higher": [
+      "BorderOwnership",
+      "Surface",
+      "TextureBoundary"
+    ],
+    "content": [
+      "CONTOUR_PEAK",
+      "Contour",
+      "ContourFragment",
+      "Corner",
+      "CurveComplex",
+      "EndStopped",
+      "IllusoryContour",
+      "Junction",
+      "PEAK_CHAIN",
+      "RegionShape",
+      "T",
+      "Y"
+    ],
+    "sheet": [
+      "Boundary",
+      "Color",
+      "EffectPresent",
+      "Motion",
+      "Onset",
+      "Orientation",
+      "OrientationPol",
+      "Polarity",
+      "Position",
+      "Size",
+      "Texture"
+    ]
+  }
+}

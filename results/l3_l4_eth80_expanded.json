@@ -1,0 +1,72 @@
+{
+  "corpus": "ETH-80 (PRIMARY; 40 scenes = 8 classes x 5 instances)",
+  "curve_containment_mixed_truth_map": {
+    "n_2px": 102,
+    "n_3px": 77,
+    "preservation_2px": 0.9313725490196079,
+    "preservation_3px": 0.987012987012987
+  },
+  "eligibility": {
+    "COCIRCULAR": {
+      "endpoints": "SHEET_DERIVED_FRAME <-> SHEET_DERIVED_FRAME",
+      "status": "ABSENT under content-only truth map",
+      "truth_map": "content-only truth map (ineligible: 0/0)"
+    },
+    "CONTOUR_CONTINUITY": {
+      "denominator": "surviving content-content edges of type CONTOUR_CONTINUITY",
+      "endpoints": "CONTENT_TOKENS <-> CONTENT_TOKENS",
+      "truth_map": "refined pattern_node_position_map"
+    },
+    "CURVE_CONTAINMENT": {
+      "denominator": "surviving mixed/sheet-content edges of type CURVE_CONTAINMENT",
+      "endpoints": "SHEET_DERIVED_FRAME <-> CONTENT_TOKENS",
+      "truth_map": "mixed truth map (content refined + sheet anchor_positions)"
+    },
+    "JUNCTION_CONTOUR": {
+      "endpoints": "SHEET_DERIVED_FRAME <-> CONTENT_TOKENS",
+      "status": "ABSENT under content-only truth map",
+      "truth_map": "content-only truth map (ineligible: 0/0)"
+    },
+    "ORIENTATION_JUNCTION": {
+      "denominator": "surviving content-content edges of type ORIENTATION_JUNCTION",
+      "endpoints": "CONTENT_TOKENS <-> CONTENT_TOKENS",
+      "truth_map": "refined pattern_node_position_map"
+    },
+    "PARALLEL": {
+      "endpoints": "SHEET_DERIVED_FRAME <-> SHEET_DERIVED_FRAME",
+      "status": "ABSENT under content-only truth map",
+      "truth_map": "content-only truth map (ineligible: 0/0)"
+    }
+  },
+  "kept_families": {
+    "CONTOUR_CONTINUITY": {
+      "n_2px": 153,
+      "n_3px": 142,
+      "n_null": 153,
+      "preservation_2px": 0.9150326797385621,
+      "preservation_3px": 0.9154929577464789,
+      "selectivity_branching": {
+        "mean": 0.9673202614379085,
+        "median": 1.0,
+        "p95": 1.0
+      },
+      "shifted_null_preservation": 0.0,
+      "status": "KEPT"
+    },
+    "ORIENTATION_JUNCTION": {
+      "n_2px": 1035,
+      "n_3px": 977,
+      "n_null": 1035,
+      "preservation_2px": 0.8289855072463768,
+      "preservation_3px": 0.7932446264073695,
+      "selectivity_branching": {
+        "mean": 3.5391304347826087,
+        "median": 3.0,
+        "p95": 9.0
+      },
+      "shifted_null_preservation": 0.05603864734299517,
+      "status": "KEPT"
+    }
+  },
+  "protocol": "Expanded ETH-80 PRIMARY L3+L4 evaluation (40 scenes, 8 classes)"
+}

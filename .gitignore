@@ -1,0 +1,15 @@
+# Local environment / large corpora (kept out of git, re-created by the
+# harness utilities in Topology/).
+.venv/
+.cache/
+__pycache__/
+*.pyc
+
+# 328 MB ETH-80 image tree lives in .cache/ETH-80-raw and is exposed through
+# this symlink; the symlink itself is not tracked.
+data/ETH-80-master/
+
+# Generated graph caches / binary results (text results are kept).
+Topology/cache/
+*.pkl
+*.npz

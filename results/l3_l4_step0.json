@@ -1,0 +1,78 @@
+{
+  "l1a_0e": {
+    "auc_l1a_off": 0.5,
+    "auc_l1a_on": 0.9730135540946352,
+    "coverage": 0.0
+  },
+  "matrix_counts_per_frame": {
+    "AMODAL_LINK|sheet-sheet": 6,
+    "COCIRCULAR|sheet-sheet": 10,
+    "COLOR_OPPONENT_BORDER|sheet-sheet": 27,
+    "CONCENTRICITY|sheet-sheet": 4,
+    "CONTOUR_CONTINUITY|sheet-sheet": 26,
+    "CONTOUR_ORIENTATION|content-content": 10,
+    "CONTOUR_ORIENTATION|sheet-sheet": 36,
+    "CO_LOCATED|sheet-sheet": 181,
+    "CURVATURE_SIGN_CONTINUITY|sheet-sheet": 21,
+    "CURVE_CONTAINMENT|sheet-sheet": 13,
+    "JUNCTION_CONTOUR|mixed": 48,
+    "JUNCTION_ORIENTATION|mixed": 23,
+    "LINE_TERMINATION|mixed": 3,
+    "ORIENTATION_BEND|sheet-sheet": 38,
+    "ORIENTATION_CONTINUITY|sheet-sheet": 33,
+    "ORIENTATION_JUNCTION|sheet-sheet": 31,
+    "PARALLEL|sheet-sheet": 13,
+    "RADIALITY|sheet-sheet": 12,
+    "REGION_CONTENT|sheet-sheet": 87,
+    "SPIRALITY|sheet-sheet": 5,
+    "SYMMETRY|sheet-sheet": 12
+  },
+  "positions_0d": {
+    "content_tokens_count": 89,
+    "contract_asserted": true,
+    "sheet_derived_count": 298
+  },
+  "protocol": "L3+L4 STEP 0 diagnosis",
+  "selection": {
+    "EDGE_BUDGET_PER_FRAME": 512,
+    "FAMILY_SEED_EDGES": 2,
+    "l5_hosts_after": 0,
+    "l5_hosts_before": 0,
+    "l5_on_host_after": 0,
+    "l5_on_host_before": 0
+  },
+  "units": {
+    "CONTOUR_SIGMA_DIST": {
+      "unit": "pixels (Gaussian distance scale)",
+      "value": 3.5
+    },
+    "CONTOUR_SIGMA_THETA": {
+      "unit": "radians (orientation difference scale)",
+      "value": 0.45
+    },
+    "EDGE_BUDGET_PER_FRAME": {
+      "unit": "edges per frame",
+      "value": 512
+    },
+    "FAMILY_SEED_EDGES": {
+      "unit": "seed edges per family",
+      "value": 2
+    },
+    "JUNCTION_MAX_GAP": {
+      "unit": "pixels (Euclidean gap in detect_junctions)",
+      "value": 3.0
+    },
+    "JUNCTION_T_PERP_TOL": {
+      "unit": "dimensionless (perpendicularity tolerance)",
+      "value": 0.15
+    },
+    "T_JUNCTION_MAX_GAP": {
+      "unit": "pixels (Euclidean endpoint-to-stem distance)",
+      "value": 6.0
+    },
+    "T_JUNCTION_MAX_PERP_DEV": {
+      "unit": "dimensionless (normalized perpendicular deviation)",
+      "value": 0.5
+    }
+  }
+}

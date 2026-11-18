@@ -1,0 +1,143 @@
+{
+  "FE_L3_SPINE_default": false,
+  "FE_L4_JUNCTIONS_default": false,
+  "after": {
+    "applied_once": [
+      "l3_spine",
+      "l4_junctions"
+    ],
+    "edges": 649,
+    "family_counts": {
+      "AMODAL_LINK": 6,
+      "COCIRCULAR": 10,
+      "COLOR_OPPONENT_BORDER": 27,
+      "CONCENTRICITY": 4,
+      "CONTOUR_CONTINUITY": 31,
+      "CONTOUR_ORIENTATION": 46,
+      "CO_LOCATED": 181,
+      "CURVATURE_SIGN_CONTINUITY": 21,
+      "CURVE_CONTAINMENT": 13,
+      "JUNCTION_CONTOUR": 48,
+      "JUNCTION_ORIENTATION": 23,
+      "LINE_TERMINATION": 3,
+      "ORIENTATION_BEND": 38,
+      "ORIENTATION_CONTINUITY": 33,
+      "ORIENTATION_JUNCTION": 36,
+      "PARALLEL": 13,
+      "RADIALITY": 12,
+      "REGION_CONTENT": 87,
+      "SPIRALITY": 5,
+      "SYMMETRY": 12
+    },
+    "l3_spine": {
+      "candidate_pairs_evaluated": 2070,
+      "canonical_order": true,
+      "content_tokens_seen": 46,
+      "edges_emitted": 5,
+      "flag": "FE_L3_SPINE",
+      "mean_degree": 0.21739130434782608,
+      "reach_px": 24.0,
+      "rejected_by_mutual_best": 36,
+      "rejected_by_reach": 1691,
+      "status": "PRESENT"
+    },
+    "l4_junctions": {
+      "canonical_order": true,
+      "content_tokens_seen": 46,
+      "decision_log_count": 24,
+      "edges_emitted": 24,
+      "flag": "FE_L4_JUNCTIONS",
+      "max_gap_px": 5.0,
+      "status": "PRESENT"
+    },
+    "mean_degree": 3.354005167958656,
+    "nodes": 387
+  },
+  "after_shift2": {
+    "applied_once": [
+      "l3_spine",
+      "l4_junctions"
+    ],
+    "edges": 663,
+    "family_counts": {
+      "AMODAL_LINK": 2,
+      "COCIRCULAR": 2,
+      "COLOR_OPPONENT_BORDER": 42,
+      "CONTACT": 3,
+      "CONTOUR_CONTINUITY": 26,
+      "CONTOUR_ORIENTATION": 59,
+      "CO_LOCATED": 195,
+      "CURVATURE_SIGN_CONTINUITY": 8,
+      "CURVE_CONTAINMENT": 13,
+      "JUNCTION_CONTOUR": 38,
+      "JUNCTION_ORIENTATION": 21,
+      "LINE_TERMINATION": 4,
+      "ORIENTATION_BEND": 14,
+      "ORIENTATION_CONTINUITY": 53,
+      "ORIENTATION_JUNCTION": 55,
+      "PARALLEL": 13,
+      "RADIALITY": 3,
+      "REGION_CONTENT": 94,
+      "SPIRALITY": 4,
+      "SYMMETRY": 8,
+      "TOPOLOGY": 6
+    },
+    "l3_spine": {
+      "candidate_pairs_evaluated": 2162,
+      "canonical_order": true,
+      "content_tokens_seen": 47,
+      "edges_emitted": 8,
+      "flag": "FE_L3_SPINE",
+      "mean_degree": 0.3404255319148936,
+      "reach_px": 24.0,
+      "rejected_by_mutual_best": 31,
+      "rejected_by_reach": 1779,
+      "status": "PRESENT"
+    },
+    "l4_junctions": {
+      "canonical_order": true,
+      "content_tokens_seen": 47,
+      "decision_log_count": 24,
+      "edges_emitted": 24,
+      "flag": "FE_L4_JUNCTIONS",
+      "max_gap_px": 5.0,
+      "status": "PRESENT"
+    },
+    "mean_degree": 3.2903225806451615,
+    "nodes": 403
+  },
+  "apply_once_idempotent": true,
+  "before": {
+    "applied_once": [],
+    "edges": 639,
+    "family_counts": {
+      "AMODAL_LINK": 6,
+      "COCIRCULAR": 10,
+      "COLOR_OPPONENT_BORDER": 27,
+      "CONCENTRICITY": 4,
+      "CONTOUR_CONTINUITY": 26,
+      "CONTOUR_ORIENTATION": 46,
+      "CO_LOCATED": 181,
+      "CURVATURE_SIGN_CONTINUITY": 21,
+      "CURVE_CONTAINMENT": 13,
+      "JUNCTION_CONTOUR": 48,
+      "JUNCTION_ORIENTATION": 23,
+      "LINE_TERMINATION": 3,
+      "ORIENTATION_BEND": 38,
+      "ORIENTATION_CONTINUITY": 33,
+      "ORIENTATION_JUNCTION": 31,
+      "PARALLEL": 13,
+      "RADIALITY": 12,
+      "REGION_CONTENT": 87,
+      "SPIRALITY": 5,
+      "SYMMETRY": 12
+    },
+    "l3_spine": {},
+    "l4_junctions": {},
+    "mean_degree": 3.302325581395349,
+    "nodes": 387
+  },
+  "corpus": "synthetic 64x64 square (LOCAL SMOKE; NOT ETH-80 or renderer-recon-v1)",
+  "no_crash": true,
+  "protocol": "L3+L4 smoke pins (before vs after, 0px and +2px)"
+}

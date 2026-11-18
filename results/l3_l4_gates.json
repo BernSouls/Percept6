@@ -1,0 +1,26 @@
+{
+  "corpus": "local 64x64 multi-class smoke (ETH-80-master symlink target absent in sandbox)",
+  "family_gates": {
+    "CONTOUR_CONTINUITY": {
+      "gate_pass": false,
+      "preservation_rate": 0.5625,
+      "preserved": 9,
+      "same_vs_diff_auc": 1.0,
+      "status": "DROPPED",
+      "total_surviving_endpoints": 16
+    },
+    "ORIENTATION_JUNCTION": {
+      "gate_pass": false,
+      "preservation_rate": 0.7727272727272727,
+      "preserved": 34,
+      "same_vs_diff_auc": 0.625,
+      "status": "DROPPED",
+      "total_surviving_endpoints": 44
+    }
+  },
+  "protocol": "L3+L4 family gates + STEP 0b loss classification",
+  "step0b_loss_classification": {
+    "not_emitted": 17,
+    "preserved": 43
+  }
+}

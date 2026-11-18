@@ -1331,6 +1331,11 @@ class Binder:
         assert self._step_begin_called, (
             "emit_pending_edges before note_step_begin"
         )
+        # [FRONT-END REBUILD] ONE site reached by both the harness tier
+        # transcription and Pipeline.step. Each mechanism asserts once.
+        if level == "v4":
+            from perception.front_end_mechanisms import apply_once
+            apply_once(self)
         if not self._higher_dets_this_step:
             return
         # Sorted here as well as at registration: the level partition means

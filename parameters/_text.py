@@ -2172,6 +2172,12 @@ MATCH_ALIGN_UNMAPPED_CREDIT: float = 0.0
 # [TUNE / LENIENT EDGES] Down-weight a node with no incident relation instead
 # of removing it.  1.0 = old; 0.5 = the tuning arm.
 MATCH_ISOLATED_NODE_WEIGHT: float = 1.0
+# [B8] Floor for MATCH_EXCLUDE_ISOLATED_FROM_CORRESPONDENCE.  The flag is a
+# DOWN-WEIGHT, not a deletion: a zero weight makes an edgeless graph pair
+# score identically (0) for every class and argmax falls to the alphabetical
+# tie-break.  The floor keeps the node term measurable; it is not a tuning
+# knob, it is the smallest weight that still measures something.
+MATCH_EXCLUDE_ISOLATED_FLOOR: float = 0.5
 # Weight of the relational (systematicity) modulation of the alignment.
 MATCH_SYSTEMATICITY_WEIGHT = 0.5
 # Bounded fixed-point rounds for the global alignment refinement.
@@ -3827,3 +3833,11 @@ ASSEMBLY_OVERLAP_MIN: float = 0.25
 # DECLARED CHEAT: every number produced while a label member is present is
 # tagged "label-assisted".
 ASSEMBLY_LABEL_ASSIST: bool = True
+
+#: [L3] Content-token spine (mutual-best successor/predecessor + chain families).
+FE_L3_SPINE: bool = False
+#: [L4] Content-token junctions (vertices and occlusion T-points).
+FE_L4_JUNCTIONS: bool = False
+
+#: [L6] Weisfeiler-Lehman structural address (k=1,2,3) on kept relation families.
+FE_L6_ADDRESS: bool = False
