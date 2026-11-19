@@ -1,0 +1,46 @@
+{
+  "protocol": "PART 0C / PART 1 emission-site map: each hard cut-off and its soft replacement",
+  "ruler_artifact_sha256": "c0aa914ba511dc20350d4148dcf58f014d901c4da231a1c7819818322a06dfae",
+  "binder_fresh_per_image": true,
+  "choke_point": {
+    "site": "Binder._channel_process (orchestration/binder.py)",
+    "hard_cutoffs": [
+      {"name": "top-k cap", "value": "MAX_CANDIDATES_PER_CHANNEL = 2000", "rule": "heapq.nlargest by (signal, -key_bytes); rest dropped", "soft_replacement": "unchanged (cap stays; it bounds the candidate set, not a pass/fail)"},
+      {"name": "threshold", "value": "theta_eff + DELTA_CHANNEL_HYST*(1-2*prev)", "rule": "norm_sig >= threshold -> pass else drop (HARD CLIFF)", "soft_replacement": "FE_SOFT_CHANNEL_GATE: graded weight via _soft_gate_weight over band [threshold-band, threshold+band]; just-below keeps noise_floor; weight stored in EdgeParams.confidence and edge signal"},
+      {"name": "signal normalization", "value": "norm_sig = signal / max_sig", "rule": "divide by the MAXIMUM candidate signal", "soft_replacement": "divide by q0.95 percentile (FE_SOFT_GATE_PERCENTILE) so one outlier does not compress the rest"}
+    ],
+    "soft_params": {
+      "FE_SOFT_CHANNEL_GATE": "bool (default False)",
+      "FE_SOFT_GATE_BAND": "0.10 (DEV-derived)",
+      "FE_SOFT_GATE_NOISE_FLOOR": "0.05 (DEV-derived)",
+      "FE_SOFT_GATE_PERCENTILE": "0.95",
+      "FE_SOFT_GATE_CALIBRATE_FACTOR": "0.785 (DEV: 4996 old edges vs 6365 weight)"
+    }
+  },
+  "l3_spine": {
+    "site": "perception/front_end_mechanisms.py _l3_spine (+ _l3_spine_soft)",
+    "hard_cutoffs": [
+      {"name": "reach", "value": "base_stride * 1.5 (24px @256)", "rule": "dist <= reach -> candidate else rejected", "soft_replacement": "reach graded over [0, reach], small weight up to reach*(1+band)"},
+      {"name": "mutual-best", "value": "nearest[v] == u", "rule": "hard; non-mutual dropped", "soft_replacement": "graded mutual = d(v,nearest[v]) / d(v,u); near-mutual keeps small weight"}
+    ]
+  },
+  "l4_junctions": {
+    "site": "perception/front_end_mechanisms.py _l4_junctions (+ _l4_junctions_soft)",
+    "hard_cutoffs": [
+      {"name": "corner turn", "value": "L4_CORNER_TURN_DEG = 45.0", "rule": "polyline turn > threshold -> corner", "soft_replacement": "graded turn_strength over a band below the threshold (_graded_ratio)"},
+      {"name": "occlusion gap", "value": "JUNCTION_MAX_GAP = 3.0 px", "rule": "dist <= gap -> T-point", "soft_replacement": "graded gap strength; small weight beyond"},
+      {"name": "dedup radius", "value": "L4_CORNER_DEDUP_PX = 8.0", "rule": "close corners merged, keep highest-turn, DELETE others", "soft_replacement": "merge keep-larger-weight: cluster by position, keep highest-WEIGHT site (never delete)"},
+      {"name": "max_gap", "value": "q0.75 of content NN gaps", "rule": "partner lookup reach", "soft_replacement": "extended by (1+band) for just-below reach"}
+    ],
+    "part1b_corner_localisation": "corner position localised at the line-intersection of the two straight arms through neighbouring peaks (_corner_localise); falls back to the peak when arms are degenerate/far"
+  },
+  "l6_address": {
+    "site": "perception/front_end_mechanisms.py _l6_address / _l6_vector_address",
+    "hard_cutoffs": [],
+    "note": "no edge emission; computes addresses. Vector address (PART 2) beside the WL hash; hash stays canonical ID (NAME), vector is the graded MATCH replacement."
+  },
+  "lens_channels": {
+    "site": "Binder._run_* methods (orchestration/binder.py ~40 channels)",
+    "note": "each funnels through _process_channel -> _channel_process; the single soft gate covers all of them. No per-channel hard cut-offs beyond the shared threshold/cap."
+  }
+}

@@ -3838,6 +3838,65 @@ ASSEMBLY_LABEL_ASSIST: bool = True
 FE_L3_SPINE: bool = False
 #: [L4] Content-token junctions (vertices and occlusion T-points).
 FE_L4_JUNCTIONS: bool = False
+#: [L4] Corner turn threshold (degrees) for a CONTOUR_PEAK to count as a
+#: vertex: the chain tangent must turn this far against a chain-neighbour.
+#: Pre-registered from the tracer calibration (consecutive-peak angle q0.90).
+L4_CORNER_TURN_DEG: float = 45.0
+#: [L4] Corner de-duplication radius (px): two detected corners closer than
+#: this are one vertex (a box corner often carries two nearby turning peaks).
+L4_CORNER_DEDUP_PX: float = 8.0
 
 #: [L6] Weisfeiler-Lehman structural address (k=1,2,3) on kept relation families.
 FE_L6_ADDRESS: bool = False
+
+# ---------------------------------------------------------------------------
+# [PART 1] Soft gates -- replace hard pass/fail cut-offs with graded weights.
+# Default OFF until the final check turns the winning flags ON.
+# ---------------------------------------------------------------------------
+#: [1a] Soft binder channel gate: replace the norm_sig >= threshold pass/fail
+#: with a weight in [0,1] rising smoothly across a band around the threshold.
+#: [FINAL CHECK G] turned ON by default: B (edge stability) passes (both
+#: families KEPT, preservation ~0.88, beats_null).
+FE_SOFT_CHANNEL_GATE: bool = True
+#: [1b] Soft L3/L4 gates: every hard cut (reach, mutual-best, corner turn,
+#: T-point gap, dedup radius) becomes a graded weight; dedup merges by max
+#: weight instead of deleting.
+#: [FINAL CHECK G] turned ON by default: B passes.
+FE_SOFT_L3_L4_GATE: bool = True
+#: [1c] Signal percentile used to normalize candidate signals (instead of the
+#: maximum).  Derived on DEV from signal stability; q0.95 by the stated rule.
+FE_SOFT_GATE_PERCENTILE: float = 0.95
+#: [1c] Band half-width around the threshold (in normalized-signal units).
+#: Derived on DEV as the typical change in a counterpart candidate's measured
+#: value between a scene and its +2px shift.
+FE_SOFT_GATE_BAND: float = 0.10
+#: [1c] Absolute noise floor added to every graded weight.  Derived on DEV
+#: from blank/null-frame candidate values.
+FE_SOFT_GATE_NOISE_FLOOR: float = 0.05
+#: [1a] When True, the graded weight also becomes the edge's signal weight
+#: (not only the EdgeParams.confidence slot), so weight-aware downstream
+#: paths see it.  Old graphs without weights use the stated default (1.0).
+FE_SOFT_GATE_EDGE_WEIGHT: bool = True
+#: [1c] Calibration target: total weight over DEV scenes matches the old
+#: emitted edge count (the graph does not grow).
+FE_SOFT_GATE_CALIBRATE: bool = False
+#: [1c] DEV-derived multiplier on the emitted soft weight so the total weight
+#: over DEV scenes matches the old hard-gate emitted edge count (4996 edges
+#: vs 6365 weight -> 0.785).  Derived once on DEV; applied when the soft gate
+#: is on.
+FE_SOFT_GATE_CALIBRATE_FACTOR: float = 0.785
+
+# ---------------------------------------------------------------------------
+# [PART 2] Vector structural address (replaces exact-hash MATCH with cosine).
+# ---------------------------------------------------------------------------
+#: [2] Enable the vector structural address (the old hash stays as canonical
+#: ID only).  [FINAL CHECK G] turned ON by default: A beats floor (top-1
+#: 0.605 vs floor 0.536) and E passes (class signal maintained).
+FE_VECTOR_ADDRESS: bool = True
+#: [2] Dimension of each symbol's fixed random vector.
+VECTOR_ADDRESS_DIM: int = 1024
+#: [2] Fixed self_weight on a node's own address term (stops a weak edge from
+#: being normalized up to full strength).
+VECTOR_ADDRESS_SELF_WEIGHT: float = 1.0
+#: [2] Number of WL levels kept (1..3), mirroring the existing L6 flag.
+VECTOR_ADDRESS_MAX_K: int = 3

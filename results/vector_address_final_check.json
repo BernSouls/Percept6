@@ -1,0 +1,56 @@
+{
+  "address_quality": {
+    "+2px": {
+      "mrr": 0.6547991468457046,
+      "n_no_counterpart": 0,
+      "n_pairs": 4227,
+      "top1": 0.6049207475751124,
+      "top5": 0.6865389164892358
+    },
+    "+3px": {
+      "mrr": 0.6342494981036165,
+      "n_no_counterpart": 0,
+      "n_pairs": 4149,
+      "top1": 0.5762834417932032,
+      "top5": 0.6712460833935888
+    }
+  },
+  "class_signal_old_histogram": {
+    "k1": {
+      "macro_auc": 0.7336309523809523,
+      "top1": 0.375
+    },
+    "k2": {
+      "macro_auc": 0.7311507936507937,
+      "top1": 0.3958333333333333
+    },
+    "k3": {
+      "macro_auc": 0.7306547619047619,
+      "top1": 0.375
+    }
+  },
+  "class_signal_vector": {
+    "k1": {
+      "macro_auc": 0.7291666666666666,
+      "n_heldout": 48,
+      "n_train": 72,
+      "top1": 0.3958333333333333
+    },
+    "k2": {
+      "macro_auc": 0.7286706349206349,
+      "n_heldout": 48,
+      "n_train": 72,
+      "top1": 0.375
+    },
+    "k3": {
+      "macro_auc": 0.7286706349206349,
+      "n_heldout": 48,
+      "n_train": 72,
+      "top1": 0.375
+    }
+  },
+  "corpus": "ETH-80 (24 refs + 48 dev -> 48 heldout)",
+  "floor_n": 483,
+  "floor_node_type_only_top1": 0.5362318840579711,
+  "protocol": "FINAL CHECK A+E (vector address quality + class signal)"
+}

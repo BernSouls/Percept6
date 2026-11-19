@@ -376,6 +376,7 @@ def _relational_agreement(
     *,
     checkable: bool = False,
     candidate: Optional[Tuple[int, int]] = None,
+    edge_weight_fn=None,
 ) -> float:
     """Conjunctive mapped-context preservation for pair (u, v).
 
@@ -415,6 +416,14 @@ def _relational_agreement(
     """
     unmapped_credit = float(getattr(P, "MATCH_ALIGN_UNMAPPED_CREDIT", 0.0))
     occlusion_credit = float(getattr(P, "PARTIAL_OCCLUSION_CREDIT", 0.0))
+    # [PART 4] weight-aware counting: when enabled, each matched edge's
+    # contribution is scaled by its graded weight (edge_weight_fn), and the
+    # denominator accumulates the weight instead of a unit count.  Old graphs
+    # without weights default to 1.0, so this reduces to the old behaviour.
+    use_weight = bool(getattr(P, "EDGE_MATCH_USE_CONFIDENCE", False)) and edge_weight_fn is not None
+
+    def _ew(a1, a2, et):
+        return float(edge_weight_fn(a1, a2, et)) if use_weight else 1.0
 
     anchors_a = getattr(inc_a, "anchors", None) or {}
     anchors_b = getattr(inc_b, "anchors", None) or {}
@@ -455,9 +464,9 @@ def _relational_agreement(
                 else:
                     terms.append(unmapped_credit)
                     if not checkable:
-                        denominator += 1
+                        denominator += _ew(u, w, et)
                 continue
-            denominator += 1
+            denominator += _ew(u, w, et)
             if et in UNDIRECTED_EDGE_TYPES:
                 lo, hi = (v, mw) if v < mw else (mw, v)
                 ok = (lo, hi, et) in b_und
@@ -481,7 +490,7 @@ def _relational_agreement(
                     a1, a2 = (u, w) if outward else (w, u)
                     b1, b2 = (v, mw) if outward else (mw, v)
                 if edge_similarity is None:
-                    terms.append(1.0)
+                    terms.append(_ew(a1, a2, et))
                 else:
                     got = edge_similarity(a1, a2, b1, b2, et)
                     if got is None:
@@ -489,9 +498,9 @@ def _relational_agreement(
                         # ontology, so they are NOT COMPARED -- no credit and
                         # no charge (the "score it 0" reading made an absent
                         # counterpart look like evidence AGAINST the pair).
-                        denominator -= 1
+                        denominator -= _ew(a1, a2, et)
                         continue
-                    terms.append(got)
+                    terms.append(_ew(a1, a2, et) * got)
         agree_u = (math.fsum(terms) / denominator) if denominator else 0.0
     else:
         # [A1] no relations is NO relational support, not perfect agreement.
@@ -512,13 +521,13 @@ def _relational_agreement(
                 if _t_junction_near_nodes(anchors_b.get(v), anchors_b.get(x),
                                           junc_b, index=tj_b):
                     terms.append(occlusion_credit)
-                    denominator += 1
+                    denominator += _ew(v, x, et)
                 else:
                     terms.append(unmapped_credit)
                     if not checkable:
-                        denominator += 1
+                        denominator += _ew(v, x, et)
                 continue
-            denominator += 1
+            denominator += _ew(v, x, et)
             if et in UNDIRECTED_EDGE_TYPES:
                 lo, hi = (u, ux) if u < ux else (ux, u)
                 ok = (lo, hi, et) in a_und
@@ -541,15 +550,15 @@ def _relational_agreement(
                     a1, a2 = (u, ux) if outward else (ux, u)
                     b1, b2 = (v, x) if outward else (x, v)
                 if edge_similarity is None:
-                    terms.append(1.0)
+                    terms.append(_ew(a1, a2, et))
                 else:
                     got = edge_similarity(a1, a2, b1, b2, et)
                     if got is None:
                         # [B7] INCOMPARABLE -- not compared at all (no credit,
                         # no charge); see the u side.
-                        denominator -= 1
+                        denominator -= _ew(a1, a2, et)
                         continue
-                    terms.append(got)
+                    terms.append(_ew(a1, a2, et) * got)
         agree_v = (math.fsum(terms) / denominator) if denominator else 0.0
     else:
         agree_v = 0.0

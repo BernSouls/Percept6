@@ -721,6 +721,69 @@ def _subgraph_wl_hash(
     )
     return hash_128(combined)
 
+
+def _subgraph_vector_code(
+    members,
+    addr_by_k: Dict[int, Dict[int, Any]],
+    k: int,
+    dim: int,
+) -> Any:
+    """Subgraph vector code: normalized sum of member node address vectors.
+
+    [PART 3] The graded counterpart of the WL hash.  The old hash stays the
+    canonical ID (NAME); this vector code is used for graded retrieval.
+    Returns a unit-norm numpy vector (or None when no members carry an
+    address at level k).
+    """
+    import numpy as np
+    acc = np.zeros(dim, dtype=np.float64)
+    layer = addr_by_k.get(k, {})
+    for nid in members:
+        v = layer.get(nid)
+        if v is not None:
+            acc += np.asarray(v, dtype=np.float64)
+    norm = float(np.linalg.norm(acc))
+    if norm <= 1e-12:
+        return None
+    return acc / norm
+
+
+def _cosine_nearest_subgraph(
+    query_code: Any,
+    entries: List[Any],
+    codes: List[Any],
+) -> Tuple[Optional[Any], float]:
+    """Cosine-nearest retrieval over subgraph vector codes.
+
+    [PART 3] Retrieval by hash is replaced by cosine-nearest over vector
+    codes, followed by the existing matcher verify (canonical tie-breaks,
+    no approximate search).  Returns (entry, cosine) or (None, 0.0).
+    """
+    import numpy as np
+    if query_code is None or not entries or not codes:
+        return None, 0.0
+    q = np.asarray(query_code, dtype=np.float64)
+    qn = float(np.linalg.norm(q))
+    if qn <= 1e-12:
+        return None, 0.0
+    best_entry = None
+    best_cos = -1.0
+    for entry, code in zip(entries, codes):
+        if code is None:
+            continue
+        c = np.asarray(code, dtype=np.float64)
+        cn = float(np.linalg.norm(c))
+        if cn <= 1e-12:
+            continue
+        cos = float(np.dot(q, c) / (qn * cn))
+        if cos > best_cos:
+            best_cos = cos
+            best_entry = entry
+    if best_entry is None:
+        return None, 0.0
+    return best_entry, max(0.0, best_cos)
+
+
 def _subgraph_size(sg: Subgraph) -> int:
     return len(sg.nodes) + len(sg.edges)
 

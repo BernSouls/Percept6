@@ -79,7 +79,9 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       "GRAPH_STAGE6_RELATIONS",
                       "ATTACHMENT_EVERY_NAMED_HOST",
                       "FE_L3_SPINE", "FE_L4_JUNCTIONS",
-                      "FE_L6_ADDRESS")
+                      "FE_L6_ADDRESS",
+                      "FE_SOFT_CHANNEL_GATE", "FE_SOFT_L3_L4_GATE",
+                      "FE_VECTOR_ADDRESS")
 
 _log = logging.getLogger("eth80_frontend")
 

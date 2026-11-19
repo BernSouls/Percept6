@@ -1,0 +1,21 @@
+{
+  "band_choice": 0.1,
+  "calibration_factor": 0.7848504682769802,
+  "confidence_mean": 0.9556131615321332,
+  "confidence_min": 0.053794476968869395,
+  "confidence_share_below_09": 0.10587527571686385,
+  "confidence_share_floor": 0.0038099057549629035,
+  "n_dev_scenes": 8,
+  "noise_floor_choice": 0.05,
+  "old_edge_count_mean": 624.5,
+  "old_edge_count_total": 4996,
+  "per_scene": [],
+  "percentile_choice": 0.95,
+  "protocol": "PART 1c soft-gate parameter derivation (DEV only)",
+  "shift2px_weight_delta_median": 0.0,
+  "shift2px_weight_delta_q090": 0.3945639533125417,
+  "soft_edge_count_mean": 844.375,
+  "soft_edge_count_total": 6755,
+  "soft_total_weight_mean": 795.6929698608637,
+  "soft_total_weight_total": 6365.54375888691
+}
