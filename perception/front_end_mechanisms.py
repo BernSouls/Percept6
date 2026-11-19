@@ -104,11 +104,79 @@ def _cosine(a, b) -> float:
     return float(np.dot(a, b) / (na * nb))
 
 
+# cache of fixed random content bumps: (class, kind, i, j, dim) -> unit vector
+_CONTENT_BUMP_CACHE: Dict[Tuple[str, str, int, int, int], Any] = {}
+
+
+def _content_bump(class_name: str, kind: str, i: int, j: int, dim: int) -> Any:
+    """Fixed random unit vector for one graded content axis.
+
+    [A5] A "soft bump": each feature axis the matcher's node similarity
+    compares (a quantized bin, a population axis/bin) gets a fixed random
+    direction seeded from SHA-256.  A node's Level-0 content code is the
+    weighted sum of these bumps, so the cosine of two Level-0 vectors
+    reflects the SAME graded content the matcher compares -- without the
+    address ever entering the matcher's objective.
+    """
+    import numpy as np
+    key = (class_name, kind, i, j, dim)
+    cached = _CONTENT_BUMP_CACHE.get(key)
+    if cached is not None:
+        return cached
+    rng = _det_lcg(_seed_int("content:%s:%s:%d:%d" % (class_name, kind, i, j)))
+    vec = np.empty(dim, dtype=np.float64)
+    for k in range(dim):
+        vec[k] = (next(rng) % 2001 - 1000) / 1000.0  # [-1, 1]
+    norm = float(np.linalg.norm(vec))
+    if norm > 1e-12:
+        vec = vec / norm
+    _CONTENT_BUMP_CACHE[key] = vec
+    return vec
+
+
+def _content_vector(sig: Any, dim: int) -> Any:
+    """Graded content code of one node signature (soft bumps over the
+    features node similarity compares: quantized bins + population axes).
+
+    Returns a vector in the same space as the type vector.  ``sig`` is the
+    ``TypedSignature`` (the second element of the ``(lens_type, sig)`` tuple
+    the matcher compares).  ABSENT slots contribute nothing.
+    """
+    import numpy as np
+    from core.types import ABSENT
+    acc = np.zeros(dim, dtype=np.float64)
+    if sig is None:
+        return acc
+    class_name = str(getattr(sig, "class_", "") or "?")
+    # quantized bins: one soft bump per bin, weighted by the bin value
+    for i, v in enumerate(getattr(sig, "quantized", ()) or ()):
+        if v == ABSENT:
+            continue
+        try:
+            vv = float(v)
+        except (TypeError, ValueError):
+            continue
+        if vv == 0.0:
+            continue
+        acc += vv * _content_bump(class_name, "q", i, 0, dim)
+    # population axes: one soft bump per (axis, bin), weighted by the count
+    for ai, axis_vec in enumerate(getattr(sig, "population", ()) or ()):
+        for bi, cnt in enumerate(axis_vec or ()):
+            try:
+                cc = float(cnt)
+            except (TypeError, ValueError):
+                continue
+            if cc == 0.0:
+                continue
+            acc += cc * _content_bump(class_name, "p", ai, bi, dim)
+    return acc
+
+
 def compute_vector_addresses(
     nodes: Iterable[int],
     edges: Iterable[Tuple[int, int, Any]],
     sigs: Dict[int, Tuple[Any, ...]],
-    kept_families: frozenset[str] = KEPT_L6_FAMILIES,
+    kept_families: Optional[frozenset] = None,
     max_k: int = 3,
     dim: Optional[int] = None,
     weights: Optional[Dict[Tuple[int, int, Any], float]] = None,
@@ -116,9 +184,16 @@ def compute_vector_addresses(
     """Vector structural address (k=1..max_k) -- the graded counterpart of
     ``compute_wl_addresses``.
 
-    L0 = fixed random type vector (SHA-256 seeded).
+    L0 = normalize(type vector + graded content code).
     Lk = normalize(self_weight * addr_{k-1}(n)
                    + sum_edges edge_weight * bind(relation, dir, addr_{k-1}(nb)))
+
+    [A5] The Level-0 address is the TYPE vector combined with a GRADED
+    CONTENT code built from the SAME features node similarity compares
+    (quantized bins + population axes), via fixed random soft bumps.  Each
+    edge contributes its graded weight the same way.  ``kept_families=None``
+    (the default) uses EVERY relation family the matcher scores; pass a set
+    only for the historical restricted diagnostic.
 
     Bindings are fixed orthogonal signed permutations (cosine-preserving),
     seeded from SHA-256(relation, direction).  Neighbours are sorted by
@@ -141,7 +216,7 @@ def compute_vector_addresses(
     adj: Dict[int, list] = {n: [] for n in node_list}
     for u, v, et in edges:
         etn = getattr(et, "name", str(et))
-        if etn not in kept_families:
+        if kept_families is not None and etn not in kept_families:
             continue
         ui, vi = int(u), int(v)
         if ui not in adj or vi not in adj:
@@ -159,10 +234,16 @@ def compute_vector_addresses(
             adj[ui].append((etn, "out", vi, w))
             adj[vi].append((etn, "in", ui, w))
 
-    # L0 = type vector
-    addr_prev: Dict[int, Any] = {
-        n: _symbol_vector(str(sigs.get(n, ("?",))[0]), dim) for n in node_list
-    }
+    # L0 = type vector + graded content code (A5)
+    addr_prev: Dict[int, Any] = {}
+    for n in node_list:
+        lens = str(sigs.get(n, ("?",))[0])
+        type_vec = _symbol_vector(lens, dim)
+        sig = sigs.get(n, (None, None))[1] if len(sigs.get(n, ())) > 1 else None
+        content = _content_vector(sig, dim)
+        acc = type_vec + content
+        norm = float(np.linalg.norm(acc))
+        addr_prev[n] = (acc / norm) if norm > 1e-12 else type_vec
     addr_by_k: Dict[int, Dict[int, Any]] = {0: dict(addr_prev)}
     for k in range(1, max_k + 1):
         addr_k: Dict[int, Any] = {}
@@ -280,7 +361,7 @@ def _l6_vector_address(binder) -> Dict[str, Any]:
                 weights[(k[0], k[1], et)] = float(
                     getattr(v, "pending_signal", 1.0))
     max_k = int(getattr(P, "VECTOR_ADDRESS_MAX_K", 3))
-    addrs = compute_vector_addresses(nodes, edges, sigs, KEPT_L6_FAMILIES,
+    addrs = compute_vector_addresses(nodes, edges, sigs, None,
                                      max_k=max_k, weights=weights)
     cache["rev"] = rev
     cache["addrs"] = addrs

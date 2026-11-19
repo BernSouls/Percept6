@@ -1187,7 +1187,6 @@ def organization_alignment(
     sg_b: Subgraph,
     sig_provider: SignatureProvider,
     rounds: int = 3,
-    addr_provider: Optional[Callable[[int], Any]] = None,
 ) -> Tuple[Dict[int, int], Dict[int, float]]:
     """Grounded fixed-point correspondence (multi-start deterministic).
 
@@ -1197,32 +1196,22 @@ def organization_alignment(
     assignment; the fixed point with the higher total grounded quality is
     returned. Matches are pairs with q >= THETA_MATCH (P.THETA_SIM).
 
-    [PART 3] When ``addr_provider`` is given (vector structural addresses),
-    the address cosine is blended into the signature base as one graded
-    term: base *= (0.5 + 0.5 * addr_sim(u, v)).  This adds a graded seed
-    beside the existing signature+degree-profile evidence WITHOUT changing
-    the matcher objective or adding solvers.
+    [A3] The vector address does NOT enter this objective.  The address is a
+    fast code of node similarity used only to SEED the production matcher
+    (``matching/joint_mcs.py`` -> ``global_consistency_alignment``); the
+    earlier ``addr_provider`` blend (base *= 0.5 + 0.5*addr_sim) was a dead
+    path (no caller passed it) and is removed.
     """
     sigs_a: Dict[int, Tuple[str, TypedSignature]] = {}
-    addrs_a: Dict[int, Any] = {}
     for n in sg_a.nodes:
         info = sig_provider(n)
         if info is not None:
             sigs_a[n] = info
-        if addr_provider is not None:
-            av = addr_provider(n)
-            if av is not None:
-                addrs_a[n] = av
     sigs_b: Dict[int, Tuple[str, TypedSignature]] = {}
-    addrs_b: Dict[int, Any] = {}
     for n in sg_b.nodes:
         info = sig_provider(n)
         if info is not None:
             sigs_b[n] = info
-        if addr_provider is not None:
-            av = addr_provider(n)
-            if av is not None:
-                addrs_b[n] = av
     if not sigs_a or not sigs_b:
         return {}, {}
 
@@ -1230,10 +1219,6 @@ def organization_alignment(
         base = _sig_sim(sigs_a[u][1], sigs_b[v][1])
         if base <= 0.0:
             return 0.0
-        if addr_provider is not None:
-            asim = _addr_sim(addrs_a.get(u), addrs_b.get(v))
-            # graded address term: can only down-weight (<=1), never inflate
-            base = base * (0.5 + 0.5 * asim)
         return base
 
     inc_a = _incidence(sg_a, sigs_a)
