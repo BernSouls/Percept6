@@ -3131,7 +3131,7 @@ FIELD_BORDER_DISCARD_PER_CHANNEL = False
 # tier's before each level is emitted, and `_run_part_containment` (which
 # lived in a level no caller ever asked for) runs with the v4 level.
 # OFF: the stale copy, byte for byte.
-BINDER_COMPLETE_POSITION_MAP = False
+BINDER_COMPLETE_POSITION_MAP = True
 # [STAGE 6 / R1, R2, R3, R5] THE MEASURED RELATIONS (one grouped switch).
 #   R1  BOUNDARY_ATTACHMENT: a local feature's place on an extended boundary
 #       (perception/attachment.py), written only when the host is unambiguous
@@ -3849,6 +3849,13 @@ FE_L4_JUNCTIONS: bool = False
 #: vertex: the chain tangent must turn this far against a chain-neighbour.
 #: Pre-registered from the tracer calibration (consecutive-peak angle q0.90).
 L4_CORNER_TURN_DEG: float = 45.0
+#: [T4/PART1] Sub-pixel peak localisation. When True, CONTOUR_PEAK token
+#: positions are refined by parabolic interpolation on the response field
+#: (the integration channel at the peak's argmax (theta, sf) cell) rather
+#: than the integer grid site. The anchor identity stays the grid site; only
+#: the (x, y) written to the position map is sub-pixel. Default OFF until the
+#: event-token survival gate is measured.
+FE_SUBPIXEL_PEAK_POS: bool = False
 #: [L4] Corner de-duplication radius (px): two detected corners closer than
 #: this are one vertex (a box corner often carries two nearby turning peaks).
 L4_CORNER_DEDUP_PX: float = 8.0

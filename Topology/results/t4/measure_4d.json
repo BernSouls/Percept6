@@ -1,0 +1,75 @@
+{
+  "best_arm": "F",
+  "contrasts": {
+    "auc_best_minus_b0": {
+      "hi": 0.08035714285714286,
+      "lo": -0.08928571428571427,
+      "mean": 6.938893903907228e-18
+    },
+    "auc_real_minus_rewired": {
+      "hi": 0.008928571428571432,
+      "lo": -0.07142857142857142,
+      "mean": -0.02678571428571428
+    },
+    "top1_best_minus_b0": {
+      "hi": 0.25,
+      "lo": -0.125,
+      "mean": 0.0625
+    },
+    "top1_real_minus_rewired": {
+      "hi": 0.0,
+      "lo": 0.0,
+      "mean": 0.0
+    }
+  },
+  "corpus": "ETH-80, split_tuning()",
+  "mode": "smoke",
+  "results": {
+    "B0/real": {
+      "auc": 0.7946428571428571,
+      "auc_ci": {
+        "hi": 0.9196428571428571,
+        "lo": 0.6428571428571429,
+        "mean": 0.7929642857142857
+      },
+      "n_queries": 16,
+      "n_refs": 8,
+      "seconds": 446.82803836799985,
+      "top1": 0.5
+    },
+    "F/real": {
+      "auc": 0.7946428571428571,
+      "auc_ci": {
+        "hi": 0.9285714285714286,
+        "lo": 0.6428571428571429,
+        "mean": 0.79325
+      },
+      "n_queries": 16,
+      "n_refs": 8,
+      "seconds": 705.8701209390001,
+      "top1": 0.5625
+    },
+    "F/rewired": {
+      "auc": 0.8214285714285714,
+      "auc_ci": {
+        "hi": 0.9375,
+        "lo": 0.6964285714285714,
+        "mean": 0.8201875
+      },
+      "n_queries": 16,
+      "n_refs": 8,
+      "seconds": 660.9785443299997,
+      "top1": 0.5625
+    }
+  },
+  "winner": {
+    "MATCH_ALIGN_UNMAPPED_CREDIT": 0.5,
+    "MATCH_COVERAGE_EXPONENT_GAMMA": 0.5,
+    "MATCH_EDGE_DENOMINATOR_MODE": "checkable",
+    "MATCH_EDGE_WEIGHT": 0.1,
+    "MATCH_EXCLUDE_ISOLATED_FROM_CORRESPONDENCE": true,
+    "MATCH_PRESENCE_ONLY_EDGES_ARE_NOT_EVIDENCE": false,
+    "MATCH_SYSTEMATICITY_WEIGHT": 0.75,
+    "MATCH_UNMATCHED_COST": 0.15
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "protocol": "E1 per-call-site table for every lookup_by_hash by SYMBOL",
+  "function": "memory/cores.py:504 CoreLibrary.lookup_by_hash(canonical_hash, kind) -> Optional[CoreEntry]",
+  "semantics": "exact dict lookup on (canonical_hash, kind); identity retrieval, NOT similarity",
+  "call_sites": [
+    {"site": "consolidator.py:1412", "symbol": "self.core_library.lookup_by_hash(core_hash, CoreKind.ACTION)", "label": "identity", "why": "Structural identity collision check before creating an ACTION core."},
+    {"site": "consolidator.py:1493", "symbol": "self.core_library.lookup_by_hash(key, CoreKind.CATEGORY)", "label": "identity", "why": "key = hash(perceptual-reference-v1, graph_hash, label); exact dedup of a reference category."},
+    {"site": "consolidator.py:2772", "symbol": "self.core_library.lookup_by_hash(core_hash, CoreKind.CATEGORY)", "label": "identity", "why": "core_hash = _subgraph_wl_hash(core_subgraph); exact dedup of a CATEGORY core."},
+    {"site": "memory/cores.py:2878", "symbol": "self.cl.lookup_by_hash(ch, CoreKind.CATEGORY)", "label": "identity", "why": "Liveness check: is the category's hash still registered?"},
+    {"site": "memory/cores.py:2895", "symbol": "self.cl.lookup_by_hash(ch, CoreKind.CATEGORY)", "label": "identity", "why": "Liveness check: is any category hash still registered?"},
+    {"site": "memory/cores.py:2960", "symbol": "self.cl.lookup_by_hash(assigned_hash, CoreKind.CATEGORY)", "label": "identity", "why": "Retrieve the entry for an assigned category hash."},
+    {"site": "memory/cores.py:3092", "symbol": "self.cl.lookup_by_hash(new_hash, CoreKind.CATEGORY)", "label": "identity", "why": "Validate/refresh an existing category entry by exact hash."},
+    {"site": "memory/cores.py:3206", "symbol": "self.cl.lookup_by_hash(ch, CoreKind.CATEGORY)", "label": "identity", "why": "Retrieve category entry by hash for validation."},
+    {"site": "memory/cores.py:3227", "symbol": "self.cl.lookup_by_hash(ch, CoreKind.CATEGORY)", "label": "identity", "why": "Retrieve category entry by hash for validation."},
+    {"site": "memory/cores.py:3250", "symbol": "self.cl.lookup_by_hash(ch, CoreKind.CATEGORY)", "label": "identity", "why": "Retrieve category entry by hash for label cleanup."},
+    {"site": "memory/cores.py:3264", "symbol": "ea = self.cl.lookup_by_hash(hash_a, CoreKind.CATEGORY); eb = self.cl.lookup_by_hash(hash_b, CoreKind.CATEGORY)", "label": "identity", "why": "_mcs_score: identity lookup fetches two entries; the SIMILARITY is computed by mcs_score(ea, eb) AFTER retrieval, not by lookup_by_hash itself."},
+    {"site": "memory/mapper.py:623", "symbol": "self.cl.lookup_by_hash(ident.core_hash, CoreKind.ACTION)", "label": "identity", "why": "Retrieve an ACTION core by its exact core_hash."},
+    {"site": "memory/mapper.py:970", "symbol": "self.cl.lookup_by_hash(ident.core_hash, kind)", "label": "identity", "why": "Retrieve a core entry by exact core_hash."}
+  ],
+  "identity_count": 13,
+  "similarity_count": 0,
+  "similarity_wiring": "None required: no lookup_by_hash call performs a similarity/nearest search. The only similarity computation (_mcs_score at cores.py:3264) uses identity lookup to fetch entries, then mcs_score for structural similarity -- the lookup itself is exact-hash identity.",
+  "match_use_remains": false,
+  "verification": "lookup_by_hash is a dict.get on (canonical_hash, kind); verified at memory/cores.py:504-511. No approximate or cosine-nearest path exists in any call site."
+}

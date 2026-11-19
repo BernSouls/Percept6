@@ -1,0 +1,34 @@
+loaded existing arm results: ['M0', 'M1', 'M2', 'M3']
+arm M1 variant graphs.json refs 8 heldout 16
+  M1   1/16  apple7-090-000
+  M1   2/16  apple7-035-135
+  M1   3/16  car9-090-000
+  M1   4/16  cow7-090-000
+  M1   5/16  car9-035-135
+  M1   6/16  cow7-035-135
+  M1   7/16  cup7-090-000
+  M1   8/16  cup7-035-135
+  M1   9/16  dog7-090-000
+  M1  10/16  horse7-090-000
+  M1  11/16  dog7-035-135
+  M1  12/16  pear7-090-000
+  M1  13/16  horse7-035-135
+  M1  14/16  tomato7-090-000
+  M1  15/16  pear7-035-135
+  M1  16/16  tomato7-035-135
+arm M1  top-1 0.4375 (7/16)  AUC 0.8214
+control arm: M1
+Traceback (most recent call last):
+  File "/home/user/Percept6/Topology/t3_measure.py", line 462, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/user/Percept6/Topology/t3_measure.py", line 453, in main
+    report["control"] = _run_control(best, items, args.workers)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Percept6/Topology/t3_measure.py", line 346, in _run_control
+    t1, _ = top1(mat, truth)
+            ^^^^^^^^^^^^^^^^
+  File "/home/user/Percept6/Topology/t3_measure.py", line 76, in top1
+    return float(pred == truth), pred
+           ^^^^^^^^^^^^^^^^^^^^
+TypeError: only 0-dimensional arrays can be converted to Python scalars

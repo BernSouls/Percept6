@@ -1,0 +1,14 @@
+applied: {'FE_SOFT_CHANNEL_GATE': False, 'FE_SOFT_L3_L4_GATE': False}
+  front end  10/120 (0s)
+  front end  20/120 (0s)
+  front end  30/120 (0s)
+  front end  40/120 (0s)
+  front end  50/120 (1s)
+  front end  60/120 (1s)
+  front end  70/120 (1s)
+  front end  80/120 (1s)
+  front end  90/120 (1s)
+  front end 100/120 (1s)
+  front end 110/120 (1s)
+  front end 120/120 (1s)
+wrote /home/user/Percept6/Topology/results/tune/graphs_softoff.json

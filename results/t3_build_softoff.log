@@ -1,0 +1,21 @@
+applied: {'FE_SOFT_CHANNEL_GATE': False, 'FE_SOFT_L3_L4_GATE': False}
+  front end  10/120 (124s)
+  front end  20/120 (248s)
+  front end  30/120 (368s)
+  front end  40/120 (484s)
+  front end  50/120 (611s)
+  front end  60/120 (742s)
+  front end  70/120 (876s)
+  front end  80/120 (1005s)
+  front end  90/120 (1131s)
+  front end 100/120 (1255s)
+  front end 110/120 (1380s)
+  front end 120/120 (1502s)
+Traceback (most recent call last):
+  File "/home/user/Percept6/Topology/t3_build_variant.py", line 99, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/user/Percept6/Topology/t3_build_variant.py", line 92, in main
+    with open(path, "w") as fh:
+         ^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Percept6/results/tune/graphs_softoff.json'

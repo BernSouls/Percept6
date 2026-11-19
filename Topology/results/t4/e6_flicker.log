@@ -1,0 +1,3 @@
+arm B0: preserved=373 lost_ep=1434 lost_both=74 added_new=1457 added_surv=83
+arm B1: preserved=305 lost_ep=3055 lost_both=56 added_new=3070 added_surv=90
+arm F: preserved=306 lost_ep=3055 lost_both=56 added_new=3098 added_surv=90

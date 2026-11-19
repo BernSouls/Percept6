@@ -1,0 +1,20 @@
+{
+  "protocol": "E2 edge counts per scene by weight band (dev, arm B1)",
+  "corpus": "ETH-80, split_tuning() dev ranks 3-5, view -090-000, lowest-rank dev per class (8 scenes)",
+  "arm": "B1 (FE_L3_SPINE=true;FE_L4_JUNCTIONS=true)",
+  "total_edges": 2897,
+  "weight_range": "0.057 - 1.000",
+  "median_weight": 0.600,
+  "share_ge_0.95": 0.879,
+  "share_lt_0.5_per_scene": {
+    "cup": 0.0,
+    "apple": 0.036,
+    "tomato": 0.031,
+    "pear": 0.048,
+    "dog": 0.052,
+    "car": 0.064,
+    "cow": 0.066,
+    "horse": 0.074
+  },
+  "note": "Edge weights are graded continuous values in EdgeParams at emission time. 87.9% of dev edges carry weight >= 0.95; the median is 0.600. The <0.5 share per scene is small (0-7.4%), so most edges carry strong placement evidence."
+}
