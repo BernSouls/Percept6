@@ -1,0 +1,158 @@
+{
+  "auc_gate_pass": false,
+  "corner_threshold_deg": 45.0,
+  "corpus": "renderer-truth-v1 (RECONSTRUCTED, 15 scenes, 192x192)",
+  "junction_gate_pass": false,
+  "junction_precision": 0.1511111111111111,
+  "junction_precision_hits": 34,
+  "junction_precision_total_edges": 225,
+  "junction_recall": 0.5,
+  "junction_recall_hits": 37,
+  "junction_recall_total_vertices": 74,
+  "per_scene_edges": {
+    "box_occlusion": {
+      "CONTOUR_CONTINUITY": 45,
+      "ORIENTATION_JUNCTION": 19
+    },
+    "box_over_box": {
+      "CONTOUR_CONTINUITY": 28,
+      "ORIENTATION_JUNCTION": 8
+    },
+    "disk_occlusion_haze": {
+      "CONTOUR_CONTINUITY": 52,
+      "ORIENTATION_JUNCTION": 18
+    },
+    "f_box_b": {
+      "CONTOUR_CONTINUITY": 25,
+      "ORIENTATION_JUNCTION": 6
+    },
+    "f_haze_a": {
+      "CONTOUR_CONTINUITY": 23,
+      "ORIENTATION_JUNCTION": 13
+    },
+    "no_texture2": {
+      "CONTOUR_CONTINUITY": 32,
+      "ORIENTATION_JUNCTION": 8
+    },
+    "single_box": {
+      "CONTOUR_CONTINUITY": 15,
+      "ORIENTATION_JUNCTION": 9
+    },
+    "single_cylinder": {
+      "CONTOUR_CONTINUITY": 21,
+      "ORIENTATION_JUNCTION": 5
+    },
+    "single_sphere": {
+      "CONTOUR_CONTINUITY": 29,
+      "ORIENTATION_JUNCTION": 11
+    },
+    "sphere_over_box": {
+      "CONTOUR_CONTINUITY": 36,
+      "ORIENTATION_JUNCTION": 18
+    },
+    "texture2_only": {
+      "CONTOUR_CONTINUITY": 30,
+      "ORIENTATION_JUNCTION": 13
+    },
+    "texture_box": {
+      "CONTOUR_CONTINUITY": 41,
+      "ORIENTATION_JUNCTION": 22
+    },
+    "texture_sphere": {
+      "CONTOUR_CONTINUITY": 90,
+      "ORIENTATION_JUNCTION": 59
+    },
+    "thin_bar": {
+      "CONTOUR_CONTINUITY": 16,
+      "ORIENTATION_JUNCTION": 14
+    },
+    "tv_same_scene": {
+      "CONTOUR_CONTINUITY": 23,
+      "ORIENTATION_JUNCTION": 2
+    }
+  },
+  "per_scene_vertices": {
+    "box_occlusion": {
+      "corners": 2,
+      "occlusion": 8,
+      "total": 10
+    },
+    "box_over_box": {
+      "corners": 5,
+      "occlusion": 6,
+      "total": 11
+    },
+    "disk_occlusion_haze": {
+      "corners": 2,
+      "occlusion": 8,
+      "total": 10
+    },
+    "f_box_b": {
+      "corners": 4,
+      "occlusion": 0,
+      "total": 4
+    },
+    "f_haze_a": {
+      "corners": 0,
+      "occlusion": 0,
+      "total": 0
+    },
+    "no_texture2": {
+      "corners": 4,
+      "occlusion": 2,
+      "total": 6
+    },
+    "single_box": {
+      "corners": 4,
+      "occlusion": 0,
+      "total": 4
+    },
+    "single_cylinder": {
+      "corners": 0,
+      "occlusion": 0,
+      "total": 0
+    },
+    "single_sphere": {
+      "corners": 0,
+      "occlusion": 0,
+      "total": 0
+    },
+    "sphere_over_box": {
+      "corners": 4,
+      "occlusion": 3,
+      "total": 7
+    },
+    "texture2_only": {
+      "corners": 4,
+      "occlusion": 2,
+      "total": 6
+    },
+    "texture_box": {
+      "corners": 4,
+      "occlusion": 0,
+      "total": 4
+    },
+    "texture_sphere": {
+      "corners": 0,
+      "occlusion": 0,
+      "total": 0
+    },
+    "thin_bar": {
+      "corners": 4,
+      "occlusion": 0,
+      "total": 4
+    },
+    "tv_same_scene": {
+      "corners": 4,
+      "occlusion": 4,
+      "total": 8
+    }
+  },
+  "protocol": "L3+L4 STEP1 renderer-vertex recall/precision + STEP2 same/diff AUC",
+  "ruler_artifact_sha256": "c0aa914ba511dc20350d4148dcf58f014d901c4da231a1c7819818322a06dfae",
+  "same_diff_auc": {
+    "CONTOUR_CONTINUITY": 0.5363672496025437,
+    "ORIENTATION_JUNCTION": 0.4868839427662957
+  },
+  "tolerance_px": 12.0
+}
