@@ -1,0 +1,131 @@
+{
+  "grid": {
+    "density": 16,
+    "pitch_px": 16.0,
+    "tolerance_is_half_pitch": true,
+    "tolerance_px": 8.0
+  },
+  "image": "data/ETH-80-master/1/4/apple4-090-000.png",
+  "image_side": [
+    256,
+    256
+  ],
+  "rows": [
+    {
+      "anchor_cell_frac": 1.0,
+      "anchor_cell_nodes": 526,
+      "anchor_cell_preserved": 526,
+      "anchors_with_position": 361,
+      "inside_margin": 526,
+      "jaccard": 1.0,
+      "matcher_frac": 1.0,
+      "matcher_nodes": 526,
+      "matcher_preserved": 526,
+      "nodes": 526,
+      "nodes_with_anchor": 526,
+      "nodes_with_position": 526,
+      "seconds": 14.904158673000097,
+      "shift": [
+        0,
+        0
+      ],
+      "truth_expected": 526,
+      "truth_frac": 1.0,
+      "truth_nodes": 526,
+      "truth_preserved": 526
+    },
+    {
+      "anchor_cell_frac": 0.7889733840304183,
+      "anchor_cell_nodes": 526,
+      "anchor_cell_preserved": 415,
+      "anchors_with_position": 355,
+      "inside_margin": 513,
+      "jaccard": 0.560530679933665,
+      "matcher_frac": 0.7270955165692008,
+      "matcher_nodes": 513,
+      "matcher_preserved": 373,
+      "nodes": 528,
+      "nodes_with_anchor": 528,
+      "nodes_with_position": 528,
+      "seconds": 16.510242829999925,
+      "shift": [
+        2,
+        0
+      ],
+      "truth_expected": 526,
+      "truth_frac": 0.8136882129277566,
+      "truth_nodes": 428,
+      "truth_preserved": 428
+    },
+    {
+      "anchor_cell_frac": 0.8193916349809885,
+      "anchor_cell_nodes": 526,
+      "anchor_cell_preserved": 431,
+      "anchors_with_position": 351,
+      "inside_margin": 509,
+      "jaccard": 0.6844036697247706,
+      "matcher_frac": 0.7931034482758621,
+      "matcher_nodes": 493,
+      "matcher_preserved": 391,
+      "nodes": 499,
+      "nodes_with_anchor": 499,
+      "nodes_with_position": 499,
+      "seconds": 17.324939573999927,
+      "shift": [
+        -2,
+        0
+      ],
+      "truth_expected": 526,
+      "truth_frac": 0.8079847908745247,
+      "truth_nodes": 425,
+      "truth_preserved": 425
+    },
+    {
+      "anchor_cell_frac": 0.7642585551330798,
+      "anchor_cell_nodes": 526,
+      "anchor_cell_preserved": 402,
+      "anchors_with_position": 355,
+      "inside_margin": 513,
+      "jaccard": 0.5482233502538071,
+      "matcher_frac": 0.7035573122529645,
+      "matcher_nodes": 506,
+      "matcher_preserved": 356,
+      "nodes": 513,
+      "nodes_with_anchor": 513,
+      "nodes_with_position": 513,
+      "seconds": 14.904299574000106,
+      "shift": [
+        3,
+        0
+      ],
+      "truth_expected": 526,
+      "truth_frac": 0.7775665399239544,
+      "truth_nodes": 409,
+      "truth_preserved": 409
+    },
+    {
+      "anchor_cell_frac": 0.779467680608365,
+      "anchor_cell_nodes": 526,
+      "anchor_cell_preserved": 410,
+      "anchors_with_position": 353,
+      "inside_margin": 509,
+      "jaccard": 0.5158069883527454,
+      "matcher_frac": 0.6898608349900597,
+      "matcher_nodes": 503,
+      "matcher_preserved": 347,
+      "nodes": 520,
+      "nodes_with_anchor": 520,
+      "nodes_with_position": 520,
+      "seconds": 15.243013109999993,
+      "shift": [
+        -3,
+        0
+      ],
+      "truth_expected": 526,
+      "truth_frac": 0.7756653992395437,
+      "truth_nodes": 408,
+      "truth_preserved": 408
+    }
+  ],
+  "warp": "np.roll(image, (dy,dx), axis=(0,1)); positive dx moves content right"
+}

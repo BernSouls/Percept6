@@ -1,0 +1,29 @@
+=== PART E: per-lens MI over all 48 dev scenes ===
+
+--- E1: lookup_by_hash table ---
+  13 call sites, all label='identity' (UNAFFECTED)
+
+--- E3: source digest ---
+  digest: b5aea88722d4e7c3caba1906ee5cea6ea6e8aa4eead47f78300d6e2ab281972d
+
+--- E5: per-lens MI over all 48 dev scenes ---
+  built 48 dev graphs
+  CurveComplex         MI=0.3529 bits  nodes=404  scenes=48/48
+  EndStopped           MI=0.3489 bits  nodes=1804  scenes=48/48
+  Orientation          MI=0.3231 bits  nodes=1745  scenes=48/48
+  Corner               MI=0.2958 bits  nodes=690  scenes=48/48
+  T                    MI=0.2883 bits  nodes=11  scenes=9/48
+  Contour              MI=0.2665 bits  nodes=538  scenes=48/48
+  CONTOUR_PEAK         MI=0.2481 bits  nodes=5646  scenes=48/48
+  Junction             MI=0.2169 bits  nodes=14  scenes=12/48
+  RegionShape          MI=0.2158 bits  nodes=731  scenes=48/48
+  PEAK_CHAIN           MI=0.2148 bits  nodes=1011  scenes=48/48
+  Y                    MI=0.2041 bits  nodes=5  scenes=4/48
+  ContourFragment      MI=0.0846 bits  nodes=2886  scenes=48/48
+
+--- E7: VALID/UNAFFECTED/INVALID table ---
+  VALID: 14 items
+  UNAFFECTED: 7 items
+  INVALID: 7 items
+
+=== PART E complete ===

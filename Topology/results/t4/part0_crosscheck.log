@@ -1,0 +1,13 @@
+image: /home/user/Percept6/data/ETH-80-master/1/4/apple4-090-000.png
+base nodes: 526
+shift=(+0,+0): truth=1.0000 matcher=1.0000 cell=1.0000 jaccard=n/a
+shift=(+2,+0): truth=0.8137 matcher=0.6274 cell=0.9715 jaccard=0.8129
+shift=(-2,+0): truth=0.8080 matcher=0.6939 cell=0.9449 jaccard=0.8635
+shift=(+3,+0): truth=0.7776 matcher=0.6027 cell=0.9772 jaccard=0.7984
+shift=(-3,+0): truth=0.7757 matcher=0.5665 cell=0.9506 jaccard=0.7822
+=== Side by side ===
+shift=[0, 0]: truth rep=1.0000 kt=1.0000 | matcher rep=1.0000 kt=1.0000 | cell rep=1.0000 kt=1.0000
+shift=[2, 0]: truth rep=0.8137 kt=0.8137 | matcher rep=0.6274 kt=0.7271 | cell rep=0.9715 kt=0.7890
+shift=[-2, 0]: truth rep=0.8080 kt=0.8080 | matcher rep=0.6939 kt=0.7931 | cell rep=0.9449 kt=0.8194
+shift=[3, 0]: truth rep=0.7776 kt=0.7776 | matcher rep=0.6027 kt=0.7036 | cell rep=0.9772 kt=0.7643
+shift=[-3, 0]: truth rep=0.7757 kt=0.7757 | matcher rep=0.5665 kt=0.6899 | cell rep=0.9506 kt=0.7795

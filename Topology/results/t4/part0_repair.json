@@ -1,0 +1,85 @@
+{
+  "0b_i": {
+    "0px_ceiling": {
+      "acc": 1.0,
+      "correct": 201,
+      "no_counterpart": 0,
+      "total": 201
+    },
+    "a_position_match": 1.0,
+    "b_unique_identity": 1.0,
+    "c_matcher_acc_shifted": {
+      "acc": 1.0,
+      "correct": 201,
+      "no_counterpart": 0,
+      "total": 201
+    },
+    "matcher_differs": false,
+    "only_anchor_a": 1.0,
+    "only_anchor_matcher_acc": {
+      "acc": 1.0,
+      "correct": 201,
+      "no_counterpart": 0,
+      "total": 201
+    },
+    "position_stores": [
+      "subgraph.anchor_of_node"
+    ],
+    "shift": [
+      2.0,
+      0.0
+    ]
+  },
+  "0b_iii": {
+    "0.5": {
+      "rms_error": 0.22171740547783225,
+      "shift": 0.5
+    },
+    "1.5": {
+      "rms_error": 0.221114756488505,
+      "shift": 1.5
+    }
+  },
+  "0b_iv": {
+    "B0_apple7-090-000": {
+      "convention": "mixed",
+      "displacement": [
+        -1.4144803115630964,
+        -1.4162283887049796
+      ]
+    },
+    "B0_car9-090-000": {
+      "convention": "mixed",
+      "displacement": [
+        -0.5282192055309167,
+        0.45505356828829235
+      ]
+    },
+    "F_apple7-090-000": {
+      "convention": "mixed",
+      "displacement": [
+        -1.4152581207590913,
+        -1.4142281323321981
+      ]
+    },
+    "F_car9-090-000": {
+      "convention": "mixed",
+      "displacement": [
+        -0.5442051983801832,
+        0.4603799198544323
+      ]
+    }
+  },
+  "0c_radius": {
+    "CONTOUR_PEAK": 1.118033988749895,
+    "Contour": 8.0,
+    "ContourFragment": 1.0,
+    "Corner": 3.605551275463989,
+    "CurveComplex": 8.0,
+    "EndStopped": 2.9154759474226504,
+    "Junction": null,
+    "Orientation": 1.0,
+    "PEAK_CHAIN": 3.0005715286832446,
+    "RegionShape": 3.4158129014595855
+  }
+}

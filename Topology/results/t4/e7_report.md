@@ -1,5 +1,13 @@
 # Front-end Sampling Mission — Final Report (E7)
 
+> **INVALID — AXIS BUG.** Every nonzero-shift number in this report is INVALID.
+> The shift helper rolled images vertically (`np.roll(arr, (shift, 0))`) but
+> expected positions horizontally (`(x0 + shift, y0)`). All shift-based
+> results (4c table, contrasts, 4e, E6, 0e, frozen tolerance) are INVALID.
+> See `part0_repair.json`, `part0_crosscheck.json`, and the repaired report
+> for correct numbers. 0px numbers, determinism, and non-shift artifacts
+> are UNAFFECTED.
+
 Corpus: ETH-80, `corpus.split_tuning()` (ref 0–2, dev 3–5, held-out 6–8).
 Ruler sha256: `c0aa914ba511dc20350d4148dcf58f014d901c4da231a1c7819818322a06dfae`.
 All numbers below carry their n. Matcher cell identical across all arms:
