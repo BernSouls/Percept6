@@ -1,0 +1,6 @@
+arm F applied: {'FE_L3_SPINE': True, 'FE_L4_JUNCTIONS': True, 'FE_SUBPIXEL_PEAK_POS': True}
+dev entries: 24 scenes
+    8/24 (107s)
+   16/24 (215s)
+   24/24 (326s)
+wrote /home/user/Percept6/Topology/results/t4/dev_graphs_all_F.json

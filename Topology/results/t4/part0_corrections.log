@@ -1,0 +1,47 @@
+=== PART 0: CORRECTIONS (0a-0j) ===
+dev entries: 24
+loaded 24 base graphs
+
+--- 0a: Four-way partition ---
+  CONTOUR_PEAK         [content] n=10072 tracked=0.908 static=0.005 disp=0.061 abs=0.026 persisters=0.974 => EQUIVARIANT
+  Contour              [non_content] n=1032 tracked=0.000 static=0.464 disp=0.000 abs=0.536 persisters=0.464 => ABSENT-LIKE
+  ContourFragment      [content] n=5064 tracked=0.684 static=0.052 disp=0.234 abs=0.031 persisters=0.969 => MIXED
+  Corner               [content] n=1092 tracked=0.742 static=0.047 disp=0.043 abs=0.168 persisters=0.832 => EQUIVARIANT
+  CurveComplex         [non_content] n=776 tracked=0.000 static=0.446 disp=0.000 abs=0.554 persisters=0.446 => ABSENT-LIKE
+  EndStopped           [content] n=3576 tracked=0.685 static=0.012 disp=0.107 abs=0.196 persisters=0.804 => MIXED
+  Orientation          [non_content] n=3304 tracked=0.000 static=0.741 disp=0.000 abs=0.259 persisters=0.741 => STATIC-WHEN-PRESENT
+  PEAK_CHAIN           [content] n=1740 tracked=0.762 static=0.032 disp=0.114 abs=0.091 persisters=0.909 => EQUIVARIANT
+  RegionShape          [content] n=1248 tracked=0.777 static=0.039 disp=0.111 abs=0.073 persisters=0.927 => EQUIVARIANT
+
+--- 0b: Scoring by partition and class ---
+
+--- 0c: Per-kind radius table ---
+  CONTOUR_PEAK         primary=1.000 class=EQUIVARIANT
+  Contour              primary=1.000 class=ABSENT-LIKE
+  ContourFragment      primary=1.000 class=MIXED
+  Corner               primary=2.062 class=EQUIVARIANT
+  CurveComplex         primary=1.000 class=ABSENT-LIKE
+  EndStopped           primary=1.500 class=MIXED
+  Orientation          primary=1.000 class=STATIC-WHEN-PRESENT
+  PEAK_CHAIN           primary=1.541 class=EQUIVARIANT
+  RegionShape          primary=1.732 class=EQUIVARIANT
+
+--- 0d: D1 reconciliation ---
+  B0: total=7102 positioned=6990 content_positioned=5712
+  B1: total=7102 positioned=6990 content_positioned=5712
+
+--- 0e: Sub-pixel diagnostics (median/p90/outlier) ---
+  fourier+0.5: n=42 median=0.7850 p90=6.0520 outlier>1px=0.452
+  fourier+1.5: n=42 median=0.9242 p90=6.0520 outlier>1px=0.476
+
+--- 0f: Sign convention (dx=-0.69) ---
+
+--- 0g: Topology half-width + mean-degree ---
+
+--- 0h: Parameter tolerance (q90 Fourier drift) ---
+
+--- 0i: Junctions on renderer corpus ---
+
+--- 0j: Corner localisation trigger ---
+
+=== PART 0 CORRECTIONS complete ===

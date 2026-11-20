@@ -1,0 +1,9 @@
+arm B0 applied: {'FE_L3_SPINE': False, 'FE_L4_JUNCTIONS': False}
+dev entries: 48 scenes
+    8/48 (0s)
+   16/48 (0s)
+   24/48 (0s)
+   32/48 (0s)
+   40/48 (0s)
+   48/48 (0s)
+wrote /home/user/Percept6/Topology/results/t4/dev_graphs_all_B0.json

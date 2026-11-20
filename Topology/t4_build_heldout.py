@@ -80,7 +80,6 @@ def _do(args2):
         if not tmp.is_file():
             with Image.open(entry["path"]) as im:
                 arr = np.asarray(im.convert("RGB"), dtype=np.uint8)
-<<<<<<< HEAD
             from t4_shift import roll_image
             rolled = roll_image(arr, dx=shift, dy=0)
             Image.fromarray(rolled).save(tmp)

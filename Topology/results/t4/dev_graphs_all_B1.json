@@ -1,0 +1,492 @@
+{
+  "applied": {
+    "FE_L3_SPINE": true,
+    "FE_L4_JUNCTIONS": true
+  },
+  "arm": "B1",
+  "build_seconds": 684.5783445710001,
+  "graphs": [
+    {
+      "class_": "apple",
+      "edges": 512,
+      "frontend_seconds": 15.50527626600001,
+      "name": "apple4-035-135",
+      "nodes": 302,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_apple4-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "apple",
+      "edges": 277,
+      "frontend_seconds": 13.291063639000186,
+      "name": "apple4-090-000",
+      "nodes": 201,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_apple4-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "apple",
+      "edges": 512,
+      "frontend_seconds": 13.889961450999863,
+      "name": "apple5-035-135",
+      "nodes": 378,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_apple5-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "apple",
+      "edges": 324,
+      "frontend_seconds": 13.288344994,
+      "name": "apple5-090-000",
+      "nodes": 286,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_apple5-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "apple",
+      "edges": 498,
+      "frontend_seconds": 14.620756860000029,
+      "name": "apple6-035-135",
+      "nodes": 630,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_apple6-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "apple",
+      "edges": 275,
+      "frontend_seconds": 14.061921942000026,
+      "name": "apple6-090-000",
+      "nodes": 272,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_apple6-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "car",
+      "edges": 512,
+      "frontend_seconds": 14.900917015000005,
+      "name": "car5-035-135",
+      "nodes": 332,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_car5-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "car",
+      "edges": 328,
+      "frontend_seconds": 13.906081918999917,
+      "name": "car5-090-000",
+      "nodes": 246,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_car5-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "car",
+      "edges": 512,
+      "frontend_seconds": 14.723578700999951,
+      "name": "car6-035-135",
+      "nodes": 391,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_car6-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "car",
+      "edges": 329,
+      "frontend_seconds": 13.817843755000013,
+      "name": "car6-090-000",
+      "nodes": 211,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_car6-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "car",
+      "edges": 512,
+      "frontend_seconds": 14.959210569000106,
+      "name": "car7-035-135",
+      "nodes": 434,
+      "object_": 7,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_car7-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "car",
+      "edges": 314,
+      "frontend_seconds": 14.122205241000074,
+      "name": "car7-090-000",
+      "nodes": 250,
+      "object_": 7,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_car7-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "cow",
+      "edges": 512,
+      "frontend_seconds": 13.668144239999947,
+      "name": "cow4-035-135",
+      "nodes": 385,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cow4-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "cow",
+      "edges": 512,
+      "frontend_seconds": 14.200799456999903,
+      "name": "cow4-090-000",
+      "nodes": 370,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cow4-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "cow",
+      "edges": 512,
+      "frontend_seconds": 13.897046844999977,
+      "name": "cow5-035-135",
+      "nodes": 439,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cow5-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "cow",
+      "edges": 435,
+      "frontend_seconds": 13.223338165000087,
+      "name": "cow5-090-000",
+      "nodes": 298,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cow5-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "cow",
+      "edges": 401,
+      "frontend_seconds": 13.135235777000162,
+      "name": "cow6-035-135",
+      "nodes": 271,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cow6-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "cow",
+      "edges": 512,
+      "frontend_seconds": 14.333078925999871,
+      "name": "cow6-090-000",
+      "nodes": 436,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cow6-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "cup",
+      "edges": 512,
+      "frontend_seconds": 14.40522066099993,
+      "name": "cup4-035-135",
+      "nodes": 376,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cup4-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "cup",
+      "edges": 512,
+      "frontend_seconds": 14.068541750999884,
+      "name": "cup4-090-000",
+      "nodes": 436,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cup4-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "cup",
+      "edges": 512,
+      "frontend_seconds": 13.580141014999981,
+      "name": "cup5-035-135",
+      "nodes": 281,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cup5-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "cup",
+      "edges": 512,
+      "frontend_seconds": 13.78429461099995,
+      "name": "cup5-090-000",
+      "nodes": 246,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cup5-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "cup",
+      "edges": 512,
+      "frontend_seconds": 13.884832415000119,
+      "name": "cup6-035-135",
+      "nodes": 299,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cup6-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "cup",
+      "edges": 506,
+      "frontend_seconds": 14.793462736000038,
+      "name": "cup6-090-000",
+      "nodes": 267,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_cup6-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "dog",
+      "edges": 512,
+      "frontend_seconds": 14.134910361000038,
+      "name": "dog4-035-135",
+      "nodes": 395,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_dog4-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "dog",
+      "edges": 512,
+      "frontend_seconds": 13.674183115000005,
+      "name": "dog4-090-000",
+      "nodes": 360,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_dog4-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "dog",
+      "edges": 512,
+      "frontend_seconds": 14.110016665000103,
+      "name": "dog5-035-135",
+      "nodes": 389,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_dog5-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "dog",
+      "edges": 512,
+      "frontend_seconds": 13.83883954099997,
+      "name": "dog5-090-000",
+      "nodes": 351,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_dog5-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "dog",
+      "edges": 512,
+      "frontend_seconds": 13.929539736000152,
+      "name": "dog6-035-135",
+      "nodes": 438,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_dog6-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "dog",
+      "edges": 512,
+      "frontend_seconds": 14.464006311000048,
+      "name": "dog6-090-000",
+      "nodes": 393,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_dog6-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "horse",
+      "edges": 485,
+      "frontend_seconds": 14.239404140000033,
+      "name": "horse4-035-135",
+      "nodes": 341,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_horse4-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "horse",
+      "edges": 512,
+      "frontend_seconds": 13.92268342300008,
+      "name": "horse4-090-000",
+      "nodes": 341,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_horse4-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "horse",
+      "edges": 512,
+      "frontend_seconds": 14.404893061000166,
+      "name": "horse5-035-135",
+      "nodes": 371,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_horse5-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "horse",
+      "edges": 512,
+      "frontend_seconds": 13.91651218900006,
+      "name": "horse5-090-000",
+      "nodes": 386,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_horse5-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "horse",
+      "edges": 512,
+      "frontend_seconds": 14.208236667999927,
+      "name": "horse6-035-135",
+      "nodes": 304,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_horse6-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "horse",
+      "edges": 512,
+      "frontend_seconds": 14.949138066999922,
+      "name": "horse6-090-000",
+      "nodes": 354,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_horse6-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "pear",
+      "edges": 458,
+      "frontend_seconds": 14.087818409999954,
+      "name": "pear4-035-135",
+      "nodes": 310,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_pear4-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "pear",
+      "edges": 422,
+      "frontend_seconds": 13.806793405000008,
+      "name": "pear4-090-000",
+      "nodes": 261,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_pear4-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "pear",
+      "edges": 473,
+      "frontend_seconds": 15.482017141000142,
+      "name": "pear5-035-135",
+      "nodes": 307,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_pear5-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "pear",
+      "edges": 312,
+      "frontend_seconds": 14.296207639000158,
+      "name": "pear5-090-000",
+      "nodes": 232,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_pear5-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "pear",
+      "edges": 374,
+      "frontend_seconds": 14.711368469000035,
+      "name": "pear6-035-135",
+      "nodes": 273,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_pear6-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "pear",
+      "edges": 472,
+      "frontend_seconds": 14.777430822999804,
+      "name": "pear6-090-000",
+      "nodes": 261,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_pear6-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "tomato",
+      "edges": 512,
+      "frontend_seconds": 15.337850088000096,
+      "name": "tomato4-035-135",
+      "nodes": 396,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_tomato4-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "tomato",
+      "edges": 341,
+      "frontend_seconds": 14.779338855999868,
+      "name": "tomato4-090-000",
+      "nodes": 228,
+      "object_": 4,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_tomato4-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "tomato",
+      "edges": 316,
+      "frontend_seconds": 15.912550454999973,
+      "name": "tomato5-035-135",
+      "nodes": 325,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_tomato5-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "tomato",
+      "edges": 335,
+      "frontend_seconds": 14.993884402000049,
+      "name": "tomato5-090-000",
+      "nodes": 216,
+      "object_": 5,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_tomato5-090-000.pkl",
+      "view": "-090-000"
+    },
+    {
+      "class_": "tomato",
+      "edges": 450,
+      "frontend_seconds": 14.06622635399981,
+      "name": "tomato6-035-135",
+      "nodes": 318,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_tomato6-035-135.pkl",
+      "view": "-035-135"
+    },
+    {
+      "class_": "tomato",
+      "edges": 295,
+      "frontend_seconds": 13.717436346999875,
+      "name": "tomato6-090-000",
+      "nodes": 200,
+      "object_": 6,
+      "pkl": "/home/user/Percept6/Topology/results/t4/dev_pkls/B1_tomato6-090-000.pkl",
+      "view": "-090-000"
+    }
+  ],
+  "n_scenes": 48,
+  "switch_spec": "FE_L3_SPINE=true;FE_L4_JUNCTIONS=true"
+}
