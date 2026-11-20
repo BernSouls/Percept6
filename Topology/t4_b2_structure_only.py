@@ -113,10 +113,13 @@ def _dev_entries():
 
 
 def _node_sim_same_lens(sig_a, sig_b):
-    """Structure-only node_sim: 1.0 if lenses match, 0.0 otherwise."""
-    lens_a = str(sig_a[0]) if sig_a else "?"
-    lens_b = str(sig_b[0]) if sig_b else "?"
-    return 1.0 if lens_a == lens_b else 0.0
+    """Structure-only node_sim: 1.0 constant.
+
+    The matcher's node_sim already gates on lens (x[0]!=y[0] returns 0.0
+    before calling _sig_similarity). Returning 1.0 here makes same-lens pairs
+    score 1.0 and different-lens pairs 0.0 — the same-lens indicator.
+    """
+    return 1.0
 
 
 _PATCH_ACTIVE = [False]
