@@ -1,0 +1,39 @@
+=== FINAL HELD-OUT COMPARISON ===
+loaded 160 graphs, 16 images
+
+--- Node correspondence ---
+  B0 s=+0: D1_pooled=0.8638 D1_class=1.0000 D2=1.0000
+  B0 s=+2: D1_pooled=0.5559 D1_class=0.6984 D2=0.7014
+  B0 s=-2: D1_pooled=0.5596 D1_class=0.7061 D2=0.7072
+  B0 s=+3: D1_pooled=0.5420 D1_class=0.6869 D2=0.6891
+  B0 s=-3: D1_pooled=0.5393 D1_class=0.6834 D2=0.6858
+  B1 s=+0: D1_pooled=0.8638 D1_class=1.0000 D2=1.0000
+  B1 s=+2: D1_pooled=0.5458 D1_class=0.6733 D2=0.7014
+  B1 s=-2: D1_pooled=0.5541 D1_class=0.6825 D2=0.7072
+  B1 s=+3: D1_pooled=0.5305 D1_class=0.6551 D2=0.6891
+  B1 s=-3: D1_pooled=0.5319 D1_class=0.6604 D2=0.6858
+
+--- Controls on FINAL (shift +2) ---
+  real                 D1_pooled=0.5458 D1_class=0.6733
+  real_params_dropped  D1_pooled=0.5410 D1_class=0.6615
+  rewired              D1_pooled=0.3552 D1_class=0.4100
+  params_shuffled      D1_pooled=0.5460 D1_class=0.6730
+  no_edge              D1_pooled=0.5654 D1_class=0.6985
+  real_minus_real_params_dropped_pooled              0.0048 [-0.0023, 0.0123] hw=0.0073
+  real_minus_real_params_dropped_class               0.0119 [0.0012, 0.0240] hw=0.0114
+  real_minus_rewired_pooled                          0.1905 [0.1560, 0.2241] hw=0.0340
+  real_minus_rewired_class                           0.2633 [0.2153, 0.3087] hw=0.0467
+  real_minus_params_shuffled_pooled                  -0.0002 [-0.0023, 0.0020] hw=0.0022
+  real_minus_params_shuffled_class                   0.0003 [-0.0018, 0.0023] hw=0.0020
+  real_minus_no_edge_pooled                          -0.0196 [-0.0281, -0.0123] hw=0.0079
+  real_minus_no_edge_class                           -0.0252 [-0.0351, -0.0164] hw=0.0093
+  real_minus_rewired_s1_pooled                       0.1786 [0.1476, 0.2085] hw=0.0304
+  real_minus_rewired_s1_class                        0.2520 [0.2128, 0.2895] hw=0.0384
+  real_minus_rewired_s2_pooled                       0.1880 [0.1490, 0.2256] hw=0.0383
+  real_minus_rewired_s2_class                        0.2664 [0.2158, 0.3132] hw=0.0487
+  real_minus_params_shuffled_s1_pooled               0.0013 [-0.0037, 0.0085] hw=0.0061
+  real_minus_params_shuffled_s1_class                0.0046 [-0.0025, 0.0155] hw=0.0090
+  real_minus_params_shuffled_s2_pooled               -0.0001 [-0.0022, 0.0022] hw=0.0022
+  real_minus_params_shuffled_s2_class                0.0019 [-0.0009, 0.0047] hw=0.0028
+
+=== FINAL HELD-OUT COMPARISON complete ===

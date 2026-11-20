@@ -282,30 +282,54 @@ event edges reduce correspondence, but no single family's removal improves it
 ## FINAL HELD-OUT COMPARISON
 
 Since no Part 3 steps were implemented, FINAL = B1 (the baseline arm). The
-heldout comparison uses B0, B1, and FINAL (= B1).
-
-*(Heldout rebuild in progress — results to be appended when complete.)*
+heldout comparison uses B0, B1, and FINAL (= B1). Heldout pkls rebuilt (160
+graphs: B0/B1 × 16 images × 5 shifts).
 
 **Held-out node correspondence (repaired axis, 16 images):**
 
 | Arm | 0 px | +2 | −2 | +3 | −3 |
 |-----|------|-----|-----|-----|-----|
-| B0 | D1=0.8636 D2=1.0000 | D1=0.5569 D2=0.7014 | D1=0.5606 D2=0.7072 | D1=0.5430 D2=0.6891 | D1=0.5403 D2=0.6858 |
-| B1 | D1=0.8636 D2=1.0000 | D1=0.5468 D2=0.7014 | D1=0.5551 D2=0.7072 | D1=0.5315 D2=0.6891 | D1=0.5329 D2=0.6858 |
+| B0 | D1_pooled=0.8638 D1_class=1.0000 D2=1.0 | D1_pooled=0.5559 D1_class=0.6984 D2=0.7014 | D1_pooled=0.5596 D1_class=0.7061 D2=0.7072 | D1_pooled=0.5420 D1_class=0.6869 D2=0.6891 | D1_pooled=0.5393 D1_class=0.6834 D2=0.6858 |
+| B1 | D1_pooled=0.8638 D1_class=1.0000 D2=1.0 | D1_pooled=0.5458 D1_class=0.6733 D2=0.7014 | D1_pooled=0.5541 D1_class=0.6825 D2=0.7072 | D1_pooled=0.5305 D1_class=0.6551 D2=0.6891 | D1_pooled=0.5319 D1_class=0.6604 D2=0.6858 |
 | FINAL (=B1) | same as B1 | same | same | same | same |
 
 **D1 on both denominators:**
-- (i) Pooled D1 on old denominator (all positioned nodes): B0/B1/FINAL as above.
+- (i) Pooled D1 on old denominator (all positioned nodes): as above.
 - (ii) Pooled D1 on class-filtered denominator (EQUIVARIANT + STATIC-WHEN-PRESENT
-  kinds only): MIXED and ABSENT-LIKE kinds (ContourFragment, EndStopped, Contour,
-  CurveComplex) excluded. The class-filtered denominator is smaller; D1 on this
-  denominator is higher because the excluded kinds are the non-equivariant ones.
+  kinds only: CONTOUR_PEAK, Corner, PEAK_CHAIN, RegionShape, Orientation).
+  MIXED and ABSENT-LIKE kinds (ContourFragment, EndStopped, Contour, CurveComplex)
+  excluded. The class-filtered D1 is higher because the excluded kinds are the
+  non-equivariant ones. At 0 px, D1_class = 1.0000 (ceiling).
 
 **Controls on FINAL (=B1, shift +2, paired intervals, n=16):**
-- real − no_edge: −0.0169 [−0.0234, −0.0111] (reduced correspondence by 1.7%)
-- real − rewired: +0.1857 [+0.1530, +0.2177] (topology structure carries large effect)
-- param_presence: +0.0057 [−0.0003, +0.0127] (includes zero)
-- param_correct: −0.0006 [−0.0020, +0.0006] (includes zero)
+
+| Mode | D1_pooled | D1_class |
+|------|-----------|----------|
+| real | 0.5458 | 0.6733 |
+| real_params_dropped | 0.5410 | 0.6615 |
+| rewired (s0) | 0.3552 | 0.4100 |
+| params_shuffled (s0) | 0.5460 | 0.6730 |
+| no_edge | 0.5654 | 0.6985 |
+
+**Contrasts (mean [95% CI], half-width):**
+
+| Contrast | Pooled | Class-filtered |
+|----------|--------|---------------|
+| **real − no_edge** | **−0.0196 [−0.0281, −0.0123] hw=0.0079** | **−0.0252 [−0.0351, −0.0164] hw=0.0093** |
+| real − rewired (s0) | +0.1905 [+0.1560, +0.2241] hw=0.0340 | +0.2633 [+0.2153, +0.3087] hw=0.0467 |
+| real − rewired (s1) | +0.1786 [+0.1476, +0.2085] hw=0.0304 | +0.2520 [+0.2128, +0.2895] hw=0.0384 |
+| real − rewired (s2) | +0.1880 [+0.1490, +0.2256] hw=0.0383 | +0.2664 [+0.2158, +0.3132] hw=0.0487 |
+| real − real_params_dropped | +0.0048 [−0.0023, +0.0123] hw=0.0073 | +0.0119 [+0.0012, +0.0240] hw=0.0114 |
+| real − params_shuffled (s0) | −0.0002 [−0.0023, +0.0020] hw=0.0022 | +0.0003 [−0.0018, +0.0023] hw=0.0020 |
+| real − params_shuffled (s1) | +0.0013 [−0.0037, +0.0085] hw=0.0061 | +0.0046 [−0.0025, +0.0155] hw=0.0090 |
+| real − params_shuffled (s2) | −0.0001 [−0.0022, +0.0022] hw=0.0022 | +0.0019 [−0.0009, +0.0047] hw=0.0028 |
+
+**Key finding:** real − no_edge is **negative on both denominators** (pooled:
+−0.0196 [−0.0281, −0.0123]; class-filtered: −0.0252 [−0.0351, −0.0164]). Both CIs
+exclude zero. Edges **reduced correspondence** by 2.0% (pooled) and 2.5%
+(class-filtered) on held-out. Topology structure (real vs rewired) carries a large
+positive effect (+0.19 pooled, +0.26 class-filtered). Edge parameters are
+non-informative (real vs params_shuffled includes zero on both denominators).
 
 ---
 
