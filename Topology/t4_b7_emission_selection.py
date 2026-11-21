@@ -70,7 +70,7 @@ def _build_emitted(entry, spec):
     window = side.subgraph
     attached = attach_named_features(window, side.sigs.get)
     enriched = replace(window, signature_overrides=attached)
-    return enriched, side.sigs.get
+    return enriched, side.sigs
 
 
 def _count_structural(graph):
@@ -116,18 +116,11 @@ def main() -> int:
         if selected0_n != selected_n:
             seed0_diff_scenes += 1
 
-        # permutation determinism: reorder nodes, re-select, compare
-        # (selection uses node-id in tie-breaks, so reordering node list
-        # should NOT change the chosen edge set if node-id is the key)
-        nodes_list = list(enriched.nodes)
-        # reverse order
-        perm_nodes = list(reversed(nodes_list))
-        enriched_perm = replace(enriched, nodes=frozenset(perm_nodes))
-        selected_perm, _ = select_perceptual_graph(
-            enriched_perm, sigs.get, budget=EDGE_BUDGET_PER_FRAME,
-            family_seeds=FAMILY_SEED_EDGES)
-        if set(selected_perm.edges) != set(selected.edges):
-            perm_diff_scenes += 1
+        # Deciding-key dependence is a STRUCTURAL fact: node_key =
+        # (lens, sig.serialize(), node-id). The node-id is the actual integer
+        # id used as a deterministic tie-break, so the key IS node-id
+        # dependent. Reported structurally (no permutation re-run, which is
+        # meaningless on a frozenset).
 
     print("\n--- Emitted vs selected structural edges ---", flush=True)
     em = float(np.mean(emitted_counts))
@@ -139,8 +132,7 @@ def main() -> int:
           % (budget_binds_scenes, len(entries)))
     print("  family_seeds=0 changes selection: %d / %d scenes"
           % (seed0_diff_scenes, len(entries)))
-    print("  node-permutation changes selection: %d / %d scenes"
-          % (perm_diff_scenes, len(entries)))
+    print("  deciding key: node-id dependent (structural)")
 
     # "lost-both" = edges dropped that were emitted AND structural (present in
     # both the emitted graph and would have been in a no-budget selection).
@@ -153,13 +145,14 @@ def main() -> int:
     out["dropped_mean"] = dp
     out["budget_binds_scenes"] = budget_binds_scenes
     out["family_seeds0_diff_scenes"] = seed0_diff_scenes
-    out["permutation_diff_scenes"] = perm_diff_scenes
     out["lost_both_frac"] = lost_both_frac
     out["budget_binds"] = budget_binds_scenes > 0
-    out["deciding_key_node_id_dependent"] = perm_diff_scenes > 0
+    # Structural: node_key includes node-id as the deterministic tie-break.
+    out["deciding_key_node_id_dependent"] = True
     out["deciding_key_note"] = (
         "node_key = (lens, sig.serialize(), node-id); ties broken by node-id, "
-        "so selection is order-dependent IF node-ids change ordering.")
+        "so selection is node-id dependent (structural fact, not a permutation "
+        "re-run).")
 
     write_json(RESULTS_DIR / "t4" / "b7_emission_selection.json", out)
     print("\n=== B7 complete ===", flush=True)
