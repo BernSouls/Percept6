@@ -1,0 +1,6 @@
+=== PART 1 — 1c jitter envelope ===
+scenes: 8, seeds: [42, 7, 1234]
+  beta=0.50: runs=48 min=-0.0645 med=0.0000 max=0.0204 (stdev 0.0208)
+  beta=0.25: runs=48 min=-0.0414 med=0.0000 max=0.0204 (stdev 0.0136)
+
+=== 1c complete ===

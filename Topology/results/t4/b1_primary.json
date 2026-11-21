@@ -1,0 +1,73 @@
+{
+  "absent_like": {
+    "EXACT-TIE": 0,
+    "OUTRANKED": 0,
+    "STRICT-LEAD": 0
+  },
+  "mixed": {
+    "EXACT-TIE": 3,
+    "OUTRANKED": 382,
+    "STRICT-LEAD": 1416
+  },
+  "old_prior_b1": {
+    "EXACT-TIE": [
+      2,
+      0.0
+    ],
+    "OUTRANKED": [
+      463,
+      0.059
+    ],
+    "STRICT-LEAD": [
+      7354,
+      0.941
+    ]
+  },
+  "orientation": {
+    "EXACT-TIE": 0,
+    "OUTRANKED": 0,
+    "STRICT-LEAD": 0
+  },
+  "primary_8px": {
+    "EXACT-TIE": [
+      0,
+      0.0
+    ],
+    "OUTRANKED": [
+      139,
+      0.019643866591294516
+    ],
+    "STRICT-LEAD": [
+      6494,
+      0.9177501413227812
+    ]
+  },
+  "primary_per_kind": {
+    "EXACT-TIE": [
+      0,
+      0.0
+    ],
+    "OUTRANKED": [
+      25,
+      0.0035330695308083662
+    ],
+    "STRICT-LEAD": [
+      6241,
+      0.8819954776710006
+    ]
+  },
+  "radius_by_lens": {
+    "CONTOUR_PEAK": 1.0,
+    "Contour": 1.0,
+    "ContourFragment": 1.0,
+    "Corner": 2.0615528128088303,
+    "CurveComplex": 1.0,
+    "EndStopped": 1.5,
+    "Junction": 8.0,
+    "Orientation": 1.0,
+    "PEAK_CHAIN": 1.5412837362262424,
+    "RegionShape": 1.732397706665228,
+    "T": 8.0,
+    "Y": 8.0
+  }
+}
