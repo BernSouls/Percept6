@@ -211,7 +211,7 @@ def main() -> int:
                 sh_g = graphs[(arm, name, shift)]
                 base_pos = _pos_lens(base)
                 sh_pos = _pos_lens(sh_g)
-                cp, _ = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
+                cp, _, _cp_stats = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
                 mapping = _run_matcher(base, sh_g)
                 d1_p, den_p = _d1(base_pos, mapping, cp, None)
                 d1_c, den_c = _d1(base_pos, mapping, cp, CLASS_FILTERED_KINDS)
@@ -254,7 +254,7 @@ def main() -> int:
             sh_g = graphs[(best, name, shift)]
             base_pos = _pos_lens(base)
             sh_pos = _pos_lens(sh_g)
-            cp, _ = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
+            cp, _, _cp_stats = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
             if mode == "real":
                 b = base
             elif mode == "real_params_dropped":
@@ -289,7 +289,7 @@ def main() -> int:
             sh_g = graphs[(best, name, shift)]
             base_pos = _pos_lens(base)
             sh_pos = _pos_lens(sh_g)
-            cp, _ = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
+            cp, _, _cp_stats = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
             b = _rewired_base(base, seed)
             mapping = _run_matcher(b, sh_g)
             d1_p, _ = _d1(base_pos, mapping, cp, None)
@@ -312,7 +312,7 @@ def main() -> int:
             sh_g = graphs[(best, name, shift)]
             base_pos = _pos_lens(base)
             sh_pos = _pos_lens(sh_g)
-            cp, _ = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
+            cp, _, _cp_stats = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
             b = _params_shuffled_base(base, seed)
             mapping = _run_matcher(b, sh_g)
             d1_p, _ = _d1(base_pos, mapping, cp, None)

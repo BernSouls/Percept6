@@ -203,7 +203,7 @@ def main() -> int:
             sh = _build_shifted(e, spec, 2, 0)
             base_pos = _pos_lens(base)
             sh_pos = _pos_lens(sh)
-            cp, _ = counterpart_map(base_pos, sh_pos, 2, 0, 8.0)
+            cp, _, _cp_stats = counterpart_map(base_pos, sh_pos, 2, 0, 8.0)
 
             sh_edges = {(min(a, b), max(a, b), c)
                         for (a, b, c) in sh.subgraph.edges}
@@ -364,7 +364,7 @@ def main() -> int:
             sh = _build_shifted(e, ARM_F, shift_dx, 0)
             base_pos = _pos_lens(base)
             sh_pos = _pos_lens(sh)
-            cp, _ = counterpart_map(base_pos, sh_pos, shift_dx, 0, 8.0)
+            cp, _, _cp_stats = counterpart_map(base_pos, sh_pos, shift_dx, 0, 8.0)
 
             # Real
             mapping = _run_matcher(base, sh)
@@ -498,7 +498,7 @@ def main() -> int:
                 sh = _build_shifted(e, ARM_B1, 2, 0)
                 base_pos = _pos_lens(base)
                 sh_pos = _pos_lens(sh)
-                cp, _ = counterpart_map(base_pos, sh_pos, 2, 0, 8.0)
+                cp, _, _cp_stats = counterpart_map(base_pos, sh_pos, 2, 0, 8.0)
                 mapping = _run_matcher(base, sh)
                 d1 = sum(1 for n in base_pos if n in cp and
                          mapping.get(n) == cp.get(n)) / len(base_pos) if base_pos else 0
@@ -513,7 +513,7 @@ def main() -> int:
                 sh = _build_shifted(e, ARM_B1, 2, 0)
                 base_pos = _pos_lens(base)
                 sh_pos = _pos_lens(sh)
-                cp, _ = counterpart_map(base_pos, sh_pos, 2, 0, 8.0)
+                cp, _, _cp_stats = counterpart_map(base_pos, sh_pos, 2, 0, 8.0)
                 mapping = _run_matcher(base, sh)
                 d1 = sum(1 for n in base_pos if n in cp and
                          mapping.get(n) == cp.get(n)) / len(base_pos) if base_pos else 0

@@ -293,7 +293,7 @@ def main() -> int:
             sh_pos = _pos_lens(sh_g)
 
             # Counterpart map (mutual-nearest, one-to-one)
-            cp, cp_info = counterpart_map(base_pos, sh_pos, dx, 0, 8.0)
+            cp, cp_info, _cp_stats = counterpart_map(base_pos, sh_pos, dx, 0, 8.0)
 
             # Build sh_sigs_by_lens
             sh_sigs_by_lens = defaultdict(list)

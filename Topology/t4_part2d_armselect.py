@@ -125,7 +125,7 @@ def main() -> int:
             sh_b1 = _build(e, "B1", dx, dy)
             bp_b1 = _pos_lens(base_b1)
             sp_b1 = _pos_lens(sh_b1)
-            cp_b1, _ = counterpart_map(bp_b1, sp_b1, dx, dy, 8.0)
+            cp_b1, _, _cp_stats = counterpart_map(bp_b1, sp_b1, dx, dy, 8.0)
             map_b1 = _run_matcher(base_b1, sh_b1)
             d1_b1 = sum(1 for n in bp_b1 if n in cp_b1 and
                         map_b1.get(n) == cp_b1.get(n)) / len(bp_b1) if bp_b1 else 0
@@ -136,7 +136,7 @@ def main() -> int:
             sh_f = _build(e, "F", dx, dy)
             bp_f = _pos_lens(base_f)
             sp_f = _pos_lens(sh_f)
-            cp_f, _ = counterpart_map(bp_f, sp_f, dx, dy, 8.0)
+            cp_f, _, _cp_stats = counterpart_map(bp_f, sp_f, dx, dy, 8.0)
             map_f = _run_matcher(base_f, sh_f)
             d1_f = sum(1 for n in bp_f if n in cp_f and
                        map_f.get(n) == cp_f.get(n)) / len(bp_f) if bp_f else 0

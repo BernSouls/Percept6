@@ -240,7 +240,7 @@ def main() -> int:
             if sh_g is None:
                 sh_g = _build_shifted(e, ARM_B1, dx)
             sh_pos = _pos_lens(sh_g)
-            cp, cp_info = counterpart_map(base_pos, sh_pos, dx, 0, 8.0)
+            cp, cp_info, _cp_stats = counterpart_map(base_pos, sh_pos, dx, 0, 8.0)
 
             # 1WL colors
             bl_colors, bl_rounds = _wl_colors(

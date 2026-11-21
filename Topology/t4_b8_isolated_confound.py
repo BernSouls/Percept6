@@ -142,7 +142,7 @@ def main() -> int:
             sh_g = _load_shifted(name, dx)
             if sh_g is None:
                 continue
-            cp, cp_info = counterpart_map(_pos_lens(base), _pos_lens(sh_g),
+            cp, cp_info, _cp_stats = counterpart_map(_pos_lens(base), _pos_lens(sh_g),
                                           dx, 0, 8.0)
 
             m_exclude = _run_matcher(base, sh_g, True)

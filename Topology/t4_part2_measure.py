@@ -308,7 +308,7 @@ def main() -> int:
                 sh_pos = _pos_lens(sh_g)
                 # Use a uniform radius of 2.0 px for the primary test
                 # (per-kind radii vary; 2.0 is the frozen tolerance)
-                cp, _info = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
+                cp, _info, _cp_stats = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
                 mapping = _run_matcher(base, sh_g)
                 d1 = matcher_accuracy(base_pos, mapping, cp, token_kinds)
                 have_c = sum(1 for n in base_pos if n in cp)
@@ -375,7 +375,7 @@ def main() -> int:
             sh_g = graphs[(best, name, shift)]
             base_pos = _pos_lens(base)
             sh_pos = _pos_lens(sh_g)
-            cp, _info = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
+            cp, _info, _cp_stats = counterpart_map(base_pos, sh_pos, shift, 0, 2.0)
             if mode == "real":
                 b = base
             elif mode == "real_params_dropped":

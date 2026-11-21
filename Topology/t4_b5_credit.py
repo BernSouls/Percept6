@@ -147,7 +147,7 @@ def main() -> int:
             if sh_g is None:
                 continue
             sh_pos = _pos_lens(sh_g)
-            cp, cp_info = counterpart_map(base_pos, sh_pos, dx, 0, 8.0)
+            cp, cp_info, _cp_stats = counterpart_map(base_pos, sh_pos, dx, 0, 8.0)
             mapping = _run_matcher(base, sh_g)
 
             sh_sigs_by_lens = defaultdict(list)

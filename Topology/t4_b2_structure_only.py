@@ -260,7 +260,7 @@ def main() -> int:
                 print("    building shifted dx=%d..." % dx, flush=True)
                 sh_g = _build_shifted(e, ARM_B1, dx)
             sh_pos = _pos_lens(sh_g)
-            cp, cp_info = counterpart_map(base_pos, sh_pos, dx, 0, 8.0)
+            cp, cp_info, _cp_stats = counterpart_map(base_pos, sh_pos, dx, 0, 8.0)
             sh_sigs_by_lens = defaultdict(list)
             for nsh in sh_g.subgraph.nodes:
                 sh_sig = sh_g.sigs.get(nsh)

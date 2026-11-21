@@ -105,7 +105,7 @@ def _counterpart_rate(base_pos, shift_pos, dx, dy, radius):
     Returns: rate, offsets (list of (dx_err, dy_err) for matched pairs),
     ambiguous_count, total_content, total_sheet.
     """
-    mapping, info = counterpart_map(base_pos, shift_pos, dx, dy, radius)
+    mapping, info, _cp_stats = counterpart_map(base_pos, shift_pos, dx, dy, radius)
     offsets = []
     ambiguous = 0
     for n, (x0, y0, l) in base_pos.items():
@@ -123,7 +123,7 @@ def _counterpart_rate(base_pos, shift_pos, dx, dy, radius):
 
 def _per_kind_stats(base_pos, shift_pos, dx, dy, radius):
     """Per-kind, per-partition one-to-one counterpart rate."""
-    mapping, info = counterpart_map(base_pos, shift_pos, dx, dy, radius)
+    mapping, info, _cp_stats = counterpart_map(base_pos, shift_pos, dx, dy, radius)
     by_kind = defaultdict(lambda: {"total": 0, "matched": 0, "offsets": [],
                                    "ambiguous": 0})
     for n, (x0, y0, l) in base_pos.items():

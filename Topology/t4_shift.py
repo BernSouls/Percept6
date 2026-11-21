@@ -61,66 +61,110 @@ def expected_position(x0: float, y0: float, dx: float, dy: float):
     return (x0 + dx, y0 + dy)
 
 
-def counterpart_map(base_pos, shift_pos, dx, dy, radius):
-    """One-to-one counterpart map.
+def counterpart_map(base_pos, shift_pos, dx, dy, radius,
+                    radius_by_lens=None):
+    """One-to-one counterpart map (REPAIRED).
 
     base_pos: {node: (x, y, lens)}
     shift_pos: {node: (x, y, lens)}
     dx, dy: shift
-    radius: PRIMARY POSITION RADIUS (strict <)
+    radius: PRIMARY POSITION RADIUS (strict <); default/fallback per lens
+    radius_by_lens: optional {lens: radius}; overrides `radius` per lens
+
+    ONE-TO-ONE RULE: forward nearest (base -> shift) and reverse nearest
+    (shift -> base), both searched with INFINITY and the radius applied
+    afterwards; keep only MUTUAL pairs; resolve competing claims greedily by
+    smallest forward distance; drop the rest.
+
+    Ambiguity: second_d <= 2 * best_d, NON-STRICT (<=), so two candidates
+    both at distance 0 are flagged. A lone distance-0 candidate has
+    second_d = inf, so inf <= 0 is False and it is NOT flagged.
 
     Returns:
-      mapping: {base_node: shift_node} for nodes with a counterpart
-      info: {base_node: {"dist": d, "ambiguous": bool, "second_dist": d2}}
+      mapping: {base_node: shift_node} for mutual pairs only
+      info: {base_node: {"dist", "ambiguous", "second_dist", "reverse_dist"}}
+      stats: {"conflicts", "dropped", "mutual", "with_counterpart"}
     """
-    # Group shifted nodes by lens
     by_lens = defaultdict(list)
     for n, (x, y, l) in shift_pos.items():
         by_lens[l].append((n, x, y))
+    base_by_lens = defaultdict(list)
+    for n, (x, y, l) in base_pos.items():
+        base_by_lens[l].append((n, x, y))
 
-    mapping = {}
-    info = {}
-    # For one-to-one: after finding nearest, check mutual nearest
-    # First pass: find nearest for each base node
-    nearest = {}
+    # Forward: base -> nearest shift (search inf, apply radius after)
+    fwd = {}
     for n, (x0, y0, l0) in base_pos.items():
+        r_eff = radius_by_lens.get(l0, radius) if radius_by_lens else radius
         ex, ey = expected_position(x0, y0, dx, dy)
-        best_n, best_d = None, radius
-        second_d = None
+        best_n, best_d = None, float("inf")
+        second_d = float("inf")
         for nsh, xsh, ysh in by_lens.get(l0, ()):
             d = math.hypot(ex - xsh, ey - ysh)
             if d < best_d:
                 second_d = best_d
                 best_d = d
                 best_n = nsh
-            elif second_d is None or d < second_d:
+            elif d < second_d:
                 second_d = d
-        if best_n is not None:
-            nearest[n] = (best_n, best_d, second_d)
-
-    # Second pass: mutual nearest (one-to-one)
-    # For each base node, its counterpart must also find it as nearest
-    for n, (bn, bd, sd) in nearest.items():
-        # Check mutual: bn's nearest should be n
-        bn_info = None
-        for n2, (bn2, bd2, sd2) in nearest.items():
-            if bn2 == n:
-                bn_info = (n2, bd2, sd2)
-                break
-        if bn_info is not None:
-            # Mutual: bn maps back to n
-            mapping[n] = bn
-            ambiguous = (sd is not None and bd > 0 and sd < 2 * bd)
-            info[n] = {"dist": bd, "ambiguous": ambiguous,
-                       "second_dist": sd}
+        if best_n is not None and best_d < r_eff:
+            fwd[n] = (best_n, best_d, second_d)
         else:
-            # Not mutual — bn's nearest is someone else
-            # Still record as counterpart but flag
-            mapping[n] = bn
-            ambiguous = (sd is not None and bd > 0 and sd < 2 * bd)
-            info[n] = {"dist": bd, "ambiguous": ambiguous,
-                       "second_dist": sd, "not_mutual": True}
-    return mapping, info
+            fwd[n] = None
+
+    # Reverse: shift -> nearest base (search inf, apply radius after)
+    rev = {}
+    for nsh, (xsh, ysh, lsh) in shift_pos.items():
+        r_eff = radius_by_lens.get(lsh, radius) if radius_by_lens else radius
+        ex, ey = xsh - dx, ysh - dy
+        best_n, best_d = None, float("inf")
+        second_d = float("inf")
+        for nb, xb, yb in base_by_lens.get(lsh, ()):
+            d = math.hypot(ex - xb, ey - yb)
+            if d < best_d:
+                second_d = best_d
+                best_d = d
+                best_n = nb
+            elif d < second_d:
+                second_d = d
+        if best_n is not None and best_d < r_eff:
+            rev[nsh] = (best_n, best_d, second_d)
+        else:
+            rev[nsh] = None
+
+    # Group forward claims by shift node; resolve competing claims greedily
+    # by smallest forward distance.
+    claims_by_shift = defaultdict(list)
+    for n, claim in fwd.items():
+        if claim is not None:
+            claims_by_shift[claim[0]].append((n, claim[1], claim[2]))
+
+    mapping = {}
+    info = {}
+    conflicts = 0
+    for bn, claimants in claims_by_shift.items():
+        if len(claimants) > 1:
+            conflicts += len(claimants) - 1
+        claimants.sort(key=lambda c: c[1])  # smallest forward distance first
+        n_win, bd_win, sd_win = claimants[0]
+        rn = rev.get(bn)
+        if rn is not None and rn[0] == n_win:
+            # Mutual: shift bn's reverse-nearest is n_win.
+            mapping[n_win] = bn
+            ambiguous = (sd_win <= 2 * bd_win)  # NON-STRICT
+            info[n_win] = {"dist": bd_win, "ambiguous": ambiguous,
+                           "second_dist": sd_win, "reverse_dist": rn[1]}
+
+    with_claim = sum(1 for c in fwd.values() if c is not None)
+    kept = set(mapping.keys())
+    claimed = set()
+    for cs in claims_by_shift.values():
+        for c in cs:
+            claimed.add(c[0])
+    dropped = len(claimed) - len(kept & claimed)
+    stats = {"conflicts": conflicts, "dropped": dropped,
+             "mutual": len(mapping), "with_counterpart": with_claim}
+    return mapping, info, stats
 
 
 def primary_radius(positions_by_lens, min_px=1.0, max_px=8.0):

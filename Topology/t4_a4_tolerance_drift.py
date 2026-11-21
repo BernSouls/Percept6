@@ -192,7 +192,7 @@ def main() -> int:
         if sh_g is None:
             continue
         sh_pos = _pos_lens(sh_g)
-        cp, cp_info = counterpart_map(base_pos, sh_pos, 2, 0, 8.0)
+        cp, cp_info, _cp_stats = counterpart_map(base_pos, sh_pos, 2, 0, 8.0)
 
         # param drift
         changes = _edge_param_change(
@@ -218,7 +218,7 @@ def main() -> int:
             base_pos = _pos_lens(base)
             sh_g = _build_shifted_fourier(e, ARM_B1, dxf)
             sh_pos = _pos_lens(sh_g)
-            cp, _ = counterpart_map(base_pos, sh_pos, int(round(dxf)), 0, 8.0)
+            cp, _, _cp_stats = counterpart_map(base_pos, sh_pos, int(round(dxf)), 0, 8.0)
             changes = _edge_param_change(
                 base.subgraph.edge_params, sh_g.subgraph.edge_params, cp)
             vals.extend([m for m, _ in changes])

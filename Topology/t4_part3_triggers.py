@@ -189,7 +189,7 @@ def main() -> int:
         for dx in [2, -2]:
             sh = _build_shifted(e, ARM_F, dx, 0)
             sh_pos = _pos_lens(sh)
-            cp, _ = counterpart_map(base_pos, sh_pos, dx, 0, 8.0)
+            cp, _, _cp_stats = counterpart_map(base_pos, sh_pos, dx, 0, 8.0)
 
             # Real D1
             mapping_real = _run_matcher(base, sh)
