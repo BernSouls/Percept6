@@ -1,0 +1,95 @@
+{
+  "1b": {
+    "eps": 1.560786340448761e-06,
+    "kself": {
+      "0": {
+        "P_c": 0.004,
+        "counts": {
+          "OUTRANKED": 25,
+          "STRICT-LEAD": 6225
+        },
+        "n": 6250
+      },
+      "1": {
+        "P_c": 0.0,
+        "counts": {
+          "STRICT-LEAD": 16
+        },
+        "n": 16
+      }
+    },
+    "kself_mean": 0.0025534631343759975,
+    "kself_usable": false,
+    "ktop": {
+      "1": {
+        "P_c": 0.0038412291933418692,
+        "counts": {
+          "OUTRANKED": 24,
+          "STRICT-LEAD": 6224
+        },
+        "n": 6248
+      },
+      "2": {
+        "P_c": 0.05555555555555555,
+        "counts": {
+          "OUTRANKED": 1,
+          "STRICT-LEAD": 17
+        },
+        "n": 18
+      }
+    },
+    "ktop_usable": false
+  },
+  "1d": {
+    "EXACT-TIE": {
+      "n": 0,
+      "real_minus_params_shuffled": null,
+      "real_minus_real_params_dropped": null
+    },
+    "OUTRANKED": {
+      "n": 25,
+      "real_minus_params_shuffled": {
+        "hi": 0.0,
+        "hw": 0.06,
+        "lo": -0.12,
+        "mean": -0.04
+      },
+      "real_minus_real_params_dropped": {
+        "hi": 0.08,
+        "hw": 0.12,
+        "lo": -0.16,
+        "mean": -0.04
+      }
+    },
+    "STRICT-LEAD": {
+      "n": 6241,
+      "real_minus_params_shuffled": {
+        "hi": 0.004326229770870053,
+        "hw": 0.002804037814452812,
+        "lo": -0.0012818458580355712,
+        "mean": 0.001602307322544464
+      },
+      "real_minus_real_params_dropped": {
+        "hi": 0.012982695080916516,
+        "hw": 0.005211504566575867,
+        "lo": 0.0025596859477647815,
+        "mean": 0.007370613683704535
+      }
+    },
+    "all": {
+      "n": 6266,
+      "real_minus_params_shuffled": {
+        "hi": 0.004149377593360996,
+        "hw": 0.002713054580274497,
+        "lo": -0.0012767315671879987,
+        "mean": 0.0014363230130864987
+      },
+      "real_minus_real_params_dropped": {
+        "hi": 0.012448132780082987,
+        "hw": 0.005106926268751994,
+        "lo": 0.0022342802425789976,
+        "mean": 0.0071816150654324925
+      }
+    }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "counts": {
+    "FIXED": 17,
+    "PRESENT": 4
+  },
+  "files": {
+    "matching/graded_mcs.py": "/home/user/Percept6/matching/graded_mcs.py",
+    "matching/joint_mcs.py": "/home/user/Percept6/matching/joint_mcs.py"
+  },
+  "items": [
+    {
+      "file": "matching/joint_mcs.py",
+      "item": "B1",
+      "note": "one-None must be 0.0; both-None may be a full unit",
+      "quoted_line": "87:     elif p is None or q is None: | 88: # [J2] A MISSING MEASUREMENT IS NOT A PERFECT ONE.  One side's",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/joint_mcs.py",
+      "item": "B2",
+      "note": "categorical topology_class agreement must earn credit",
+      "quoted_line": "70:             cat = edge_categorical_axes(p, q)",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/joint_mcs.py",
+      "item": "B3",
+      "note": "node_sim must be memoized",
+      "quoted_line": "186:     @lru_cache(maxsize=None) | 187:     def node_sim(u,v):",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/joint_mcs.py",
+      "item": "B4",
+      "note": "dead code under a 1:1 node map; absent on HEAD = removed",
+      "quoted_line": "176:         na, nb = sorted(a.nodes), sorted(b.nodes)",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/joint_mcs.py",
+      "item": "B5",
+      "note": "forward branch must still report reverse exhaustion",
+      "quoted_line": "401:             return replace(forward, budget_exhausted=True)",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/joint_mcs.py",
+      "item": "B6",
+      "note": "pooled branch must read MATCH_EDGE_WEIGHT",
+      "quoted_line": "349:             score=2.0*(nodes+w*edge_credit)/denom if denom else 0.0",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/joint_mcs.py",
+      "item": "B7",
+      "note": "docstring must not claim the pooled-only subtraction universally",
+      "quoted_line": "153:     under MATCH_SEPARATE_TERM_NORMALIZATION the edge term is charged against",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/joint_mcs.py",
+      "item": "B8",
+      "note": "exclude_isolated must down-weight, not delete nodes",
+      "quoted_line": "174:         na, nb = sorted(_active(a)), sorted(_active(b))",
+      "verdict": "PRESENT"
+    },
+    {
+      "file": "matching/joint_mcs.py",
+      "item": "B9",
+      "note": "derived price must be on q's scale (beta + isolated weight)",
+      "quoted_line": "202:         unmatched_cost = (math.fsum(positive) / len(positive)) if positive else 0.0 | 0: ",
+      "verdict": "PRESENT"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B10",
+      "note": "byte-identical duplicate removed; only static remains",
+      "quoted_line": "136: def _static_coherence(Q: Any, C: Any, u: int, v: int,",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B11",
+      "note": "no unread edge_mass parameter in any signature",
+      "quoted_line": "304: def _edge_terms(Q: Any, C: Any, q_sigs: Dict[int, Tuple[str, Any]],",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B12",
+      "note": "node_mass must reach objective_value and the reported node_term",
+      "quoted_line": "451:                     node_mass: Optional[Dict[int, float]] = None) -> Dict[str, float]:",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B13",
+      "note": "one term per query edge with the BEST compatible reference edge in BOTH",
+      "quoted_line": "394:                     if best is None or value > best: | 525:         best_a = 0.0",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B14",
+      "note": "computed const must be used, not a hardcoded 2.0*W_U",
+      "quoted_line": "824:     const = -W_U * (1.0 + 1.0) | 1112:             # (`objective_value` == -c.x + const; the const is the constant",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B15",
+      "note": "the claimed failure counter exists",
+      "quoted_line": "109:         _EDGE_AGREEMENT_FAILURES[\"count\"] += 1",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B16",
+      "note": "match_evidence clamps to [0,1]",
+      "quoted_line": "1159:     return max(0.0, min(1.0, res.score / scale)), res.correspondence",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B17",
+      "note": "NODE_REQUIRES_EDGE restricted to MEASURED support",
+      "quoted_line": "911:             js = [j for j in support.get(i, ()) if j in measured_terms]",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B18",
+      "note": "structurally supported pairs unioned before the joint solve",
+      "quoted_line": "247:     if q_types and c_types:",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B19",
+      "note": "degree map must be O(|E|), not O(n_q x |E|)",
+      "quoted_line": "769:     q_deg = {u: sum(1 for e in Q.edges if e[0] == u or e[1] == u)",
+      "verdict": "PRESENT"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B20",
+      "note": "reported score is objective_value(correspondence)",
+      "quoted_line": "1124:     obj = objective_value(correspondence, Q, C, q_sigs, c_sigs, beta=beta,",
+      "verdict": "FIXED"
+    },
+    {
+      "file": "matching/graded_mcs.py",
+      "item": "B21",
+      "note": "edgeless reads 0.0 unconditionally, like alignment.py",
+      "quoted_line": "160:         return 1.0 | 566:             kappa = 1.0",
+      "verdict": "PRESENT"
+    }
+  ]
+}

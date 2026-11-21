@@ -1,0 +1,24 @@
+=== 0b(i) Synthetic shift test (arm=B0) ===
+  0px ceiling: D1=1.0000 (correct=201/201, no_cp=0)
+  Position stores: ['subgraph.anchor_of_node']
+  (a) position match: 201/201 (1.0000)
+  (b) unique-position identity: 102/102 (1.0000)
+  (c) matcher acc on shifted copy: 1.0000 (ceiling 1.0000)
+  Variant (only anchor_of_node): (a) 201/201 (1.0000)
+  Matcher differs between all-stores and only-anchor: False
+=== 0b(iii) Fourier shift on sinusoid ===
+  shift=0.5: RMS error vs expected = 0.221717
+  shift=1.5: RMS error vs expected = 0.221115
+  (token-count change vs shift 0 reported in Part 1)
+=== 0b(iv) Roll-axis provenance ===
+=== 0c Primary position radius + parameter tolerance (arm=B0) ===
+  CONTOUR_PEAK         n=890 -> radius=1.118 px
+  Contour              n=88 -> radius=8.000 px
+  ContourFragment      n=433 -> radius=1.000 px
+  Corner               n=91 -> radius=3.606 px
+  CurveComplex         n=65 -> radius=8.000 px
+  EndStopped           n=308 -> radius=2.915 px
+  Junction             n=5 -> ABSENT (<20 nodes)
+  Orientation          n=275 -> radius=1.000 px
+  PEAK_CHAIN           n=142 -> radius=3.001 px
+  RegionShape          n=103 -> radius=3.416 px

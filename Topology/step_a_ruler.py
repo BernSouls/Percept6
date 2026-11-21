@@ -35,7 +35,7 @@ from guard import RESULTS_DIR, write_json  # noqa: E402
 
 SCENES_DIR = Path(guard.TREE) / "data" / "renderer-truth-v1"
 TRUTH_PATH = SCENES_DIR / "truth.json"
-ETH80_IMG = Path(guard.TREE).parent / "data" / "ETH-80-master" / "1" / "2" / "apple2-022-000.png"
+ETH80_IMG = Path(guard.TREE) / "data" / "ETH-80-master" / "1" / "2" / "apple2-022-000.png"
 SHIFTS_R = (0, 2, 3, 6, 12, 24)
 SHIFTS_E = (0, 2, 3, 8, 16, 32)
 TOL = 8.0

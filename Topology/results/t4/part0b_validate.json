@@ -1,0 +1,18 @@
+{
+  "T1": {
+    "ambiguous": 0,
+    "rate": 1.0
+  },
+  "T2": {
+    "base0_ambiguous": true
+  },
+  "T3": {
+    "ambiguous": false,
+    "has_counterpart": true
+  },
+  "T4": {
+    "resolved": [
+      0
+    ]
+  }
+}

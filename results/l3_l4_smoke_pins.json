@@ -1,0 +1,152 @@
+{
+  "FE_L3_SPINE_default": false,
+  "FE_L4_JUNCTIONS_default": false,
+  "after": {
+    "applied_once": [
+      "l3_spine",
+      "l4_junctions",
+      "l6_vector_address"
+    ],
+    "edges": 776,
+    "family_counts": {
+      "AMODAL_LINK": 6,
+      "COCIRCULAR": 12,
+      "COLOR_OPPONENT_BORDER": 37,
+      "CONCENTRICITY": 4,
+      "CONTOUR_CONTINUITY": 107,
+      "CONTOUR_ORIENTATION": 48,
+      "CO_LOCATED": 184,
+      "CURVATURE_SIGN_CONTINUITY": 23,
+      "CURVE_CONTAINMENT": 14,
+      "JUNCTION_CONTOUR": 50,
+      "JUNCTION_ORIENTATION": 23,
+      "LINE_TERMINATION": 3,
+      "ORIENTATION_BEND": 39,
+      "ORIENTATION_CONTINUITY": 36,
+      "ORIENTATION_JUNCTION": 50,
+      "PARALLEL": 17,
+      "RADIALITY": 13,
+      "REGION_CONTENT": 90,
+      "SPIRALITY": 5,
+      "SYMMETRY": 15
+    },
+    "l3_spine": {
+      "candidate_pairs_evaluated": 7832,
+      "canonical_order": true,
+      "content_tokens_seen": 89,
+      "edges_emitted": 69,
+      "flag": "FE_L3_SPINE_SOFT",
+      "graded_mutual_pairs": 49,
+      "mean_degree": 1.550561797752809,
+      "reach_px": 24.0,
+      "status": "PRESENT"
+    },
+    "l4_junctions": {
+      "canonical_order": true,
+      "content_tokens_seen": 89,
+      "corner_turn_deg": 45.0,
+      "corners_detected": 8,
+      "edges_emitted": 17,
+      "flag": "FE_L4_JUNCTIONS_SOFT",
+      "max_gap_px": 3.0413812651491097,
+      "occlusion_gap_px": 3.0,
+      "occlusion_tpoints": 9,
+      "status": "PRESENT"
+    },
+    "mean_degree": 3.9897172236503855,
+    "nodes": 389
+  },
+  "after_shift2": {
+    "applied_once": [
+      "l3_spine",
+      "l4_junctions",
+      "l6_vector_address"
+    ],
+    "edges": 908,
+    "family_counts": {
+      "AMODAL_LINK": 7,
+      "COCIRCULAR": 13,
+      "COLOR_OPPONENT_BORDER": 57,
+      "CONCENTRICITY": 4,
+      "CONTACT": 3,
+      "CONTOUR_CONTINUITY": 114,
+      "CONTOUR_ORIENTATION": 70,
+      "CO_LOCATED": 198,
+      "CURVATURE_SIGN_CONTINUITY": 29,
+      "CURVE_CONTAINMENT": 17,
+      "JUNCTION_CONTOUR": 48,
+      "JUNCTION_ORIENTATION": 21,
+      "LINE_TERMINATION": 9,
+      "ORIENTATION_BEND": 18,
+      "ORIENTATION_CONTINUITY": 57,
+      "ORIENTATION_JUNCTION": 77,
+      "PARALLEL": 21,
+      "RADIALITY": 15,
+      "REGION_CONTENT": 96,
+      "SPIRALITY": 4,
+      "SYMMETRY": 24,
+      "TOPOLOGY": 6
+    },
+    "l3_spine": {
+      "candidate_pairs_evaluated": 7310,
+      "canonical_order": true,
+      "content_tokens_seen": 86,
+      "edges_emitted": 69,
+      "flag": "FE_L3_SPINE_SOFT",
+      "graded_mutual_pairs": 52,
+      "mean_degree": 1.6046511627906976,
+      "reach_px": 24.0,
+      "status": "PRESENT"
+    },
+    "l4_junctions": {
+      "canonical_order": true,
+      "content_tokens_seen": 86,
+      "corner_turn_deg": 45.0,
+      "corners_detected": 7,
+      "edges_emitted": 19,
+      "flag": "FE_L4_JUNCTIONS_SOFT",
+      "max_gap_px": 3.0413812651491097,
+      "occlusion_gap_px": 3.0,
+      "occlusion_tpoints": 12,
+      "status": "PRESENT"
+    },
+    "mean_degree": 4.407766990291262,
+    "nodes": 412
+  },
+  "apply_once_idempotent": true,
+  "before": {
+    "applied_once": [
+      "l6_vector_address"
+    ],
+    "edges": 694,
+    "family_counts": {
+      "AMODAL_LINK": 6,
+      "COCIRCULAR": 12,
+      "COLOR_OPPONENT_BORDER": 37,
+      "CONCENTRICITY": 4,
+      "CONTOUR_CONTINUITY": 38,
+      "CONTOUR_ORIENTATION": 48,
+      "CO_LOCATED": 184,
+      "CURVATURE_SIGN_CONTINUITY": 23,
+      "CURVE_CONTAINMENT": 14,
+      "JUNCTION_CONTOUR": 50,
+      "JUNCTION_ORIENTATION": 23,
+      "LINE_TERMINATION": 3,
+      "ORIENTATION_BEND": 39,
+      "ORIENTATION_CONTINUITY": 36,
+      "ORIENTATION_JUNCTION": 37,
+      "PARALLEL": 17,
+      "RADIALITY": 13,
+      "REGION_CONTENT": 90,
+      "SPIRALITY": 5,
+      "SYMMETRY": 15
+    },
+    "l3_spine": {},
+    "l4_junctions": {},
+    "mean_degree": 3.5681233933161955,
+    "nodes": 389
+  },
+  "corpus": "synthetic 64x64 square (LOCAL SMOKE; NOT ETH-80 or renderer-recon-v1)",
+  "no_crash": true,
+  "protocol": "L3+L4 smoke pins (before vs after, 0px and +2px)"
+}

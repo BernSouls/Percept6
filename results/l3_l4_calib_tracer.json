@@ -1,0 +1,84 @@
+{
+  "calib_cap": 8,
+  "n_scenes": 8,
+  "peaks_total": 1164,
+  "consec_gaps": 715,
+  "consec_angles": 715,
+  "chain_kind_counts": {},
+  "per_scene": [
+    {
+      "scene": "apple4",
+      "peaks": 48,
+      "consec_gaps": 16,
+      "consec_angles": 16
+    },
+    {
+      "scene": "apple4",
+      "peaks": 100,
+      "consec_gaps": 58,
+      "consec_angles": 58
+    },
+    {
+      "scene": "apple5",
+      "peaks": 159,
+      "consec_gaps": 89,
+      "consec_angles": 89
+    },
+    {
+      "scene": "apple5",
+      "peaks": 166,
+      "consec_gaps": 101,
+      "consec_angles": 101
+    },
+    {
+      "scene": "apple6",
+      "peaks": 174,
+      "consec_gaps": 105,
+      "consec_angles": 105
+    },
+    {
+      "scene": "apple6",
+      "peaks": 219,
+      "consec_gaps": 138,
+      "consec_angles": 138
+    },
+    {
+      "scene": "car5",
+      "peaks": 122,
+      "consec_gaps": 86,
+      "consec_angles": 86
+    },
+    {
+      "scene": "car5",
+      "peaks": 176,
+      "consec_gaps": 122,
+      "consec_angles": 122
+    }
+  ],
+  "gap_quantiles": {
+    "0.5": 7.810249675906654,
+    "0.75": 10.63014581273465,
+    "0.9": 12.649110640673518,
+    "0.95": 13.072767298673476,
+    "0.99": 17.188320508002228
+  },
+  "angle_quantiles_rad": {
+    "0.5": 0.0,
+    "0.75": 0.26179938779914935,
+    "0.9": 1.0471975511965976,
+    "0.95": 1.308996938995747,
+    "0.99": 1.5707963267948963
+  },
+  "angle_quantiles_deg": {
+    "0.5": 0.0,
+    "0.75": 14.999999999999996,
+    "0.9": 59.99999999999999,
+    "0.95": 74.99999999999999,
+    "0.99": 89.99999999999999
+  },
+  "gap_mean": 8.467324372465963,
+  "gap_median": 7.810249675906654,
+  "gap_max": 22.561028345356956,
+  "angle_mean": 0.20760874528967516,
+  "angle_max_deg": 90.0
+}

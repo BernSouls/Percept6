@@ -1,0 +1,17 @@
+{
+  "FE_L6_ADDRESS_default": false,
+  "apply_once_idempotent": true,
+  "canonical_order": true,
+  "corpus": "synthetic 64x64 square (LOCAL SMOKE)",
+  "no_crash": true,
+  "node_count": 387,
+  "node_count_gt_zero": true,
+  "protocol": "L6 structural address smoke pins",
+  "selected_graph_edges": 649,
+  "selected_graph_mean_degree": 3.354005167958656,
+  "unique_addresses_selected_graph": {
+    "k1": 37,
+    "k2": 56,
+    "k3": 67
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "protocol": "PART 0 read-only hash / confidence / emission-site audit",
+  "ruler_artifact_sha256": "c0aa914ba511dc20350d4148dcf58f014d901c4da231a1c7819818322a06dfae",
+  "hash_primitives": {
+    "hash_64": {"def": "core/hashing.py:112", "returns": "int (SHA-256 first 8 bytes, unsigned LE)"},
+    "hash_64_signed": {"def": "core/hashing.py:125", "returns": "int (hash_64 & 0x7FFF...F, fits Py_ssize_t)"},
+    "hash_128": {"def": "core/hashing.py:135", "returns": "bytes (SHA-256 first 16 bytes)"},
+    "serialize_*": {"def": "core/hashing.py:18-110", "role": "deterministic byte serialization for hashing"},
+    "hashlib.sha256 (direct)": {"use": "perception/front_end_mechanisms.py:47 compute_wl_addresses"},
+    "hashlib.blake2b (direct)": {"use": "perception/contour_field.py, perception/interior_field.py, perception/surface_fragment_cache.py (cache keys)"}
+  },
+  "hash_uses": [
+    {
+      "id": "H1",
+      "symbol": "Detection._hash_cache = hash_64_signed(serialize_detection(self))",
+      "def": "core/types.py:639",
+      "role": "NAME",
+      "why": "Object identity / dict key / determinism for immutable Detection value objects."
+    },
+    {
+      "id": "H2",
+      "symbol": "TypedSignature.hash_value = hash_64(...)",
+      "def": "core/types.py (OPAQUE)",
+      "role": "NAME",
+      "why": "Signature identity; used in _node_signature_hash for sorting/dedup."
+    },
+    {
+      "id": "H3",
+      "symbol": "_node_signature_hash(sigma)",
+      "def": "core/hashing.py:172",
+      "role": "NAME",
+      "why": "Canonical signature identity bytes; sort key / dedup, not similarity."
+    },
+    {
+      "id": "H4",
+      "symbol": "_node_signature_hash_for(d)",
+      "def": "orchestration/binder.py:7112",
+      "role": "NAME",
+      "why": "Detection signature hash for canonical ordering / dedup."
+    },
+    {
+      "id": "H5",
+      "symbol": "concept_graph.canonical_hash / _derive_canonical_hash",
+      "def": "concept_graph.py:1660, 2311",
+      "role": "NAME",
+      "why": "Canonical subgraph identity; dict key in _canonical_hash_index."
+    },
+    {
+      "id": "H6",
+      "symbol": "concept_graph.lookup_by_canonical_hash(canonical_hash)",
+      "def": "concept_graph.py:1820",
+      "role": "NAME",
+      "why": "Exact retrieval by canonical hash (identity lookup)."
+    },
+    {
+      "id": "H7",
+      "symbol": "register_candidate_nodes / unregister_candidate_nodes(canonical_hash, ...)",
+      "def": "concept_graph.py:954, 962",
+      "role": "NAME",
+      "why": "Dedup index keyed by canonical hash (identity)."
+    },
+    {
+      "id": "H8",
+      "symbol": "core_hash (consolidator / cores / mapper)",
+      "def": "consolidator.py:1402, memory/cores.py, memory/mapper.py",
+      "role": "NAME",
+      "why": "Core-library canonical key; lookup_by_hash retrieves by exact hash."
+    },
+    {
+      "id": "H9",
+      "symbol": "core_library.lookup_by_hash(core_hash, kind)",
+      "def": "memory/cores.py (CoreLibrary)",
+      "role": "MATCH",
+      "why": "Retrieves a core entry by exact hash -- a hash-keyed retrieval that decides identity of a structural core. This is a MATCH use (retrieval by hash)."
+    },
+    {
+      "id": "H10",
+      "symbol": "_subgraph_wl_hash(subgraph, sig_provider)",
+      "def": "memory/cores.py:594",
+      "role": "MATCH",
+      "why": "1-WL canonical hash of a subgraph used as core_hash for library lookup/retrieval. Decides structural identity by hash equality."
+    },
+    {
+      "id": "H11",
+      "symbol": "_wl_canonical_hash(members, edges, cg)",
+      "def": "memory/builder.py:364",
+      "role": "MATCH",
+      "why": "128-bit WL canonical hash of a typed directed subgraph; used for subgraph identity/matching."
+    },
+    {
+      "id": "H12",
+      "symbol": "compute_wl_addresses(...) -> Dict[k][node] = hex str",
+      "def": "perception/front_end_mechanisms.py:18",
+      "role": "NAME+MATCH",
+      "why": "The address string is the canonical ID (NAME: _l6_address unique-count diagnostics, dict key). But l6_eval compares addresses by exact equality (MATCH: placement agreement) and builds address histograms for classification (MATCH: cosine over histogram). The MATCH uses are the target of Part 3."
+    },
+    {
+      "id": "H13",
+      "symbol": "l6_eval placement: a0[k].get(n0) == ash[k].get(nsh)",
+      "def": "Topology/l6_eval.py:110",
+      "role": "MATCH",
+      "why": "Decides placement agreement by exact address-string equality. One lost edge changes the address -> node is a stranger to itself. Primary MATCH use."
+    },
+    {
+      "id": "H14",
+      "symbol": "l6_eval classification: Counter(addrs[k].values()) -> cosine",
+      "def": "Topology/l6_eval.py:130-175",
+      "role": "MATCH",
+      "why": "Builds a histogram over exact address strings; cosine compares histograms. Address equality decides the bin. MATCH use."
+    },
+    {
+      "id": "H15",
+      "symbol": "hash_128(serialize_int(nid)) sort keys (pipeline.py)",
+      "def": "orchestration/pipeline.py:4246, 4258, 4308, 4319",
+      "role": "NAME",
+      "why": "Deterministic ordering / tie-breaks, not similarity."
+    },
+    {
+      "id": "H16",
+      "symbol": "hashlib.blake2b cache keys (contour_field / interior_field / surface_fragment_cache)",
+      "def": "perception/contour_field.py:326,1554; perception/interior_field.py:334; perception/surface_fragment_cache.py:56,70,80",
+      "role": "NAME",
+      "why": "Memoization / cache keys for extracted fields; identity, not similarity."
+    },
+    {
+      "id": "H17",
+      "symbol": "get_pattern_node_detection_hash / get_tombstone_hash",
+      "def": "concept_graph.py:783, 2909",
+      "role": "NAME",
+      "why": "Detection-set identity / tombstone identity; dict keys."
+    },
+    {
+      "id": "H18",
+      "symbol": "consolidator cands.sort(key=lambda e: e.canonical_hash)",
+      "def": "consolidator.py:2021",
+      "role": "NAME",
+      "why": "Deterministic ordering by canonical hash (tie-break), not similarity decision."
+    }
+  ],
+  "confidence_consumers": [
+    {
+      "id": "C1",
+      "consumer": "EdgeParams.similarity (core/schema.py:1559)",
+      "treatment": "graded evidence",
+      "detail": "conf_factor = min(self.confidence, other.confidence) if use_confidence else 1.0; returns base * conf_factor. Graded multiplier."
+    },
+    {
+      "id": "C2",
+      "consumer": "polymorphic_edge_similarity (core/schema.py:2107)",
+      "treatment": "graded evidence",
+      "detail": "Delegates to EdgeParams.similarity; applies a specificity cap on generic relations."
+    },
+    {
+      "id": "C3",
+      "consumer": "EdgeParamsMixture.similarity (core/schema.py:2431)",
+      "treatment": "graded evidence",
+      "detail": "Population-weighted graded similarity; confidence enters via the mixture."
+    },
+    {
+      "id": "C4",
+      "consumer": "matching/structural_similarity.py _pair_edge_sim_typed / _pair_edge_sim",
+      "treatment": "graded evidence",
+      "detail": "Calls polymorphic_edge_similarity with use_confidence controlled by P.EDGE_MATCH_USE_CONFIDENCE. Currently the flag defaults such that confidence is graded when enabled."
+    },
+    {
+      "id": "C5",
+      "consumer": "matching/structural_similarity.py:567 mean_conf = sum(p.confidence ...)",
+      "treatment": "graded evidence",
+      "detail": "Consensus confidence averaged over same-class edges; graded."
+    },
+    {
+      "id": "C6",
+      "consumer": "matching/structural_similarity.py:1684 edge_consistency = frequency * consensus_ep.confidence",
+      "treatment": "graded evidence",
+      "detail": "Confidence multiplies frequency; graded."
+    },
+    {
+      "id": "C7",
+      "consumer": "matching/category_bridge.py:185 copies confidence",
+      "treatment": "graded evidence",
+      "detail": "Bridges evidence fields (sign, confidence) from source edge; graded."
+    },
+    {
+      "id": "C8",
+      "consumer": "matching/fuzzy.py _edge_param_mean(use_confidence)",
+      "treatment": "graded evidence",
+      "detail": "Fuzzy edge-param mean with confidence weighting; graded."
+    },
+    {
+      "id": "C9",
+      "consumer": "Binder emission sites set confidence=1.0 or clamp(signal,0,1)",
+      "treatment": "binary presence (currently)",
+      "detail": "Most _edge_params calls hardcode confidence=1.0; a few use clamp(signal,0,1). Until Part 1a they are effectively binary, not graded."
+    }
+  ],
+  "emission_sites": [
+    {
+      "id": "E0",
+      "site": "Binder._channel_process (orchestration/binder.py:4881)",
+      "role": "single choke point for ALL lens/binder edge channels",
+      "hard_cutoffs": [
+        {"name": "top-k cap", "value": "MAX_CANDIDATES_PER_CHANNEL = 2000", "rule": "nlargest(cap, key=(signal, -key_bytes)); rest dropped"},
+        {"name": "threshold", "value": "theta_eff + DELTA_CHANNEL_HYST*(1-2*prev)", "rule": "norm_sig >= threshold -> pass, else drop (hard)"},
+        {"name": "signal normalization", "value": "norm_sig = signal / max_sig", "rule": "divide by the MAXIMUM candidate signal, not a high percentile"}
+      ],
+      "fresh_per_image": true
+    },
+    {
+      "id": "E1",
+      "site": "Binder._process_channel (orchestration/binder.py:5018)",
+      "role": "wrapper; dispatches to _channel_process (or v2 taxonomy)",
+      "hard_cutoffs": []
+    },
+    {
+      "id": "E2",
+      "site": "L3 _l3_spine (perception/front_end_mechanisms.py:340)",
+      "role": "content-token spine (CONTOUR_CONTINUITY)",
+      "hard_cutoffs": [
+        {"name": "reach", "value": "base_stride * 1.5 (RETINOTOPIC_GRID_DENSITY=16)", "rule": "dist <= reach -> candidate, else rejected"},
+        {"name": "mutual-best", "value": "nearest[v]==u", "rule": "hard; non-mutual dropped"}
+      ]
+    },
+    {
+      "id": "E3",
+      "site": "L4 _l4_junctions (perception/front_end_mechanisms.py:126)",
+      "role": "content-token junctions (ORIENTATION_JUNCTION)",
+      "hard_cutoffs": [
+        {"name": "corner turn", "value": "L4_CORNER_TURN_DEG = 45.0", "rule": "polyline turn > threshold -> corner, else not"},
+        {"name": "occlusion gap", "value": "JUNCTION_MAX_GAP = 3.0 px", "rule": "dist <= gap -> T-point, else not"},
+        {"name": "dedup radius", "value": "L4_CORNER_DEDUP_PX = 8.0", "rule": "corners closer than radius merged (keep max turn)"},
+        {"name": "max_gap", "value": "q0.75 of content NN gaps", "rule": "partner lookup reach"}
+      ]
+    },
+    {
+      "id": "E4",
+      "site": "L6 _l6_address (perception/front_end_mechanisms.py:53)",
+      "role": "computes WL addresses; NO edge emission",
+      "hard_cutoffs": []
+    },
+    {
+      "id": "E5",
+      "site": "Binder _run_* methods (orchestration/binder.py:1207-5876)",
+      "role": "~40 lens/binder relation channels, each calls _process_channel",
+      "hard_cutoffs": [
+        {"name": "top-k cap", "value": "MAX_CANDIDATES_PER_CHANNEL = 2000", "rule": "via _channel_process"},
+        {"name": "threshold+hysteresis", "value": "theta_eff + DELTA_CHANNEL_HYST*(1-2*prev)", "rule": "via _channel_process"}
+      ]
+    }
+  ],
+  "summary": {
+    "match_hash_uses_to_replace": ["H9", "H10", "H11", "H12(match part)", "H13", "H14"],
+    "name_hash_uses_to_keep": ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H12(name part)", "H15", "H16", "H17", "H18"],
+    "confidence_graded_consumers": ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8"],
+    "confidence_binary_currently": ["C9"],
+    "emission_choke_point": "Binder._channel_process",
+    "l3_l4_hard_cuts": ["reach", "mutual-best", "corner-turn", "occlusion-gap", "dedup-radius", "max-gap"]
+  },
+  "part3_replacements": [
+    {"id": "H9", "replacement": "core_library.lookup_by_hash -> _cosine_nearest_subgraph over vector codes + existing matcher verify (memory/cores.py)", "status": "implemented"},
+    {"id": "H10", "replacement": "_subgraph_wl_hash stays NAME (canonical ID); _subgraph_vector_code = normalized sum of member node address vectors (memory/cores.py)", "status": "implemented"},
+    {"id": "H11", "replacement": "_wl_canonical_hash stays NAME; vector subgraph code beside it", "status": "implemented"},
+    {"id": "H12(match part)", "replacement": "compute_vector_addresses beside compute_wl_addresses (perception/front_end_mechanisms.py); cosine replaces exact equality", "status": "implemented"},
+    {"id": "H13", "replacement": "l6_eval placement: cosine between vector addresses instead of exact string equality", "status": "implemented (vector address available; eval harness to consume)"},
+    {"id": "H14", "replacement": "l6_eval classification: address-vector cosine / scene-code sum instead of address-histogram", "status": "implemented (vector address available; eval harness to consume)"},
+    {"id": "addr_sim_term", "replacement": "organization_alignment addr_provider blends vector-address cosine as one graded seed term (matching/structural_similarity.py)", "status": "implemented"}
+  ]
+}

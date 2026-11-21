@@ -1,0 +1,32 @@
+loading graphs...
+  loaded 240 graphs (2s)
+token kinds: ['CONTOUR_PEAK', 'Contour', 'ContourFragment', 'Corner', 'CurveComplex', 'EndStopped', 'Orientation', 'PEAK_CHAIN', 'RegionShape']
+main arms...
+  B0 done (271s)
+  B1 done (626s)
+  F done (980s)
+controls...
+  controls done (648s)
+seeded controls...
+  seeded done (571s)
+=== 4c ORGANIZATION TEST ===
+  B0 shift=+0  D1=0.8636  D2=1.0000
+  B0 shift=+2  D1=0.0996  D2=0.1450
+  B0 shift=-2  D1=0.1038  D2=0.1501
+  B0 shift=+3  D1=0.0031  D2=0.0338
+  B0 shift=-3  D1=0.0040  D2=0.0340
+  B1 shift=+0  D1=0.8636  D2=1.0000
+  B1 shift=+2  D1=0.1002  D2=0.1450
+  B1 shift=-2  D1=0.1007  D2=0.1501
+  B1 shift=+3  D1=0.0028  D2=0.0338
+  B1 shift=-3  D1=0.0040  D2=0.0340
+  F shift=+0  D1=0.8635  D2=1.0000
+  F shift=+2  D1=0.1003  D2=0.1446
+  F shift=-2  D1=0.1008  D2=0.1500
+  F shift=+3  D1=0.0024  D2=0.0326
+  F shift=-3  D1=0.0039  D2=0.0330
+  F D3 (CONTOUR_PEAK, +2): 0.00555402268642549
+    headline_real_minus_rewired              0.0251 [0.0180, 0.0345]
+    topology_realpd_minus_rewired            0.0078 [0.0033, 0.0128]
+    param_presence_real_minus_realpd         0.0173 [0.0116, 0.0238]
+    param_correct_real_minus_shuffled        0.0094 [0.0039, 0.0153]

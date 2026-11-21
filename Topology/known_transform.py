@@ -204,7 +204,7 @@ def run(image_path: str, workers: int):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--image", default=str(Path(guard.TREE).parent / "data" /
+    ap.add_argument("--image", default=str(Path(guard.TREE) / "data" /
                                            "ETH-80-master" / "1" / "2" /
                                            "apple2-022-000.png"))
     ap.add_argument("--workers", type=int, default=4)

@@ -38,11 +38,31 @@ import sys
 from pathlib import Path
 
 TREE = Path(__file__).resolve().parents[1]          # ...\work
-SRC = TREE / "src"
+# [EXPORT ADAPTATION] The harness was written for a ``work/src`` +
+# ``work/diagnostics`` + ``work/topology`` tree.  This Percept6 export
+# flattened the product library into the repository root and ships the
+# harness as ``Topology/``, so SRC == TREE and the front-end driver lives at
+# the root (with a diagnostics/ alias shim).  Only these path constants and
+# source_digest's file set change; every measurement definition is untouched.
+SRC = TREE
 FRONTEND_DIR = TREE / "diagnostics"
 HARNESS_DIR = Path(__file__).resolve().parent
 RESULTS_DIR = HARNESS_DIR / "results"
 CACHE_DIR = HARNESS_DIR / "cache"
+
+#: The product source set, for source_digest() only.  In the original tree
+#: ``SRC`` was a dedicated directory, so walking it hashed exactly the product
+#: library; here SRC is the repository root, which also holds the harness,
+#: data, caches and results.  Whitelisting keeps the digest's meaning (product
+#: bytes only) and keeps graph cache keys stable as measurements are written.
+PRODUCT_SOURCE_DIRS = (
+    "core", "dynamics", "learning", "lenses", "matching", "memory",
+    "orchestration", "parameters", "perception", "action", "diagnostics",
+)
+PRODUCT_SOURCE_FILES = (
+    "concept_graph.py", "consolidator.py", "eth80_frontend.py",
+    "eth80_split.py", "sensory_floor.py", "derived_lenses.py", "_bootstrap.py",
+)
 
 PRODUCT_PACKAGES = frozenset({
     "core", "dynamics", "input", "learning", "lenses", "matching", "memory",
@@ -157,17 +177,30 @@ def assert_product_paths() -> dict:
 
 
 def source_digest() -> str:
-    """sha256 over every product source file and this tree's front-end driver."""
+    """sha256 over every product source file and this tree's front-end driver.
+
+    [EXPORT ADAPTATION] Instead of walking SRC (now the repository root, which
+    contains data/caches/results), walk the whitelisted product directories
+    and root product modules.  Same contract as the original: the bytes of
+    every product .py file, keyed by its tree-relative path, in sorted order.
+    """
     h = hashlib.sha256()
     paths = []
-    for base, dirs, files in os.walk(SRC):
-        dirs[:] = sorted(d for d in dirs if d != "__pycache__")
-        for f in sorted(files):
-            if f.endswith(".py"):
-                paths.append(Path(base) / f)
-    paths.append(FRONTEND_DIR / "eth80_frontend.py")
-    paths.append(FRONTEND_DIR / "_bootstrap.py")
-    for p in sorted(paths):
+    for dirname in PRODUCT_SOURCE_DIRS:
+        root = TREE / dirname
+        if not root.is_dir():
+            continue
+        for base, dirs, files in os.walk(root):
+            dirs[:] = sorted(d for d in dirs
+                             if d != "__pycache__" and not d.startswith("."))
+            for f in sorted(files):
+                if f.endswith(".py"):
+                    paths.append(Path(base) / f)
+    for name in PRODUCT_SOURCE_FILES:
+        p = TREE / name
+        if p.is_file():
+            paths.append(p)
+    for p in sorted(set(paths)):
         h.update(str(p.relative_to(TREE)).replace("\\", "/").encode())
         h.update(hashlib.sha256(p.read_bytes()).digest())
     return h.hexdigest()

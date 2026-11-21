@@ -316,6 +316,21 @@ def _pair_edge_sim(a1: int, a2: int, b1: int, b2: int, et: EdgeType, p_a: Option
     return edge_params_similarity(ep_a, ep_b, flipped=flipped)
 
 
+def _edge_weight(p: Optional[Dict], a1: int, a2: int, et: EdgeType) -> float:
+    """The graded weight of an edge, from its EdgeParams.confidence.
+
+    [PART 4] Old graphs without a graded weight default to 1.0, so
+    weight-aware counting reduces to the old present/absent count.
+    """
+    ep = _lookup_edge_params(p, a1, a2, et)
+    if ep is None:
+        return 1.0
+    w = float(getattr(ep, "confidence", 1.0))
+    if w < 0.0:
+        return 0.0
+    return w
+
+
 # =============================================================================
 # [PASS 25] V4 BOUNDARY CONFORMATION & TURNING FUNCTION OPERATORS
 # =============================================================================
@@ -973,15 +988,19 @@ def _relational_agreement(
     p_b = getattr(inc_b, "params", {})
 
     edges_u = inc_a.get(u)
+    use_weight = bool(getattr(P, "EDGE_MATCH_USE_CONFIDENCE", False))
     if edges_u:
         terms = []
+        denom_u = 0.0
         for w, et, outward in edges_u:
+            ew = _edge_weight(p_a, u, w, et) if use_weight else 1.0
+            denom_u += ew
             mw = mapping.get(w)
             if mw is None:
                 if _t_junction_near_nodes(anchors_a.get(u),
                                           anchors_a.get(w), junc_a,
                                           index=tj_a):
-                    terms.append(P.PARTIAL_OCCLUSION_CREDIT)
+                    terms.append(ew * P.PARTIAL_OCCLUSION_CREDIT)
                 continue
             if et in UNDIRECTED_EDGE_TYPES:
                 lo, hi = (v, mw) if v < mw else (mw, v)
@@ -991,8 +1010,8 @@ def _relational_agreement(
             if ok:
                 a1, a2 = (u, w) if outward else (w, u)
                 b1, b2 = (v, mw) if outward else (mw, v)
-                terms.append(_pair_edge_sim(a1, a2, b1, b2, et, p_a, p_b))
-        agree_u = math.fsum(terms) / len(edges_u)
+                terms.append(ew * _pair_edge_sim(a1, a2, b1, b2, et, p_a, p_b))
+        agree_u = (math.fsum(terms) / denom_u) if denom_u > 0.0 else 1.0
     else:
         agree_u = 1.0
 
@@ -1001,7 +1020,7 @@ def _relational_agreement(
         if rev is None:
             rev = {vv: uu for uu, vv in mapping.items()}
         terms = []
-        counted = 0
+        denom_v = 0.0
         for x, et, outward in edges_v:
             # [STAGE 10 / AUDIT B1] the denominator is ALL of v's relations,
             # exactly as u's side counts all of u's.  The old code counted only
@@ -1009,13 +1028,14 @@ def _relational_agreement(
             # u but not v -- and the same pair scored 0.333 one way and 1.000
             # the other.  "No evidence" must not mean "perfect agreement" on
             # one side only.
-            counted += 1
+            ew = _edge_weight(p_b, v, x, et) if use_weight else 1.0
+            denom_v += ew
             ux = rev.get(x)
             if ux is None:
                 if _t_junction_near_nodes(anchors_b.get(v),
                                           anchors_b.get(x), junc_b,
                                           index=tj_b):
-                    terms.append(P.PARTIAL_OCCLUSION_CREDIT)
+                    terms.append(ew * P.PARTIAL_OCCLUSION_CREDIT)
                 continue
             if et in UNDIRECTED_EDGE_TYPES:
                 lo, hi = (u, ux) if u < ux else (ux, u)
@@ -1028,8 +1048,9 @@ def _relational_agreement(
             if ok:
                 b1, b2 = (v, x) if outward else (x, v)
                 a1, a2 = (u, ux) if outward else (ux, u)
-                terms.append(_pair_edge_sim(a1, a2, b1, b2, et, p_a, p_b))
-        agree_v = min(1.0, math.fsum(terms) / counted) if counted else 1.0
+                terms.append(ew * _pair_edge_sim(a1, a2, b1, b2, et, p_a, p_b))
+        agree_v = (min(1.0, math.fsum(terms) / denom_v)
+                   if denom_v > 0.0 else 1.0)
     else:
         agree_v = 1.0
     return min(agree_u, agree_v)
@@ -1148,6 +1169,19 @@ def _edge_indexes(sg: Subgraph, sigs: Dict[int, Tuple[str, TypedSignature]]):
     return directed, undirected
 
 
+def _addr_sim(a, b) -> float:
+    """Graded address similarity in [0,1] from a cosine in [-1,1]."""
+    import numpy as np
+    if a is None or b is None:
+        return 0.0
+    na = float(np.linalg.norm(a))
+    nb = float(np.linalg.norm(b))
+    if na <= 1e-12 or nb <= 1e-12:
+        return 0.0
+    cos = float(np.dot(a, b) / (na * nb))
+    return max(0.0, min(1.0, (cos + 1.0) / 2.0))
+
+
 def organization_alignment(
     sg_a: Subgraph,
     sg_b: Subgraph,
@@ -1161,6 +1195,12 @@ def organization_alignment(
     Seeds: (1) signature-bag assignment, (2) degree-profile-weighted
     assignment; the fixed point with the higher total grounded quality is
     returned. Matches are pairs with q >= THETA_MATCH (P.THETA_SIM).
+
+    [A3] The vector address does NOT enter this objective.  The address is a
+    fast code of node similarity used only to SEED the production matcher
+    (``matching/joint_mcs.py`` -> ``global_consistency_alignment``); the
+    earlier ``addr_provider`` blend (base *= 0.5 + 0.5*addr_sim) was a dead
+    path (no caller passed it) and is removed.
     """
     sigs_a: Dict[int, Tuple[str, TypedSignature]] = {}
     for n in sg_a.nodes:
@@ -1174,6 +1214,12 @@ def organization_alignment(
             sigs_b[n] = info
     if not sigs_a or not sigs_b:
         return {}, {}
+
+    def _base_sim(u, v):
+        base = _sig_sim(sigs_a[u][1], sigs_b[v][1])
+        if base <= 0.0:
+            return 0.0
+        return base
 
     inc_a = _incidence(sg_a, sigs_a)
     inc_b = _incidence(sg_b, sigs_b)
@@ -1205,10 +1251,10 @@ def organization_alignment(
         return m
 
     def _sig_w(u, v):
-        return _sig_sim(sigs_a[u][1], sigs_b[v][1])
+        return _base_sim(u, v)
 
     def _prof_w(u, v):
-        base = _sig_sim(sigs_a[u][1], sigs_b[v][1])
+        base = _base_sim(u, v)
         if base <= 0.0:
             return 0.0
         pa, pb = _profile(sg_a, sigs_a, u), _profile(sg_b, sigs_b, v)
@@ -1225,7 +1271,7 @@ def organization_alignment(
             rev_map = {vv: uu for uu, vv in mapping.items()}
 
             def w_fn(u, v, m=mapping, rv=rev_map):
-                base = _sig_sim(sigs_a[u][1], sigs_b[v][1])
+                base = _base_sim(u, v)
                 if base <= 0.0:
                     return 0.0
                 agree = _relational_agreement(u, v, m, inc_a, inc_b, b_dir, b_und, a_dir, a_und, rev=rv)
@@ -1237,7 +1283,7 @@ def organization_alignment(
         qvals: Dict[int, float] = {}
         rev_final = {vv: uu for uu, vv in mapping.items()}
         for u, v in mapping.items():
-            base = _sig_sim(sigs_a[u][1], sigs_b[v][1])
+            base = _base_sim(u, v)
             if base <= 0.0:
                 continue
             agree = _relational_agreement(u, v, mapping, inc_a, inc_b, b_dir, b_und, a_dir, a_und, rev=rev_final)
@@ -1292,8 +1338,12 @@ def edge_structural_alignment(
 
     # 2. Topological alignment modulated by relational EdgeParams similarity
     set_b = set(edges_b)
+    use_weight = bool(getattr(P, "EDGE_MATCH_USE_CONFIDENCE", False))
     aligned_terms = []
+    weight_a = 0.0
     for src, dst, et in sorted(edges_a, key=_edge_sort_key):
+        ew = _edge_weight(params_a, src, dst, et) if use_weight else 1.0
+        weight_a += ew
         mapped_src = node_mapping.get(src)
         mapped_dst = node_mapping.get(dst)
         if mapped_src is not None and mapped_dst is not None:
@@ -1304,9 +1354,13 @@ def edge_structural_alignment(
                 is_matched = (mapped_src, mapped_dst, et) in set_b
 
             if is_matched:
-                aligned_terms.append(_pair_edge_sim(src, dst, mapped_src, mapped_dst, et, params_a, params_b))
+                aligned_terms.append(ew * _pair_edge_sim(src, dst, mapped_src, mapped_dst, et, params_a, params_b))
 
-    topo_align = math.fsum(aligned_terms) / (max(len_a, len_b) + EPSILON)
+    if use_weight:
+        denom = max(weight_a, 0.0) + EPSILON
+    else:
+        denom = max(len_a, len_b) + EPSILON
+    topo_align = math.fsum(aligned_terms) / denom
     edge_score = W_SIZE * edge_ratio + W_TYPE * binder_overlap + W_ALIGN * topo_align
     return clamp(edge_score, 0.0, 1.0)
 

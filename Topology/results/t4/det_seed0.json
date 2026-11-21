@@ -1,0 +1,17 @@
+{
+  "arms": {
+    "B0": {
+      "hash": "bc57bf39416dfecb62858e3265550010aff0f852f8ef9b95dc1f1a4da5592628",
+      "name": "apple4-090-000"
+    },
+    "B1": {
+      "hash": "960189f92ae1635ff7fc9cbf0dd147a8146c844c778bd82c5f4829413aeac74c",
+      "name": "apple4-090-000"
+    },
+    "F": {
+      "hash": "b910d1119918bd43345a3cbade50134afa6f155f82eb935184d626733fade535",
+      "name": "apple4-090-000"
+    }
+  },
+  "seed": 0
+}

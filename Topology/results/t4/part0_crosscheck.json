@@ -1,0 +1,135 @@
+{
+  "comparison": [
+    {
+      "kt_cell": 1.0,
+      "kt_matcher": 1.0,
+      "kt_truth": 1.0,
+      "repaired_cell": 1.0,
+      "repaired_matcher": 1.0,
+      "repaired_truth": 1.0,
+      "shift": [
+        0,
+        0
+      ]
+    },
+    {
+      "kt_cell": 0.7889733840304183,
+      "kt_matcher": 0.7270955165692008,
+      "kt_truth": 0.8136882129277566,
+      "repaired_cell": 0.9714828897338403,
+      "repaired_matcher": 0.6273764258555133,
+      "repaired_truth": 0.8136882129277566,
+      "shift": [
+        2,
+        0
+      ]
+    },
+    {
+      "kt_cell": 0.8193916349809885,
+      "kt_matcher": 0.7931034482758621,
+      "kt_truth": 0.8079847908745247,
+      "repaired_cell": 0.9448669201520913,
+      "repaired_matcher": 0.6939163498098859,
+      "repaired_truth": 0.8079847908745247,
+      "shift": [
+        -2,
+        0
+      ]
+    },
+    {
+      "kt_cell": 0.7642585551330798,
+      "kt_matcher": 0.7035573122529645,
+      "kt_truth": 0.7775665399239544,
+      "repaired_cell": 0.9771863117870723,
+      "repaired_matcher": 0.6026615969581749,
+      "repaired_truth": 0.7775665399239544,
+      "shift": [
+        3,
+        0
+      ]
+    },
+    {
+      "kt_cell": 0.779467680608365,
+      "kt_matcher": 0.6898608349900597,
+      "kt_truth": 0.7756653992395437,
+      "repaired_cell": 0.9505703422053232,
+      "repaired_matcher": 0.5665399239543726,
+      "repaired_truth": 0.7756653992395437,
+      "shift": [
+        -3,
+        0
+      ]
+    }
+  ],
+  "image": "/home/user/Percept6/data/ETH-80-master/1/4/apple4-090-000.png",
+  "pitch": 16.0,
+  "rows": [
+    {
+      "anchor_cell_frac": 1.0,
+      "jaccard": null,
+      "matcher_frac": 1.0,
+      "matcher_nodes": 526,
+      "nodes": 526,
+      "shift": [
+        0,
+        0
+      ],
+      "truth_frac": 1.0,
+      "truth_nodes": 526
+    },
+    {
+      "anchor_cell_frac": 0.9714828897338403,
+      "jaccard": 0.8128654970760234,
+      "matcher_frac": 0.6273764258555133,
+      "matcher_nodes": 502,
+      "nodes": 528,
+      "shift": [
+        2,
+        0
+      ],
+      "truth_frac": 0.8136882129277566,
+      "truth_nodes": 428
+    },
+    {
+      "anchor_cell_frac": 0.9448669201520913,
+      "jaccard": 0.8635437881873728,
+      "matcher_frac": 0.6939163498098859,
+      "matcher_nodes": 490,
+      "nodes": 499,
+      "shift": [
+        -2,
+        0
+      ],
+      "truth_frac": 0.8079847908745247,
+      "truth_nodes": 425
+    },
+    {
+      "anchor_cell_frac": 0.9771863117870723,
+      "jaccard": 0.7984189723320159,
+      "matcher_frac": 0.6026615969581749,
+      "matcher_nodes": 501,
+      "nodes": 513,
+      "shift": [
+        3,
+        0
+      ],
+      "truth_frac": 0.7775665399239544,
+      "truth_nodes": 409
+    },
+    {
+      "anchor_cell_frac": 0.9505703422053232,
+      "jaccard": 0.7821782178217822,
+      "matcher_frac": 0.5665399239543726,
+      "matcher_nodes": 492,
+      "nodes": 520,
+      "shift": [
+        -3,
+        0
+      ],
+      "truth_frac": 0.7756653992395437,
+      "truth_nodes": 408
+    }
+  ],
+  "tol_px": 8.0,
+  "warp": "roll_image(arr, dx, dy) = np.roll(arr, (dy, dx), axis=(0,1))"
+}

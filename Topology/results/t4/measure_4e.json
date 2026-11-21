@@ -1,0 +1,48 @@
+{
+  "best_arm": "F",
+  "per_shift": {
+    "-2": {
+      "n_junctions": 3,
+      "n_scenes": 2,
+      "precision_mean": 0.25,
+      "recall_mean": 0.25,
+      "survival_mean": 0.25
+    },
+    "-3": {
+      "n_junctions": 3,
+      "n_scenes": 2,
+      "precision_mean": 0.0,
+      "recall_mean": 0.0,
+      "survival_mean": 0.0
+    },
+    "0": {
+      "n_junctions": 3,
+      "n_scenes": 2,
+      "precision_mean": 1.0,
+      "recall_mean": 1.0,
+      "survival_mean": 1.0
+    },
+    "2": {
+      "n_junctions": 3,
+      "n_scenes": 2,
+      "precision_mean": 0.5,
+      "recall_mean": 0.5,
+      "survival_mean": 0.5
+    },
+    "3": {
+      "n_junctions": 3,
+      "n_scenes": 2,
+      "precision_mean": 0.0,
+      "recall_mean": 0.0,
+      "survival_mean": 0.0
+    }
+  },
+  "shifts": [
+    0,
+    2,
+    -2,
+    3,
+    -3
+  ],
+  "tol_px": 2.0
+}

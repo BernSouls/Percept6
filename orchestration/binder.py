@@ -867,6 +867,9 @@ class Binder:
             "candidate_cap_hits": defaultdict(int),
             "dropped_below_threshold": defaultdict(int),
             "empty_or_zero_signal_by_type": defaultdict(int),
+            # [A2] the maximum graded soft-gate weight emitted per channel, so
+            # the calibration (ramp-centre shift) is reported with numbers.
+            "soft_gate_max_weight_by_type": defaultdict(float),
             # [STAGE 6] outcomes of the attachment writer, keyed
             # "feature kind|host kind|outcome" (known / unambiguous /
             # ambiguous / no_host) and the pooling counters.
@@ -1331,6 +1334,11 @@ class Binder:
         assert self._step_begin_called, (
             "emit_pending_edges before note_step_begin"
         )
+        # [FRONT-END REBUILD] ONE site reached by both the harness tier
+        # transcription and Pipeline.step. Each mechanism asserts once.
+        if level == "v4":
+            from perception.front_end_mechanisms import apply_once
+            apply_once(self)
         if not self._higher_dets_this_step:
             return
         # Sorted here as well as at registration: the level partition means
@@ -1659,6 +1667,9 @@ class Binder:
             ),
             "empty_or_zero_signal_by_type": dict(
                 self.diagnostics["empty_or_zero_signal_by_type"]
+            ),
+            "soft_gate_max_weight_by_type": dict(
+                self.diagnostics.get("soft_gate_max_weight_by_type", {})
             ),
             "stage6_attachment": dict(
                 self.diagnostics.get("stage6_attachment", {})
@@ -4924,7 +4935,7 @@ class Binder:
         if max_sig <= 0.0:
             self.diagnostics["empty_or_zero_signal_by_type"][diag_key] += 1
 
-        passing: List[Tuple[int, int, float, bytes]] = []
+        passing: List[Tuple[int, int, float, bytes, Any]] = []
         if max_sig > 0.0:
 
             theta_eff = clamp(
@@ -4935,32 +4946,68 @@ class Binder:
                 P.THETA_ACT_MAX,
             )
 
-            M_prev: Dict[bytes, int] = state["M_prev"]
+            M_prev: Dict[bytes, float] = state["M_prev"]
+            # [PART 1a] Soft gate: normalize by a high percentile of the
+            # candidate signals (not the max), and turn the pass/fail into a
+            # graded weight rising smoothly across a band around the threshold.
+            soft = bool(getattr(P, "FE_SOFT_CHANNEL_GATE", False))
+            band = float(getattr(P, "FE_SOFT_GATE_BAND", 0.10))
+            noise_floor = float(getattr(P, "FE_SOFT_GATE_NOISE_FLOOR", 0.05))
+            pctl_q = float(getattr(P, "FE_SOFT_GATE_PERCENTILE", 0.95))
+            centre_shift = float(getattr(P, "FE_SOFT_GATE_CENTRE_SHIFT", 0.0))
+            edge_weight = bool(getattr(P, "FE_SOFT_GATE_EDGE_WEIGHT", True))
+            if soft:
+                norm_denom = _percentile([c[2] for c in candidates], pctl_q)
+                if norm_denom <= 0.0:
+                    norm_denom = max_sig
+            else:
+                norm_denom = max_sig
+
             for cand in candidates:
                 src, dst, signal, key = cand[0], cand[1], cand[2], cand[3]
                 ep = cand[4] if len(cand) > 4 else None
                 key_b = _candidate_key_bytes(key)
-                norm_sig = signal / max_sig
-                prev = M_prev.get(key_b, 0)
+                norm_sig = signal / norm_denom if norm_denom > 0.0 else 0.0
+                prev = M_prev.get(key_b, 0.0)
                 if self._first_step:
                     threshold = theta_eff
                 else:
                     threshold = (
                         theta_eff + P.DELTA_CHANNEL_HYST * (1 - 2 * prev)
                     )
-                if norm_sig >= threshold:
-                    passing.append((src, dst, signal, key_b, ep))
+                if soft:
+                    # [A2] Shift the RAMP CENTRE (not a global multiplier) so
+                    # the total weight over a corpus matches the old hard-gate
+                    # edge count; a perfect edge stays at weight 1.0.  Weights
+                    # below the noise floor are dropped (not lifted), and the
+                    # drop is a non-strict (>=) floor test -- no cliff.
+                    weight = _soft_gate_weight(
+                        norm_sig, threshold + centre_shift, band, noise_floor)
+                    if weight >= noise_floor:
+                        passing.append((src, dst, weight, key_b, ep, weight))
+                        mx = self.diagnostics["soft_gate_max_weight_by_type"]
+                        if weight > mx[diag_key]:
+                            mx[diag_key] = weight
+                else:
+                    if norm_sig >= threshold:
+                        passing.append((src, dst, signal, key_b, ep, 1.0))
 
             # Emit passing edges. Preserve direction for directed types;
             # canonicalize (min, max) for undirected types.
-            for src, dst, signal, _key_b, ep in passing:
+            for src, dst, w, _key_b, ep, conf in passing:
                 if src == dst and not allow_self:
                     continue
                 if undirected:
                     a, b = (src, dst) if src < dst else (dst, src)
                 else:
                     a, b = src, dst
-                self.cg.upsert_edge(a, b, edge_type, signal, self.t, params=ep)
+                # `w` is the graded weight in soft mode, the raw passing
+                # signal in legacy mode.  Store it as the edge's signal
+                # weight (so weight-aware downstream paths see it) and the
+                # graded weight as the existing EdgeParams.confidence.
+                if ep is not None:
+                    ep = _replace_ep_confidence(ep, conf)
+                self.cg.upsert_edge(a, b, edge_type, w, self.t, params=ep)
 
             emitted = len(passing)
             self.diagnostics["emitted_by_type"][diag_key] += emitted
@@ -4971,12 +5018,20 @@ class Binder:
             # D10 + [v8] Retain M_prev across steps, updated in
             # place. Eviction is LRU on `last_seen` (mirrors
             passing_keys = {p[3] for p in passing}
+            # [A4] Build the passing weight lookup ONCE, instead of scanning
+            # `passing` for every candidate below.
+            passing_weights: Dict[bytes, float] = {p[3]: p[5] for p in passing}
             last_seen: Dict[bytes, int] = state["last_seen"]
             new_M_prev = dict(M_prev)
             for cand in candidates:
                 key = cand[3]
                 key_b = _candidate_key_bytes(key)
-                new_M_prev[key_b] = 1 if key_b in passing_keys else 0
+                if soft:
+                    # Store the graded weight (float) for smooth hysteresis.
+                    w = passing_weights.get(key_b, 0.0)
+                    new_M_prev[key_b] = w
+                else:
+                    new_M_prev[key_b] = 1.0 if key_b in passing_keys else 0.0
                 last_seen[key_b] = self.t
             if len(new_M_prev) > self.MAX_M_PREV_SIZE:
                 to_drop = len(new_M_prev) - (self.MAX_M_PREV_SIZE // 2)
@@ -7126,6 +7181,86 @@ def _node_signature_hash_for(d: Detection) -> bytes:
         serialize_bytes(base),
         serialize_int(d.scale),
     ])))
+
+
+def _replace_ep_confidence(ep: Any, confidence: float) -> Any:
+    """Return a copy of an EdgeParams (or Mixture) with confidence set.
+
+    Stores the graded weight in the existing confidence slot.  EdgeParams is
+    frozen (value-identity), so a shallow copy with the new field is a new
+    object; EdgeParamsMixture carries per-proto confidence and is rebuilt.
+    """
+    from core.schema import EdgeParams, EdgeParamsMixture
+    if isinstance(ep, EdgeParams):
+        if abs(float(ep.confidence) - float(confidence)) < 1e-12:
+            return ep
+        return EdgeParams(
+            class_=ep.class_,
+            quantized=ep.quantized,
+            sign=ep.sign,
+            confidence=float(confidence),
+            identity_slots=ep.identity_slots,
+            population=ep.population,
+            ontology=ep.ontology,
+            provenance=ep.provenance,
+            origin=getattr(ep, "origin", None),
+            ordinal=getattr(ep, "ordinal", None),
+        )
+    if isinstance(ep, EdgeParamsMixture):
+        protos = []
+        mass = []
+        for p, m in zip(ep.protos, ep.mass):
+            protos.append(_replace_ep_confidence(p, float(confidence)))
+            mass.append(float(m))
+        return EdgeParamsMixture(protos=protos, mass=mass,
+                                 t_last=int(getattr(ep, "t_last", 0)))
+    return ep
+
+
+def _percentile(values: List[float], q: float) -> float:
+    """Deterministic q-th percentile of a list of floats (linear interp).
+
+    Used by the soft channel gate to normalize candidate signals by a high
+    percentile instead of the maximum, so one outlier does not compress every
+    other candidate's normalized signal toward zero.
+    """
+    if not values:
+        return 0.0
+    s = sorted(values)
+    if len(s) == 1:
+        return float(s[0])
+    idx = q * (len(s) - 1)
+    lo = int(math.floor(idx))
+    hi = int(math.ceil(idx))
+    if lo == hi:
+        return float(s[lo])
+    return float(s[lo] + (s[hi] - s[lo]) * (idx - lo))
+
+
+def _soft_gate_weight(
+    norm_sig: float,
+    threshold: float,
+    band: float,
+    noise_floor: float,
+) -> float:
+    """Graded weight in [0,1] rising smoothly across a band around `threshold`.
+
+    The weight is 0 at (threshold - band), 1 at (threshold + band), and
+    linear in between.  A perfect edge (norm_sig at or above the top of the
+    ramp) keeps weight 1.0.  Weights below `noise_floor` are NOT lifted: they
+    stay below the floor and are dropped by the caller's (non-strict) floor
+    test, so there is no strict-greater-than cliff.  Candidates with no signal
+    stay at 0.
+    """
+    if norm_sig <= 0.0:
+        return 0.0
+    if norm_sig <= threshold - band:
+        w = 0.0
+    elif norm_sig >= threshold + band:
+        w = 1.0
+    else:
+        w = (norm_sig - (threshold - band)) / (2.0 * band) if band > 0.0 else 1.0
+    return clamp(w, 0.0, 1.0)
 
 
 def _candidate_key_bytes(key: Tuple[Any, ...]) -> bytes:

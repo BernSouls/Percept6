@@ -1,0 +1,6 @@
+arm F dev entries: ['apple4-090-000', 'car5-090-000', 'cow4-090-000', 'cup4-090-000', 'dog4-090-000', 'horse4-090-000', 'pear4-090-000', 'tomato4-090-000']
+  built   6/24 (80s)
+  built  12/24 (152s)
+  built  18/24 (227s)
+  built  24/24 (298s)
+arm F mean_degree 1.4142 corr_acc +2 0.1423 -2 0.1326 surv +2 0.0955 (null 0.0009)

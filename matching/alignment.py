@@ -376,6 +376,7 @@ def _relational_agreement(
     *,
     checkable: bool = False,
     candidate: Optional[Tuple[int, int]] = None,
+    edge_weight_fn=None,
 ) -> float:
     """Conjunctive mapped-context preservation for pair (u, v).
 
@@ -415,6 +416,14 @@ def _relational_agreement(
     """
     unmapped_credit = float(getattr(P, "MATCH_ALIGN_UNMAPPED_CREDIT", 0.0))
     occlusion_credit = float(getattr(P, "PARTIAL_OCCLUSION_CREDIT", 0.0))
+    # [PART 4] weight-aware counting: when enabled, each matched edge's
+    # contribution is scaled by its graded weight (edge_weight_fn), and the
+    # denominator accumulates the weight instead of a unit count.  Old graphs
+    # without weights default to 1.0, so this reduces to the old behaviour.
+    use_weight = bool(getattr(P, "EDGE_MATCH_USE_CONFIDENCE", False)) and edge_weight_fn is not None
+
+    def _ew(a1, a2, et):
+        return float(edge_weight_fn(a1, a2, et)) if use_weight else 1.0
 
     anchors_a = getattr(inc_a, "anchors", None) or {}
     anchors_b = getattr(inc_b, "anchors", None) or {}
@@ -455,9 +464,9 @@ def _relational_agreement(
                 else:
                     terms.append(unmapped_credit)
                     if not checkable:
-                        denominator += 1
+                        denominator += _ew(u, w, et)
                 continue
-            denominator += 1
+            denominator += _ew(u, w, et)
             if et in UNDIRECTED_EDGE_TYPES:
                 lo, hi = (v, mw) if v < mw else (mw, v)
                 ok = (lo, hi, et) in b_und
@@ -481,7 +490,7 @@ def _relational_agreement(
                     a1, a2 = (u, w) if outward else (w, u)
                     b1, b2 = (v, mw) if outward else (mw, v)
                 if edge_similarity is None:
-                    terms.append(1.0)
+                    terms.append(_ew(a1, a2, et))
                 else:
                     got = edge_similarity(a1, a2, b1, b2, et)
                     if got is None:
@@ -489,9 +498,9 @@ def _relational_agreement(
                         # ontology, so they are NOT COMPARED -- no credit and
                         # no charge (the "score it 0" reading made an absent
                         # counterpart look like evidence AGAINST the pair).
-                        denominator -= 1
+                        denominator -= _ew(a1, a2, et)
                         continue
-                    terms.append(got)
+                    terms.append(_ew(a1, a2, et) * got)
         agree_u = (math.fsum(terms) / denominator) if denominator else 0.0
     else:
         # [A1] no relations is NO relational support, not perfect agreement.
@@ -512,13 +521,13 @@ def _relational_agreement(
                 if _t_junction_near_nodes(anchors_b.get(v), anchors_b.get(x),
                                           junc_b, index=tj_b):
                     terms.append(occlusion_credit)
-                    denominator += 1
+                    denominator += _ew(v, x, et)
                 else:
                     terms.append(unmapped_credit)
                     if not checkable:
-                        denominator += 1
+                        denominator += _ew(v, x, et)
                 continue
-            denominator += 1
+            denominator += _ew(v, x, et)
             if et in UNDIRECTED_EDGE_TYPES:
                 lo, hi = (u, ux) if u < ux else (ux, u)
                 ok = (lo, hi, et) in a_und
@@ -541,15 +550,15 @@ def _relational_agreement(
                     a1, a2 = (u, ux) if outward else (ux, u)
                     b1, b2 = (v, x) if outward else (x, v)
                 if edge_similarity is None:
-                    terms.append(1.0)
+                    terms.append(_ew(a1, a2, et))
                 else:
                     got = edge_similarity(a1, a2, b1, b2, et)
                     if got is None:
                         # [B7] INCOMPARABLE -- not compared at all (no credit,
                         # no charge); see the u side.
-                        denominator -= 1
+                        denominator -= _ew(a1, a2, et)
                         continue
-                    terms.append(got)
+                    terms.append(_ew(a1, a2, et) * got)
         agree_v = (math.fsum(terms) / denominator) if denominator else 0.0
     else:
         agree_v = 0.0
@@ -692,6 +701,47 @@ def _dice_multiset(a: Dict[Any, int], b: Dict[Any, int]) -> float:
     return (2.0 * shared) / float(total_a + total_b)
 
 
+def _clamped_cosine(a, b) -> float:
+    """Cosine of two vectors clamped to [0, 1].  1.0 when either is absent
+    (the seed is left unchanged for a node with no address code)."""
+    import numpy as np
+    if a is None or b is None:
+        return 1.0
+    na = float(np.linalg.norm(a))
+    nb = float(np.linalg.norm(b))
+    if na <= 1e-12 or nb <= 1e-12:
+        return 1.0
+    return max(0.0, min(1.0, float(np.dot(a, b) / (na * nb))))
+
+
+def _address_seed_factor(
+    nodes_a: Sequence[int],
+    nodes_b: Sequence[int],
+    addrs_a: Optional[Dict[int, Any]],
+    addrs_b: Optional[Dict[int, Any]],
+    k: Optional[int],
+) -> Optional[List[List[float]]]:
+    """[B2] Element-wise clamped-cosine factor over node address vectors.
+
+    Returns a matrix [i][j] of cosines (clamped 0..1) between the level-``k``
+    address vectors of node i (A) and node j (B), or None when no addresses
+    are supplied.  A node with no address vector contributes a factor of 1.0
+    (its seed is unchanged).  This is a SEED adjustment only: it multiplies
+    the seed matrix and introduces NO pruning of candidate pairs.
+    """
+    if not addrs_a or not addrs_b:
+        return None
+    if k is None:
+        keys = [kk for kk in addrs_a if isinstance(kk, int)]
+        k = max(keys) if keys else None
+        if k is None or k not in addrs_b:
+            return None
+    la = addrs_a.get(k, {})
+    lb = addrs_b.get(k, {})
+    return [[_clamped_cosine(la.get(u), lb.get(v)) for v in nodes_b]
+            for u in nodes_a]
+
+
 def global_consistency_alignment(
     nodes_a: Sequence[int],
     nodes_b: Sequence[int],
@@ -711,6 +761,10 @@ def global_consistency_alignment(
     anchors_b: Optional[Dict[int, Sequence[float]]] = None,
     junctions_a: Sequence[Any] = (),
     junctions_b: Sequence[Any] = (),
+    addrs_a: Optional[Dict[int, Any]] = None,
+    addrs_b: Optional[Dict[int, Any]] = None,
+    address_k: Optional[int] = None,
+    edge_weight_fn=None,
 ) -> Alignment:
     """Global-consistency alignment seeded from the approximate Hungarian.
 
@@ -780,6 +834,16 @@ def global_consistency_alignment(
         for i in range(len(nodes_a))
     ]
 
+    # [B2] Address seed: multiply the SEED matrix element-wise by the clamped
+    # cosine of the per-graph address vectors.  Nothing else -- no pruning of
+    # candidate pairs (the unmatched_cost prune above is unchanged).
+    addr_factor = _address_seed_factor(nodes_a, nodes_b, addrs_a, addrs_b,
+                                       address_k)
+    if addr_factor is not None:
+        for i in range(len(nodes_a)):
+            for j in range(len(nodes_b)):
+                matrix[i][j] *= addr_factor[i][j]
+
     if not any(any(row) for row in matrix):
         return empty
 
@@ -803,6 +867,7 @@ def global_consistency_alignment(
         return _relational_agreement(
             u, v, mp, inc_a, inc_b, b_dir, b_und, a_dir, a_und, rv,
             edge_similarity, checkable=True, candidate=candidate,
+            edge_weight_fn=edge_weight_fn,
         )
 
     def _quality(u: int, v: int, mp: Dict[int, int], rv: Dict[int, int],

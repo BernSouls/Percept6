@@ -1,0 +1,33 @@
+{
+  "counts": {
+    "classes": 8,
+    "distinct_views": 41,
+    "image_sizes": {
+      "256x256": 80
+    },
+    "instances_per_class": {
+      "apple": 10,
+      "car": 10,
+      "cow": 10,
+      "cup": 10,
+      "dog": 10,
+      "horse": 10,
+      "pear": 10,
+      "tomato": 10
+    },
+    "mask_images": 3280,
+    "object_images": 3280,
+    "views_per_instance": [
+      41
+    ],
+    "views_used": {
+      "-035-135": 80,
+      "-090-000": 80
+    }
+  },
+  "layout": "/home/user/Percept6/data/ETH-80-master",
+  "normalised": false,
+  "note": "mirror already has <class>/<instance>/<name>.png + maps/; no layout change was needed",
+  "source": "https://codeload.github.com/chenchkx/ETH-80/tar.gz/refs/heads/master",
+  "verified": true
+}

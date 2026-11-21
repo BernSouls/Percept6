@@ -7,7 +7,7 @@ from PIL import Image
 import eth80_frontend as FE
 from matching.joint_mcs import joint_mcs
 from pathlib import Path
-IMG = str(Path(guard.TREE).parent / "data" / "ETH-80-master" / "1" / "2" / "apple2-022-000.png")
+IMG = str(Path(guard.TREE) / "data" / "ETH-80-master" / "1" / "2" / "apple2-022-000.png")
 
 def build(shift):
     with Image.open(IMG) as im:

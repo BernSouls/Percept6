@@ -225,7 +225,17 @@ def peaks_to_contour_peak_detections(
         if anchor is None:
             continue
 
-        anchor_positions[anchor] = (float(x), float(y))
+        # [T4/PART1] Sub-pixel position when FE_SUBPIXEL_PEAK_POS is on.
+        # The anchor identity stays the integer grid site (anchor_allocator
+        # above); only the (x, y) written to the position map is the
+        # parabolic-interpolated maximum of the response field.
+        if bool(getattr(P, "FE_SUBPIXEL_PEAK_POS", False)):
+            _px = float(pk.get("x_sub", x))
+            _py = float(pk.get("y_sub", y))
+        else:
+            _px = float(x)
+            _py = float(y)
+        anchor_positions[anchor] = (_px, _py)
 
         theta_idx = int(pk.get("theta_idx", 0)) % 12
         sf_idx = int(pk.get("sf_idx", 0))

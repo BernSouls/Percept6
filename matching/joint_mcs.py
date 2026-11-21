@@ -30,7 +30,7 @@ def edge_key(e):
     return (min(a,b),max(a,b),_edge_type_key(t),a,b)
 
 
-def edge_pair_credit(a, b, x, y, u, v, et):
+def edge_pair_credit(a, b, x, y, u, v, et, edge_weight_fn=None):
     """Typed edge credit; missing parameters yield presence, not physics.
 
     [LEAD / UNDIRECTED REVERSAL] An edge's parameters may be DIRECTIONAL, and
@@ -44,6 +44,10 @@ def edge_pair_credit(a, b, x, y, u, v, et):
     therefore resolved once, from the store, and the endpoints are handed
     over in it: the reversal inside `_pair_edge_sim_typed` then fires
     exactly when the two sides' conventions differ.
+
+    [B3] ``edge_weight_fn`` is threaded through for the weight-aware path;
+    the returned credit is the typed SIMILARITY (the min-weight numerator
+    credit is applied by the caller's matched-pairs loop).
     """
     p, flip_a = _lookup_edge_params_oriented(a.edge_params, x, y, et)
     q, flip_b = _lookup_edge_params_oriented(b.edge_params, u, v, et)
@@ -121,7 +125,8 @@ class JointMCS:
         return self.graded_edge_similarity_sum / self.graded_edges if self.graded_edges else None
 
 
-def _directional_joint_mcs(a, b, sigs_a, sigs_b):
+def _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None,
+                           address_k=None):
     """Two graphs in; no labels, training sets, filtering or learned masses.
 
     Each matched node contributes its signature similarity; each preserved
@@ -164,16 +169,34 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
     separate = bool(getattr(P, "MATCH_SEPARATE_TERM_NORMALIZATION", False))
     exclude_isolated = bool(getattr(
         P, "MATCH_EXCLUDE_ISOLATED_FROM_CORRESPONDENCE", False))
+    # [B3] Edge-weight credit mode: matched pairs credit min(weight on each
+    # side) in the numerator; the denominators carry the raw weights.
+    min_credit = bool(getattr(P, "MATCH_EDGE_MIN_CREDIT", False))
+
+    def _edge_weight(graph, x, y, et):
+        """Graded weight of one edge: EdgeParams.confidence (default 1.0)."""
+        p = _lookup_edge_params(getattr(graph, "edge_params", None), x, y, et)
+        return float(getattr(p, "confidence", 1.0)) if p is not None else 1.0
+
+    # [B3] edge_weight_fn threaded through edge_pair_credit and the alignment.
+    # The alignment's internal weight-aware relational path is gated by its
+    # own flag (EDGE_MATCH_USE_CONFIDENCE); this wiring makes the weight
+    # available without touching that pin.
+    def _align_edge_weight(x, y, et):
+        return _edge_weight(a, x, y, et)
+    # [B8] EXCLUSION IS A DOWN-WEIGHT, NOT A DELETION.  Removing isolated
+    # nodes from na/nb made an edgeless graph pair produce an EMPTY alignment:
+    # every class then scored 0 and argmax fell to the alphabetical tie-break
+    # (the "no-edges 0.1250" artefact).  The correspondence domain is now the
+    # SAME for every arm; exclusion is the declared isolated-node weight, and
+    # a floor keeps the node term measurable when neither graph has edges.
+    na, nb = sorted(a.nodes), sorted(b.nodes)
     if exclude_isolated:
-        def _active(g):
-            deg = {}
-            for s, d, _et in g.edges:
-                deg[s] = deg.get(s, 0) + 1
-                deg[d] = deg.get(d, 0) + 1
-            return [n for n in g.nodes if deg.get(n, 0) > 0]
-        na, nb = sorted(_active(a)), sorted(_active(b))
+        isolated_floor = float(getattr(P, "MATCH_EXCLUDE_ISOLATED_FLOOR", 0.5))
+        isolated_w = min(float(getattr(P, "MATCH_ISOLATED_NODE_WEIGHT", 1.0)),
+                         isolated_floor)
     else:
-        na, nb = sorted(a.nodes), sorted(b.nodes)
+        isolated_w = float(getattr(P, "MATCH_ISOLATED_NODE_WEIGHT", 1.0))
     deg_a = {}
     for s0, d0, _et0 in a.edges:
         deg_a[s0] = deg_a.get(s0, 0) + 1
@@ -182,28 +205,41 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
     for s0, d0, _et0 in b.edges:
         deg_b[s0] = deg_b.get(s0, 0) + 1
         deg_b[d0] = deg_b.get(d0, 0) + 1
-    isolated_w = float(getattr(P, "MATCH_ISOLATED_NODE_WEIGHT", 1.0))
+    # isolated_w is declared here (the [B8] down-weight rule) but NOT applied
+    # inside node_sim.  [T3] The baseline instrument (solver.py / TUNING_REPORT
+    # line 39) applies the isolated down-weight at SCORE time, per-node, AFTER
+    # the alignment has run on the RAW similarity.  Applying it pre-alignment
+    # (inside node_sim) changes the correspondence itself -- the alignment sees
+    # a deflated matrix and maps fewer nodes -- so the score is not the baseline
+    # cell.  The flag value is unchanged; only the placement moves to score
+    # time, where the baseline instrument reads it.
     @lru_cache(maxsize=None)
     def node_sim(u,v):
         x,y=sigs_a.get(u),sigs_b.get(v)
         if x is None or y is None or x[0]!=y[0]: return 0.0
-        got = _sig_similarity(x[1],y[1])
-        if isolated_w < 1.0 and (deg_a.get(u, 0) == 0 or deg_b.get(v, 0) == 0):
-            got *= isolated_w
-        return got
+        return _sig_similarity(x[1],y[1])
 
     unmatched_cost = float(P.MATCH_UNMATCHED_COST)
     if bool(getattr(P, "MATCH_UNMATCHED_COST_DERIVED", False)):
         # [F2] c = mean positive node similarity over the same-lens candidate
-        # matrix.  This is the objective's own null: a pair below the average
-        # candidate is a weaker explanation than leaving both nodes unmatched.
+        # matrix.  [B9] THE PRICE MUST BE ON q's SCALE.  A relative criterion
+        # (the mean of the raw similarities) compared against
+        # q = sim*(1-beta) + beta*rel made every >=1-side-edgeless pair
+        # unmatchable at high beta with the isolated down-weight on
+        # (q = 0.125*sim < c=0.15 collapsed a mapping from 229 to 56 nodes).
+        # node_sim is memoized (B3), and the price is scaled by exactly the
+        # coefficients q applies to a node similarity, so the comparison is
+        # a cost accounting in the objective's own units.
         positive = [s for u in na for v in nb
                     if (s := node_sim(u, v)) > 0.0]
-        unmatched_cost = (math.fsum(positive) / len(positive)) if positive else 0.0
+        price_scale = ((1.0 - float(P.MATCH_SYSTEMATICITY_WEIGHT))
+                       * isolated_w)
+        unmatched_cost = ((math.fsum(positive) / len(positive)) * price_scale
+                          if positive else 0.0)
 
     @lru_cache(maxsize=None)
     def edge_sim(x,y,u,v,et):
-        return edge_pair_credit(a,b,x,y,u,v,et)
+        return edge_pair_credit(a,b,x,y,u,v,et,edge_weight_fn=_align_edge_weight)
 
     al=global_consistency_alignment(
         na,nb,node_sim,edges_a=a.edges,edges_b=b.edges,
@@ -216,7 +252,14 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
         anchors_b=getattr(b,"anchor_of_node",None),
         junctions_a=getattr(a,"t_junctions",None) or (),
         junctions_b=getattr(b,"t_junctions",None) or (),
-        edge_similarity=edge_sim)
+        edge_similarity=edge_sim,
+        # [B2] the vector address is a fast code of node similarity; it ONLY
+        # seeds the alignment (multiplies the seed matrix).  It never enters
+        # the objective.
+        addrs_a=getattr(a,"addrs",None) if addrs_a is None else addrs_a,
+        addrs_b=getattr(b,"addrs",None) if addrs_b is None else addrs_b,
+        address_k=address_k,
+        edge_weight_fn=_align_edge_weight)
     assert len(set(al.mapping.values()))==len(al.mapping)
     b_und={(min(x,y),max(x,y),et) for x,y,et in b.edges if et in UNDIRECTED_EDGE_TYPES}
     b_dir={(x,y,et) for x,y,et in b.edges if et not in UNDIRECTED_EDGE_TYPES}
@@ -224,6 +267,9 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
     a_dir={(x,y,et) for x,y,et in a.edges if et not in UNDIRECTED_EDGE_TYPES}
     credits=[];graded=[];presence=0
     presence_credit=0.0;presence_pairs=0
+    # [B3] raw weight of the presence-only edges (subtracted from the
+    # weighted denominator, mirroring the count subtraction).
+    presence_weight=0.0
     # [J8] the presence-only relations among the CHECKABLE ones (both
     # endpoints mapped): they can never earn, so they leave the edge mass.
     presence_checkable_a=0
@@ -243,7 +289,12 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
         if edge_graded_axes(p,q)>0:
             value=edge_sim(x,y,u,v,et)
             graded.append(value)
-            credits.append(value)
+            if min_credit:
+                # [B3] numerator: min(weight on each side) * similarity
+                wa=_edge_weight(a,x,y,et); wb=_edge_weight(b,u,v,et)
+                credits.append(min(wa, wb) * value)
+            else:
+                credits.append(value)
         else:
             # [PHASE 3 / I5] NO MEASURED AXES: this is the topological fact
             # that the relation exists on both sides -- a membership flag, a
@@ -278,9 +329,26 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
                 # the presence-only edges (one on each side) can never earn,
                 # so they must not dilute the mass that can
                 presence_pairs+=1
+                if min_credit:
+                    presence_weight += (_edge_weight(a,x,y,et)
+                                        + _edge_weight(b,u,v,et))
             else:
-                credits.append(raw)
-    nodes=math.fsum(node_sim(u,v) for u,v in sorted(al.mapping.items()))
+                if min_credit:
+                    # [B3] the categorical credit is also weighted by the
+                    # weaker side's edge weight
+                    wa=_edge_weight(a,x,y,et); wb=_edge_weight(b,u,v,et)
+                    credits.append(min(wa, wb) * raw)
+                else:
+                    credits.append(raw)
+    # [T3] SCORE-TIME ISOLATED DOWN-WEIGHT.  The baseline instrument
+    # (solver.py / TUNING_REPORT line 39) applies the isolated-node weight
+    # AFTER the alignment, per mapped node, to the node credit only.  node_sim
+    # is raw now; here each mapped pair's contribution is scaled by
+    # isolated_w when either endpoint is isolated.  This is the placement the
+    # baseline cell declares (isolated=downweight), not a new mechanism.
+    nodes=math.fsum(node_sim(u,v) * (
+        isolated_w if (deg_a.get(u, 0) == 0 or deg_b.get(v, 0) == 0) else 1.0
+    ) for u,v in sorted(al.mapping.items()))
     edge_credit=math.fsum(credits)
     rev={v:k for k,v in al.mapping.items()}
     # [TUNE / DENOMINATOR] the checkable masses and the image-side credit.
@@ -293,6 +361,17 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
                     if al.mapping.get(x) is not None and al.mapping.get(y) is not None)
     checkable_b=sum(1 for x,y,_et in b.edges
                     if rev.get(x) is not None and rev.get(y) is not None)
+    # [B3] raw edge-weight masses for the weighted denominator
+    raw_mass_a = math.fsum(_edge_weight(a, x, y, et) for x, y, et in a.edges)
+    raw_mass_b = math.fsum(_edge_weight(b, x, y, et) for x, y, et in b.edges)
+    # [B3] raw weight of the CHECKABLE edges (both endpoints mapped), for the
+    # checkable/per_side denominator arms.
+    checkable_mass_a = math.fsum(
+        _edge_weight(a, x, y, et) for x, y, et in a.edges
+        if al.mapping.get(x) is not None and al.mapping.get(y) is not None)
+    checkable_mass_b = math.fsum(
+        _edge_weight(b, x, y, et) for x, y, et in b.edges
+        if rev.get(x) is not None and rev.get(y) is not None)
     b_credit=0.0
     if mode != "all":
         for x,y,et in sorted(b.edges,key=edge_key):
@@ -315,18 +394,26 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
                 if not not_evidence or raw > 0.0:
                     b_credit+=raw
     if mode == "all" and gamma == 1.0:
-        denom=len(na)+len(nb)+len(a.edges)+len(b.edges)
-        if presence_pairs:
-            # the presence-only edges (one on each side) can never earn, so they
-            # must not dilute the mass that can
-            denom=max(0,denom-2*presence_pairs)
+        if min_credit:
+            # [B3] denominators carry the raw weights, not the counts
+            denom=len(na)+len(nb)+raw_mass_a+raw_mass_b
+            if presence_pairs:
+                denom=max(0,denom-presence_weight)
+        else:
+            denom=len(na)+len(nb)+len(a.edges)+len(b.edges)
+            if presence_pairs:
+                # the presence-only edges (one on each side) can never earn, so they
+                # must not dilute the mass that can
+                denom=max(0,denom-2*presence_pairs)
         node_denom=len(na)+len(nb)
         if separate:
             # [FIX 2] The edge term charges against ALL edges on both sides.
             # Preserving 10% of the edges must score at most 0.10 on this term.
-            edge_denom=len(a.edges)+len(b.edges)
+            edge_denom=(raw_mass_a+raw_mass_b) if min_credit else (len(a.edges)+len(b.edges))
         else:
-            edge_denom=max(0,len(a.edges)+len(b.edges)-2*presence_pairs)
+            edge_denom=(max(0, raw_mass_a+raw_mass_b-presence_weight)
+                        if min_credit else
+                        max(0,len(a.edges)+len(b.edges)-2*presence_pairs))
         node_term=(nodes/node_denom) if node_denom else 0.0
         edge_term=(edge_credit/edge_denom) if edge_denom else 0.0
         # [J4] MATCH_EDGE_WEIGHT IS READ IN THE POOLED BRANCH.  It was not:
@@ -363,13 +450,22 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
         # which denominator was declared -- for a reason that has nothing to
         # do with the physics.
         if mode == "checkable":
-            edge_mass=float(2*min(checkable_a-presence_checkable_a,
-                                  checkable_b-presence_checkable_b))
+            if min_credit:
+                edge_mass=float(2*min(checkable_mass_a, checkable_mass_b))
+            else:
+                edge_mass=float(2*min(checkable_a-presence_checkable_a,
+                                      checkable_b-presence_checkable_b))
         elif mode == "per_side":
-            edge_mass=float((checkable_a-presence_checkable_a)
-                            +(checkable_b-presence_checkable_b))
+            if min_credit:
+                edge_mass=float(checkable_mass_a+checkable_mass_b)
+            else:
+                edge_mass=float((checkable_a-presence_checkable_a)
+                                +(checkable_b-presence_checkable_b))
         else:
-            edge_mass=float(max(0,len(a.edges)+len(b.edges)-2*presence_pairs))
+            if min_credit:
+                edge_mass=float(max(0,raw_mass_a+raw_mass_b-presence_weight))
+            else:
+                edge_mass=float(max(0,len(a.edges)+len(b.edges)-2*presence_pairs))
         edge_mass=max(0.0,edge_mass)
         if gamma != 1.0:
             edge_mass=float(edge_mass**gamma) if edge_mass>0.0 else 0.0
@@ -385,15 +481,20 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b):
     return JointMCS(score,dict(al.mapping),len(credits),len(graded),math.fsum(graded),presence,al.budget_exhausted,presence_credit,nodes,edge_credit_total,node_term,edge_term,float(denom))
 
 
-def joint_mcs(a, b, sigs_a, sigs_b):
+def joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None, address_k=None):
     """Symmetric score: retain the better of both directional heuristic solves.
 
     This does not certify optimality. Reversing graph arguments considers the
     same two candidates, so the scalar score is symmetric even if the bounded
     heuristic's seed or refinement behaves differently in the two directions.
+
+    [B2] ``addrs_a``/``addrs_b`` are the per-graph vector addresses (a side
+    structure beside the graph).  They seed the alignment only.
     """
-    forward = _directional_joint_mcs(a, b, sigs_a, sigs_b)
-    reverse = _directional_joint_mcs(b, a, sigs_b, sigs_a)
+    forward = _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a, addrs_b,
+                                     address_k)
+    reverse = _directional_joint_mcs(b, a, sigs_b, sigs_a, addrs_b, addrs_a,
+                                     address_k)
     if forward.score >= reverse.score:
         # symmetric budget reporting: the other direction's exhaustion is
         # still information about this pair.

@@ -23,7 +23,7 @@ from pathlib import Path
 
 from guard import TREE
 
-DATA = TREE.parent / "data" / "ETH-80-master"
+DATA = TREE / "data" / "ETH-80-master"
 _NAME = re.compile(r"^([a-z]+)(\d+)-(\d{3})-(\d{3})\.png$")
 
 CLASSES = ("apple", "car", "cow", "cup", "dog", "horse", "pear", "tomato")

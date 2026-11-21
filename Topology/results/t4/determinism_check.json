@@ -1,0 +1,24 @@
+{
+  "all_match": true,
+  "arms": {
+    "B0": {
+      "match": true,
+      "seed0_hash": "bc57bf39416dfecb62858e3265550010aff0f852f8ef9b95dc1f1a4da5592628",
+      "seed1729_hash": "bc57bf39416dfecb62858e3265550010aff0f852f8ef9b95dc1f1a4da5592628"
+    },
+    "B1": {
+      "match": true,
+      "seed0_hash": "960189f92ae1635ff7fc9cbf0dd147a8146c844c778bd82c5f4829413aeac74c",
+      "seed1729_hash": "960189f92ae1635ff7fc9cbf0dd147a8146c844c778bd82c5f4829413aeac74c"
+    },
+    "F": {
+      "match": true,
+      "seed0_hash": "b910d1119918bd43345a3cbade50134afa6f155f82eb935184d626733fade535",
+      "seed1729_hash": "b910d1119918bd43345a3cbade50134afa6f155f82eb935184d626733fade535"
+    }
+  },
+  "seeds": [
+    0,
+    1729
+  ]
+}

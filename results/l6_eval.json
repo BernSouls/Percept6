@@ -1,0 +1,44 @@
+{
+  "classification": {
+    "k1": {
+      "macro_auc": 0.7351190476190476,
+      "n_heldout": 48,
+      "n_train": 72,
+      "top1": 0.3541666666666667
+    },
+    "k2": {
+      "macro_auc": 0.7346230158730158,
+      "n_heldout": 48,
+      "n_train": 72,
+      "top1": 0.3541666666666667
+    },
+    "k3": {
+      "macro_auc": 0.7366071428571428,
+      "n_heldout": 48,
+      "n_train": 72,
+      "top1": 0.3541666666666667
+    }
+  },
+  "corpus": "ETH-80 (PRIMARY; 24 refs + 48 dev -> 48 heldout)",
+  "placement_agreement": {
+    "k1": {
+      "agreement_2px": 0.41802696948190204,
+      "agreement_3px": 0.4049168474331164,
+      "n_2px": 1409,
+      "n_3px": 1383
+    },
+    "k2": {
+      "agreement_2px": 0.35911994322214336,
+      "agreement_3px": 0.35647143890093996,
+      "n_2px": 1409,
+      "n_3px": 1383
+    },
+    "k3": {
+      "agreement_2px": 0.3470546486870121,
+      "agreement_3px": 0.3492407809110629,
+      "n_2px": 1409,
+      "n_3px": 1383
+    }
+  },
+  "protocol": "L6 structural address evaluation (ETH-80 PRIMARY)"
+}

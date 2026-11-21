@@ -1,0 +1,201 @@
+{
+  "corpus": "renderer-truth-v1 (RECONSTRUCTED with perception/synthetic3d.py)",
+  "counts": {
+    "CAL": 10,
+    "TEST": 5,
+    "scenes": 15
+  },
+  "frozen_ruler_json": "ABSENT (results/step_a_ruler.json not in this checkout)",
+  "frozen_ruler_sha256": "15c2b7c9... (reported by the brief; not verifiable here)",
+  "protocol": "192x192 uint8 RGB, fixed deterministic scenes, no random input; probe shifts applied by np.roll(image,(0,shift),axis=(0,1))",
+  "reason": "the frozen corpus was not shipped with this export; the ruler CODE and all measurement definitions are used unchanged",
+  "scenes": [
+    {
+      "description": "one box, flat background, axis aligned",
+      "height": 192,
+      "image_sha256": "540e279a96f13fb70173b23b318993b9588a66d7154c68dc35faf5a596594542",
+      "mask_pixels": 9504,
+      "name": "single_box",
+      "objects": [
+        "box"
+      ],
+      "split": "CAL",
+      "width": 192
+    },
+    {
+      "description": "one cylinder, flat background",
+      "height": 192,
+      "image_sha256": "39ed24933a93f91c655a52a5ed8c1dc74995292efe1945ffb7958e4dd7dc628b",
+      "mask_pixels": 4628,
+      "name": "single_cylinder",
+      "objects": [
+        "cylinder"
+      ],
+      "split": "CAL",
+      "width": 192
+    },
+    {
+      "description": "one sphere, flat background",
+      "height": 192,
+      "image_sha256": "9e730a21fda2270f0c325409b43dfd30d76769d6badc14074c73d0fb14725966",
+      "mask_pixels": 6320,
+      "name": "single_sphere",
+      "objects": [
+        "sphere"
+      ],
+      "split": "CAL",
+      "width": 192
+    },
+    {
+      "description": "noise-textured box (heavy texture)",
+      "height": 192,
+      "image_sha256": "836fbfca02000472258fa331339b66fc699ebbd7cad63c4145746fe049c681f4",
+      "mask_pixels": 9504,
+      "name": "texture_box",
+      "objects": [
+        "box"
+      ],
+      "split": "CAL",
+      "width": 192
+    },
+    {
+      "description": "striped sphere",
+      "height": 192,
+      "image_sha256": "cc0f29948062c3c56de60f176bb2e8f48673cd2c90615178f159f113b1081590",
+      "mask_pixels": 6320,
+      "name": "texture_sphere",
+      "objects": [
+        "sphere"
+      ],
+      "split": "CAL",
+      "width": 192
+    },
+    {
+      "description": "sphere occludes a rotated box",
+      "height": 192,
+      "image_sha256": "bf571c0f560015f11b0842a9019b7eeafb2b4b4cd885c3c859cad6d9aeb3ced4",
+      "mask_pixels": 10986,
+      "name": "box_occlusion",
+      "objects": [
+        "sphere",
+        "box"
+      ],
+      "split": "CAL",
+      "width": 192
+    },
+    {
+      "description": "sphere in front of box",
+      "height": 192,
+      "image_sha256": "8f7792f75e1836c770e30327cd181dbf6112f15e1e38e25f06311933d31f7b44",
+      "mask_pixels": 9896,
+      "name": "sphere_over_box",
+      "objects": [
+        "sphere",
+        "box"
+      ],
+      "split": "CAL",
+      "width": 192
+    },
+    {
+      "description": "two axis-aligned boxes, one in front",
+      "height": 192,
+      "image_sha256": "bb64b2cc46b00a2833cdd504147b1e736dd2519ef6e731a6a287656487f24af9",
+      "mask_pixels": 13797,
+      "name": "box_over_box",
+      "objects": [
+        "box",
+        "box"
+      ],
+      "split": "CAL",
+      "width": 192
+    },
+    {
+      "description": "occlusion under distance haze + slight blur",
+      "height": 192,
+      "image_sha256": "752496ba50c3c38a996b134a1186689aadc39d4e8cc810acce4b8e20f3b2985d",
+      "mask_pixels": 10986,
+      "name": "disk_occlusion_haze",
+      "objects": [
+        "sphere",
+        "box"
+      ],
+      "split": "CAL",
+      "width": 192
+    },
+    {
+      "description": "rotated box (tangent truth check)",
+      "height": 192,
+      "image_sha256": "f3b45bc84e4aa3fac9ef3d5e64581a258ddf49f871385bb34c551943f2325edb",
+      "mask_pixels": 12036,
+      "name": "f_box_b",
+      "objects": [
+        "box"
+      ],
+      "split": "CAL",
+      "width": 192
+    },
+    {
+      "description": "hazed cylinder",
+      "height": 192,
+      "image_sha256": "240542f90aec799cb705b8e7ee5e900b0b1a7a92425b8c2fb27efc4aea1cb2a0",
+      "mask_pixels": 5676,
+      "name": "f_haze_a",
+      "objects": [
+        "cylinder"
+      ],
+      "split": "TEST",
+      "width": 192
+    },
+    {
+      "description": "two textured boxes, same material",
+      "height": 192,
+      "image_sha256": "46bc9732df857468d3a55d6ee6f1b8633d7a7bc4c92710fdb1bc23d20ba35f42",
+      "mask_pixels": 15136,
+      "name": "tv_same_scene",
+      "objects": [
+        "box",
+        "box"
+      ],
+      "split": "TEST",
+      "width": 192
+    },
+    {
+      "description": "two untextured objects",
+      "height": 192,
+      "image_sha256": "14d7395452e714eaa6ad75e483d66e46e56ac925f38210fed64458e1372e6c71",
+      "mask_pixels": 12236,
+      "name": "no_texture2",
+      "objects": [
+        "sphere",
+        "box"
+      ],
+      "split": "TEST",
+      "width": 192
+    },
+    {
+      "description": "two differently textured objects",
+      "height": 192,
+      "image_sha256": "f75345691bf0b5369503c265d9e82faf8add9b10d965ac75898fd812c6c7a02c",
+      "mask_pixels": 12236,
+      "name": "texture2_only",
+      "objects": [
+        "sphere",
+        "box"
+      ],
+      "split": "TEST",
+      "width": 192
+    },
+    {
+      "description": "thin elongated box (bar)",
+      "height": 192,
+      "image_sha256": "196a462d3d0ce366ef52de606464db835db5a55134d5aeaab82409e6cbde9d83",
+      "mask_pixels": 1652,
+      "name": "thin_bar",
+      "objects": [
+        "box"
+      ],
+      "split": "TEST",
+      "width": 192
+    }
+  ]
+}

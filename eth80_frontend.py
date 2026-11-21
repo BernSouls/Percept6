@@ -77,7 +77,12 @@ _FRONTEND_SOURCE_FILES = ("orchestration/binder.py",
 _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       "BINDER_COMPLETE_POSITION_MAP",
                       "GRAPH_STAGE6_RELATIONS",
-                      "ATTACHMENT_EVERY_NAMED_HOST")
+                      "ATTACHMENT_EVERY_NAMED_HOST",
+                      "FE_L3_SPINE", "FE_L4_JUNCTIONS",
+                      "FE_SUBPIXEL_PEAK_POS",
+                      "FE_L6_ADDRESS",
+                      "FE_SOFT_CHANNEL_GATE", "FE_SOFT_L3_L4_GATE",
+                      "FE_VECTOR_ADDRESS")
 
 _log = logging.getLogger("eth80_frontend")
 
@@ -298,6 +303,7 @@ def build_graph(image: np.ndarray, name: str = "",
                           self_binders=None, derived=None, cg=cg)
         channels_by_step: List[Dict[str, Any]] = []
         for t in range(n_steps):
+            v4_emitted = False
             if t > 0:
                 # [STAGE 6 / 0a] close the previous presentation in
                 # Pipeline.step's order: the weight EMA, then the binder.
@@ -381,6 +387,16 @@ def build_graph(image: np.ndarray, name: str = "",
                     if lens_name in ("EndStopped", "RegionShape", "Polarity",
                                      "TextureBoundary"):
                         lens_dets.extend(out)
+                    # [T4/PART0 root-cause fix] The lens tier's positions are
+                    # written into `anchor_positions` by each _run_higher_lens
+                    # call above. They must be merged into the binder's step
+                    # map BEFORE any bind_intra_step mints a node, otherwise
+                    # _remember_node_position finds nothing for tier-lens nodes
+                    # (CONTOUR_PEAK, PEAK_CHAIN, EndStopped, ...) and they get
+                    # zero positions -- the matcher then sees no geometry for
+                    # them. Merging here, once per iteration, is idempotent
+                    # (the binder's own entries always win) and complete.
+                    binder.note_tier_positions(anchor_positions)
                     # --- the bind choreography, per lens ---
                     if lens_name in ("BorderOwnership", "Surface"):
                         binder.bind_intra_step(t, frozenset(out))
@@ -421,6 +437,9 @@ def build_graph(image: np.ndarray, name: str = "",
                         binder.bind_intra_step(t, frozenset(out))
                         binder.note_tier_positions(anchor_positions)
                         binder.emit_pending_edges("v4")
+                        v4_emitted = True
+        if not v4_emitted:
+            binder.emit_pending_edges("v4")
 
         # D_bind_all, in the pipeline's fixed union order
         D_v2 = (list(tier_dets.get("Contour", []))

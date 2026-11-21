@@ -1,0 +1,271 @@
+{
+  "E1_lookup_by_hash": {
+    "call_sites": [
+      {
+        "label": "identity",
+        "site": "consolidator.py:1412",
+        "symbol": "self.core_library.lookup_by_hash(core_hash, CoreKind.ACTION)",
+        "why": "Structural identity collision check before creating an ACTION core."
+      },
+      {
+        "label": "identity",
+        "site": "consolidator.py:1493",
+        "symbol": "self.core_library.lookup_by_hash(key, CoreKind.CATEGORY)",
+        "why": "key = hash(perceptual-reference-v1, graph_hash, label); exact dedup of a reference category."
+      },
+      {
+        "label": "identity",
+        "site": "consolidator.py:2772",
+        "symbol": "self.core_library.lookup_by_hash(core_hash, CoreKind.CATEGORY)",
+        "why": "core_hash = _subgraph_wl_hash(core_subgraph); exact dedup of a CATEGORY core."
+      },
+      {
+        "label": "identity",
+        "site": "memory/cores.py:2878",
+        "symbol": "self.cl.lookup_by_hash(ch, CoreKind.CATEGORY)",
+        "why": "Liveness check: is the category's hash still registered?"
+      },
+      {
+        "label": "identity",
+        "site": "memory/cores.py:2895",
+        "symbol": "self.cl.lookup_by_hash(ch, CoreKind.CATEGORY)",
+        "why": "Liveness check: is any category hash still registered?"
+      },
+      {
+        "label": "identity",
+        "site": "memory/cores.py:2960",
+        "symbol": "self.cl.lookup_by_hash(assigned_hash, CoreKind.CATEGORY)",
+        "why": "Retrieve the entry for an assigned category hash."
+      },
+      {
+        "label": "identity",
+        "site": "memory/cores.py:3092",
+        "symbol": "self.cl.lookup_by_hash(new_hash, CoreKind.CATEGORY)",
+        "why": "Validate/refresh an existing category entry by exact hash."
+      },
+      {
+        "label": "identity",
+        "site": "memory/cores.py:3206",
+        "symbol": "self.cl.lookup_by_hash(ch, CoreKind.CATEGORY)",
+        "why": "Retrieve category entry by hash for validation."
+      },
+      {
+        "label": "identity",
+        "site": "memory/cores.py:3227",
+        "symbol": "self.cl.lookup_by_hash(ch, CoreKind.CATEGORY)",
+        "why": "Retrieve category entry by hash for validation."
+      },
+      {
+        "label": "identity",
+        "site": "memory/cores.py:3250",
+        "symbol": "self.cl.lookup_by_hash(ch, CoreKind.CATEGORY)",
+        "why": "Retrieve category entry by hash for label cleanup."
+      },
+      {
+        "label": "identity",
+        "site": "memory/cores.py:3264",
+        "symbol": "ea = self.cl.lookup_by_hash(hash_a, CoreKind.CATEGORY); eb = self.cl.lookup_by_hash(hash_b, CoreKind.CATEGORY)",
+        "why": "_mcs_score: identity lookup fetches two entries; the SIMILARITY is computed by mcs_score(ea, eb) AFTER retrieval, not by lookup_by_hash itself."
+      },
+      {
+        "label": "identity",
+        "site": "memory/mapper.py:623",
+        "symbol": "self.cl.lookup_by_hash(ident.core_hash, CoreKind.ACTION)",
+        "why": "Retrieve an ACTION core by its exact core_hash."
+      },
+      {
+        "label": "identity",
+        "site": "memory/mapper.py:970",
+        "symbol": "self.cl.lookup_by_hash(ident.core_hash, kind)",
+        "why": "Retrieve a core entry by exact core_hash."
+      }
+    ],
+    "function": "memory/cores.py:504 CoreLibrary.lookup_by_hash(canonical_hash, kind) -> Optional[CoreEntry]",
+    "n_call_sites": 13,
+    "semantics": "exact dict lookup on (canonical_hash, kind); identity retrieval, NOT similarity",
+    "status": "UNAFFECTED (static call-site table; axis bug does not apply)"
+  },
+  "E3_source_digest": "b5aea88722d4e7c3caba1906ee5cea6ea6e8aa4eead47f78300d6e2ab281972d",
+  "E5_per_lens": {
+    "arm": "B1",
+    "class_labels": [
+      "apple",
+      "apple",
+      "apple",
+      "apple",
+      "apple",
+      "apple",
+      "car",
+      "car",
+      "car",
+      "car",
+      "car",
+      "car",
+      "cow",
+      "cow",
+      "cow",
+      "cow",
+      "cow",
+      "cow",
+      "cup",
+      "cup",
+      "cup",
+      "cup",
+      "cup",
+      "cup",
+      "dog",
+      "dog",
+      "dog",
+      "dog",
+      "dog",
+      "dog",
+      "horse",
+      "horse",
+      "horse",
+      "horse",
+      "horse",
+      "horse",
+      "pear",
+      "pear",
+      "pear",
+      "pear",
+      "pear",
+      "pear",
+      "tomato",
+      "tomato",
+      "tomato",
+      "tomato",
+      "tomato",
+      "tomato"
+    ],
+    "mi_bits_count_bins": {
+      "CONTOUR_PEAK": 0.2481223466355133,
+      "Contour": 0.266454612625056,
+      "ContourFragment": 0.0845992802667109,
+      "Corner": 0.2958409727907907,
+      "CurveComplex": 0.3529052642602591,
+      "EndStopped": 0.3489338353989375,
+      "Junction": 0.21691718668869922,
+      "Orientation": 0.3231335574596905,
+      "PEAK_CHAIN": 0.2147971291958699,
+      "RegionShape": 0.21584087214857808,
+      "T": 0.2883487073489738,
+      "Y": 0.20413077600632856
+    },
+    "n_scenes": 48,
+    "node_totals": {
+      "CONTOUR_PEAK": 5646,
+      "Contour": 538,
+      "ContourFragment": 2886,
+      "Corner": 690,
+      "CurveComplex": 404,
+      "EndStopped": 1804,
+      "Junction": 14,
+      "Orientation": 1745,
+      "PEAK_CHAIN": 1011,
+      "RegionShape": 731,
+      "T": 11,
+      "Y": 5
+    },
+    "scene_names": [
+      "apple4-090-000",
+      "apple4-035-135",
+      "apple5-090-000",
+      "apple5-035-135",
+      "apple6-090-000",
+      "apple6-035-135",
+      "car5-090-000",
+      "car5-035-135",
+      "car6-090-000",
+      "car6-035-135",
+      "car7-090-000",
+      "car7-035-135",
+      "cow4-090-000",
+      "cow4-035-135",
+      "cow5-090-000",
+      "cow5-035-135",
+      "cow6-090-000",
+      "cow6-035-135",
+      "cup4-090-000",
+      "cup4-035-135",
+      "cup5-090-000",
+      "cup5-035-135",
+      "cup6-090-000",
+      "cup6-035-135",
+      "dog4-090-000",
+      "dog4-035-135",
+      "dog5-090-000",
+      "dog5-035-135",
+      "dog6-090-000",
+      "dog6-035-135",
+      "horse4-090-000",
+      "horse4-035-135",
+      "horse5-090-000",
+      "horse5-035-135",
+      "horse6-090-000",
+      "horse6-035-135",
+      "pear4-090-000",
+      "pear4-035-135",
+      "pear5-090-000",
+      "pear5-035-135",
+      "pear6-090-000",
+      "pear6-035-135",
+      "tomato4-090-000",
+      "tomato4-035-135",
+      "tomato5-090-000",
+      "tomato5-035-135",
+      "tomato6-090-000",
+      "tomato6-035-135"
+    ],
+    "scene_presence": {
+      "CONTOUR_PEAK": 48,
+      "Contour": 48,
+      "ContourFragment": 48,
+      "Corner": 48,
+      "CurveComplex": 48,
+      "EndStopped": 48,
+      "Junction": 12,
+      "Orientation": 48,
+      "PEAK_CHAIN": 48,
+      "RegionShape": 48,
+      "T": 9,
+      "Y": 4
+    }
+  },
+  "E7_validity": {
+    "INVALID": [
+      "4c contrasts (real - no_edge etc.)",
+      "4e junction shift numbers",
+      "E6 flicker (per-family, shift-based)",
+      "all per-kind equivariance claims (nonzero shift)",
+      "dev corr+2/surv+2",
+      "e8_lens_mi (VACUOUS \u2014 redone over all 48 dev scenes)",
+      "frozen-tolerance 2.0 px"
+    ],
+    "UNAFFECTED": [
+      "0px D1(0)=0.8636, D2(0)=1.0",
+      "4d AUC/top-1 (no positions used)",
+      "address work (L0 = normalize(type vector + graded content code))",
+      "determinism hashes (0 vs 1729 ALL MATCH)",
+      "edge-weight band table (2897 dev edges)",
+      "isolated-weight note (joint_mcs.py:349)",
+      "mean degree + graph census per arm"
+    ],
+    "VALID": [
+      "Part 0: 0b(i) shift-all-stores PASS",
+      "Part 0: 0b(ii) cross-check PASS (matches known_transform)",
+      "Part 0: 0b(iii) Fourier integer-exact PASS",
+      "Part 0: 0b(iv) axis provenance (matched-token displacement)",
+      "Part 0: 0c primary radius per kind/partition",
+      "Part 1a: per-kind/per-partition equivariance @8px",
+      "Part 1b: mechanism probes (Contour/CurveComplex drop/create)",
+      "Part 1c: sub-pixel RMS vs 0.5px floor",
+      "Part 1d: per-lens anchor fraction",
+      "Part 2a: dev measurements (mean degree, zero share, NN gap)",
+      "Part 2b: held-out correspondence 0/\u00b12/\u00b13 + 0px ceiling",
+      "Part 2c: controls paired intervals",
+      "Part 2d: arm selection (F vs B1)",
+      "Part E: per-lens MI over 48 dev scenes"
+    ]
+  }
+}

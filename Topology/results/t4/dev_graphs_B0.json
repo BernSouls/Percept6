@@ -1,0 +1,123 @@
+{
+  "applied": {
+    "FE_L3_SPINE": false,
+    "FE_L4_JUNCTIONS": false
+  },
+  "arm": "B0",
+  "build_seconds": 96.90511603399864,
+  "graphs": [
+    {
+      "budget": 512,
+      "cache": "/home/user/Percept6/Topology/cache/graphs/b4a49d0d405c7d09_2fce37437de9315b_8d1005f964431d45_b512.pkl",
+      "class_": "apple",
+      "edges": 168,
+      "feature_count": 76,
+      "feature_nodes": 53,
+      "frontend_seconds": 26.350413234998996,
+      "name": "apple4-090-000",
+      "nodes": 201,
+      "object_": 4,
+      "source_digest": "2fce37437de9315b6a5846f365b433aaba2371a7c821f77bc241bed529705974",
+      "view": "-090-000"
+    },
+    {
+      "budget": 512,
+      "cache": "/home/user/Percept6/Topology/cache/graphs/a737386b97342fd0_2fce37437de9315b_8d1005f964431d45_b512.pkl",
+      "class_": "car",
+      "edges": 90,
+      "feature_count": 56,
+      "feature_nodes": 35,
+      "frontend_seconds": 24.45483199800219,
+      "name": "car5-090-000",
+      "nodes": 246,
+      "object_": 5,
+      "source_digest": "2fce37437de9315b6a5846f365b433aaba2371a7c821f77bc241bed529705974",
+      "view": "-090-000"
+    },
+    {
+      "budget": 512,
+      "cache": "/home/user/Percept6/Topology/cache/graphs/12afce128fbd4ed1_2fce37437de9315b_8d1005f964431d45_b512.pkl",
+      "class_": "cow",
+      "edges": 174,
+      "feature_count": 88,
+      "feature_nodes": 54,
+      "frontend_seconds": 22.466190614999505,
+      "name": "cow4-090-000",
+      "nodes": 370,
+      "object_": 4,
+      "source_digest": "2fce37437de9315b6a5846f365b433aaba2371a7c821f77bc241bed529705974",
+      "view": "-090-000"
+    },
+    {
+      "budget": 512,
+      "cache": "/home/user/Percept6/Topology/cache/graphs/853e923703fbf7ad_2fce37437de9315b_8d1005f964431d45_b512.pkl",
+      "class_": "cup",
+      "edges": 502,
+      "feature_count": 125,
+      "feature_nodes": 80,
+      "frontend_seconds": 23.413456197002233,
+      "name": "cup4-090-000",
+      "nodes": 436,
+      "object_": 4,
+      "source_digest": "2fce37437de9315b6a5846f365b433aaba2371a7c821f77bc241bed529705974",
+      "view": "-090-000"
+    },
+    {
+      "budget": 512,
+      "cache": "/home/user/Percept6/Topology/cache/graphs/a4e0eda27dabf9d4_2fce37437de9315b_8d1005f964431d45_b512.pkl",
+      "class_": "dog",
+      "edges": 128,
+      "feature_count": 45,
+      "feature_nodes": 30,
+      "frontend_seconds": 24.80243282900119,
+      "name": "dog4-090-000",
+      "nodes": 360,
+      "object_": 4,
+      "source_digest": "2fce37437de9315b6a5846f365b433aaba2371a7c821f77bc241bed529705974",
+      "view": "-090-000"
+    },
+    {
+      "budget": 512,
+      "cache": "/home/user/Percept6/Topology/cache/graphs/8ff6f2a8592a1b22_2fce37437de9315b_8d1005f964431d45_b512.pkl",
+      "class_": "horse",
+      "edges": 248,
+      "feature_count": 102,
+      "feature_nodes": 62,
+      "frontend_seconds": 23.929227575001278,
+      "name": "horse4-090-000",
+      "nodes": 341,
+      "object_": 4,
+      "source_digest": "2fce37437de9315b6a5846f365b433aaba2371a7c821f77bc241bed529705974",
+      "view": "-090-000"
+    },
+    {
+      "budget": 512,
+      "cache": "/home/user/Percept6/Topology/cache/graphs/9db00f544aa0736b_2fce37437de9315b_8d1005f964431d45_b512.pkl",
+      "class_": "pear",
+      "edges": 144,
+      "feature_count": 58,
+      "feature_nodes": 40,
+      "frontend_seconds": 21.884015307998197,
+      "name": "pear4-090-000",
+      "nodes": 261,
+      "object_": 4,
+      "source_digest": "2fce37437de9315b6a5846f365b433aaba2371a7c821f77bc241bed529705974",
+      "view": "-090-000"
+    },
+    {
+      "budget": 512,
+      "cache": "/home/user/Percept6/Topology/cache/graphs/63371a6f35be5d0c_2fce37437de9315b_8d1005f964431d45_b512.pkl",
+      "class_": "tomato",
+      "edges": 148,
+      "feature_count": 63,
+      "feature_nodes": 38,
+      "frontend_seconds": 22.602482843998587,
+      "name": "tomato4-090-000",
+      "nodes": 228,
+      "object_": 4,
+      "source_digest": "2fce37437de9315b6a5846f365b433aaba2371a7c821f77bc241bed529705974",
+      "view": "-090-000"
+    }
+  ],
+  "switch_spec": "FE_L3_SPINE=false;FE_L4_JUNCTIONS=false"
+}

@@ -155,9 +155,11 @@ def _static_coherence(Q: Any, C: Any, u: int, v: int,
     rels_u = q_inc.get(u) or []
     rels_v = c_inc.get(v) or []
     if not rels_u or not rels_v:
-        # nothing to disagree with: the coherence is 1.0 (no evidence
-        # against the pair), which is the only honest reading
-        return 1.0
+        # [B21] NO EVIDENCE IS NOT PERFECT AGREEMENT.  matching/alignment.py
+        # reads an edgeless side as 0.0 relational support unconditionally;
+        # the MILP path must agree, or the absence of structure earns the
+        # full coherence credit and displaces structured pairs.
+        return 0.0
     total = 0.0
     for (eu, epu) in rels_u:
         best = 0.0
@@ -563,7 +565,9 @@ def objective_value(mapping: Dict[int, int], Q: Any, C: Any,
                 tot += a
             kappa = tot / d
         else:
-            kappa = 1.0
+            # [B21] edgeless => kappa = 0.0 (alignment.py's convention),
+            # not the vacuous 1.0 that paid full credit for no structure.
+            kappa = 0.0
         node_term += A * (1.0 - beta + beta * kappa)
     unmatched = -W_U * ((len(nodes_q) - len(mapping)) / n_q
                         + (len(nodes_c) - len(mapping)) / n_c)
@@ -766,8 +770,11 @@ def graded_mcs(Q: Any, C: Any,
     # node earns its similarity ONLY through the units it preserves.
     beta = float(getattr(P, "GRADED_MCS_COHERENCE_BETA", 0.0))
     static_coh = bool(getattr(P, "GRADED_MCS_STATIC_COHERENCE", False))
-    q_deg = {u: sum(1 for e in Q.edges if e[0] == u or e[1] == u)
-             for u in nodes_q}
+    # [B19] ONE PASS over |E|, not O(n_q x |E|).
+    q_deg = {}
+    for (_u, _u2, _et) in Q.edges:
+        q_deg[_u] = q_deg.get(_u, 0) + 1
+        q_deg[_u2] = q_deg.get(_u2, 0) + 1
     if static_coh:
         q_params = getattr(Q, "edge_params", None) or {}
         c_params = getattr(C, "edge_params", None) or {}
@@ -789,12 +796,20 @@ def graded_mcs(Q: Any, C: Any,
         if node_mass:
             w = float(node_mass.get(u, 1.0)) * float(node_mass.get(v, 1.0))
         A = W_N * sim(u, v) * w / n_q
-        # a node with NO relations has nothing to disagree about: its
-        # coherence is 1.0, so its credit stays unconditional
-        b_eff = beta if q_deg.get(u, 0) > 0 else 0.0
-        if static_coh and b_eff:
-            A = A * (1.0 - b_eff + b_eff * coh[(u, v)])
+        # [B21] A node with NO relations has NO coherence (kappa = 0.0),
+        # the same reading alignment.py uses: it earns only the appearance
+        # part (1 - beta) of its credit, never the full unconditional A.
+        has_edges = q_deg.get(u, 0) > 0
+        if static_coh:
+            # _static_coherence returns 0.0 for an edgeless side, so this
+            # one expression covers both cases.
+            A = A * (1.0 - beta + beta * coh[(u, v)])
             b_eff = 0.0
+        elif not has_edges:
+            A = A * (1.0 - beta)
+            b_eff = 0.0
+        else:
+            b_eff = beta
         A_full[i] = A
         A_vec[i] = A * (1.0 - b_eff)
     E_vec = np.zeros(n_y, dtype=np.float64)

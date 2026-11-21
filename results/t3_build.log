@@ -1,0 +1,78 @@
+  front end  10/120 (120s)
+  front end  20/120 (238s)
+  front end  30/120 (360s)
+  front end  40/120 (479s)
+  front end  50/120 (606s)
+  front end  60/120 (704s)
+  front end  70/120 (828s)
+  front end  80/120 (951s)
+  front end  90/120 (1071s)
+  front end 100/120 (1187s)
+  front end 110/120 (1309s)
+  front end 120/120 (1422s)
+wrote /home/user/Percept6/Topology/results/tune/graphs.json
+es(obj)
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 199, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 410, in _send_bytes
+    self._send(header + buf)
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 367, in _send
+    n = write(self._handle, buf)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.11/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/lib/python3.11/multiprocessing/pool.py", line 136, in worker
+    put((job, i, (False, wrapped)))
+  File "/usr/lib/python3.11/multiprocessing/queues.py", line 377, in put
+    self._writer.send_bytes(obj)
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 199, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 410, in _send_bytes
+    self._send(header + buf)
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 367, in _send
+    n = write(self._handle, buf)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
+Process SpawnPoolWorker-1:
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/multiprocessing/pool.py", line 131, in worker
+    put((job, i, result))
+  File "/usr/lib/python3.11/multiprocessing/queues.py", line 377, in put
+    self._writer.send_bytes(obj)
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 199, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 410, in _send_bytes
+    self._send(header + buf)
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 367, in _send
+    n = write(self._handle, buf)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.11/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/lib/python3.11/multiprocessing/pool.py", line 136, in worker
+    put((job, i, (False, wrapped)))
+  File "/usr/lib/python3.11/multiprocessing/queues.py", line 377, in put
+    self._writer.send_bytes(obj)
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 199, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 410, in _send_bytes
+    self._send(header + buf)
+  File "/usr/lib/python3.11/multiprocessing/connection.py", line 367, in _send
+    n = write(self._handle, buf)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
+/usr/lib/python3.11/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 6 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

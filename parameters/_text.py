@@ -2172,6 +2172,12 @@ MATCH_ALIGN_UNMAPPED_CREDIT: float = 0.0
 # [TUNE / LENIENT EDGES] Down-weight a node with no incident relation instead
 # of removing it.  1.0 = old; 0.5 = the tuning arm.
 MATCH_ISOLATED_NODE_WEIGHT: float = 1.0
+# [B8] Floor for MATCH_EXCLUDE_ISOLATED_FROM_CORRESPONDENCE.  The flag is a
+# DOWN-WEIGHT, not a deletion: a zero weight makes an edgeless graph pair
+# score identically (0) for every class and argmax falls to the alphabetical
+# tie-break.  The floor keeps the node term measurable; it is not a tuning
+# knob, it is the smallest weight that still measures something.
+MATCH_EXCLUDE_ISOLATED_FLOOR: float = 0.5
 # Weight of the relational (systematicity) modulation of the alignment.
 MATCH_SYSTEMATICITY_WEIGHT = 0.5
 # Bounded fixed-point rounds for the global alignment refinement.
@@ -2181,6 +2187,13 @@ MATCH_ALIGN_MAX_PAIR_EVALS = 200000
 # Weight of the relational term in the combined fuzzy score (the node term is
 # 1 - this). This is a blend weight, NOT the removed 0.85 additive floor.
 MATCH_EDGE_WEIGHT = 0.5
+# [B3] Edge-weight credit mode.  When True, a matched edge pair credits
+# min(weight on A's side, weight on B's side) in the NUMERATOR and the raw
+# weights in the DENOMINATORS (a weak edge observed on both sides earns the
+# weaker weight; the mass is the sum of the raw weights, not the count).
+# When False the historical unit-count credit/mass is used.  Switchable per
+# arm without touching the other pins.
+MATCH_EDGE_MIN_CREDIT: bool = False
 # [TUNE / DENOMINATOR] How the pooled score charges edges it did not preserve.
 #   "all"       -- every edge on both sides (the historical denominator)
 #   "checkable" -- edges with BOTH endpoints mapped, per side, then min
@@ -3118,7 +3131,7 @@ FIELD_BORDER_DISCARD_PER_CHANNEL = False
 # tier's before each level is emitted, and `_run_part_containment` (which
 # lived in a level no caller ever asked for) runs with the v4 level.
 # OFF: the stale copy, byte for byte.
-BINDER_COMPLETE_POSITION_MAP = False
+BINDER_COMPLETE_POSITION_MAP = True
 # [STAGE 6 / R1, R2, R3, R5] THE MEASURED RELATIONS (one grouped switch).
 #   R1  BOUNDARY_ATTACHMENT: a local feature's place on an extended boundary
 #       (perception/attachment.py), written only when the host is unambiguous
@@ -3827,3 +3840,75 @@ ASSEMBLY_OVERLAP_MIN: float = 0.25
 # DECLARED CHEAT: every number produced while a label member is present is
 # tagged "label-assisted".
 ASSEMBLY_LABEL_ASSIST: bool = True
+
+#: [L3] Content-token spine (mutual-best successor/predecessor + chain families).
+FE_L3_SPINE: bool = False
+#: [L4] Content-token junctions (vertices and occlusion T-points).
+FE_L4_JUNCTIONS: bool = False
+#: [L4] Corner turn threshold (degrees) for a CONTOUR_PEAK to count as a
+#: vertex: the chain tangent must turn this far against a chain-neighbour.
+#: Pre-registered from the tracer calibration (consecutive-peak angle q0.90).
+L4_CORNER_TURN_DEG: float = 45.0
+#: [T4/PART1] Sub-pixel peak localisation. When True, CONTOUR_PEAK token
+#: positions are refined by parabolic interpolation on the response field
+#: (the integration channel at the peak's argmax (theta, sf) cell) rather
+#: than the integer grid site. The anchor identity stays the grid site; only
+#: the (x, y) written to the position map is sub-pixel. Default OFF until the
+#: event-token survival gate is measured.
+FE_SUBPIXEL_PEAK_POS: bool = False
+#: [L4] Corner de-duplication radius (px): two detected corners closer than
+#: this are one vertex (a box corner often carries two nearby turning peaks).
+L4_CORNER_DEDUP_PX: float = 8.0
+
+#: [L6] Weisfeiler-Lehman structural address (k=1,2,3) on kept relation families.
+FE_L6_ADDRESS: bool = False
+
+# ---------------------------------------------------------------------------
+# [PART 1] Soft gates -- replace hard pass/fail cut-offs with graded weights.
+# Default OFF until the final check turns the winning flags ON.
+# ---------------------------------------------------------------------------
+#: [1a] Soft binder channel gate: replace the norm_sig >= threshold pass/fail
+#: with a weight in [0,1] rising smoothly across a band around the threshold.
+#: [FINAL CHECK G] turned ON by default: B (edge stability) passes (both
+#: families KEPT, preservation ~0.88, beats_null).
+FE_SOFT_CHANNEL_GATE: bool = True
+#: [1b] Soft L3/L4 gates: every hard cut (reach, mutual-best, corner turn,
+#: T-point gap, dedup radius) becomes a graded weight; dedup merges by max
+#: weight instead of deleting.
+#: [FINAL CHECK G] turned ON by default: B passes.
+FE_SOFT_L3_L4_GATE: bool = True
+#: [1c] Signal percentile used to normalize candidate signals (instead of the
+#: maximum).  Derived on DEV from signal stability; q0.95 by the stated rule.
+FE_SOFT_GATE_PERCENTILE: float = 0.95
+#: [1c] Band half-width around the threshold (in normalized-signal units).
+#: Derived on DEV as the typical change in a counterpart candidate's measured
+#: value between a scene and its +2px shift.
+FE_SOFT_GATE_BAND: float = 0.10
+#: [1c] Absolute noise floor added to every graded weight.  Derived on DEV
+#: from blank/null-frame candidate values.
+FE_SOFT_GATE_NOISE_FLOOR: float = 0.05
+#: [1a] When True, the graded weight also becomes the edge's signal weight
+#: (not only the EdgeParams.confidence slot), so weight-aware downstream
+#: paths see it.  Old graphs without weights use the stated default (1.0).
+FE_SOFT_GATE_EDGE_WEIGHT: bool = True
+#: [1c] DEV-derived SHIFT of the soft-gate ramp centre (in normalized-signal
+#: units) so the total weight over DEV scenes matches the old hard-gate
+#: emitted edge count.  Derived once on DEV; applied when the soft gate is
+#: on.  Replaces the old global multiplier (x0.785): a centre shift keeps a
+#: perfect edge at weight 1.0 while matching the total.
+FE_SOFT_GATE_CENTRE_SHIFT: float = 0.0
+
+# ---------------------------------------------------------------------------
+# [PART 2] Vector structural address (replaces exact-hash MATCH with cosine).
+# ---------------------------------------------------------------------------
+#: [2] Enable the vector structural address (the old hash stays as canonical
+#: ID only).  OFF until PART B wires it to the matcher (B2): the address is a
+#: fast code of node similarity used ONLY to seed the matcher.  [Task 3 A1]
+FE_VECTOR_ADDRESS: bool = False
+#: [2] Dimension of each symbol's fixed random vector.
+VECTOR_ADDRESS_DIM: int = 1024
+#: [2] Fixed self_weight on a node's own address term (stops a weak edge from
+#: being normalized up to full strength).
+VECTOR_ADDRESS_SELF_WEIGHT: float = 1.0
+#: [2] Number of WL levels kept (1..3), mirroring the existing L6 flag.
+VECTOR_ADDRESS_MAX_K: int = 3

@@ -1,0 +1,116 @@
+=== PART 1: DIAGNOSE ===
+dev entries: 8
+
+--- Computing primary radius (B0, all dev) ---
+  CONTOUR_PEAK         n=890 radius=1.118
+  Contour              n=88 radius=8.000
+  ContourFragment      n=433 radius=1.000
+  Corner               n=91 radius=3.606
+  CurveComplex         n=65 radius=8.000
+  EndStopped           n=308 radius=2.915
+  Junction             n=5 radius=ABSENT
+  Orientation          n=275 radius=1.000
+  PEAK_CHAIN           n=142 radius=3.001
+  RegionShape          n=103 radius=3.416
+
+--- 1a: vert+2 (dx=0, dy=2) ---
+  apple4-090-000: rate@8px=0.8806 (177/201) amb=4
+  car5-090-000: rate@8px=0.9370 (223/238) amb=11
+  cow4-090-000: rate@8px=0.8743 (313/358) amb=13
+  cup4-090-000: rate@8px=0.8349 (354/424) amb=7
+  dog4-090-000: rate@8px=0.9076 (324/357) amb=20
+  horse4-090-000: rate@8px=0.8889 (296/333) amb=14
+  pear4-090-000: rate@8px=0.8621 (225/261) amb=21
+  tomato4-090-000: rate@8px=0.8553 (195/228) amb=10
+  CONTOUR_PEAK|content           rate=0.9809 (873/890) amb=31
+  ContourFragment|content        rate=0.9769 (423/433) amb=26
+  Contour|content                rate=0.3750 (33/88) amb=1
+  Corner|content                 rate=0.8352 (76/91) amb=7
+  CurveComplex|content           rate=0.2923 (19/65) amb=1
+  EndStopped|content             rate=0.8149 (251/308) amb=24
+  Junction|content               rate=0.2000 (1/5) amb=0
+  Orientation|sheet              rate=0.7491 (206/275) amb=0
+  PEAK_CHAIN|content             rate=0.9014 (128/142) amb=6
+  RegionShape|sheet              rate=0.9417 (97/103) amb=4
+
+--- 1a: vert+3 (dx=0, dy=3) ---
+  apple4-090-000: rate@8px=0.8060 (162/201) amb=8
+  car5-090-000: rate@8px=0.9076 (216/238) amb=5
+  cow4-090-000: rate@8px=0.8464 (303/358) amb=19
+  cup4-090-000: rate@8px=0.8208 (348/424) amb=6
+  dog4-090-000: rate@8px=0.8768 (313/357) amb=16
+  horse4-090-000: rate@8px=0.8108 (270/333) amb=26
+  pear4-090-000: rate@8px=0.8276 (216/261) amb=24
+  tomato4-090-000: rate@8px=0.8114 (185/228) amb=13
+  CONTOUR_PEAK|content           rate=0.9753 (868/890) amb=37
+  ContourFragment|content        rate=0.9677 (419/433) amb=29
+  Contour|content                rate=0.2614 (23/88) amb=0
+  Corner|content                 rate=0.8022 (73/91) amb=3
+  CurveComplex|content           rate=0.1692 (11/65) amb=0
+  EndStopped|content             rate=0.7305 (225/308) amb=32
+  Junction|content               rate=0.4000 (2/5) amb=0
+  Orientation|sheet              rate=0.6400 (176/275) amb=0
+  PEAK_CHAIN|content             rate=0.8592 (122/142) amb=10
+  RegionShape|sheet              rate=0.9126 (94/103) amb=6
+
+--- 1a: horiz+2 (dx=2, dy=0) ---
+  apple4-090-000: rate@8px=0.8308 (167/201) amb=17
+  car5-090-000: rate@8px=0.8908 (212/238) amb=22
+  cow4-090-000: rate@8px=0.9050 (324/358) amb=31
+  cup4-090-000: rate@8px=0.8656 (367/424) amb=33
+  dog4-090-000: rate@8px=0.9328 (333/357) amb=23
+  horse4-090-000: rate@8px=0.8769 (292/333) amb=25
+  pear4-090-000: rate@8px=0.9310 (243/261) amb=12
+  tomato4-090-000: rate@8px=0.9079 (207/228) amb=10
+  CONTOUR_PEAK|content           rate=0.9820 (874/890) amb=20
+  ContourFragment|content        rate=0.9908 (429/433) amb=116
+  Contour|content                rate=0.4659 (41/88) amb=3
+  Corner|content                 rate=0.8901 (81/91) amb=4
+  CurveComplex|content           rate=0.4615 (30/65) amb=0
+  EndStopped|content             rate=0.7857 (242/308) amb=21
+  Junction|content               rate=0.0000 (0/5) amb=0
+  Orientation|sheet              rate=0.7673 (211/275) amb=0
+  PEAK_CHAIN|content             rate=0.9648 (137/142) amb=5
+  RegionShape|sheet              rate=0.9709 (100/103) amb=4
+
+--- 1a: fourier+0.5 (dx=0, dy=0.5) ---
+  apple4-090-000: rate@8px=0.7711 (155/201) amb=43
+  car5-090-000: rate@8px=0.6261 (149/238) amb=64
+  cow4-090-000: rate@8px=0.6676 (239/358) amb=73
+  cup4-090-000: rate@8px=0.7712 (327/424) amb=106
+  dog4-090-000: rate@8px=0.8515 (304/357) amb=81
+  horse4-090-000: rate@8px=0.8228 (274/333) amb=70
+  pear4-090-000: rate@8px=0.8429 (220/261) amb=46
+  tomato4-090-000: rate@8px=0.8421 (192/228) amb=54
+  CONTOUR_PEAK|content           rate=0.9494 (845/890) amb=182
+  ContourFragment|content        rate=0.6721 (291/433) amb=272
+  Contour|content                rate=0.5455 (48/88) amb=0
+  Corner|content                 rate=0.3626 (33/91) amb=6
+  CurveComplex|content           rate=0.5692 (37/65) amb=0
+  EndStopped|content             rate=0.7175 (221/308) amb=44
+  Junction|content               rate=0.6000 (3/5) amb=0
+  Orientation|sheet              rate=0.8618 (237/275) amb=0
+  PEAK_CHAIN|content             rate=0.5915 (84/142) amb=20
+  RegionShape|sheet              rate=0.5922 (61/103) amb=13
+
+--- 1a: fourier+1.5 (dx=0, dy=1.5) ---
+  apple4-090-000: rate@8px=0.7363 (148/201) amb=40
+  car5-090-000: rate@8px=0.6345 (151/238) amb=66
+  cow4-090-000: rate@8px=0.6508 (233/358) amb=71
+  cup4-090-000: rate@8px=0.7241 (307/424) amb=112
+  dog4-090-000: rate@8px=0.8095 (289/357) amb=79
+  horse4-090-000: rate@8px=0.8348 (278/333) amb=69
+  pear4-090-000: rate@8px=0.7816 (204/261) amb=48
+  tomato4-090-000: rate@8px=0.7895 (180/228) amb=52
+  CONTOUR_PEAK|content           rate=0.9483 (844/890) amb=191
+  ContourFragment|content        rate=0.6536 (283/433) amb=260
+  Contour|content                rate=0.4432 (39/88) amb=0
+  Corner|content                 rate=0.3407 (31/91) amb=8
+  CurveComplex|content           rate=0.3385 (22/65) amb=0
+  EndStopped|content             rate=0.7013 (216/308) amb=43
+  Junction|content               rate=0.0000 (0/5) amb=0
+  Orientation|sheet              rate=0.7782 (214/275) amb=0
+  PEAK_CHAIN|content             rate=0.5915 (84/142) amb=23
+  RegionShape|sheet              rate=0.5534 (57/103) amb=12
+
+=== PART 1 complete ===
