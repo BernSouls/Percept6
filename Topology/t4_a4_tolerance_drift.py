@@ -123,17 +123,24 @@ def _edge_param_change(ep_base, ep_sh, mapped_nodes):
         if key not in sh_ep_lookup:
             continue
         val2 = sh_ep_lookup[key]
-        if isinstance(val, (list, tuple)) and isinstance(val2, (list, tuple)):
+        # EdgeParams: compare the quantized parameter tuple (gap/angle/offset)
+        # and the graded population. comparable if both are EdgeParams with
+        # matching quantized arity.
+        def _extract(v):
+            q = getattr(v, "quantized", None)
+            if q is None and isinstance(v, (list, tuple)):
+                q = v
+            return q
+        qa = _extract(val)
+        qb = _extract(val2)
+        if qa is not None and qb is not None and len(qa) == len(qb):
             try:
-                diff = np.array(val, dtype=float) - np.array(val2, dtype=float)
+                diff = np.array(qa, dtype=float) - np.array(qb, dtype=float)
                 changes.append((float(np.abs(diff).max()), True))
             except Exception:
                 changes.append((0.0, False))
         else:
-            try:
-                changes.append((abs(float(val) - float(val2)), True))
-            except Exception:
-                changes.append((0.0, False))
+            changes.append((0.0, False))
     return changes
 
 
