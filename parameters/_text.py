@@ -1142,6 +1142,20 @@ JUNCTION_FAMILY_SPLIT: bool = os.environ.get(
 # to "0" to reproduce the pre-U21 (inert) behaviour exactly.
 ORIENTATION_SPINE_WIRED: bool = os.environ.get(
     "ORIENTATION_SPINE_WIRED", "1") != "0"
+
+# [PLACEMENT / dark] ORIENTATION_SPINE_EXTRA widens the spine's RANGE.
+# The spine admits only ORIENTATION / ORIENTATION_POL / ORIENTATION_GABOR, and
+# in the synthetic placement graphs every one of the 536 nodes is produced by a
+# DIFFERENT lens, so only 29 nodes (all "Orientation") are ever eligible and
+# placement edges reach 3.3% of nodes.
+#
+# Entries are (LENS KEY, SIGNATURE CLASS) PAIRS, because the two filters live
+# in different namespaces: the writer filters on ``d.k`` (the lens key, e.g.
+# "Boundary") AND on ``d.sigma.class_`` (e.g. "BOUNDARY_ANCHORED").  A single
+# list of class names is inert -- measured: widening the class list alone left
+# payload edges at exactly 30, and so did widening the lens list alone.
+# EMPTY => shipped behaviour, bit-identical.
+ORIENTATION_SPINE_EXTRA: Tuple[Tuple[str, str], ...] = ()
 #
 # [U25] BORDER_SUPPORT_GATE: extract_peaks keeps a candidate that lies
 # inside the kernel-support border band when the raw luminance has a real

@@ -131,3 +131,129 @@ over with a tuned weight.
 | translate every node together → P unchanged | payload invariant **exactly** (delta 0.0) |
 | fresh-process rerun bit-identical | 3 processes, identical node count and identical full + selected edge-set hashes |
 | K arm | **not run**: 0a found the walker's admission test is not mapping-dependent, so it is not a placement candidate |
+
+---
+
+# THE FIX, ATTEMPTED AND MEASURED
+
+The mission says: if it fails, find the actual reason and fix it; extend the
+RANGE of an existing class first, and authorise a new class only if none can
+carry it. That procedure was followed and is recorded here in full.
+
+## 1. The reason, located exactly
+
+The spine admits three signature classes:
+
+```
+ORIENTATION_SPINE_CLASSES = ("ORIENTATION", "ORIENTATION_POL", "ORIENTATION_GABOR")
+```
+
+and the writer filters on **two** things: the lens key `d.k`, restricted to
+`("Orientation", "OrientationPol")`, and `d.sigma.class_`. In the synthetic
+placement graphs the class census is
+
+| class | nodes |
+|---|---|
+| POSITION | 102 |
+| CONTOUR_PEAK | 75 |
+| BOUNDARY_ANCHORED | 64 |
+| CONTOUR_FRAGMENT | 63 |
+| BORDER_OWNERSHIP | 50 |
+| TEXTURE_BOUNDARY | 35 |
+| TEXTURE | 34 |
+| **ORIENTATION** | **29** |
+| ENDSTOPPED | 26 |
+| … | … |
+
+so **29 of 536 nodes** are ever eligible. Reach is not a radius problem, it is
+a class-admission problem.
+
+## 2. Extending the RANGE of the existing class — measured NO-OP
+
+`ORIENTATION_CONTINUITY_RANGE_TAU_MULT` swept on one graph:
+
+| search radius multiplier | nodes | payload edges | endpoints | reach |
+|---|---|---|---|---|
+| 2.0 (shipped) | 536 | 30 | 29 | 5.41 % |
+| 4.0 | 536 | **30** | **29** | **5.41 %** |
+| 8.0 | 536 | **30** | **29** | **5.41 %** |
+
+Range extension changes nothing, because the binding constraint is which nodes
+may enter at all, not how far they may look. Part 1's "extend the range first"
+therefore resolves to: **range cannot be extended usefully here.**
+
+## 3. Widening the class admission — it DOES raise reach
+
+A dark, pair-carrying knob `ORIENTATION_SPINE_EXTRA` was added, empty by
+default. Both filters read it, because a class-name list alone is **inert** —
+measured: widening only the class list, or only the lens list, left the payload
+count at exactly 30, since the two namespaces differ (`"Boundary"` vs
+`"BOUNDARY_ANCHORED"`).
+
+| widening | nodes | payload edges | endpoints | **reach** |
+|---|---|---|---|---|
+| none (shipped) | 536 | 30 | 29 | 5.41 % |
+| + ContourFragment | 533 | 47 | 45 | 8.44 % |
+| + Texture | 536 | 92 | 60 | 11.19 % |
+| + Boundary | 527 | 124 | 78 | 14.80 % |
+| + Position | 537 | 153 | 116 | 21.60 % |
+| **+ all** | 527 | **220** | **149** | **28.27 %** |
+
+So the reach defect **is** fixable in principle: 5.41 % → 28.27 %.
+
+## 4. Why it was NOT adopted — the frames are not directions
+
+A node's frame is its orientation, so a lens may only join the spine if its
+`theta` is a genuine image-plane direction. Tested on a single-orientation
+grating rotated by a **true 2D image rotation of 20°** (the well-posed test: the
+population is concentrated, so the circular mean is meaningful). A genuine
+direction must shift by ≈ 0.349 rad.
+
+| lens | n | shift in theta | concentration R at 0° / 20° | verdict |
+|---|---|---|---|---|
+| **Orientation** | 17 | **0.262** | **1.00 / 1.00** | **DIRECTION** (one 24-bin step for a 20° turn) |
+| Position | 96 | 0.146 | 0.19 / 0.17 | unconcentrated |
+| IllusoryContour | 32 | 0.340 | 0.62 / 0.05 | direction, but 1 node in the real scenes |
+| TextureBoundary | 34 | 0.047 | — | **not a direction** |
+| **Boundary** | 17 | **0.009** | **0.89 / 0.84** | **not a direction** |
+| **ContourFragment** | 8 | **0.000** | **1.00 / 1.00** | **not a direction** |
+| Color | 5 | 0.399 | 0.48 / 0.00 | unconcentrated |
+
+`Boundary` and `ContourFragment` are strongly **concentrated** and still do not
+move — their `theta` is a stable local descriptor, not an orientation in the
+image plane. Attaching placement payloads to them would put the "direction" in
+a frame that does not rotate with the object: **exactly the `polar_angle`
+frame error the mission forbids.** No new registered class was authorised, and
+none of the candidates can carry it.
+
+**Conclusion: the fix is available in reach but invalid in frame, so it is not
+adopted.** The knob stays dark (`ORIENTATION_SPINE_EXTRA = ()`).
+
+### A confounded test that was discarded
+
+An earlier probe compared `theta` medians across the `v2_rot10` pose and
+appeared to show *every* lens shifting by exactly 10°. That test is invalid on
+two counts and was not used: the v-series pose is a 3D object rotation, not a
+2D image rotation, and for near-isotropic orientation populations the circular
+mean is unstable and carries no information. The grating test above is the
+well-posed replacement.
+
+## 5. The refactor is a proven no-op
+
+Restructuring the two filters into `_orient_spine_classes()` /
+`_orient_spine_lenses()` changes nothing at the default:
+
+```
+REFACTOR    nodes=711 edges=1717 hash=91aa4bfaf8d2bd43
+ORIGINAL    nodes=711 edges=1717 hash=91aa4bfaf8d2bd43   (pre-refactor literals restored)
+REFACTOR-2  nodes=711 edges=1717 hash=91aa4bfaf8d2bd43
+```
+
+## Revised verdict
+
+The failing part is **REACH**, and the reason it stands unfixed is that the
+only lenses with enough coverage do not carry a usable orientation frame. This
+is a **frame-validity** wall behind a reach wall: reach fails first, and the
+obvious repair fails on frames. Both are named here rather than one being
+traded for the other, and no weight, threshold or tolerance was tuned to hide
+it.

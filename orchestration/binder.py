@@ -510,10 +510,33 @@ ORIENTATION_SPINE_CLASSES: Tuple[str, ...] = (
 
 
 def _orient_spine_classes() -> Tuple[str, ...]:
-    """The classes the spine admits, honouring the [U21] rollback flag."""
+    """The classes the spine admits, honouring the [U21] rollback flag.
+
+    [PLACEMENT / dark] ``ORIENTATION_SPINE_EXTRA`` widens the spine's RANGE
+    to other lenses that also carry a continuous theta.  It is EMPTY by
+    default, so the shipped behaviour is bit-identical.
+    """
     if getattr(P, "ORIENTATION_SPINE_WIRED", True):
-        return ORIENTATION_SPINE_CLASSES
-    return ("ORIENTATION", "ORIENTATION_POL")
+        base = ORIENTATION_SPINE_CLASSES
+    else:
+        base = ("ORIENTATION", "ORIENTATION_POL")
+    extra = tuple(cls for _lens, cls in
+                  (getattr(P, "ORIENTATION_SPINE_EXTRA", ()) or ()))
+    return tuple(base) + extra
+
+
+def _orient_spine_lenses() -> Tuple[str, ...]:
+    """The lens keys the spine admits.
+
+    [PLACEMENT / dark] Widening the CLASS list alone is inert: the writer also
+    filters on the LENS key ``d.k``, and the two namespaces do not match
+    ("Boundary" vs "BOUNDARY_ANCHORED").  Both filters therefore move together
+    off one pair-carrying parameter.  Measured: widening either list alone
+    left payload edges at exactly 30.  Empty => exactly the shipped pair.
+    """
+    extra = tuple(lens for lens, _cls in
+                  (getattr(P, "ORIENTATION_SPINE_EXTRA", ()) or ()))
+    return ("Orientation", "OrientationPol") + extra
 
 
 def _orient_class(det) -> str:
@@ -6130,8 +6153,9 @@ class Binder:
 
         rep: Dict[Any, Detection] = {}
         _spine_cls = _orient_spine_classes()
+        spine_lenses = _orient_spine_lenses()
         for d in dets:
-            if d.k not in ("Orientation", "OrientationPol"): continue
+            if d.k not in spine_lenses: continue
             if d.sigma.class_ not in _spine_cls: continue
             if d.alpha not in anchor_positions or len(d.sigma.quantized) < 1: continue
 
@@ -7020,8 +7044,9 @@ class Binder:
             return
 
         rep: Dict[Any, Detection] = {}
+        spine_lenses = _orient_spine_lenses()
         for d in dets:
-            if d.k not in ("Orientation", "OrientationPol"):
+            if d.k not in spine_lenses:
                 continue
             # [Option (b)] ORIENTATION_POL is orientation content here
             # too, as its own class (never merged into ORIENTATION).
