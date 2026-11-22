@@ -37,6 +37,8 @@ def main() -> int:
     ap.add_argument("--per-family", type=int, default=8)
     ap.add_argument("--tag", default="m7_dev5")
     ap.add_argument("--no-oracle", action="store_true")
+    ap.add_argument("--endpoints", choices=("all", "places"), default="all",
+                    help="which nodes may be a placement endpoint")
     args = ap.parse_args()
 
     import guard
@@ -46,6 +48,12 @@ def main() -> int:
 
     if args.no_oracle:
         M3.ORACLE = False
+
+    if args.endpoints == "places":
+        from Topology import placement_arms2 as _A2
+        from core.place_key import place_lenses
+        _A2.ENDPOINT_LENSES = tuple(place_lenses())
+        print("endpoints: PLACES ONLY (%d lenses)" % len(_A2.ENDPOINT_LENSES))
 
     specs = all_specs5(per_family=args.per_family)
     fit_specs, check_specs = split5(specs)

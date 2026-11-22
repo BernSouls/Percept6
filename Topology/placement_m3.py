@@ -58,7 +58,14 @@ def _rows_for(g_q: Any, g_r: Any, pop: Sequence[int],
 
 def _payload(mod: Any, g: Any, img: Any, obj: Dict[int, int],
              intra: bool = False) -> Dict[Tuple[int, int, Any], Any]:
-    return mod.build_edges(g.subgraph, img, object_of=obj, intra_only=intra)
+    # [MISSION 7] The FIT densities must be fitted on the SAME
+    # endpoint population the arms are scored on, or the fit and the
+    # score disagree about what an edge is.
+    from Topology import placement_arms2 as _A2
+    return mod.build_edges(g.subgraph, img, object_of=obj,
+                           intra_only=intra,
+                           lens_map=mod.lens_map_of(g),
+                           endpoint_lenses=(_A2.ENDPOINT_LENSES or None))
 
 
 # ---------------------------------------------------------------------------

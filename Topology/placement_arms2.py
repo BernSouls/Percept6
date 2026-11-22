@@ -54,6 +54,14 @@ EDGE_BETA = 0.5          # the shipped matcher's appearance/structure balance
 
 
 # ---------------------------------------------------------------------------
+
+#: [MISSION 7 / STEP 2] PLACEMENT ENDPOINTS ARE PLACES.
+#
+#: Empty tuple = no restriction (the shipped behaviour).  Set to the place
+#: lenses and every placement edge connects two PLACES; attribute and ridge
+#: nodes attach to a place and inherit its support instead of standing in for
+#: one.  This is a configuration of the graph, not a weight.
+ENDPOINT_LENSES: Tuple[str, ...] = ()
 def lens_of(g: Any, n: int) -> str:
     s = g.sigs.get(n)
     return str(s[0]) if s is not None else "?"
@@ -336,7 +344,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         r_pop = [n for n in sorted(obj_r) if obj_r[n] >= 0]
         intra = (spec.family == "NEGATIVE-A")
         r_pay = PE.build_edges(g_ref.subgraph, r0.image_u8, tolerance=None,
-                               object_of=obj_r, intra_only=intra)
+                               object_of=obj_r, intra_only=intra,
+                               lens_map=PE.lens_map_of(g_ref),
+                               endpoint_lenses=(ENDPOINT_LENSES or None))
         r_ship = shipped_edges(g_ref.subgraph)
 
         ref_by_src: Dict[int, Dict[Any, List[int]]] = defaultdict(
@@ -361,7 +371,9 @@ def main(argv: Optional[List[str]] = None) -> int:
             g_q = get_or_build(r1.image_u8, spec.name + "|" + label)
             obj_q = node_objects(r1, g_q)
             q_pay = PE.build_edges(g_q.subgraph, r1.image_u8, tolerance=None,
-                                   object_of=obj_q, intra_only=intra)
+                                   object_of=obj_q, intra_only=intra,
+                                   lens_map=PE.lens_map_of(g_q),
+                                   endpoint_lenses=(ENDPOINT_LENSES or None))
             tol = float(toltab.get(label, {}).get("tolerance", 1.5))
 
             fwd = track_optimal(spec.scene, r0, sc1, r1, g_ref, g_q)
