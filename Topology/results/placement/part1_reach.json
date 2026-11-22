@@ -1,0 +1,323 @@
+{
+  "CONTROL|control_single_sphere": {
+    "family": "CONTROL",
+    "landmark": {
+      "landmark_lens_counts": {
+        "Boundary": 64,
+        "CONTOUR_PEAK": 75,
+        "Contour": 11,
+        "ContourFragment": 63,
+        "Corner": 3,
+        "CurveComplex": 7,
+        "EndStopped": 26,
+        "IllusoryContour": 1,
+        "PEAK_CHAIN": 12,
+        "RegionShape": 8
+      },
+      "n_landmark_nodes": 270,
+      "n_texture_nodes": 69,
+      "n_texture_with_landmark_1hop": 0,
+      "n_texture_with_landmark_2hop": 0,
+      "placement_carrier_lenses": {
+        "Contour": 7,
+        "CurveComplex": 7,
+        "Orientation": 29,
+        "RegionShape": 2
+      },
+      "share_texture_with_landmark_1hop": 0.0,
+      "share_texture_with_landmark_2hop": 0.0
+    },
+    "n_edges": 1191,
+    "n_nodes": 536,
+    "n_placement_edges": 39,
+    "reach": {
+      "component_sizes": [
+        13,
+        9,
+        3,
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "frame_reachable_share": 0.28888888888888886,
+      "largest_component": 13,
+      "mean_degree": 1.7333333333333334,
+      "median_degree": 2.0,
+      "n_components": 12,
+      "n_frame_nodes": 45,
+      "n_frame_reachable": 13,
+      "n_nodes_with_anchor": 45,
+      "n_nodes_without_any_placement_edge": 491,
+      "n_zero_degree": 0,
+      "share_without_any_placement_edge": 0.9160447761194029,
+      "share_zero_degree": 0.0
+    },
+    "scene": "control_single_sphere",
+    "span": {
+      "max": 50.59644256269407,
+      "mean": 21.82364648361231,
+      "median": 22.627416997969522,
+      "n": 39,
+      "nn_spacing_median": 6.708203932499369,
+      "p05": 0.0,
+      "p25": 16.0,
+      "p75": 27.31370849898476,
+      "p95": 48.25964425626941,
+      "span_over_nn": 3.3730961708462712
+    },
+    "texture_period": {
+      "cell_px": 21.333333333333332,
+      "checker_parity_px": 42.666666666666664,
+      "mission_form_128_over_freq_px": 21.333333333333332,
+      "pixel_scale": 0.0078125,
+      "sine_period_px": 21.333333333333332,
+      "texture_freq": 6.0
+    }
+  },
+  "NEGATIVE-A|neg_2_identical": {
+    "family": "NEGATIVE-A",
+    "landmark": {
+      "landmark_lens_counts": {
+        "Boundary": 57,
+        "CONTOUR_PEAK": 104,
+        "Contour": 10,
+        "ContourFragment": 34,
+        "Corner": 13,
+        "CurveComplex": 7,
+        "EndStopped": 28,
+        "PEAK_CHAIN": 16,
+        "RegionShape": 12,
+        "T": 4
+      },
+      "n_landmark_nodes": 285,
+      "n_texture_nodes": 68,
+      "n_texture_with_landmark_1hop": 0,
+      "n_texture_with_landmark_2hop": 0,
+      "placement_carrier_lenses": {
+        "Contour": 7,
+        "CurveComplex": 7,
+        "Orientation": 30,
+        "RegionShape": 5
+      },
+      "share_texture_with_landmark_1hop": 0.0,
+      "share_texture_with_landmark_2hop": 0.0
+    },
+    "n_edges": 1418,
+    "n_nodes": 576,
+    "n_placement_edges": 43,
+    "reach": {
+      "component_sizes": [
+        10,
+        6,
+        6,
+        6,
+        5,
+        4,
+        4,
+        2,
+        2,
+        2,
+        2
+      ],
+      "frame_reachable_share": 0.20408163265306123,
+      "largest_component": 10,
+      "mean_degree": 1.7551020408163265,
+      "median_degree": 2.0,
+      "n_components": 11,
+      "n_frame_nodes": 49,
+      "n_frame_reachable": 10,
+      "n_nodes_with_anchor": 49,
+      "n_nodes_without_any_placement_edge": 527,
+      "n_zero_degree": 0,
+      "share_without_any_placement_edge": 0.9149305555555556,
+      "share_zero_degree": 0.0
+    },
+    "scene": "neg_2_identical",
+    "span": {
+      "max": 65.96969000988257,
+      "mean": 26.872761016472897,
+      "median": 22.627416997969522,
+      "n": 43,
+      "nn_spacing_median": 6.082762530298219,
+      "p05": 0.0,
+      "p25": 16.0,
+      "p75": 45.254833995939045,
+      "p95": 64.0,
+      "span_over_nn": 3.7199244398022175
+    },
+    "texture_period": {
+      "cell_px": 21.333333333333332,
+      "checker_parity_px": 42.666666666666664,
+      "mission_form_128_over_freq_px": 21.333333333333332,
+      "pixel_scale": 0.0078125,
+      "sine_period_px": 21.333333333333332,
+      "texture_freq": 6.0
+    }
+  },
+  "NEGATIVE-B|neg_cross": {
+    "family": "NEGATIVE-B",
+    "landmark": {
+      "landmark_lens_counts": {
+        "Boundary": 57,
+        "CONTOUR_PEAK": 104,
+        "Contour": 10,
+        "ContourFragment": 34,
+        "Corner": 13,
+        "CurveComplex": 7,
+        "EndStopped": 28,
+        "PEAK_CHAIN": 16,
+        "RegionShape": 12,
+        "T": 4
+      },
+      "n_landmark_nodes": 285,
+      "n_texture_nodes": 68,
+      "n_texture_with_landmark_1hop": 0,
+      "n_texture_with_landmark_2hop": 0,
+      "placement_carrier_lenses": {
+        "Contour": 7,
+        "CurveComplex": 7,
+        "Orientation": 30,
+        "RegionShape": 5
+      },
+      "share_texture_with_landmark_1hop": 0.0,
+      "share_texture_with_landmark_2hop": 0.0
+    },
+    "n_edges": 1418,
+    "n_nodes": 576,
+    "n_placement_edges": 43,
+    "reach": {
+      "component_sizes": [
+        10,
+        6,
+        6,
+        6,
+        5,
+        4,
+        4,
+        2,
+        2,
+        2,
+        2
+      ],
+      "frame_reachable_share": 0.20408163265306123,
+      "largest_component": 10,
+      "mean_degree": 1.7551020408163265,
+      "median_degree": 2.0,
+      "n_components": 11,
+      "n_frame_nodes": 49,
+      "n_frame_reachable": 10,
+      "n_nodes_with_anchor": 49,
+      "n_nodes_without_any_placement_edge": 527,
+      "n_zero_degree": 0,
+      "share_without_any_placement_edge": 0.9149305555555556,
+      "share_zero_degree": 0.0
+    },
+    "scene": "neg_cross",
+    "span": {
+      "max": 65.96969000988257,
+      "mean": 26.872761016472897,
+      "median": 22.627416997969522,
+      "n": 43,
+      "nn_spacing_median": 6.082762530298219,
+      "p05": 0.0,
+      "p25": 16.0,
+      "p75": 45.254833995939045,
+      "p95": 64.0,
+      "span_over_nn": 3.7199244398022175
+    },
+    "texture_period": {
+      "cell_px": 21.333333333333332,
+      "checker_parity_px": 42.666666666666664,
+      "mission_form_128_over_freq_px": 21.333333333333332,
+      "pixel_scale": 0.0078125,
+      "sine_period_px": 21.333333333333332,
+      "texture_freq": 6.0
+    }
+  },
+  "RESOLVABLE|resolvable_two_spheres": {
+    "family": "RESOLVABLE",
+    "landmark": {
+      "landmark_lens_counts": {
+        "Boundary": 68,
+        "CONTOUR_PEAK": 90,
+        "Contour": 13,
+        "ContourFragment": 69,
+        "Corner": 8,
+        "CurveComplex": 7,
+        "EndStopped": 30,
+        "IllusoryContour": 1,
+        "Junction": 1,
+        "PEAK_CHAIN": 16,
+        "RegionShape": 11,
+        "T": 1
+      },
+      "n_landmark_nodes": 315,
+      "n_texture_nodes": 78,
+      "n_texture_with_landmark_1hop": 0,
+      "n_texture_with_landmark_2hop": 0,
+      "placement_carrier_lenses": {
+        "Contour": 7,
+        "CurveComplex": 7,
+        "Orientation": 37,
+        "RegionShape": 2
+      },
+      "share_texture_with_landmark_1hop": 0.0,
+      "share_texture_with_landmark_2hop": 0.0
+    },
+    "n_edges": 1773,
+    "n_nodes": 620,
+    "n_placement_edges": 51,
+    "reach": {
+      "component_sizes": [
+        20,
+        17,
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "frame_reachable_share": 0.37735849056603776,
+      "largest_component": 20,
+      "mean_degree": 1.9245283018867925,
+      "median_degree": 2.0,
+      "n_components": 9,
+      "n_frame_nodes": 53,
+      "n_frame_reachable": 20,
+      "n_nodes_with_anchor": 53,
+      "n_nodes_without_any_placement_edge": 567,
+      "n_zero_degree": 0,
+      "share_without_any_placement_edge": 0.9145161290322581,
+      "share_zero_degree": 0.0
+    },
+    "scene": "resolvable_two_spheres",
+    "span": {
+      "max": 71.55417527999327,
+      "mean": 25.907270240257287,
+      "median": 22.627416997969522,
+      "n": 51,
+      "nn_spacing_median": 5.685545428212114,
+      "p05": 0.0,
+      "p25": 16.0,
+      "p75": 35.77708763999664,
+      "p95": 57.688820407423826,
+      "span_over_nn": 3.979814651676256
+    },
+    "texture_period": {
+      "cell_px": 21.333333333333332,
+      "checker_parity_px": 42.666666666666664,
+      "mission_form_128_over_freq_px": 21.333333333333332,
+      "pixel_scale": 0.0078125,
+      "sine_period_px": 21.333333333333332,
+      "texture_freq": 6.0
+    }
+  }
+}
