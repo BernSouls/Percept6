@@ -249,9 +249,17 @@ class Material:
         return p @ d1, p @ d2
 
     def uv_for(self, uv, p_local):
-        """The (u, v) this material is addressed at, per ``texture_space``."""
+        """The (u, v) this material is addressed at, per ``texture_space``.
+
+        Always returns an ``(N, 2)`` array.  ``_object_uv`` returns a
+        ``(u, v)`` PAIR of arrays, so the caller had two shapes to cope with --
+        which is how the object-space path came to be written and then never
+        wired up.  One shape, one caller.
+        """
         if self.texture_space == "object" and p_local is not None:
-            return self._object_uv(p_local)
+            u, v = self._object_uv(p_local)
+            return np.stack([np.asarray(u, dtype=np.float64),
+                             np.asarray(v, dtype=np.float64)], axis=1)
         return uv
 
     @staticmethod
@@ -1178,7 +1186,22 @@ class Scene:
             for direction, weight in self.extra_lights:
                 lam = lam + float(weight) * np.clip(
                     nw @ _unit(direction), 0.0, None)
-            tex = obj.material.texture_value_vec(uv[:, 0], uv[:, 1])
+            # [PLACEMENT FIX] ``texture_space`` was DEAD CODE: ``uv_for`` and
+            # ``_object_uv`` existed but nothing ever called them, so a
+            # material declared ``texture_space="object"`` was rendered with
+            # its FACE parameterisation anyway.  Measured: three different
+            # ``texture_dir`` values gave byte-identical images
+            # (sha256 d45a766af914 all three).  That silently defeated the
+            # mission's "object space for every periodic family" rule and made
+            # the object-frame claim untestable.
+            #
+            # The fix passes the OBJECT-LOCAL surface point, which is what an
+            # object field is addressed by.  ``texture_space="face"`` (the
+            # default) returns ``uv`` unchanged, so every scene that does not
+            # ask for an object field renders bit-identically.
+            p_local = o + t[:, None] * d
+            uv_use = obj.material.uv_for(uv, p_local)
+            tex = obj.material.texture_value_vec(uv_use[:, 0], uv_use[:, 1])
             inten[sel] = (self.ambient
                           + obj.material.albedo * tex * lam)
         return inten
