@@ -1016,7 +1016,8 @@ class Binder:
         """
         return self.cg.pattern_node_anchor_map()
 
-    def _remember_node_position(self, nid: int, anchor: Any) -> None:
+    def _remember_node_position(self, nid: int, anchor: Any,
+                                det: Any = None) -> None:
         """[V9 Track 2 - B.26] Record the (x, y) of `nid`'s anchor for the
         CURRENT step.
 
@@ -1029,9 +1030,21 @@ class Binder:
         position of the step in which it was first bound.
         """
         pos = self._step_anchor_positions
-        if pos is None:
-            return
-        p = pos.get(anchor)
+        p = getattr(det, "_place_pos", None) if det is not None else None
+        # [MISSION 6] A DETECTION THAT MEASURED ITS OWN PLACE WINS.
+        #
+        # The map lookup below is keyed by `d.alpha`, and for every tiling
+        # lens that key is the REGION index -- so the position the graph
+        # recorded was always the region CENTROID, whatever a lens had
+        # measured.  That is why two missions of sub-pixel work moved
+        # nothing: the refined anchor was written under the 4-tuple anchor
+        # key, and nothing ever looked it up.  A detection that carries its
+        # own place (`_place_pos`, set only under a dark flag) supplies it
+        # here; when it does not, the lookup is exactly what it always was.
+        if p is None:
+            if pos is None:
+                return
+            p = pos.get(anchor)
         if p is not None:
             self.cg.note_pattern_node_position(nid, p)
 
@@ -1080,7 +1093,7 @@ class Binder:
             # [V9 Track 2 - B.26] Nodes minted after step() returns: the
             # step's position map is still live here (finalize_step clears
             # it), so capture inline rather than in a later pass.
-            self._remember_node_position(node_id, d.alpha)
+            self._remember_node_position(node_id, d.alpha, d)
             self._higher_dets_this_step.append(d)
             self._stage6_higher_all.append((d, node_id))
             self._higher_present_this_step.add(pat)
@@ -1627,7 +1640,7 @@ class Binder:
         # pass is O(|dets|); first write wins, so re-visiting a node that
         # was bound in an earlier step changes nothing.
         for _d, _nid in node_ids.items():
-            self._remember_node_position(_nid, _d.alpha)
+            self._remember_node_position(_nid, _d.alpha, _d)
 
         if self._lifecycle_owned:
             # Self-managed step (no Pipeline bracket) — commit here so direct
@@ -1744,7 +1757,7 @@ class Binder:
         )
         # [V9 Track 2 - B.26] Same delayed-window rule as bind_intra_step;
         # no-op when the step's positions are already gone (None).
-        self._remember_node_position(nid, det.alpha)
+        self._remember_node_position(nid, det.alpha, det)
         self._pattern_last_onset[pat] = t
         self._pattern_last_seen[pat] = t
         # [PHASE B] Stage into the accumulator, NOT into _pattern_present_prev.

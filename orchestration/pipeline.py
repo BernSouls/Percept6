@@ -1046,6 +1046,21 @@ class Pipeline:
                 else:
                     z = 0.0
                 anchor_positions[idx] = (x, y, z)
+        # [MISSION 6] THE WRITER FIX.
+        #
+        # Everything above is the observation's own map: region index ->
+        # region CENTROID.  That map is what the binder reads, so every
+        # tiling lens bound its node to a centroid no matter what its cell
+        # had measured.  Under the dark flag the Gabor place of each region
+        # replaces the centroid it was standing in for; regions the front end
+        # can place keep their entry exactly, so flag-off is bit-identical.
+        if bool(getattr(P, "FE_SUBPIXEL_GABOR_ANCHOR", False)):
+            try:
+                from lenses.base import gabor_place_positions
+                anchor_positions.update(
+                    gabor_place_positions(observation, anchor_positions))
+            except Exception:
+                pass
         return anchor_positions
 
     def _derive_extraction_scale(self, observation) -> float:

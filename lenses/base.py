@@ -773,6 +773,63 @@ def _gabor_pixel_anchor(obs: Any, u: int, it: int, isf: int
     return tile_p[:2]
 
 
+def gabor_place_positions(obs: Any,
+                         positions: Dict[Any, Tuple[float, ...]]
+                         ) -> Dict[int, Tuple[float, ...]]:
+    """[MISSION 6] The Gabor place of every region that has a centroid.
+
+    THIS IS THE WRITER.  `Pipeline._derive_anchor_positions` builds the map the
+    binder reads from `observation.positions`, which is keyed by REGION and
+    holds the region CENTROID.  Every tiling lens therefore bound its nodes to
+    a centroid, whatever its own cell had measured -- which is why two
+    missions of sub-pixel work moved exactly zero nodes.
+
+    For each region: take the strongest (theta, sf) cell AT the centroid
+    (one lookup, no scan), then the sub-pixel position of that cell via
+    `_gabor_pixel_anchor` (which applies the U26 tile/RF rule and, under
+    FE_SUBPIXEL_GABOR_ANCHOR, the quadratic refinement).  The z of the
+    original entry is preserved so downstream consumers see the same shape.
+
+    Returns only regions it could place; the caller merges, so a region with
+    no Gabor field keeps its centroid exactly.
+    """
+    gx = getattr(obs, "_gabor_complex", None)
+    if gx is None:
+        return {}
+    try:
+        chan0 = np.asarray(gx[0, 0])
+    except Exception:
+        return {}
+    if chan0.ndim != 2:
+        return {}
+    H, W = chan0.shape
+    out: Dict[int, Tuple[float, ...]] = {}
+    for u in sorted(int(k) for k in positions if isinstance(k, int)):
+        p = positions.get(u)
+        if p is None or len(p) < 2:
+            continue
+        xi, yi = int(round(float(p[0]))), int(round(float(p[1])))
+        if not (0 <= yi < H and 0 <= xi < W):
+            continue
+        best = None
+        try:
+            for it in range(gx.shape[0]):
+                for isf in range(gx.shape[1]):
+                    v = float(np.abs(gx[it, isf][yi, xi]))
+                    if best is None or v > best[0]:
+                        best = (v, it, isf)
+        except Exception:
+            continue
+        if best is None or best[0] <= 0.0:
+            continue
+        q = _gabor_pixel_anchor(obs, u, int(best[1]), int(best[2]))
+        if q is None:
+            continue
+        z = float(p[2]) if len(p) >= 3 else 0.0
+        out[u] = (float(q[0]), float(q[1]), z)
+    return out
+
+
 class LensExecutor:
     """Runs all v31 lenses over a single step and returns the union of
     their detections.
@@ -2344,6 +2401,11 @@ class LensExecutor:
             theta_idx: List[int] = [0] * n
             sf_idx: List[int] = [0] * n
             positions: List[Optional[Tuple[float, float]]] = [None] * n
+            # [MISSION 6] Every anchor cell of a region measures its OWN
+            # sub-pixel position, but the graph binds nodes to the REGION,
+            # so one position has to stand for the place.  The strongest
+            # cell sets it -- a deterministic rule, not "the first one".
+            region_best_pos: Dict[int, Tuple[float, Tuple[float, float]]] = {}
             for idx, a in enumerate(anchors):
                 u = a[0] if isinstance(a, tuple) else a
                 # [B.45 declared fix] Both axes are indexed by the GABOR
@@ -2394,6 +2456,15 @@ class LensExecutor:
                     if anchor_positions is not None:
                         anchor_positions[a] = (
                             float(p[0]), float(p[1]))
+                    _a6 = anchors[idx] if isinstance(anchors[idx],
+                                                tuple) else None
+                    if _a6 is not None and len(_a6) >= 3:
+                        _u6 = int(_a6[0])
+                        _r6 = float(raws[idx]) if idx < len(raws) else 0.0
+                        _c6 = region_best_pos.get(_u6)
+                        if _c6 is None or _r6 > _c6[0]:
+                            region_best_pos[_u6] = (
+                                _r6, (float(p[0]), float(p[1])))
 
             r2 = (P.DIVISIVE_ANISO_POOL_RADIUS
                   * P.DIVISIVE_ANISO_POOL_RADIUS)
@@ -2524,7 +2595,40 @@ class LensExecutor:
         state["C"] = (1.0 - P.KAPPA_C_CHANNEL) * state["C"] + P.KAPPA_C_CHANNEL * had_emission
         state["F"] = P.BETA_F_CHANNEL * state["F"] + (1.0 - P.BETA_F_CHANNEL) * had_emission
 
-        return base_emitted + rich_emitted
+        # [MISSION 6] THE WRITER FIX, under the same dark flag.
+        #
+        # A tiling lens binds its node to the REGION, so the step map the
+        # binder reads is keyed by the region index and always returns the
+        # CENTROID.  The sub-pixel anchor this lens measures was written
+        # under the 4-tuple cell key and never read by anything.  Each
+        # detection now carries the position its own lens measured, and
+        # the binder prefers it.  Flag off: every `_place_pos` stays None
+        # and the graph is bit-identical by construction.
+        _out6 = base_emitted + rich_emitted
+        if bool(getattr(P, "FE_SUBPIXEL_GABOR_ANCHOR", False)):
+            for _d6 in _out6:
+                if getattr(_d6, "_place_pos", None) is not None:
+                    continue
+                _a6 = getattr(_d6, "alpha", None)
+                _pp6 = None
+                if isinstance(_a6, tuple) and len(_a6) >= 3:
+                    _c6 = region_best_pos.get(int(_a6[0]))
+                    _pp6 = _c6[1] if _c6 is not None else None
+                else:
+                    # The anchor index is a NUMPY integer on this path;
+                    # `isinstance(x, int)` is False for it and the first
+                    # version of this fix silently set nothing (measured:
+                    # 0 detections carried a place).  Duck-type it.
+                    try:
+                        _u6 = int(_a6)
+                    except (TypeError, ValueError):
+                        _u6 = None
+                    if _u6 is not None:
+                        _c6 = region_best_pos.get(_u6)
+                        _pp6 = _c6[1] if _c6 is not None else None
+                if _pp6 is not None:
+                    object.__setattr__(_d6, "_place_pos", _pp6)
+        return _out6
 
     # -------------------------------------------------------------------------
     # OrientationPol lens -- polarized major-axis orientation (option (b)).

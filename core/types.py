@@ -671,6 +671,16 @@ class Detection:
         "_frag_mid",
         "_frag_tangent",
         "_frag_host_arc",
+        # [MISSION 6] A detection's OWN measured place position, in pixels.
+        #
+        # The node position used to be looked up in the step map by
+        # `d.alpha`, and for the tiling lenses that key is the REGION index,
+        # so every node took the region CENTROID.  A lens that measures a
+        # better position (the Gabor pixel anchor, the keypoint layer) had
+        # nowhere to put it.  Carried like `_frag_mid`: not part of the
+        # signature, equality or hash, so the node is the same node and a
+        # dark flag cannot move a single default bit.
+        "_place_pos",
     )
 
     def __init__(
@@ -698,6 +708,7 @@ class Detection:
         object.__setattr__(self, "_frag_mid", None)
         object.__setattr__(self, "_frag_tangent", None)
         object.__setattr__(self, "_frag_host_arc", None)
+        object.__setattr__(self, "_place_pos", None)
         object.__setattr__(
             self, "_hash_cache", hash_64_signed(serialize_detection(self))
         )
