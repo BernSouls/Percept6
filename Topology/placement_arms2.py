@@ -140,10 +140,18 @@ def presence_credit(u: int, v: int,
     return float(n)
 
 
+#: R-fixed's agreement threshold, in tolerance units: a counterpart edge counts
+#: as agreeing when its payload residual is at most this.  Fixed at ONE
+#: tolerance unit before any CHECK was evaluated.
+GEOM_AGREE_UNITS = 1.0
+
+
 def geometry_credit(u: int, v: int,
                     inc: Dict[int, List[Tuple[int, bool, str]]],
                     ref_by: Dict[int, Dict[str, List[Tuple[int, Any]]]],
-                    mapping: Dict[int, int]) -> float:
+                    mapping: Dict[int, int],
+                    q_idx: Optional[Dict[Tuple[int, int, str], Any]] = None
+                    ) -> float:
     """R-fixed's term: a counterpart must AGREE, and silence is subtracted.
 
     Two changes, both aimed at the measured harm of the presence term:
@@ -161,15 +169,32 @@ def geometry_credit(u: int, v: int,
     for (other, _is_src, name) in es:
         cand_edges = ref_by.get(v, {}).get(name, [])
         mo = mapping.get(int(other))
+        if q_idx is not None:
+            qv = (q_idx.get((int(u), int(other), name)) if _is_src
+                  else q_idx.get((int(other), int(u), name)))
+        else:
+            qv = None
         hit = None
         for (d2, params) in cand_edges:
             if mo is not None and int(d2) == int(mo):
                 hit = params
                 break
-        if hit is None:
+        # A counterpart edge counts only if its PARAMETERS agree.  The first
+        # implementation incremented `agree` as soon as a counterpart EDGE
+        # existed and never looked at `params`, so R_fixed was presence with a
+        # different denominator -- measured: it returned 1.0 for a matched and
+        # a wildly mismatched relation alike (canary in test_placement_m3),
+        # which is why mission 2 found R_fixed "only matched N".
+        if hit is None or qv is None:
             dis += 1
             continue
-        agree += 1
+        from matching.placement_llr import FIXED_TOL
+        from matching.placement_scorer import payload_residual
+        res = payload_residual(qv, hit, FIXED_TOL)
+        if math.isfinite(res) and res <= GEOM_AGREE_UNITS:
+            agree += 1
+        else:
+            dis += 1
     return (agree - dis) / len(es)
 
 
