@@ -58,8 +58,17 @@ def payload_residual(q: Any, r: Any, tol: float) -> float:
         return float("inf")
     if tol is None or not math.isfinite(tol) or tol <= 0.0:
         return float("inf")
-    from matching.placement import wrap_pi
-    dpsi = abs(wrap_pi(float(q.direction) - float(r.direction)))
+    from matching.placement import wrap_pi, wrap_ax
+    # AXIAL frames are compared MODULO pi.  A structure-tensor frame is an
+    # axis, so a flip of the source's axis is not a different placement; using
+    # the signed difference there would penalise a vector for a sign the
+    # provider cannot supply.  Both payloads must agree on the convention --
+    # they are compared as axes if EITHER says axial, because a signed vector
+    # against an axial one is only defined up to the flip.
+    if bool(getattr(q, "axial", False)) or bool(getattr(r, "axial", False)):
+        dpsi = abs(wrap_ax(float(q.direction) - float(r.direction)))
+    else:
+        dpsi = abs(wrap_pi(float(q.direction) - float(r.direction)))
     dlogd = abs(math.log(max(float(q.distance), 1e-9))
                 - math.log(max(float(r.distance), 1e-9)))
     dlogs = abs(float(q.log_scale) - float(r.log_scale))

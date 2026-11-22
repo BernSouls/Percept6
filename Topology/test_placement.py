@@ -114,5 +114,48 @@ class DarknessTests(unittest.TestCase):
         self.assertEqual(a.mapping, b.mapping)
 
 
+class AxialFrameTests(unittest.TestCase):
+    """A structure-tensor frame is an AXIS; the score must be flip-symmetric."""
+
+    def test_axial_flip_is_not_a_different_placement(self):
+        from matching.placement import PlacementVector, wrap_ax
+        from matching.placement_scorer import payload_residual
+        a = PlacementVector(direction=0.3, distance=2.0, log_scale=0.0,
+                            source_theta=0.0, source_scale=1.0,
+                            tolerance=1.0, axial=True)
+        b = PlacementVector(direction=wrap_ax(0.3 + math.pi), distance=2.0,
+                            log_scale=0.0, source_theta=0.0, source_scale=1.0,
+                            tolerance=1.0, axial=True)
+        self.assertAlmostEqual(payload_residual(a, b, 1.0), 0.0, places=12)
+
+    def test_axial_is_not_silently_signed(self):
+        """A 60 deg axial error is NOT a 120 deg one: the fold must apply."""
+        from matching.placement import PlacementVector
+        from matching.placement_scorer import payload_residual
+        a = PlacementVector(direction=0.0, distance=1.0, log_scale=0.0,
+                            source_theta=0.0, source_scale=1.0,
+                            tolerance=1.0, axial=True)
+        b = PlacementVector(direction=math.radians(80.0), distance=1.0,
+                            log_scale=0.0, source_theta=0.0, source_scale=1.0,
+                            tolerance=1.0, axial=True)
+        # 80 deg folds to 80 - 180 = -100 -> |axial| = 80 deg
+        self.assertAlmostEqual(payload_residual(a, b, 1.0),
+                               math.radians(80.0), places=9)
+
+
+class EdgeClassTests(unittest.TestCase):
+    def test_placement_class_is_distinct_from_the_shipped_spine(self):
+        from core.types import EdgeType
+        self.assertIsNot(EdgeType.SOURCE_FRAME_PLACEMENT,
+                         EdgeType.ORIENTATION_CONTINUITY)
+        self.assertEqual(EdgeType.SOURCE_FRAME_PLACEMENT.value, 55)
+
+    def test_field_provider_constants_are_frozen(self):
+        from matching import placement_edges as PE
+        self.assertEqual(PE.FRAME_COHERENCE_MIN, 0.30)
+        self.assertEqual(PE.TARGET_K, 4)
+        self.assertEqual(PE.TARGET_RADIUS_SCALES, 4.0)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

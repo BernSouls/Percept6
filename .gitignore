@@ -13,3 +13,4 @@ data/ETH-80-master/
 Topology/cache/
 *.pkl
 *.npz
+Topology/results/placement/_graphcache/

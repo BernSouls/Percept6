@@ -96,6 +96,12 @@ class PlacementVector:
     source_theta: float       # the source's continuous orientation (radians)
     source_scale: float       # the divisor used, in px
     tolerance: Optional[float] = None   # frozen per view step (Part 3)
+    #: True when the source's frame is an AXIS rather than an arrow.  A
+    #: structure-tensor field gives the dominant gradient direction, which is
+    #: 180-degree ambiguous, so ``direction`` is then the AXIAL angle in
+    #: (-pi/2, pi/2] and must be compared modulo pi.  Carrying the flag on the
+    #: vector means the scorer cannot silently treat an axis as an arrow.
+    axial: bool = False
 
     def key(self) -> Tuple[float, float, float]:
         return (self.direction, self.distance, self.log_scale)
@@ -144,6 +150,20 @@ def wrap_pi(a: float) -> float:
     if x <= 0.0:
         x += 2.0 * math.pi
     return x - math.pi
+
+
+def wrap_ax(x: float) -> float:
+    """Fold an angle onto the AXIS interval (-pi/2, pi/2].
+
+    Used by frames that are lines rather than arrows (see
+    ``PlacementVector.axial``).  Folding here, once, is what keeps the scorer
+    symmetric under a flip of an axial frame.
+    """
+    while x > math.pi / 2:
+        x -= math.pi
+    while x <= -math.pi / 2:
+        x += math.pi
+    return x
 
 
 def node_theta(sig: Any) -> Optional[float]:

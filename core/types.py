@@ -111,6 +111,11 @@ class EdgeType(Enum):
     BOUNDARY_ATTACHMENT = 52    # host boundary -> a local feature on it
     BOUNDARY_SUCCESSOR = 53     # consecutive member peaks of one chain
     ILLUSORY_INDUCER = 54       # illusory contour -> each of its inducers
+    # [PLACEMENT] source -> target, carrying WHERE the target sits in the
+    # SOURCE's OWN frame.  Directed (the frame belongs to the source), and
+    # distinct from ORIENTATION_CONTINUITY so the shipped matcher's edge term
+    # (which is frozen this mission) never consumes it.
+    SOURCE_FRAME_PLACEMENT = 55
 
 
 # --- from binder.py: edge-type registries ---
