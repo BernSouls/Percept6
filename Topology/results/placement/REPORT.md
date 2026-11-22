@@ -1,5 +1,8 @@
 # Task 4 MISSION — PLACEMENT: final report
 
+*This file reports mission 1. Mission 2 (placement reach, EVAL arms)
+is reported in [`MISSION2_REPORT.md`](MISSION2_REPORT.md).*
+
 Branch `arena/c316ca3a-percept6`. Every part below has its own document next to
 this one; this file is the map, the DONE-MEANS checklist, and the verdict.
 
