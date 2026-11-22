@@ -264,6 +264,19 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     toltab = frozen["tolerance"]
     weight = float(getattr(__import__("parameters"), "PLACEMENT_WEIGHT", 0.25))
+    if tag == "eval":
+        # The run must be the PRE-REGISTERED one.  Assert every constant the
+        # pre-registration fixed, so an unnoticed drift fails loudly instead of
+        # quietly producing a different experiment.
+        from Topology.placement_eval_spec import FROZEN
+        assert abs(weight - FROZEN["placement_weight"]) < 1e-12, weight
+        assert abs(EDGE_BETA - FROZEN["edge_beta"]) < 1e-12, EDGE_BETA
+        assert abs(AMBIGUOUS_MARGIN - FROZEN["ambiguous_margin"]) < 1e-12
+        assert abs(PE.FRAME_COHERENCE_MIN - FROZEN["frame_coherence_min"]) < 1e-12
+        assert int(PE.TARGET_K) == int(FROZEN["target_k"])
+        assert abs(PE.TARGET_RADIUS_SCALES - FROZEN["target_radius_scales"]) < 1e-12
+        assert all(abs(float(v["tolerance"]) - FROZEN["tolerance_all_views"]) < 1e-9
+                   for v in toltab.values()), toltab
 
     acc: Dict[str, Dict[str, List[Tuple[str, float]]]] = defaultdict(
         lambda: defaultdict(list))
