@@ -269,6 +269,10 @@ def field_fingerprint() -> Tuple:
         float(_p("ENDSTOP_ENERGY_K", 3.0)),
         float(_p("ENDSTOP_EPS_Q", 0.00595069462503979)),
         _per_channel_discard(),
+        # [T4/PART1] The sub-pixel peak-position flag changes the peak dict
+        # (adds x_sub/y_sub), so it must fold into the cache key or a cached
+        # field would return peaks without the refined positions.
+        bool(_p("FE_SUBPIXEL_PEAK_POS", False)),
     )
 
 
@@ -1500,9 +1504,41 @@ def extract_peaks(
         sf_axis_pos = ((math.log2(max(sf_here, 1e-9)) - sf_log_lo)
                        / sf_log_span) * float(max(n_sf - 1, 1))
 
+        # [T4/PART1] Sub-pixel localisation. When FE_SUBPIXEL_PEAK_POS is on,
+        # the token position is the parabolic-interpolated maximum of the
+        # response channel at the peak's argmax (theta, sf) cell, not the
+        # integer grid site. Parabolic interpolation on a 1D sample triple
+        # (v-, v0, v+) gives the offset 0.5*(v- - v+)/(v- - 2*v0 + v+),
+        # clamped to [-0.5, 0.5]. Applied independently along x and y on the
+        # 2D channel. The anchor identity stays the grid site; only the
+        # stored position is sub-pixel.
+        x_sub, y_sub = float(x), float(y)
+        if bool(getattr(P, "FE_SUBPIXEL_PEAK_POS", False)):
+            _ch = integration[best_theta, best_sf_here]
+            # x offset: samples (y, x-1), (y, x), (y, x+1)
+            if 0 < x < _ch.shape[1] - 1:
+                _v_, _v0, _vp = (float(_ch[y, x - 1]), float(_ch[y, x]),
+                                 float(_ch[y, x + 1]))
+                _den = _v_ - 2.0 * _v0 + _vp
+                if _den != 0.0:
+                    _dx = 0.5 * (_v_ - _vp) / _den
+                    if -0.5 <= _dx <= 0.5:
+                        x_sub = float(x) + _dx
+            # y offset: samples (y-1, x), (y, x), (y+1, x)
+            if 0 < y < _ch.shape[0] - 1:
+                _vu, _v0, _vd = (float(_ch[y - 1, x]), float(_ch[y, x]),
+                                 float(_ch[y + 1, x]))
+                _den = _vu - 2.0 * _v0 + _vd
+                if _den != 0.0:
+                    _dy = 0.5 * (_vu - _vd) / _den
+                    if -0.5 <= _dy <= 0.5:
+                        y_sub = float(y) + _dy
+
         peaks.append({
             "x": int(x),
             "y": int(y),
+            "x_sub": x_sub,
+            "y_sub": y_sub,
             "theta": float(theta_rad),
             "theta_idx": int(best_theta),
             "sf_idx": int(best_sf_here),

@@ -867,6 +867,9 @@ class Binder:
             "candidate_cap_hits": defaultdict(int),
             "dropped_below_threshold": defaultdict(int),
             "empty_or_zero_signal_by_type": defaultdict(int),
+            # [A2] the maximum graded soft-gate weight emitted per channel, so
+            # the calibration (ramp-centre shift) is reported with numbers.
+            "soft_gate_max_weight_by_type": defaultdict(float),
             # [STAGE 6] outcomes of the attachment writer, keyed
             # "feature kind|host kind|outcome" (known / unambiguous /
             # ambiguous / no_host) and the pooling counters.
@@ -1664,6 +1667,9 @@ class Binder:
             ),
             "empty_or_zero_signal_by_type": dict(
                 self.diagnostics["empty_or_zero_signal_by_type"]
+            ),
+            "soft_gate_max_weight_by_type": dict(
+                self.diagnostics.get("soft_gate_max_weight_by_type", {})
             ),
             "stage6_attachment": dict(
                 self.diagnostics.get("stage6_attachment", {})
@@ -4948,7 +4954,7 @@ class Binder:
             band = float(getattr(P, "FE_SOFT_GATE_BAND", 0.10))
             noise_floor = float(getattr(P, "FE_SOFT_GATE_NOISE_FLOOR", 0.05))
             pctl_q = float(getattr(P, "FE_SOFT_GATE_PERCENTILE", 0.95))
-            calib = float(getattr(P, "FE_SOFT_GATE_CALIBRATE_FACTOR", 1.0))
+            centre_shift = float(getattr(P, "FE_SOFT_GATE_CENTRE_SHIFT", 0.0))
             edge_weight = bool(getattr(P, "FE_SOFT_GATE_EDGE_WEIGHT", True))
             if soft:
                 norm_denom = _percentile([c[2] for c in candidates], pctl_q)
@@ -4970,17 +4976,18 @@ class Binder:
                         theta_eff + P.DELTA_CHANNEL_HYST * (1 - 2 * prev)
                     )
                 if soft:
+                    # [A2] Shift the RAMP CENTRE (not a global multiplier) so
+                    # the total weight over a corpus matches the old hard-gate
+                    # edge count; a perfect edge stays at weight 1.0.  Weights
+                    # below the noise floor are dropped (not lifted), and the
+                    # drop is a non-strict (>=) floor test -- no cliff.
                     weight = _soft_gate_weight(
-                        norm_sig, threshold, band, noise_floor)
-                    # Apply the DEV-derived calibration so the total weight
-                    # over a corpus matches the old hard-gate edge count.
-                    weight = clamp(weight * calib, noise_floor, 1.0)
-                    # Emit when the graded weight clears the noise floor, so
-                    # candidates just below the old threshold keep a small
-                    # weight (the graph's total weight is calibrated to the
-                    # old emitted count, not its edge count).
-                    if weight > noise_floor:
+                        norm_sig, threshold + centre_shift, band, noise_floor)
+                    if weight >= noise_floor:
                         passing.append((src, dst, weight, key_b, ep, weight))
+                        mx = self.diagnostics["soft_gate_max_weight_by_type"]
+                        if weight > mx[diag_key]:
+                            mx[diag_key] = weight
                 else:
                     if norm_sig >= threshold:
                         passing.append((src, dst, signal, key_b, ep, 1.0))
@@ -5011,6 +5018,9 @@ class Binder:
             # D10 + [v8] Retain M_prev across steps, updated in
             # place. Eviction is LRU on `last_seen` (mirrors
             passing_keys = {p[3] for p in passing}
+            # [A4] Build the passing weight lookup ONCE, instead of scanning
+            # `passing` for every candidate below.
+            passing_weights: Dict[bytes, float] = {p[3]: p[5] for p in passing}
             last_seen: Dict[bytes, int] = state["last_seen"]
             new_M_prev = dict(M_prev)
             for cand in candidates:
@@ -5018,11 +5028,7 @@ class Binder:
                 key_b = _candidate_key_bytes(key)
                 if soft:
                     # Store the graded weight (float) for smooth hysteresis.
-                    w = 0.0
-                    for p in passing:
-                        if p[3] == key_b:
-                            w = p[5]
-                            break
+                    w = passing_weights.get(key_b, 0.0)
                     new_M_prev[key_b] = w
                 else:
                     new_M_prev[key_b] = 1.0 if key_b in passing_keys else 0.0
@@ -7240,10 +7246,11 @@ def _soft_gate_weight(
     """Graded weight in [0,1] rising smoothly across a band around `threshold`.
 
     The weight is 0 at (threshold - band), 1 at (threshold + band), and
-    linear in between.  An absolute noise floor lifts candidates that carry
-    any signal (norm_sig > 0) to at least `noise_floor`, so candidates just
-    below the old hard threshold keep a small weight instead of vanishing.
-    Candidates with no signal stay at 0.
+    linear in between.  A perfect edge (norm_sig at or above the top of the
+    ramp) keeps weight 1.0.  Weights below `noise_floor` are NOT lifted: they
+    stay below the floor and are dropped by the caller's (non-strict) floor
+    test, so there is no strict-greater-than cliff.  Candidates with no signal
+    stay at 0.
     """
     if norm_sig <= 0.0:
         return 0.0
@@ -7253,8 +7260,6 @@ def _soft_gate_weight(
         w = 1.0
     else:
         w = (norm_sig - (threshold - band)) / (2.0 * band) if band > 0.0 else 1.0
-    if w < noise_floor:
-        w = noise_floor
     return clamp(w, 0.0, 1.0)
 
 

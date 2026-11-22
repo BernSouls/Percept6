@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Any, Dict, Tuple
 
 import guard
+import _bootstrap
 from guard import CACHE_DIR
 
 #: the pre-registered structural edge budget (core.frontend_contract.EDGE_BUDGET_PER_FRAME)
@@ -53,16 +54,61 @@ class Graph:
     frontend_seconds: float
     subgraph: Any
     sigs: Dict[int, Tuple[str, Any]]
+    #: [B1] Vector structural addresses beside the graph (a SIDE structure:
+    #: never a field on Subgraph/TypedSignature).  ``None`` when the vector
+    #: address is off.  ``{k: {node: np.ndarray}}`` for k=0..max_k.
+    addrs: Any = None
 
 
 def _key(entry: dict) -> str:
+    """Cache key: image bytes + source digest + front-end switch overrides.
+
+    The switch-override digest (``_bootstrap.switch_overrides_key``) is folded
+    in so two arms that differ in the front-end switches NEVER share a graph
+    (the bootstrap's documented contract).  An empty override (the default
+    configuration) keeps the historical key shape so existing default-flag
+    graphs stay valid.
+    """
     digest = guard.source_digest()[:16]
+    sw = _bootstrap.switch_overrides_key()
+    if sw:
+        return "%s_%s_%s_b%d" % (entry["sha256"][:16], digest, sw, BUDGET)
     return "%s_%s_b%d" % (entry["sha256"][:16], digest, BUDGET)
 
 
 def paths(entry: dict) -> Tuple[Path, Path]:
     key = _key(entry)
     return CACHE / (key + ".pkl"), CACHE / (key + ".json")
+
+
+def _graph_addresses(selected, sigs):
+    """[B1] Compute the vector structural addresses for a built graph.
+
+    Returns ``{k: {node: np.ndarray}}`` (k=0..max_k) or ``None`` when
+    ``FE_VECTOR_ADDRESS`` is off.  Addresses are computed INSIDE the selected
+    subgraph (its own edges only) -- A6 -- and carried BESIDE the graph in the
+    ``Graph.addrs`` side structure, never as a Subgraph/TypedSignature field.
+    Each edge contributes its graded weight (EdgeParams.confidence).
+    """
+    import parameters as P
+    if not bool(getattr(P, "FE_VECTOR_ADDRESS", False)):
+        return None
+    from core.types import UNDIRECTED_EDGE_TYPES
+    from perception.front_end_mechanisms import compute_vector_addresses
+    max_k = int(getattr(P, "VECTOR_ADDRESS_MAX_K", 3))
+    ep = getattr(selected, "edge_params", None) or {}
+    weights = {}
+    for (u, v, et) in selected.edges:
+        ui, vi = int(u), int(v)
+        p = ep.get((ui, vi, et))
+        if p is None and et in UNDIRECTED_EDGE_TYPES:
+            p = ep.get((min(ui, vi), max(ui, vi), et))
+        if p is None:
+            p = ep.get((vi, ui, et))
+        w = float(getattr(p, "confidence", 1.0)) if p is not None else 1.0
+        weights[(ui, vi, et)] = w
+    return compute_vector_addresses(selected.nodes, selected.edges, sigs, None,
+                                    max_k=max_k, weights=weights)
 
 
 def build(entry: dict) -> Graph:
@@ -104,11 +150,12 @@ def build(entry: dict) -> Graph:
     if len(sigs) != len(selected.nodes):
         raise RuntimeError("%s: %d signatures for %d nodes"
                            % (name, len(sigs), len(selected.nodes)))
+    addrs = _graph_addresses(selected, sigs)
     return Graph(name=name, class_=entry["class"], object_=int(entry["object"]),
                  view=entry["view"], nodes=len(selected.nodes),
                  edges=len(selected.edges), feature_nodes=feature_nodes,
                  feature_count=feature_count, frontend_seconds=seconds,
-                 subgraph=selected, sigs=sigs)
+                 subgraph=selected, sigs=sigs, addrs=addrs)
 
 
 def meta(graph: Graph, source_digest: str) -> dict:
@@ -147,7 +194,12 @@ def load(cache_path) -> Graph:
 
 
 def shift(graph: Any, delta: int):
-    """The same graph with every node id moved by `delta`."""
+    """The same graph with every node id moved by `delta`.
+
+    Operates on a ``Subgraph`` (the matcher's node/edge container).  Address
+    vectors live BESIDE the graph (``Graph.addrs``), not on the Subgraph, so
+    they are shifted by the caller at the Graph level, not here.
+    """
     def edge(e):
         return (e[0] + delta, e[1] + delta, e[2])
     return replace(

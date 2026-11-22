@@ -2187,6 +2187,13 @@ MATCH_ALIGN_MAX_PAIR_EVALS = 200000
 # Weight of the relational term in the combined fuzzy score (the node term is
 # 1 - this). This is a blend weight, NOT the removed 0.85 additive floor.
 MATCH_EDGE_WEIGHT = 0.5
+# [B3] Edge-weight credit mode.  When True, a matched edge pair credits
+# min(weight on A's side, weight on B's side) in the NUMERATOR and the raw
+# weights in the DENOMINATORS (a weak edge observed on both sides earns the
+# weaker weight; the mass is the sum of the raw weights, not the count).
+# When False the historical unit-count credit/mass is used.  Switchable per
+# arm without touching the other pins.
+MATCH_EDGE_MIN_CREDIT: bool = False
 # [TUNE / DENOMINATOR] How the pooled score charges edges it did not preserve.
 #   "all"       -- every edge on both sides (the historical denominator)
 #   "checkable" -- edges with BOTH endpoints mapped, per side, then min
@@ -3124,7 +3131,7 @@ FIELD_BORDER_DISCARD_PER_CHANNEL = False
 # tier's before each level is emitted, and `_run_part_containment` (which
 # lived in a level no caller ever asked for) runs with the v4 level.
 # OFF: the stale copy, byte for byte.
-BINDER_COMPLETE_POSITION_MAP = False
+BINDER_COMPLETE_POSITION_MAP = True
 # [STAGE 6 / R1, R2, R3, R5] THE MEASURED RELATIONS (one grouped switch).
 #   R1  BOUNDARY_ATTACHMENT: a local feature's place on an extended boundary
 #       (perception/attachment.py), written only when the host is unambiguous
@@ -3842,6 +3849,13 @@ FE_L4_JUNCTIONS: bool = False
 #: vertex: the chain tangent must turn this far against a chain-neighbour.
 #: Pre-registered from the tracer calibration (consecutive-peak angle q0.90).
 L4_CORNER_TURN_DEG: float = 45.0
+#: [T4/PART1] Sub-pixel peak localisation. When True, CONTOUR_PEAK token
+#: positions are refined by parabolic interpolation on the response field
+#: (the integration channel at the peak's argmax (theta, sf) cell) rather
+#: than the integer grid site. The anchor identity stays the grid site; only
+#: the (x, y) written to the position map is sub-pixel. Default OFF until the
+#: event-token survival gate is measured.
+FE_SUBPIXEL_PEAK_POS: bool = False
 #: [L4] Corner de-duplication radius (px): two detected corners closer than
 #: this are one vertex (a box corner often carries two nearby turning peaks).
 L4_CORNER_DEDUP_PX: float = 8.0
@@ -3877,22 +3891,20 @@ FE_SOFT_GATE_NOISE_FLOOR: float = 0.05
 #: (not only the EdgeParams.confidence slot), so weight-aware downstream
 #: paths see it.  Old graphs without weights use the stated default (1.0).
 FE_SOFT_GATE_EDGE_WEIGHT: bool = True
-#: [1c] Calibration target: total weight over DEV scenes matches the old
-#: emitted edge count (the graph does not grow).
-FE_SOFT_GATE_CALIBRATE: bool = False
-#: [1c] DEV-derived multiplier on the emitted soft weight so the total weight
-#: over DEV scenes matches the old hard-gate emitted edge count (4996 edges
-#: vs 6365 weight -> 0.785).  Derived once on DEV; applied when the soft gate
-#: is on.
-FE_SOFT_GATE_CALIBRATE_FACTOR: float = 0.785
+#: [1c] DEV-derived SHIFT of the soft-gate ramp centre (in normalized-signal
+#: units) so the total weight over DEV scenes matches the old hard-gate
+#: emitted edge count.  Derived once on DEV; applied when the soft gate is
+#: on.  Replaces the old global multiplier (x0.785): a centre shift keeps a
+#: perfect edge at weight 1.0 while matching the total.
+FE_SOFT_GATE_CENTRE_SHIFT: float = 0.0
 
 # ---------------------------------------------------------------------------
 # [PART 2] Vector structural address (replaces exact-hash MATCH with cosine).
 # ---------------------------------------------------------------------------
 #: [2] Enable the vector structural address (the old hash stays as canonical
-#: ID only).  [FINAL CHECK G] turned ON by default: A beats floor (top-1
-#: 0.605 vs floor 0.536) and E passes (class signal maintained).
-FE_VECTOR_ADDRESS: bool = True
+#: ID only).  OFF until PART B wires it to the matcher (B2): the address is a
+#: fast code of node similarity used ONLY to seed the matcher.  [Task 3 A1]
+FE_VECTOR_ADDRESS: bool = False
 #: [2] Dimension of each symbol's fixed random vector.
 VECTOR_ADDRESS_DIM: int = 1024
 #: [2] Fixed self_weight on a node's own address term (stops a weak edge from
