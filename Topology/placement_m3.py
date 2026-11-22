@@ -44,6 +44,8 @@ EDGE_BETA = 0.5
 #: Candidate list per node.  Capped so the rival set is the one the assignment
 #: actually sees and so every pairwise loop is bounded.
 CAND_CAP = 6
+#: Run the DEV-only oracle-context ceiling diagnostic.
+ORACLE = True
 
 ARMS = ("N", "R", "R_fixed", "P", "P_presence", "P_shuffled", "W")
 
@@ -228,6 +230,18 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
                     L.score_candidate(u, v, nmap, sh_inc, sh_idx, r_idx, fit), s))
                 scored["W"] = pick(lambda v, s: blend(
                     L.score_candidate(u, v, nmap, w_inc, w_idx, r_idx, fit), s))
+                # DEV-ONLY CEILING DIAGNOSTIC.  Oracle context = the neighbours'
+                # images come from renderer truth instead of from N.  This
+                # violates TRUTH-FREE AT MATCH TIME by construction, which is
+                # exactly why it can never enter a deployed arm: it exists to
+                # say whether the ceiling is set by the CONTEXT (N is right on
+                # ~30% of nodes) or by the PAYLOAD/frames.  Reported as a
+                # ceiling only.
+                if ORACLE:
+                    scored["P_oracle"] = pick(lambda v, s: blend(
+                        L.score_candidate(u, v, truth, q_inc, q_idx, r_idx, fit), s))
+                    scored["P_oracle_presence"] = pick(lambda v, s: blend(
+                        L.presence_score(u, v, truth, q_inc, q_idx, r_idx, pfit), s))
 
                 records.append({
                     "scene": spec.name, "view": label, "family": spec.family,
@@ -307,7 +321,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--fit-limit", type=int, default=None)
     ap.add_argument("--check-limit", type=int, default=None)
     ap.add_argument("--tag", default="m3")
+    ap.add_argument("--no-oracle", action="store_true")
     args = ap.parse_args(argv)
+    global ORACLE
+    ORACLE = not args.no_oracle
 
     from Topology.placement_dev3 import VIEWS, all_specs, split
 
@@ -331,16 +348,22 @@ def main(argv: Optional[List[str]] = None) -> int:
                            "arms": {}, "contrasts": {}}
 
     print("\n== CHECK, near-tie ambiguous nodes")
-    for arm in ARMS:
+    arms_here = list(ARMS) + [a for a in ("P_oracle", "P_oracle_presence")
+                              if records and a in records[0]["ok"]]
+    for arm in arms_here:
         s = scene_stats(records, arm)
         res["arms"][arm] = s
         print("  %-11s %.4f  scene_se %.4f  n=%d scenes=%d"
               % (arm, s["mean"], s["scene_se"], s["n"], s["n_scenes"]))
 
     print("\n  contrast            effect   scene_se     MDE        CI           p_exact  verdict")
-    for a, b in (("P", "N"), ("P", "P_presence"), ("P", "P_shuffled"),
-                 ("P", "W"), ("P", "R_fixed"), ("R", "N"), ("R_fixed", "R"),
-                 ("P_presence", "N")):
+    pairs = [("P", "N"), ("P", "P_presence"), ("P", "P_shuffled"),
+             ("P", "W"), ("P", "R_fixed"), ("R", "N"), ("R_fixed", "R"),
+             ("P_presence", "N")]
+    if "P_oracle" in records[0]["ok"] if records else False:
+        pairs += [("P_oracle", "P"), ("P_oracle", "P_presence"),
+                  ("P_oracle_presence", "P_presence"), ("P_oracle", "P_oracle_presence")]
+    for a, b in pairs:
         c = contrast(records, a, b)
         res["contrasts"]["%s-%s" % (a, b)] = c
         print("  %-18s %+.4f  %.4f    %.4f  [%+.4f,%+.4f]  %.4f  %s"
