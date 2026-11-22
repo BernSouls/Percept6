@@ -1,0 +1,35 @@
+{
+  "arms": {
+    "P_mu": {
+      "mean": 0.32772136638052723,
+      "n": 2811,
+      "n_scenes": 20,
+      "scene_se": 0.016636269738555445
+    },
+    "P_neutral": {
+      "mean": 0.32772136638052723,
+      "n": 2811,
+      "n_scenes": 20,
+      "scene_se": 0.016636269738555445
+    },
+    "P_presence_mu": {
+      "mean": 0.35532471671085364,
+      "n": 2811,
+      "n_scenes": 20,
+      "scene_se": 0.015703568553898165
+    },
+    "P_presence_neutral": {
+      "mean": 0.35532471671085364,
+      "n": 2811,
+      "n_scenes": 20,
+      "scene_se": 0.015703568553898165
+    }
+  },
+  "contrasts": {
+    "P_mu-P_presence_mu": -0.027603350330326404,
+    "P_neutral-P_mu": 0.0,
+    "P_neutral-P_presence_neutral": -0.027603350330326404
+  },
+  "mu_wrong": -0.11735853173068052,
+  "uncheckable_share": 0.8629561084835606
+}

@@ -148,14 +148,22 @@ def score_candidate(u: int, v: int, mapping: Mapping[int, int],
                     q_inc: Mapping[int, List[Tuple[int, bool, str]]],
                     q_idx: Mapping[Tuple[int, int, str], Any],
                     r_idx: Mapping[Tuple[int, int, str], Any],
-                    fit: LLRFit, slot_cap: int = SLOT_CAP) -> float:
-    """The padded, clipped, summed LLR score for u -> v, mapped to [0, 1]."""
+                    fit: LLRFit, slot_cap: int = SLOT_CAP,
+                    pad: Optional[float] = None) -> float:
+    """The padded, clipped, summed LLR score for u -> v, mapped to [0, 1].
+
+    ``pad`` overrides the padding value.  The default is ``mu_wrong`` -- an
+    uncheckable slot is worth what a wrong pair is worth -- but STAGE 0b asks
+    what happens if an absent edge is treated as NEUTRAL instead, because 33 %
+    of edges vanish between views and the absence penalty may swamp weak
+    geometry.
+    """
+    padv = float(fit.mu_wrong) if pad is None else float(pad)
     slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx)[:slot_cap]
     total = 0.0
     for (_name, _other, res) in slots:
         total += fit.of(res)
-    # PAD the unused slots with the wrong-pair expectation.
-    total += float(fit.mu_wrong) * (slot_cap - len(slots))
+    total += padv * (slot_cap - len(slots))
     return total / (2.0 * LLR_CLIP * slot_cap) + 0.5
 
 
@@ -277,8 +285,10 @@ def presence_score(u: int, v: int, mapping: Mapping[int, int],
                    q_inc: Mapping[int, List[Tuple[int, bool, str]]],
                    q_idx: Mapping[Tuple[int, int, str], Any],
                    r_idx: Mapping[Tuple[int, int, str], Any],
-                   pfit: PresenceFit, slot_cap: int = SLOT_CAP) -> float:
+                   pfit: PresenceFit, slot_cap: int = SLOT_CAP,
+                   pad: Optional[float] = None) -> float:
     """Presence credit under P's normalisation, caps and padding."""
+    padv = float(pfit.mu_wrong) if pad is None else float(pad)
     slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx)[:slot_cap]
     total = 0.0
     for (name, _other, res) in slots:
@@ -288,5 +298,5 @@ def presence_score(u: int, v: int, mapping: Mapping[int, int],
         # arm rather than a second geometry arm.
         if res is not None:
             total += float(pfit.llr.get(name, 0.0))
-    total += float(pfit.mu_wrong) * (slot_cap - len(slots))
+    total += padv * (slot_cap - len(slots))
     return total / (2.0 * LLR_CLIP * slot_cap) + 0.5
