@@ -242,3 +242,69 @@ def detected(out: List[Keypoint]) -> Dict[str, int]:
     for p in out:
         c[p.kind] = c.get(p.kind, 0) + 1
     return c
+
+
+# ---------------------------------------------------------------------------
+# [MISSION 6 / STEP 2] THE LAYER AS BINDER DETECTIONS
+# ---------------------------------------------------------------------------
+#: Orientation bins over pi (a direction has no sign) and the scale index.
+THETA_BINS: int = 12
+COHERENCE_BINS: int = 4
+KIND_INDEX: Dict[str, int] = {"corner": 0, "blob": 1, "edge": 2}
+
+
+def _q(v: float, lo: float, hi: float, n: int) -> int:
+    if hi <= lo:
+        return 0
+    x = (float(v) - lo) / (hi - lo)
+    return int(max(0, min(n - 1, int(x * n))))
+
+
+def signature_of(p: Keypoint) -> Any:
+    """The signature a keypoint node carries.
+
+    Quantised so that the SAME feature seen from another view lands in the same
+    bin: orientation to pi/12, coherence to quarters, scale to its sigma index,
+    kind to its own slot.  This is what `identity` reads, so it must be stable
+    under small pose change and MUST NOT carry position.
+    """
+    from core.types import TypedSignature
+    th = float(p.theta) % np.pi
+    return TypedSignature(
+        kind="CANONICAL",
+        class_=LENS_OF_KIND.get(p.kind, "Keypoint"),
+        quantized=(float(_q(th, 0.0, np.pi, THETA_BINS)),
+                   float(_q(p.coherence, 0.0, 1.0, COHERENCE_BINS)),
+                   float(round(float(p.scale), 3)),
+                   float(KIND_INDEX.get(p.kind, 3)),
+                   float(p.dim)),
+    )
+
+
+def anchor_of(p: Keypoint, idx: int) -> Tuple[Any, ...]:
+    """A unique, hashable anchor key for a keypoint (never an int region id)."""
+    return ("kp", str(p.kind), int(idx))
+
+
+def as_detections(image: Any, t: int = 0, **kw: Any) -> Tuple[List[Any], Dict[Any, Tuple[float, float, float]]]:
+    """(detections, anchor -> position) for one image.
+
+    The position map is the part that makes the writer real: the binder looks a
+    node's position up by its anchor, so every keypoint hands it its own
+    sub-pixel (x, y) with z = 0.
+    """
+    from core.types import Detection
+    pts = detect(image, **kw)
+    dets: List[Any] = []
+    pos: Dict[Any, Tuple[float, float, float]] = {}
+    for i, p in enumerate(pts):
+        a = anchor_of(p, i)
+        pos[a] = (float(p.x), float(p.y), 0.0)
+        d = Detection(k=LENS_OF_KIND.get(p.kind, "Keypoint"),
+                      source_layer=0, scale=0, sigma=signature_of(p),
+                      alpha=a, z=float(p.resp), t=int(t), rho=())
+        # The detection's own measured place, so the writer fix carries it even
+        # if the map lookup is bypassed by a caller.
+        object.__setattr__(d, "_place_pos", (float(p.x), float(p.y)))
+        dets.append(d)
+    return dets, pos

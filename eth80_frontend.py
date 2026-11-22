@@ -376,6 +376,20 @@ def build_graph(image: np.ndarray, name: str = "",
                     extraction_scale)
             D_bind = set(D_v1)
 
+            # [MISSION 6 / STEP 2] THE TRUE-KEYPOINT PLACES.
+            #
+            # The layer is added AFTER surround suppression, so it cannot
+            # be thinned by a rule written for the tiling lenses, and each
+            # detection hands the binder both its own sub-pixel position and
+            # its signature.  Dark by default: with FE_KEYPOINTS off nothing
+            # below runs and the graph is bit-identical by construction.
+            if bool(getattr(P, "FE_KEYPOINTS", False)):
+                from lenses.keypoints import as_detections as _kp_dets
+                _kpd, _kpp = _kp_dets(obs.image_u8 if hasattr(obs, "image_u8")
+                                      else image, t=t)
+                D_bind |= set(_kpd)
+                binder_positions.update(_kpp)
+
             # 4. binder
             binder.step(
                 t, frozenset(D_bind),
