@@ -102,22 +102,42 @@ def node_support(u: int,
     n_total = 0
     n_unmapped = 0
     n_nopayload = 0
+    # BOTH DIRECTIONS.  A payload edge is framed in its SOURCE, so when u is
+    # the source the frame is u's own; when u is the TARGET the frame is the
+    # neighbour's.  Both are legitimate evidence about where u sits, and
+    # restricting to the outgoing side left most nodes unmeasured (measured:
+    # support None on the first node tried, which would make P collapse onto
+    # N and the whole arm vacuous).  The frame is never the target's, so this
+    # is not a frame error -- it is two framings of the same node.
     for (s, d, et), qv in sorted(q_pay.items(),
                                  key=lambda kv: (kv[0][0], kv[0][1],
                                                  getattr(kv[0][2], "name", ""))):
-        if s != u:
+        if int(s) == int(u):
+            other, is_source = int(d), True
+        elif int(d) == int(u):
+            other, is_source = int(s), False
+        else:
             continue
         name = getattr(et, "name", None) or str(et).replace("EdgeType.", "")
         if name not in allowed:
             continue
         n_total += 1
-        w = mapping.get(d)
-        if w is None:
+        # THE REFERENCE-SIDE KEY IS THE EDGE'S OWN SOURCE IMAGE.
+        # A payload edge (s, d) is framed in ITS source.  On the query side
+        # that edge may be stored either way, but on the REFERENCE side the
+        # counterpart edge is (mapping[s], mapping[d]) -- NOT (mapping[u], ...)
+        # with u forced to the front.  Using the query-side orientation for
+        # both sides was the bug: it asked for a reference edge that does not
+        # exist and scored every node as having no payload.
+        ms, md = mapping.get(int(s)), mapping.get(int(d))
+        if ms is None or md is None:
             n_unmapped += 1
             continue
+        w = md if is_source else ms
+        key_s, key_d = int(ms), int(md)
         rv = None
         for (s2, d2, et2), cand in r_pay.items():
-            if s2 == mapping.get(u) and d2 == w and \
+            if int(s2) == key_s and int(d2) == key_d and \
                     (getattr(et2, "name", None) == name):
                 rv = cand
                 break
