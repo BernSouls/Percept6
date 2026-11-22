@@ -277,6 +277,7 @@ def build_edges(subgraph: Any, image_u8: np.ndarray,
                 exclude_lenses: Optional[Sequence[str]] = None,
                 ridge_across_only: Optional[bool] = None,
                 collapse_places: Optional[bool] = None,
+                endpoint_lenses: Optional[Sequence[str]] = None,
                 **sel_kw: Any) -> Dict[Tuple[int, int, Any], PlacementVector]:
     """The SOURCE_FRAME_PLACEMENT payloads for one graph.
 
@@ -329,6 +330,19 @@ def build_edges(subgraph: Any, image_u8: np.ndarray,
         keep = sorted({rep[u] for u in pos})
         pos = {u: pos[u] for u in keep if u in pos}
         frames = {u: frames[u] for u in keep if u in frames}
+
+    # [MISSION 7 / STEP 2] PLACEMENT ENDPOINTS ARE PLACES.
+    #
+    # A whitelist, not a blacklist: only lenses that are a PLACE can be an
+    # endpoint.  An attribute or ridge node describes or bounds a place, so it
+    # attaches to one (coverage 0.736 within 4 px, Mission 6) and inherits its
+    # support; it does not get to be an endpoint itself.  Empty (the default)
+    # means "no restriction", so the shipped behaviour is untouched.
+    ends = tuple(endpoint_lenses if endpoint_lenses is not None
+                 else _param("PLACEMENT_ENDPOINT_LENSES", ()))
+    if ends and lens:
+        pos = {u: p for u, p in pos.items() if lens.get(u) in ends}
+        frames = {u: t for u, t in frames.items() if lens.get(u) in ends}
 
     if excl:
         # [STAGE 2a (i)] A ridge token is not a place.  Drop it as an endpoint

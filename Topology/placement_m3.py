@@ -168,7 +168,8 @@ def collect_fit(specs: Sequence[Any], views: Sequence[Any], limit: Optional[int]
 
 # ---------------------------------------------------------------------------
 def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
-              limit: Optional[int], ratio_fit: Any = None) -> List[Dict[str, Any]]:
+              limit: Optional[int], ratio_fit: Any = None,
+              pose_fn: Optional[Any] = None) -> List[Dict[str, Any]]:
     import guard
     guard.activate()
     from matching import placement_edges as PE
@@ -204,9 +205,12 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
             ref_by_src[s][nm].append(d)
             ref_by[s][nm].append((d, params))
         for label, view in views:
-            pv = view_pose(spec, view)
-            sc1 = posed(spec.scene, pv["rot_deg"], tuple(pv["shift"]),
-                        pv["scale"])
+            if pose_fn is not None:
+                sc1, pv = pose_fn(spec, view)
+            else:
+                pv = view_pose(spec, view)
+                sc1 = posed(spec.scene, pv["rot_deg"], tuple(pv["shift"]),
+                            pv["scale"])
             r1 = sc1.render()
             g1 = get_or_build(r1.image_u8, spec.name + "|" + label)
             o1 = node_objects(r1, g1)
