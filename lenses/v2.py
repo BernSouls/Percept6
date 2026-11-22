@@ -11,6 +11,7 @@ from collections import defaultdict
 from typing import Any, Dict, List, Optional, Set, Tuple
 import parameters as P
 from perception.ownership import ownership_signed
+from core.place_key import salted_sig_hash  # noqa: F401
 from core.hashing import (  # noqa: F401
     _detection_sort_key,
     _node_signature_hash,
@@ -601,7 +602,9 @@ class ContourLens(HigherLens):
         nid_to_inst: Dict[int, List[int]] = defaultdict(list)
         for i, det in enumerate(rep_dets):
             nid = concept_graph.get_or_create_pattern_node(
-                det.k, _node_signature_hash(det.sigma), signature=det.sigma
+                det.k,
+                salted_sig_hash(det.k, _node_signature_hash(det.sigma),
+                                getattr(det, 'alpha', None)), signature=det.sigma
             )
             inst_nid[i] = nid
             nid_to_inst[nid].append(i)
@@ -1147,7 +1150,9 @@ class JunctionLens(HigherLens):
             if len(det.sigma.quantized) < 2:
                 continue
             nid = concept_graph.get_or_create_pattern_node(
-                det.k, _node_signature_hash(det.sigma), signature=det.sigma
+                det.k,
+                salted_sig_hash(det.k, _node_signature_hash(det.sigma),
+                                getattr(det, 'alpha', None)), signature=det.sigma
             )
             det_to_nid[i] = nid
 

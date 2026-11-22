@@ -11,6 +11,7 @@ import itertools
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Set, Tuple
 import parameters as P
+from core.place_key import salted_sig_hash  # noqa: F401
 from core.hashing import (  # noqa: F401
     _detection_sort_key,
     _node_signature_hash,
@@ -1047,7 +1048,9 @@ class CurveComplexLens(HigherLens):
             if len(det.sigma.quantized) < 4:
                 continue
             nid = concept_graph.get_or_create_pattern_node(
-                det.k, _node_signature_hash(det.sigma), signature=det.sigma
+                det.k,
+                salted_sig_hash(det.k, _node_signature_hash(det.sigma),
+                                getattr(det, 'alpha', None)), signature=det.sigma
             )
             node_id_to_detection.setdefault(nid, det)
             node_id_to_kind.setdefault(nid, "Contour")
@@ -1055,7 +1058,9 @@ class CurveComplexLens(HigherLens):
             if len(det.sigma.quantized) < 3:
                 continue
             nid = concept_graph.get_or_create_pattern_node(
-                det.k, _node_signature_hash(det.sigma), signature=det.sigma
+                det.k,
+                salted_sig_hash(det.k, _node_signature_hash(det.sigma),
+                                getattr(det, 'alpha', None)), signature=det.sigma
             )
             node_id_to_detection.setdefault(nid, det)
             node_id_to_kind.setdefault(nid, "Junction")
@@ -1504,7 +1509,9 @@ class CurveComplexLens_B13(HigherLens):
         if concept_graph is not None:
             for d in contour_dets_sorted:
                 nid = concept_graph.get_or_create_pattern_node(
-                    d.k, _node_signature_hash(d.sigma), signature=d.sigma
+                    d.k,
+                    salted_sig_hash(d.k, _node_signature_hash(d.sigma),
+                                    getattr(d, 'alpha', None)), signature=d.sigma
                 )
                 c_nids.append(nid)
 

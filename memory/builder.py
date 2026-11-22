@@ -27,6 +27,7 @@ from collections import OrderedDict, defaultdict, deque
 from dataclasses import dataclass, field
 from typing import Any, Dict, FrozenSet, List, Optional, Set, Tuple
 
+from core.place_key import salted_sig_hash  # noqa: F401
 from core.hashing import (  # noqa: F401
     clamp,
     hash_128,
@@ -1139,7 +1140,8 @@ class Builder:
         self._current_s_t_bytes = s_t_bytes
         self._step_detection_map = {}
         for d in sorted(D_bind, key=lambda dd: serialize_detection(dd)):
-            sig_hash = _node_signature_hash(d.sigma)
+            sig_hash = salted_sig_hash(d.k, _node_signature_hash(d.sigma),
+                                       getattr(d, 'alpha', None))
             nid = self.cg.get_or_create_pattern_node(
                 d.k, sig_hash, signature=d.sigma
             )
@@ -1223,7 +1225,8 @@ class Builder:
         s_t_bytes: bytes,
     ) -> None:
         for d in sorted(D_bind, key=lambda dd: serialize_detection(dd)):
-            sig_hash = _node_signature_hash(d.sigma)
+            sig_hash = salted_sig_hash(d.k, _node_signature_hash(d.sigma),
+                                       getattr(d, 'alpha', None))
             nid = self.cg.get_or_create_pattern_node(
                 d.k, sig_hash, signature=d.sigma
             )

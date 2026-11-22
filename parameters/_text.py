@@ -1198,6 +1198,20 @@ FE_SUBPIXEL_GABOR_ANCHOR: bool = os.environ.get(
 FE_KEYPOINTS: bool = os.environ.get("FE_KEYPOINTS", "0") != "0"
 
 
+# [MISSION 7] FE_PLACE_LAYER: salt the pattern-node key with the detection's
+# own anchor, so each detection of a place lens is its OWN node instead of
+# folding into a signature class (measured: Orientation 105 detections -> 32
+# nodes, Texture 135 -> 27, Color 110 -> 7, keypoints 405 -> 96).  No grid
+# rounding: the anchor the lens emitted is the key.  DARK by default, and the
+# stored signature stays position-free, so matching is unchanged.
+FE_PLACE_LAYER: bool = os.environ.get("FE_PLACE_LAYER", "0") != "0"
+
+# Lenses minted per PLACE.  Attribute lenses are deliberately NOT here: an
+# attribute describes what a place is like, so folding its detections is right.
+PLACE_LAYER_LENSES: Tuple[str, ...] = ("Orientation", "Texture", "Color",
+                                       "Contour", "Boundary",
+                                       "CornerPoint", "Blob", "BoundaryArc")
+
 # [U26] The footprint of that spatial maximum, as a fraction of `radius_px`.
 # `V1RetinotopicLattice` sets radius_px = (stride/2) * overlap_factor with
 # overlap_factor = 1.6, so radius_px / 1.6 is exactly the half-width of the

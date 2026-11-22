@@ -2284,7 +2284,27 @@ class LensExecutor:
                 if g > 0.0:
                     responses[idx] = responses[idx] * (1.0 + g)
 
-        return self._emit("Orientation", responses, anchors, _sig, _tb)
+        # [MISSION 7] THE SAME PLACE HAND-OFF AS THE GABOR PATH.
+        #
+        # This path emits tuple anchors, which the step map does not hold
+        # (it is keyed by region), so without this its nodes reached the
+        # graph POSITION-LESS -- measured: 45 Orientation place nodes, 27
+        # with a position.  A place without a position is not a place.
+        _out7 = self._emit("Orientation", responses, anchors, _sig, _tb)
+        if bool(getattr(P, "FE_PLACE_LAYER", False)):
+            _gp = getattr(obs, "get_region_centroid_by_anchor", None)
+            for _d7 in _out7:
+                if getattr(_d7, "_place_pos", None) is not None:
+                    continue
+                _a7 = getattr(_d7, "alpha", None)
+                _u7 = int(_a7[0]) if isinstance(_a7, tuple) and _a7 else None
+                if _u7 is None or not callable(_gp):
+                    continue
+                _p7 = _gp(_u7)
+                if _p7 is not None and len(_p7) >= 2:
+                    object.__setattr__(_d7, "_place_pos",
+                                       (float(_p7[0]), float(_p7[1])))
+        return _out7
 
 
     def _run_orientation_gabor(self, S_t: Any, obs: Any,
@@ -2612,8 +2632,18 @@ class LensExecutor:
                 _a6 = getattr(_d6, "alpha", None)
                 _pp6 = None
                 if isinstance(_a6, tuple) and len(_a6) >= 3:
-                    _c6 = region_best_pos.get(int(_a6[0]))
-                    _pp6 = _c6[1] if _c6 is not None else None
+                    # [MISSION 7] A CELL IS A PLACE.  The region fallback
+                    # gave every cell of one region the same position
+                    # (measured: 45 nodes, 30 distinct).  The pooling map
+                    # holds this cell's OWN sub-pixel position under its
+                    # anchor key, so use it and fall back only if absent.
+                    _pp6 = (anchor_positions.get(_a6)
+                            if anchor_positions is not None else None)
+                    if _pp6 is not None:
+                        _pp6 = (float(_pp6[0]), float(_pp6[1]))
+                    else:
+                        _c6 = region_best_pos.get(int(_a6[0]))
+                        _pp6 = _c6[1] if _c6 is not None else None
                 else:
                     # The anchor index is a NUMPY integer on this path;
                     # `isinstance(x, int)` is False for it and the first

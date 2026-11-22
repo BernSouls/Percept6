@@ -53,6 +53,7 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 from collections import defaultdict
 
+from core.place_key import salted_sig_hash  # noqa: F401
 from core.hashing import (  # noqa: F401
     clamp,
     hash_128,
@@ -1652,7 +1653,9 @@ class ConceptGraph:
         node_ids: Set[int] = set()
         for det in cs.detections:
             nid = self.get_or_create_pattern_node(
-                det.k, _node_signature_hash(det.sigma), signature=det.sigma
+                det.k,
+                salted_sig_hash(det.k, _node_signature_hash(det.sigma),
+                                getattr(det, 'alpha', None)), signature=det.sigma
             )
             node_ids.add(nid)
         return node_ids

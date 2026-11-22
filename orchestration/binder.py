@@ -42,6 +42,7 @@ from core.hashing import (  # noqa: F401
     serialize_tuple,
     serialize_value,
 )
+from core.place_key import salted_sig_hash, sig_hash_of  # noqa: F401
 from core.schema import EdgeParams  # noqa: F401
 from core.schema import edge_params as _edge_params  # noqa: F401
 from core.schema import edge_quantise  # noqa: F401
@@ -1075,7 +1076,12 @@ class Binder:
         assert t == self.t, "bind_intra_step out of step"
         dets_tuple = tuple(sorted(set(dets), key=_detection_sort_key))
         for d in dets_tuple:
-            sig_hash = _node_signature_hash(d.sigma)
+            # [MISSION 7] SALT THE KEY WITH THE PLACE'S OWN ANCHOR.
+            # One node per place, not one per signature class.  `pat` is
+            # written from the same salted hash, so every later lookup in
+            # this scope agrees with the node key (no unsalted twin).
+            sig_hash = salted_sig_hash(d.k, _node_signature_hash(d.sigma),
+                                       getattr(d, 'alpha', None))
             pat = (d.k, sig_hash)
             if pat in self._higher_present_this_step:
                 self._stage6_note_pooled(d, pat)
@@ -1564,7 +1570,10 @@ class Binder:
 
         node_ids: Dict[Detection, int] = {
             d: self.cg.get_or_create_pattern_node(
-                d.k, _node_signature_hash(d.sigma), signature=d.sigma
+                d.k,
+                salted_sig_hash(d.k, _node_signature_hash(d.sigma),
+                                getattr(d, 'alpha', None)),
+                signature=d.sigma
             )
             for d in dets
         }
@@ -1622,7 +1631,7 @@ class Binder:
         # commit is finalize_step()'s job so that higher-lens patterns
         # registered later in the same step (bind_intra_step) join it.
         self._v1_present_this_step = {
-            (d.k, _node_signature_hash(d.sigma)) for d in dets
+            (d.k, sig_hash_of(d)) for d in dets
         }
         # [U29 STAGE] V1 detections made visible to the mid-level
         # cross-tier emitters (anti_phase containment / border ownership
@@ -1750,7 +1759,8 @@ class Binder:
         execution is a fresh causal event, keeping lag = 1 to its own
         effects). Deterministic; O(1).
         """
-        sig_hash = _node_signature_hash(det.sigma)
+        sig_hash = salted_sig_hash(det.k, _node_signature_hash(det.sigma),
+                                   getattr(det, 'alpha', None))
         pat = (det.k, sig_hash)
         nid = self.cg.get_or_create_pattern_node(
             det.k, sig_hash, signature=det.sigma
@@ -5272,7 +5282,7 @@ class Binder:
         present_now: Set[Tuple[str, bytes]] = set()
         anchor_patterns_now: Dict[Any, Set[Tuple[str, bytes]]] = defaultdict(set)
         for d in dets:
-            pat = (d.k, _node_signature_hash(d.sigma))
+            pat = (d.k, sig_hash_of(d))
             present_now.add(pat)
             anchor_patterns_now[d.alpha].add(pat)
             self._pattern_last_seen[pat] = self.t
@@ -5354,7 +5364,7 @@ class Binder:
 
         det_data = []
         for d in dets:
-            pat = (d.k, _node_signature_hash(d.sigma))
+            pat = (d.k, sig_hash_of(d))
             det_data.append((d, pat, node_ids[d]))
 
         candidates = []
@@ -5389,7 +5399,7 @@ class Binder:
         # Map current-onset patterns to node ids.
         current_node: Dict[Tuple[str, bytes], int] = {}
         for d in dets:
-            pat = (d.k, _node_signature_hash(d.sigma))
+            pat = (d.k, sig_hash_of(d))
             if pat in self._pattern_onset_now and pat not in current_node:
                 current_node[pat] = node_ids[d]
 
@@ -5506,7 +5516,7 @@ class Binder:
         # Distinct patterns present this step.
         patterns: Dict[Tuple[str, bytes], Detection] = {}
         for d in dets:
-            pat = (d.k, _node_signature_hash(d.sigma))
+            pat = (d.k, sig_hash_of(d))
             if pat not in patterns:
                 patterns[pat] = d
         if len(patterns) < 2:
@@ -5559,7 +5569,7 @@ class Binder:
     ) -> None:
         patterns: Dict[Tuple[str, bytes], Detection] = {}
         for d in dets:
-            pat = (d.k, _node_signature_hash(d.sigma))
+            pat = (d.k, sig_hash_of(d))
             if pat not in patterns:
                 patterns[pat] = d
         if len(patterns) < 2:
@@ -5615,7 +5625,7 @@ class Binder:
         Change = mean anchor pattern-set change EMA over B's anchors."""
         patterns: Dict[Tuple[str, bytes], Detection] = {}
         for d in dets:
-            pat = (d.k, _node_signature_hash(d.sigma))
+            pat = (d.k, sig_hash_of(d))
             if pat not in patterns:
                 patterns[pat] = d
         if len(patterns) < 2:
@@ -6044,7 +6054,7 @@ class Binder:
         # Current-onset patterns and their node IDs.
         current_node: Dict[Tuple[str, bytes], int] = {}
         for d in dets:
-            pat = (d.k, _node_signature_hash(d.sigma))
+            pat = (d.k, sig_hash_of(d))
             if pat in self._pattern_onset_now and pat not in current_node:
                 current_node[pat] = node_ids[d]
 
@@ -6117,7 +6127,7 @@ class Binder:
 
         patterns: Dict[Tuple[str, bytes], Detection] = {}
         for d in dets:
-            pat = (d.k, _node_signature_hash(d.sigma))
+            pat = (d.k, sig_hash_of(d))
             if pat not in patterns:
                 patterns[pat] = d
 

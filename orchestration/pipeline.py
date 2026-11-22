@@ -5,6 +5,7 @@ Pure orchestration of the per-step loop. No business logic.
 """
 
 from __future__ import annotations
+from core.place_key import sig_hash_of  # noqa: F401
 from core.hashing import (  # noqa: F401
     clamp,
     hash_128,
@@ -4143,13 +4144,13 @@ class StatePatternIndex:
         lookup = getattr(self.cg, "get_pattern_node_id", None)
         for d in D_bind:
             if callable(lookup):
-                nid = lookup(d.k, _node_signature_hash(d.sigma))
+                nid = lookup(d.k, sig_hash_of(d))
             else:
                 # Consolidated fallback: ConceptGraph's key→id index.
                 # Flagged for concept_graph.py to expose the public
                 # accessor (module-boundary rule §1.10.3).
                 nid = self.cg._pattern_node_id_by_key.get(  # noqa: SLF001
-                    (d.k, _node_signature_hash(d.sigma))
+                    (d.k, sig_hash_of(d))
                 )
             if nid is not None:
                 nodes.add(nid)
