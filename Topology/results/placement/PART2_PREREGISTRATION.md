@@ -121,3 +121,17 @@ carried instead by criterion (2), the `P_shuffled` contrast.
 
 **One** EVAL read. A second read requires a recorded cause and is reported as a
 second read. DEV reruns are free and are not counted here.
+
+## 10. Amendments recorded BEFORE any EVAL number was read
+
+**A1 (instrument, 2026-11-18).** The first `--set eval` invocation crashed with
+`AttributeError: 'Cylinder' object has no attribute 'height'` inside
+`placement_scenes.posed`: the primitive stores `half_height`, and no scene had
+used a cylinder through `posed` before. The run aborted before computing or
+writing any accuracy; `arms_eval.json` did not exist and no EVAL number was
+seen. Fixed in `posed` (scale the real attribute). **The pre-registered scene
+set, views, constants and criteria are unchanged** — this was an instrument gap
+in the pose helper, not a change to the experiment.
+
+**A2 (instrument, 2026-11-18).** `posed` was imported only in the DEV branch, so
+`--set eval` raised `UnboundLocalError`. Same status: no numbers produced.

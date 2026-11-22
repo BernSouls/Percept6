@@ -248,6 +248,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     from Topology.placement_truth import (node_objects, swap_truth,
                                           track_optimal)
     from Topology import placement_census as C
+    from Topology.placement_scenes import posed
 
     if args.set == "eval":
         from Topology.placement_eval_spec import eval_specs, EVAL_VIEWS as VIEWS
@@ -257,7 +258,6 @@ def main(argv: Optional[List[str]] = None) -> int:
         tag = "eval"
     else:
         from Topology.placement_dev import all_specs, DEV_VIEWS as VIEWS
-        from Topology.placement_scenes import posed
         specs = all_specs()
         frozen = json.load(open(os.path.join(OUT, "devfit_tolerance.json")))
         tag = "dev"

@@ -123,8 +123,11 @@ def posed(scene: Scene, rot_deg: float = 0.0, shift: Tuple[float, float] = (0.0,
             elif isinstance(shape, Box):
                 shape = Box(tuple(float(x) * scale for x in shape.half_extents))
             elif isinstance(shape, Cylinder):
+                # The primitive stores `half_height`, not `height`; scaling the
+                # old attribute name raised AttributeError the first time an
+                # EVAL scene actually used a cylinder.
                 shape = Cylinder(radius=shape.radius * scale,
-                                 height=shape.height * scale)
+                                 half_height=shape.half_height * scale)
         objs.append(replace(o, rotation=r, centre=c, shape=shape))
     if occluder:
         # A thin slab in front of the frontmost object.  It occludes part of
