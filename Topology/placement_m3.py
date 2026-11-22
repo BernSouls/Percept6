@@ -62,7 +62,8 @@ def _payload(mod: Any, g: Any, img: Any, obj: Dict[int, int],
 
 
 # ---------------------------------------------------------------------------
-def collect_fit(specs: Sequence[Any], views: Sequence[Any], limit: Optional[int]
+def collect_fit(specs: Sequence[Any], views: Sequence[Any], limit: Optional[int],
+                pose_fn: Optional[Any] = None
                 ) -> Tuple[Any, Any, Dict[str, Any]]:
     """Fit the residual densities and the presence rates on the FIT half."""
     import guard
@@ -93,9 +94,13 @@ def collect_fit(specs: Sequence[Any], views: Sequence[Any], limit: Optional[int]
         r_pay = _payload(PE, g0, r0.image_u8, o0, intra)
         r_idx = payload_index(r_pay)
         for label, view in views:
-            pv = view_pose(spec, view)
-            sc1 = posed(spec.scene, pv["rot_deg"], tuple(pv["shift"]),
-                        pv["scale"])
+            if pose_fn is not None:
+                # [MISSION 6] DEV-5 states its own steps; DEV-3 derives them.
+                sc1, pv = pose_fn(spec, view)
+            else:
+                pv = view_pose(spec, view)
+                sc1 = posed(spec.scene, pv["rot_deg"], tuple(pv["shift"]),
+                            pv["scale"])
             r1 = sc1.render()
             g1 = get_or_build(r1.image_u8, spec.name + "|" + label)
             o1 = node_objects(r1, g1)
