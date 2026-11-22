@@ -45,7 +45,14 @@ def select_perceptual_graph(graph, sig_lookup, *, budget=EDGE_BUDGET_PER_FRAME,
         a, b = node_key(u), node_key(v)
         if b < a:
             a, b = b, a
-        return (-float(graph.weights.get(edge, 1.0)), et.name, a, b, edge[0], edge[1])
+        # [0d] CANONICAL.  `node_key` ends in the node id, so the old key
+        # broke signal ties by BUILD ORDER.  a[:2]/b[:2] are the endpoints'
+        # CONTENT (lens type, signature bytes); the ids remain only as the
+        # final total-order fallback for content-identical pairs.
+        # Measured: 1109 structural edges compete for the 512 budget, so this
+        # decider really does choose which edges the matcher ever sees.
+        return (-float(graph.weights.get(edge, 1.0)), et.name,
+                a[:2], b[:2], edge[0], edge[1])
 
     families = defaultdict(list)
     adjacency = defaultdict(list)

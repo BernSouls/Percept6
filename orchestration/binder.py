@@ -4919,10 +4919,18 @@ class Binder:
             # D1: cap by signal using heapq.nlargest (O(N log K)).
             if len(candidates) > cap:
                 self.diagnostics["candidate_cap_hits"][diag_key] += 1
+                # [0d] CANONICAL DECIDER.  Ties on signal used to fall
+                # through to _neg_bytes(c[3]), whose key tuple contains the
+                # node ids -- i.e. build order decided which edges survived
+                # the budget.  The tie is now broken by the endpoints'
+                # CONTENT identity, so the surviving set is a property of the
+                # scene rather than of the order nodes were minted.
                 candidates = nlargest(
                     cap,
                     candidates,
-                    key=lambda c: (c[2], _neg_bytes(c[3])),
+                    key=lambda c: (c[2],
+                                   _neg_bytes(_canonical_pair_key(
+                                       self.cg, c[0], c[1]))),
                 )
 
             max_sig = max(c[2] for c in candidates)
@@ -7271,6 +7279,51 @@ def _neg_bytes(key: Tuple[Any, ...]) -> bytes:
     """Deterministic inverse key for heapq.nlargest tie-breaking by
     canonical bytes (lower bytes should win, so nlargest sees higher)."""
     return bytes(255 - b for b in _candidate_key_bytes(key))
+
+
+def _canonical_node_key(cg: Any, nid: int) -> Tuple[Any, ...]:
+    """[0d] A node's CONTENT identity, with no dependence on build order.
+
+    The channel cap used to break signal ties with ``_neg_bytes(c[3])``, where
+    the key tuple contains the two node ids.  Ids are the order the binder
+    minted nodes in, so a tie was decided by BUILD ORDER -- the same class of
+    defect as frozenset iteration being process-salted.  Measured: 1109
+    structural edges compete for a 512 budget, and ORIENTATION_CONTINUITY
+    alone loses 46 -> 34, so ties decide real edges.
+
+    ``ConceptGraph`` keeps ``_pattern_node_id_by_key: {(lens, sig_hash): nid}``;
+    inverting it recovers the pattern a node was minted from, which IS the
+    node's content.  Falls back to the id only when the node has no pattern
+    (which keeps the key total).
+    """
+    table = getattr(cg, "_pattern_node_id_by_key", None) or {}
+    cache = getattr(cg, "_canonical_key_cache", None)
+    if cache is None:
+        cache = {}
+        try:
+            object.__setattr__(cg, "_canonical_key_cache", cache)
+        except Exception:
+            return _scan_content_key(table, nid)
+    got = cache.get(int(nid))
+    if got is not None:
+        return got
+    key = _scan_content_key(table, nid)
+    cache[int(nid)] = key
+    return key
+
+
+def _scan_content_key(table: Any, nid: int) -> Tuple[Any, ...]:
+    for key, got in table.items():
+        if int(got) == int(nid):
+            return (str(key[0]), bytes(key[1]))
+    return ("", b"", int(nid))
+
+
+def _canonical_pair_key(cg: Any, u: int, v: int) -> Tuple[Any, ...]:
+    """Order-independent content key of an unordered node pair."""
+    a = _canonical_node_key(cg, u)
+    b = _canonical_node_key(cg, v)
+    return (a, b) if a <= b else (b, a)
 
 
 def _conditional_from_history(
