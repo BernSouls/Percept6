@@ -1178,6 +1178,26 @@ BORDER_SUPPORT_MIN_GRAD: float = float(os.environ.get("BORDER_SUPPORT_MIN_GRAD",
 # CENTROID, verified by diagnostics/_u25_orient_patha.json).
 ORIENTATION_PIXEL_ANCHORS: bool = os.environ.get(
     "ORIENTATION_PIXEL_ANCHORS", "1") != "0"
+# [MISSION 5 / STAGE 2] FE_SUBPIXEL_GABOR_ANCHOR: refine the Gabor pixel
+# anchor to sub-pixel with a 2D quadratic fit of the channel response around
+# the integer argmax, instead of returning the argmax pixel itself.
+#
+# The integer anchor is the single largest localisation term in the front
+# end: measured node-to-node on 20 FIT scenes, localisation given the right
+# node is 1.08-1.48 px median and the gate asks for 0.50 px.  A parabola fit
+# over the 3x3 response window costs one 3x3 read per anchor and is the only
+# mechanism in this codebase that can move a Gabor anchor below one pixel.
+# DARK by default: the default graph must stay bit-identical by hash.
+FE_SUBPIXEL_GABOR_ANCHOR: bool = os.environ.get(
+    "FE_SUBPIXEL_GABOR_ANCHOR", "0") != "0"
+# [MISSION 5 / STAGE 3] FE_KEYPOINTS: emit the true-keypoint frame layer
+# (lenses/keypoints.py) -- Harris corners, multi-scale LoG blobs and
+# arc-length boundary points -- as graph nodes, instead of relying on region
+# centroids and integer Gabor argmax as placement endpoints.
+# DARK by default: the default graph must stay bit-identical by hash.
+FE_KEYPOINTS: bool = os.environ.get("FE_KEYPOINTS", "0") != "0"
+
+
 # [U26] The footprint of that spatial maximum, as a fraction of `radius_px`.
 # `V1RetinotopicLattice` sets radius_px = (stride/2) * overlap_factor with
 # overlap_factor = 1.6, so radius_px / 1.6 is exactly the half-width of the

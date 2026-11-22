@@ -79,6 +79,14 @@ FRAME_LENS_TYPES: FrozenSet[str] = frozenset({
     "EndStopped",         # a line end
     "IllusoryContour",    # a completed contour between two inducers
     "RegionShape",        # the outline shape of a region
+    # [MISSION 5 / STAGE 3] the true-keypoint layer (lenses/keypoints.py).
+    # All three are FRAME: each is a piece of shape at a sub-pixel position
+    # with its own orientation, scale and position covariance.  BoundaryArc
+    # is 1-D -- reliable across the boundary, undefined along it -- and its
+    # covariance says so, so a tolerance can gate the axis it owns.
+    "CornerPoint",        # a Harris corner, sub-pixel, var from curvature
+    "Blob",               # a multi-scale LoG extremum, with its scale
+    "BoundaryArc",        # an arc-length point on a boundary (1-D)
 })
 
 #: lens types whose nodes say what a place is like

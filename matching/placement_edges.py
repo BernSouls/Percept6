@@ -235,12 +235,48 @@ def scale_map(subgraph: Any, fallback: Optional[float] = None
     return out
 
 
+# ---------------------------------------------------------------------------
+# [MISSION 5 / STAGE 2a] THE POPULATION LEVER -- ridge tokens
+# ---------------------------------------------------------------------------
+#: Lenses whose position along their own structure is undefined (the aperture
+#: problem).  Measured node-to-node on 20 FIT scenes (MISSION5_REPORT.md):
+#: identity 0.213 (ContourFragment) and 0.212 (TextureBoundary), against
+#: 0.71-0.95 for every other lens.  They are 86 of the 179 placement nodes, so
+#: they dominate a population whose geometry is exactly the geometry they
+#: cannot supply.  A ridge token knows WHERE THE LINE IS, not where on it.
+RIDGE_LENSES: Tuple[str, ...] = ("ContourFragment", "TextureBoundary")
+
+
+def _param(name: str, default: Any) -> Any:
+    """A parameter if one has been declared, else the dark default."""
+    try:
+        import parameters as P
+    except Exception:
+        return default
+    return getattr(P, name, default)
+
+
+def lens_map_of(g: Any) -> Dict[int, str]:
+    """node -> lens name, from an ImageGraph's signatures."""
+    sigs = getattr(g, "sigs", None) or {}
+    out: Dict[int, str] = {}
+    for n in sorted(int(k) for k in sigs):
+        s = sigs.get(n)
+        if s is not None:
+            out[int(n)] = str(s[0])
+    return out
+
+
 def build_edges(subgraph: Any, image_u8: np.ndarray,
                 tolerance: Optional[float] = None,
                 k: int = TARGET_K,
                 radius_scales: float = TARGET_RADIUS_SCALES,
                 object_of: Optional[Dict[int, int]] = None,
                 intra_only: bool = False,
+                lens_map: Optional[Dict[int, str]] = None,
+                exclude_lenses: Optional[Sequence[str]] = None,
+                ridge_across_only: Optional[bool] = None,
+                collapse_places: Optional[bool] = None,
                 **sel_kw: Any) -> Dict[Tuple[int, int, Any], PlacementVector]:
     """The SOURCE_FRAME_PLACEMENT payloads for one graph.
 
@@ -258,19 +294,74 @@ def build_edges(subgraph: Any, image_u8: np.ndarray,
     pos = {int(n): (float(subgraph.anchor_of_node[n][0]),
                     float(subgraph.anchor_of_node[n][1]))
            for n in sorted(subgraph.nodes) if n in subgraph.anchor_of_node}
+    lens = dict(lens_map or {})
+    excl = tuple(exclude_lenses if exclude_lenses is not None
+                 else _param("PLACEMENT_EXCLUDE_LENSES", ()))
+    ridge = bool(ridge_across_only if ridge_across_only is not None
+                 else _param("PLACEMENT_RIDGE_ACROSS_ONLY", False))
+    across_min = float(_param("PLACEMENT_RIDGE_ACROSS_MIN", 0.5))
+
+    # [MISSION 5 / STAGE 2] ONE PLACE PER SITE.
+    #
+    # Census (m5_stage0_census.json): 179 placement nodes sit at 55 places,
+    # max 16 at one site.  Edges already avoid same-place pairs (0 of 4384),
+    # so the cost is not degenerate edges but DILUTION: a place with 16 nodes
+    # contributes 16 candidates to every neighbour slot, and the extra copies
+    # are near-duplicates whose vectors a rival can match as well as the true
+    # partner can.  Collapsing picks ONE representative per site -- the
+    # canonical-key minimum, never "the first seen" -- so the edge set is
+    # place-to-place and the slot contents are distinct places.
+    collapse = bool(collapse_places if collapse_places is not None
+                    else _param("PLACEMENT_COLLAPSE_PLACES", False))
+    if collapse and pos:
+        grid = float(_param("PLACEMENT_PLACE_GRID_PX", 1.0))
+        sites: Dict[Tuple[int, int], List[int]] = {}
+        for u in sorted(pos):
+            site_key = (int(round(pos[u][0] / grid)),
+                        int(round(pos[u][1] / grid)))
+            sites.setdefault(site_key, []).append(u)
+        rep: Dict[int, int] = {}
+        for site_key in sorted(sites):
+            members = sites[site_key]
+            r = min(members, key=lambda v: canonical_key(subgraph, v))
+            for v in members:
+                rep[v] = int(r)
+        keep = sorted({rep[u] for u in pos})
+        pos = {u: pos[u] for u in keep if u in pos}
+        frames = {u: frames[u] for u in keep if u in frames}
+
+    if excl:
+        # [STAGE 2a (i)] A ridge token is not a place.  Drop it as an endpoint
+        # on BOTH sides -- source and target -- so no edge can hang off one.
+        pos = {u: p for u, p in pos.items() if lens.get(u) not in excl}
+        frames = {u: t for u, t in frames.items() if lens.get(u) not in excl}
+
     scales = scale_map(subgraph)
     targets = select_targets(subgraph, frames, pos, scales, k=k,
                              radius_scales=radius_scales, **sel_kw)
     out: Dict[Tuple[int, int, Any], PlacementVector] = {}
     for u in sorted(targets):
+        seen_place: set = set()
         for v in targets[u]:
+            v = rep.get(int(v), int(v)) if collapse else int(v)
+            if v in seen_place:
+                continue
+            seen_place.add(v)
             if intra_only and object_of is not None:
                 if object_of.get(int(u)) != object_of.get(int(v)):
                     continue
             pv = placement_vector_from(subgraph, u, v, frames[u],
                                        scales.get(u, 0.0), tolerance)
-            if pv is not None:
-                out[(int(u), int(v), EdgeType.SOURCE_FRAME_PLACEMENT)] = pv
+            if pv is None:
+                continue
+            if ridge and lens.get(int(u)) in RIDGE_LENSES:
+                # [STAGE 2a (ii)] Keep the ridge token, score only the axis it
+                # actually defines.  `direction` is axial-wrapped, so a
+                # neighbour ALONG the ridge sits at direction ~ 0 (mod pi) and
+                # |sin| ~ 0; ACROSS the ridge sits at |sin| ~ 1.
+                if abs(math.sin(pv.direction)) < across_min:
+                    continue
+            out[(int(u), int(v), EdgeType.SOURCE_FRAME_PLACEMENT)] = pv
     return out
 
 

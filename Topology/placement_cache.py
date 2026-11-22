@@ -41,7 +41,31 @@ def _switch_digest() -> str:
         return "switch-error:%r" % (exc,)
 
 
+def _source_digest() -> str:
+    """The front-end source closure digest (see eth80_frontend)."""
+    sys.path.insert(0, ROOT)
+    import eth80_frontend as F
+    fn = getattr(F, "frontend_source_digest", None)
+    if fn is None:
+        return "no-source-digest"
+    try:
+        return str(fn())
+    except Exception as exc:      # pragma: no cover - defensive
+        return "source-error:%r" % (exc,)
+
+
 def key_for(image_u8: Any) -> str:
+    """Pixels + switch values + THE SOURCE TREE the graph was built from.
+
+    [MISSION 5 / 0d] The switch digest covers parameter VALUES, never the
+    source that reads them.  A change to `lenses/base.py` therefore left every
+    key untouched while changing every graph -- measured: the sub-pixel Gabor
+    anchor was added to a tree whose cache entries were all still live, so a
+    run would have been served graphs made by code that no longer existed.
+    `frontend_source_digest()` covers the import closure of the build path
+    (84 files, checked by Topology/placement_cacheclosure_m5.py), so folding it
+    in makes the entry and the code that produced it move together.
+    """
     import numpy as np
     a = np.ascontiguousarray(image_u8)
     h = hashlib.sha256()
@@ -49,6 +73,7 @@ def key_for(image_u8: Any) -> str:
     h.update(str(a.dtype).encode())
     h.update(a.tobytes())
     h.update(_switch_digest().encode())
+    h.update(_source_digest().encode())
     return h.hexdigest()
 
 

@@ -100,6 +100,14 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       "ATTACHMENT_EVERY_NAMED_HOST",
                       "FE_L3_SPINE", "FE_L4_JUNCTIONS",
                       "FE_SUBPIXEL_PEAK_POS",
+                      # [MISSION 5 / STAGE 2] moves every Gabor anchor
+                      # off the integer pixel, so the graph it emits
+                      # is different: it must key the cache.
+                      "FE_SUBPIXEL_GABOR_ANCHOR",
+                      # [MISSION 5 / STAGE 3] the keypoint layer adds
+                      # nodes of new lens types: the graph differs, so
+                      # the cache key must move with it.
+                      "FE_KEYPOINTS",
                       "FE_L6_ADDRESS",
                       "FE_SOFT_CHANNEL_GATE", "FE_SOFT_L3_L4_GATE",
                       "FE_VECTOR_ADDRESS",

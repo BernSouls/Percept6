@@ -688,7 +688,32 @@ def _gabor_pixel_anchor(obs: Any, u: int, it: int, isf: int
         v = float(sub[dy, dx])
         if not np.isfinite(v) or v <= 0.0:
             return None
-        return (float(x0 + dx), float(y0 + dy), v)
+        fx, fy = float(x0 + dx), float(y0 + dy)
+        # [MISSION 5 / STAGE 2] SUB-PIXEL ANCHOR.
+        #
+        # The anchor used to BE the argmax pixel, so its position error
+        # could never fall below the half-pixel quantisation floor however
+        # good the detector was.  Measured node-to-node: 1.08-1.48 px median
+        # against a 0.50 px gate.  A separable parabola through the 3x3
+        # response window recovers the true peak of a smooth response and
+        # costs one 3x3 read.  Clamped to +-0.5: beyond that the
+        # neighbourhood no longer supports the parabola (the peak is not in
+        # this cell), and the fallback is the argmax pixel, never a guess.
+        if getattr(P, "FE_SUBPIXEL_GABOR_ANCHOR", False):
+            yc, xc = int(fy), int(fx)
+            if 0 < yc < H - 1 and 0 < xc < W - 1:
+                c0 = float(chan[yc, xc])
+                cx1 = float(chan[yc, xc - 1])
+                cx2 = float(chan[yc, xc + 1])
+                cy1 = float(chan[yc - 1, xc])
+                cy2 = float(chan[yc + 1, xc])
+                denx = cx1 + cx2 - 2.0 * c0
+                deny = cy1 + cy2 - 2.0 * c0
+                if denx < -1e-12:
+                    fx += max(-0.5, min(0.5, 0.5 * (cx1 - cx2) / denx))
+                if deny < -1e-12:
+                    fy += max(-0.5, min(0.5, 0.5 * (cy1 - cy2) / deny))
+        return (fx, fy, v)
 
     poly = None
     try:
