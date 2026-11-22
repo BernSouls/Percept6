@@ -188,3 +188,93 @@ def track(scene0: Scene, render0: Any, scene1: Scene, g0: Any, g1: Any,
         out[n] = m
         used.add(m)
     return out
+
+def object_id_at(render: Any, anchor: Any) -> int:
+    """Which object a node's anchor sits on (-1 = background)."""
+    if render.object_id is None or anchor is None:
+        return -1
+    h, w = render.object_id.shape
+    x, y = int(round(float(anchor[0]))), int(round(float(anchor[1])))
+    if not (0 <= x < w and 0 <= y < h):
+        return -1
+    return int(render.object_id[y, x])
+
+
+def track_optimal(scene0: Scene, render0: Any, scene1: Scene, render1: Any,
+                  g0: Any, g1: Any, radius: float = TRACK_RADIUS,
+                  same_object: bool = True) -> Dict[int, int]:
+    """Renderer-truth correspondence by OPTIMAL assignment, not greedy.
+
+    Greedy nearest-with-a-used-set is order-dependent and, where many nodes
+    share an anchor region (which is exactly the ambiguous case), it exhausts
+    the candidates and reports "untracked" for nodes that DO have a partner.
+    Measured with greedy: only 19 % of ambiguous nodes had a truth partner.
+
+    Here the correspondence is the minimum-cost 1-1 assignment within each
+    (lens, object) group, costing the distance from the node's TRUE predicted
+    position to the candidate's anchor.  `same_object` also requires the base
+    node and its partner to sit on the named object, because "the same point on
+    the same body" is what correspondence means -- and it is what makes an
+    explicit SWAP mapping well defined for NEGATIVE-A.
+    """
+    import numpy as np
+    from scipy.optimize import linear_sum_assignment
+
+    names = [o.name for o in scene0.objects]
+    tf = transforms_by_name(scene0, scene1)
+    pred: Dict[int, Tuple[float, float]] = {}
+    obj0: Dict[int, str] = {}
+    for n in sorted(g0.subgraph.nodes):
+        a = g0.subgraph.anchor_of_node.get(n)
+        if a is None:
+            continue
+        p = world_point_at(scene0, render0, float(a[0]), float(a[1]))
+        if p is None:
+            continue
+        oid = object_id_at(render0, a)
+        if oid < 0 or oid >= len(names):
+            continue
+        t = tf.get(names[oid])
+        if t is None:
+            continue
+        c0, R0, c1, R1 = t
+        q = c1 + (R1 @ (R0.T @ (p - c0)))
+        pred[int(n)] = project(scene1, q)
+        obj0[int(n)] = names[oid]
+
+    groups0: Dict[Tuple[str, str], List[int]] = defaultdict(list)
+    for n in sorted(pred):
+        groups0[(obj0[n], LENS(g0.sigs.get(n)))].append(n)
+    groups1: Dict[Tuple[str, str], List[int]] = defaultdict(list)
+    for m in sorted(int(x) for x in g1.subgraph.nodes):
+        a = g1.subgraph.anchor_of_node.get(m)
+        if a is None:
+            continue
+        oid = object_id_at(render1, a)
+        if oid < 0 or oid >= len(names):
+            continue
+        groups1[(names[oid], LENS(g1.sigs.get(m)))].append(m)
+
+    out: Dict[int, int] = {}
+    for key in sorted(set(groups0) & set(groups1)):
+        us = groups0[key]
+        vs = groups1[key]
+        if not us or not vs:
+            continue
+        cost = np.full((len(us), len(vs)), 1e6, dtype=np.float64)
+        for i, u in enumerate(us):
+            px, py = pred[u]
+            for j, v in enumerate(vs):
+                a = g1.subgraph.anchor_of_node[v]
+                d = math.hypot(float(a[0]) - px, float(a[1]) - py)
+                if d <= radius:
+                    cost[i, j] = d
+        ri, ci = linear_sum_assignment(cost)
+        for i, j in zip(ri, ci):
+            if cost[i, j] < 1e6:
+                out[int(us[i])] = int(vs[j])
+    return out
+
+
+def LENS(sig: Any) -> str:
+    return str(sig[0]) if sig is not None else "?"

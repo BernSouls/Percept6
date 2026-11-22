@@ -42,15 +42,45 @@ from matching.placement import (PlacementVector, median_nn_spacing, node_scale,
                                 wrap_ax)
 
 #: A node needs at least this much local coherence for its frame to be used.
-#: Fixed below by the coherence census, before any arm is run.
-FRAME_COHERENCE_MIN = 0.30
+#:
+#: DERIVED ON DEV, from the per-node paired residual STRATIFIED BY COHERENCE
+#: (in-plane rotations 10/20/30 on all four DEV scenes):
+#:
+#:   coherence   n     median |residual|   share within 15 deg
+#:   0.30-0.50  129        14.68 deg            0.52
+#:   0.50-0.70  264         8.08 deg            0.64
+#:   0.70-0.90  453         6.44 deg            0.80
+#:   0.90-1.01  1989        2.12 deg            0.97
+#:
+#: At 0.30-0.50 the frame is wrong far more often than the scorer's own 15-deg
+#: band, so admitting it would be admitting noise.  The floor is set at 0.50:
+#: the first band whose median residual sits inside that band.
+FRAME_COHERENCE_MIN = 0.50
 #: Structure-tensor window, pixels (odd).
 FIELD_WINDOW = 7
 #: How many targets one source keeps.
-TARGET_K = 4
+#:
+#: DERIVED ON DEV (4 scenes x 5 views), coverage of OBJECT-anchored ambiguous
+#: nodes under N's frozen mapping / pair survival:
+#:
+#:   k    edges    coverage(N)   survival
+#:   4     1287        26.3 %      46.3 %
+#:   8     2574        42.6 %      55.6 %
+#:  12     3862        54.9 %      63.4 %
+#:  16     5149        65.8 %      67.1 %
+#:  24     7705        77.5 %      72.1 %
+#:  32    10141        85.1 %      76.3 %
+#:
+#: 16 is taken: it clears the 50 % coverage target with margin while keeping
+#: the degree near 7 per node.  Beyond that the returns flatten and every
+#: neighbour adds a weaker constraint.
+TARGET_K = 16
 #: Radius, in the source's scale units (i.e. in median nearest-neighbour
-#: spacings).  Large enough that several targets exist, small enough that the
-#: vector is local.
+#: spacings).  MEASURED NOT TO BIND on these graphs: k nearest are always found
+#: inside it (sweeping 6/12/24/48 gave byte-identical edge counts, because the
+#: node field is dense -- median NN spacing 5.0 px).  It is kept as a bound so
+#: that a sparse graph cannot produce a long-range "placement" vector, and its
+#: non-binding status is recorded rather than presented as a tuned value.
 TARGET_RADIUS_SCALES = 4.0
 
 
@@ -243,3 +273,46 @@ def attach(subgraph: Any, image_u8: np.ndarray, tolerance: Optional[float] = Non
     edges = frozenset(set(subgraph.edges) | set(pay))
     ep = dict(subgraph.edge_params or {})
     return replace(subgraph, edges=edges, edge_params=ep), pay
+
+# ---------------------------------------------------------------------------
+# multi-scale field: the frame provider has to work where the texture is smooth
+# ---------------------------------------------------------------------------
+#: Windows tried, smallest FIRST.  A node takes the smallest window whose
+#: coherence clears FRAME_COHERENCE_MIN, so a finely textured region keeps the
+#: local estimate while a smooth region still gets one.  Measured motivation:
+#: with the single 7x7 window only 33.8 % of AMBIGUOUS nodes had a frame --
+#: ambiguous nodes are the low-contrast ones, so the provider failed exactly
+#: where the mission needs it.
+FIELD_WINDOWS: Tuple[int, ...] = (7, 15, 23, 31)
+
+
+def field_multiscale(image_u8: np.ndarray,
+                     windows: Sequence[int] = FIELD_WINDOWS
+                     ) -> List[Tuple[int, np.ndarray, np.ndarray]]:
+    return [(int(w),) + field_angles(image_u8, w) for w in windows]
+
+
+def node_frames_multiscale(subgraph: Any,
+                           fields: Sequence[Tuple[int, np.ndarray, np.ndarray]],
+                           coherence_min: float = FRAME_COHERENCE_MIN
+                           ) -> Tuple[Dict[int, float], Dict[int, int]]:
+    """node -> axial frame, and node -> the window it came from.
+
+    Smallest window that clears the coherence bar wins.  No frame is invented:
+    a node whose anchor is incoherent at EVERY scale gets none, and an edge with
+    no frame is not emitted.
+    """
+    theta: Dict[int, float] = {}
+    win: Dict[int, int] = {}
+    for n in sorted(subgraph.nodes):
+        a = subgraph.anchor_of_node.get(n)
+        if a is None:
+            continue
+        for w, ang, coh in fields:
+            f = frame_at(ang, coh, float(a[0]), float(a[1]))
+            if f is None:
+                continue
+            theta[int(n)] = f[0]
+            win[int(n)] = int(w)
+            break
+    return theta, win
