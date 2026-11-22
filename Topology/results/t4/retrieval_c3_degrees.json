@@ -1,0 +1,29 @@
+{
+  "queries_128": {
+    "degree_mean": 3.4106319899022512,
+    "degree_p25": 2.0,
+    "degree_p75": 4.0,
+    "n_graphs": 128,
+    "nodes_mean": 336.4921875,
+    "nodes_p25": 303.75,
+    "nodes_p75": 375.0
+  },
+  "refs_8": {
+    "degree_mean": 3.4580838323353293,
+    "degree_p25": 2.0,
+    "degree_p75": 4.0,
+    "n_graphs": 8,
+    "nodes_mean": 302.875,
+    "nodes_p25": 254.75,
+    "nodes_p75": 350.75
+  },
+  "refs_80": {
+    "degree_mean": 3.5273857172951337,
+    "degree_p25": 2.0,
+    "degree_p75": 4.0,
+    "n_graphs": 80,
+    "nodes_mean": 293.5,
+    "nodes_p25": 242.5,
+    "nodes_p75": 353.25
+  }
+}

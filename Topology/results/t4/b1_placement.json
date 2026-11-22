@@ -1,0 +1,272 @@
+{
+  "case_shares": {
+    "excluded_ambiguous": 237,
+    "excluded_no_counterpart": 672,
+    "excluded_not_dclass": 5252,
+    "mean_b_1_over_T": 0.29545454545454547,
+    "n_a": 7354,
+    "n_b": 2,
+    "n_c": 463,
+    "node_sim_range": [
+      0.0,
+      1.0
+    ],
+    "predicted_no_edge_accuracy": 0.940605052959574,
+    "share_a": 0.9405294794730784,
+    "share_b": 0.0002557871850620284,
+    "share_c": 0.059214733341859574,
+    "total": 7819
+  },
+  "contrasts": {
+    "EXACT-TIE": {
+      "n": 2,
+      "real_minus_no_edge": {
+        "hi": 1.0,
+        "hw": 0.5,
+        "lo": 0.0,
+        "mean": 0.5
+      },
+      "real_minus_params_shuffled_s0": {
+        "hi": 0.0,
+        "hw": 0.0,
+        "lo": 0.0,
+        "mean": 0.0
+      },
+      "real_minus_params_shuffled_s1": {
+        "hi": 0.0,
+        "hw": 0.0,
+        "lo": 0.0,
+        "mean": 0.0
+      },
+      "real_minus_params_shuffled_s2": {
+        "hi": 0.0,
+        "hw": 0.0,
+        "lo": 0.0,
+        "mean": 0.0
+      },
+      "real_minus_rewired_s0": {
+        "hi": 1.0,
+        "hw": 0.5,
+        "lo": 0.0,
+        "mean": 0.5
+      },
+      "real_minus_rewired_s1": {
+        "hi": 1.0,
+        "hw": 0.5,
+        "lo": 0.0,
+        "mean": 0.5
+      },
+      "real_minus_rewired_s2": {
+        "hi": 1.0,
+        "hw": 0.5,
+        "lo": 0.0,
+        "mean": 0.5
+      }
+    },
+    "OUTRANKED": {
+      "n": 463,
+      "real_minus_no_edge": {
+        "hi": 0.4146868250539957,
+        "hw": 0.04754319654427647,
+        "lo": 0.31960043196544274,
+        "mean": 0.367170626349892
+      },
+      "real_minus_params_shuffled_s0": {
+        "hi": 0.1663606911447084,
+        "hw": 0.04214362850971921,
+        "lo": 0.08207343412526998,
+        "mean": 0.12526997840172785
+      },
+      "real_minus_params_shuffled_s1": {
+        "hi": 0.12095032397408208,
+        "hw": 0.0388768898488121,
+        "lo": 0.04319654427645788,
+        "mean": 0.08423326133909287
+      },
+      "real_minus_params_shuffled_s2": {
+        "hi": 0.15550755939524838,
+        "hw": 0.03995680345572354,
+        "lo": 0.0755939524838013,
+        "mean": 0.11447084233261338
+      },
+      "real_minus_rewired_s0": {
+        "hi": 0.45788336933045354,
+        "hw": 0.052915766738660885,
+        "lo": 0.35205183585313177,
+        "mean": 0.4060475161987041
+      },
+      "real_minus_rewired_s1": {
+        "hi": 0.46873650107991355,
+        "hw": 0.048623110151187865,
+        "lo": 0.3714902807775378,
+        "mean": 0.42116630669546434
+      },
+      "real_minus_rewired_s2": {
+        "hi": 0.48812095032397407,
+        "hw": 0.05399568034557234,
+        "lo": 0.3801295896328294,
+        "mean": 0.43412526997840173
+      }
+    },
+    "STRICT-LEAD": {
+      "n": 7354,
+      "real_minus_no_edge": {
+        "hi": -0.030051672559151484,
+        "hw": 0.005643187381017132,
+        "lo": -0.04133804732118575,
+        "mean": -0.03562686973075877
+      },
+      "real_minus_params_shuffled_s0": {
+        "hi": 0.016181669839543104,
+        "hw": 0.004011422355180853,
+        "lo": 0.008158825129181398,
+        "mean": 0.012238237693772096
+      },
+      "real_minus_params_shuffled_s1": {
+        "hi": 0.012782159369050857,
+        "hw": 0.0038074517269513193,
+        "lo": 0.005167255915148218,
+        "mean": 0.009110688060919228
+      },
+      "real_minus_params_shuffled_s2": {
+        "hi": 0.011014413924394888,
+        "hw": 0.0038754419363611643,
+        "lo": 0.003263530051672559,
+        "mean": 0.0070709817786238785
+      },
+      "real_minus_rewired_s0": {
+        "hi": 0.34756595050312755,
+        "hw": 0.012103957030187656,
+        "lo": 0.32335803644275224,
+        "mean": 0.334647810715257
+      },
+      "real_minus_rewired_s1": {
+        "hi": 0.35369186837095457,
+        "hw": 0.012447307587707374,
+        "lo": 0.3287972531955398,
+        "mean": 0.34185477291270056
+      },
+      "real_minus_rewired_s2": {
+        "hi": 0.3417221920043514,
+        "hw": 0.011901686157193392,
+        "lo": 0.3179188196899646,
+        "mean": 0.32988849605656784
+      }
+    }
+  },
+  "measured_accuracy": {
+    "no_edge": {
+      "EXACT-TIE": {
+        "accuracy": 0.0,
+        "n": 2
+      },
+      "OUTRANKED": {
+        "accuracy": 0.2613390928725702,
+        "n": 463
+      },
+      "STRICT-LEAD": {
+        "accuracy": 0.9823225455534403,
+        "n": 7354
+      }
+    },
+    "params_shuffled_s0": {
+      "EXACT-TIE": {
+        "accuracy": 0.5,
+        "n": 2
+      },
+      "OUTRANKED": {
+        "accuracy": 0.5032397408207343,
+        "n": 463
+      },
+      "STRICT-LEAD": {
+        "accuracy": 0.9344574381289095,
+        "n": 7354
+      }
+    },
+    "params_shuffled_s1": {
+      "EXACT-TIE": {
+        "accuracy": 0.5,
+        "n": 2
+      },
+      "OUTRANKED": {
+        "accuracy": 0.5442764578833693,
+        "n": 463
+      },
+      "STRICT-LEAD": {
+        "accuracy": 0.9375849877617624,
+        "n": 7354
+      }
+    },
+    "params_shuffled_s2": {
+      "EXACT-TIE": {
+        "accuracy": 0.5,
+        "n": 2
+      },
+      "OUTRANKED": {
+        "accuracy": 0.5140388768898488,
+        "n": 463
+      },
+      "STRICT-LEAD": {
+        "accuracy": 0.9396246940440577,
+        "n": 7354
+      }
+    },
+    "real": {
+      "EXACT-TIE": {
+        "accuracy": 0.5,
+        "n": 2
+      },
+      "OUTRANKED": {
+        "accuracy": 0.6285097192224622,
+        "n": 463
+      },
+      "STRICT-LEAD": {
+        "accuracy": 0.9466956758226815,
+        "n": 7354
+      }
+    },
+    "rewired_s0": {
+      "EXACT-TIE": {
+        "accuracy": 0.0,
+        "n": 2
+      },
+      "OUTRANKED": {
+        "accuracy": 0.2224622030237581,
+        "n": 463
+      },
+      "STRICT-LEAD": {
+        "accuracy": 0.6120478651074245,
+        "n": 7354
+      }
+    },
+    "rewired_s1": {
+      "EXACT-TIE": {
+        "accuracy": 0.0,
+        "n": 2
+      },
+      "OUTRANKED": {
+        "accuracy": 0.20734341252699784,
+        "n": 463
+      },
+      "STRICT-LEAD": {
+        "accuracy": 0.6048409029099809,
+        "n": 7354
+      }
+    },
+    "rewired_s2": {
+      "EXACT-TIE": {
+        "accuracy": 0.0,
+        "n": 2
+      },
+      "OUTRANKED": {
+        "accuracy": 0.19438444924406048,
+        "n": 463
+      },
+      "STRICT-LEAD": {
+        "accuracy": 0.6168071797661137,
+        "n": 7354
+      }
+    }
+  },
+  "net_effect_real_minus_no_edge": -0.011638316920322293
+}

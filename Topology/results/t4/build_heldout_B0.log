@@ -1,0 +1,11 @@
+held-out entries: ['apple7-090-000', 'apple7-035-135', 'car9-090-000', 'car9-035-135', 'cow7-090-000', 'cow7-035-135', 'cup7-090-000', 'cup7-035-135', 'dog7-090-000', 'dog7-035-135', 'horse7-090-000', 'horse7-035-135', 'pear7-090-000', 'pear7-035-135', 'tomato7-090-000', 'tomato7-035-135']
+total builds: 80 (1 arms x 16 images x 5 shifts)
+  built  10/80 (47s)
+  built  20/80 (93s)
+  built  30/80 (138s)
+  built  40/80 (184s)
+  built  50/80 (230s)
+  built  60/80 (276s)
+  built  70/80 (322s)
+  built  80/80 (367s)
+done in 367s

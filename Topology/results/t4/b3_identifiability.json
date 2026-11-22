@@ -1,0 +1,94 @@
+{
+  "contrasts": {
+    "EXACT-TIE": {
+      "n": 2,
+      "sig1wl_real_minus_rewired": {
+        "hi": 0.0,
+        "hw": 0.0,
+        "lo": 0.0,
+        "mean": 0.0
+      },
+      "sig1wl_real_minus_sig_only": {
+        "hi": 0.0,
+        "hw": 0.0,
+        "lo": 0.0,
+        "mean": 0.0
+      }
+    },
+    "OUTRANKED": {
+      "n": 617,
+      "sig1wl_real_minus_rewired": {
+        "hi": 0.0,
+        "hw": 0.0,
+        "lo": 0.0,
+        "mean": 0.0
+      },
+      "sig1wl_real_minus_sig_only": {
+        "hi": 0.03565640194489465,
+        "hw": 0.011345218800648298,
+        "lo": 0.012965964343598054,
+        "mean": 0.022690437601296597
+      }
+    },
+    "STRICT-LEAD": {
+      "n": 7437,
+      "sig1wl_real_minus_rewired": {
+        "hi": -0.001344628210299852,
+        "hw": 0.002084173725964771,
+        "lo": -0.0055129756622293935,
+        "mean": -0.0034960333467796154
+      },
+      "sig1wl_real_minus_sig_only": {
+        "hi": -0.06063937071399758,
+        "hw": 0.005718031464300118,
+        "lo": -0.07207543364259782,
+        "mean": -0.06642463358881269
+      }
+    }
+  },
+  "rank_first_rates": {
+    "sig_1wl_real": {
+      "EXACT-TIE": {
+        "n": 2,
+        "rate": 0.29545454545454547
+      },
+      "OUTRANKED": {
+        "n": 617,
+        "rate": 0.022690437601296597
+      },
+      "STRICT-LEAD": {
+        "n": 7437,
+        "rate": 0.9335753664111873
+      }
+    },
+    "sig_1wl_rewired": {
+      "EXACT-TIE": {
+        "n": 2,
+        "rate": 0.29545454545454547
+      },
+      "OUTRANKED": {
+        "n": 617,
+        "rate": 0.022690437601296597
+      },
+      "STRICT-LEAD": {
+        "n": 7437,
+        "rate": 0.9370713997579669
+      }
+    },
+    "sig_only": {
+      "EXACT-TIE": {
+        "n": 2,
+        "rate": 0.29545454545454547
+      },
+      "OUTRANKED": {
+        "n": 617,
+        "rate": 0.0
+      },
+      "STRICT-LEAD": {
+        "n": 7437,
+        "rate": 1.0
+      }
+    }
+  },
+  "wl_rounds_mean": 1.0
+}

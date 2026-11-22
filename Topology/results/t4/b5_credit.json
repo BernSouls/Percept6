@@ -1,0 +1,78 @@
+{
+  "decomposition": {
+    "EXACT-TIE": {
+      "correct": {
+        "mean": 0.5,
+        "n": 2
+      },
+      "denominator_penalty": 0.0,
+      "denominator_penalty_n": 2,
+      "edge_credit_mapped": {
+        "mean": 2.0,
+        "n": 2
+      },
+      "edge_credit_true": {
+        "mean": 2.5,
+        "n": 2
+      },
+      "node_sim_mapped": {
+        "mean": 0.2072572795451001,
+        "n": 2
+      },
+      "node_sim_true": {
+        "mean": 0.2072572795451001,
+        "n": 2
+      }
+    },
+    "OUTRANKED": {
+      "correct": {
+        "mean": 0.5283630470016207,
+        "n": 617
+      },
+      "denominator_penalty": -0.05950985682118437,
+      "denominator_penalty_n": 617,
+      "edge_credit_mapped": {
+        "mean": 3.0567260940032415,
+        "n": 617
+      },
+      "edge_credit_true": {
+        "mean": 3.2965964343598055,
+        "n": 617
+      },
+      "node_sim_mapped": {
+        "mean": 0.6037767571896809,
+        "n": 617
+      },
+      "node_sim_true": {
+        "mean": 0.6632866140108653,
+        "n": 617
+      }
+    },
+    "STRICT-LEAD": {
+      "correct": {
+        "mean": 0.9417775984940164,
+        "n": 7437
+      },
+      "denominator_penalty": -0.020449993950748535,
+      "denominator_penalty_n": 7437,
+      "edge_credit_mapped": {
+        "mean": 2.943794540809466,
+        "n": 7437
+      },
+      "edge_credit_true": {
+        "mean": 2.9686701627000134,
+        "n": 7437
+      },
+      "node_sim_mapped": {
+        "mean": 0.967584198347475,
+        "n": 7437
+      },
+      "node_sim_true": {
+        "mean": 0.9880341922982235,
+        "n": 7437
+      }
+    }
+  },
+  "denominator_penalty_on_a": -0.020449993950748535,
+  "p3_5_condition_denominator_penalty": true
+}

@@ -1,0 +1,42 @@
+{
+  "branching_factor": {
+    "mean": 67.2593845658128,
+    "median": 58.0,
+    "n": 6207,
+    "p95": 142.0,
+    "q50": 58.0,
+    "q90": 126.0
+  },
+  "comparable_count": 84,
+  "drift": {
+    "mean": 2.0714285714285716,
+    "median": 1.0,
+    "n": 84,
+    "p95": 6.849999999999994,
+    "q50": 1.0,
+    "q90": 6.0
+  },
+  "fourier_drift": {
+    "0.5": {
+      "mean": 0.0026917900403768506,
+      "median": 0.0,
+      "n": 1486,
+      "p95": 0.0,
+      "q50": 0.0,
+      "q90": 0.0
+    },
+    "1.5": {
+      "mean": 1.5416666666666667,
+      "median": 0.5,
+      "n": 24,
+      "p95": 5.0,
+      "q50": 0.5,
+      "q90": 4.699999999999999
+    }
+  },
+  "limit_note": "Pure rigid translation leaves relation PARAMETERS (gap/angle) invariant; only offset (position) shifts. Failing a parameter-invariance check is decisive; passing is necessary not sufficient.",
+  "noncomparable_count": 0,
+  "noncomparable_frac": 0.0,
+  "tolerance": 6.0,
+  "tolerance_4x": 24.0
+}

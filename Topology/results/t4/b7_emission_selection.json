@@ -1,0 +1,11 @@
+{
+  "budget_binds": true,
+  "budget_binds_scenes": 24,
+  "deciding_key_node_id_dependent": true,
+  "deciding_key_note": "node_key = (lens, sig.serialize(), node-id); ties broken by node-id, so selection is node-id dependent (structural fact, not a permutation re-run).",
+  "dropped_mean": 1841.1666666666667,
+  "emitted_mean": 2261.375,
+  "family_seeds0_diff_scenes": 24,
+  "lost_both_frac": 0.814180163248761,
+  "selected_mean": 420.2083333333333
+}
