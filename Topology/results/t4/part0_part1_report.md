@@ -242,7 +242,8 @@ W-P 0.1094, all below 0.125. On AUC all three are above 0.5 with intervals
 clear of it (0.59–0.60), and W-P has the **tightest** interval
 (0.5993 [0.5324, 0.6641], MDE 0.094).
 
-But the arm-to-arm contrasts are all indistinguishable:
+The arm-to-arm contrasts all have favourable point estimates, and none is
+resolved:
 
 | contrast | on MRR | 95 % CI | MDE |
 |---|---|---|---|
