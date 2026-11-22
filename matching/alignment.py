@@ -765,6 +765,9 @@ def global_consistency_alignment(
     addrs_b: Optional[Dict[int, Any]] = None,
     address_k: Optional[int] = None,
     edge_weight_fn=None,
+    placement_payloads_a: Optional[Dict[Any, Any]] = None,
+    placement_payloads_b: Optional[Dict[Any, Any]] = None,
+    placement_tolerance: Optional[float] = None,
 ) -> Alignment:
     """Global-consistency alignment seeded from the approximate Hungarian.
 
@@ -843,6 +846,51 @@ def global_consistency_alignment(
         for i in range(len(nodes_a)):
             for j in range(len(nodes_b)):
                 matrix[i][j] *= addr_factor[i][j]
+
+    # [PLACEMENT / dark] Part 3's scorer as a MODIFIER on node similarity.
+    #
+    # sim'(u, v) = sim(u, v) * (1 + w * (support(u) - 0.5))
+    #
+    # with ONE pre-stated w (P.PLACEMENT_WEIGHT) -- no sweep, no fitted beta.
+    # The modifier is NEUTRAL at support 0.5, bounded to [1 - w/2, 1 + w/2],
+    # and a node with NO CHECKABLE EDGE keeps its similarity exactly (support
+    # None => no credit and no penalty; the mission forbids rewarding mere
+    # presence).  It is applied to the SEED matrix using the seed's own
+    # provisional mapping, so the support is read against a correspondence
+    # the aligner produced, never against truth.
+    #
+    # Dark by default: PLACEMENT_ENABLED is False and every argument is
+    # optional, so the shipped path is untouched (a caller that passes
+    # nothing gets exactly the old matrix).
+    if (bool(getattr(P, "PLACEMENT_SCORER_ENABLED", False))
+            and placement_payloads_a is not None
+            and placement_payloads_b is not None
+            and placement_tolerance):
+        try:
+            from matching.placement_scorer import node_support
+            _prov: Dict[int, int] = {}
+            for _i, _u in enumerate(nodes_a):
+                _bj, _bv = -1, 0.0
+                for _j, _v in enumerate(nodes_b):
+                    if matrix[_i][_j] > _bv:
+                        _bv, _bj = matrix[_i][_j], _j
+                if _bj >= 0 and _bv > 0.0:
+                    _prov[int(_u)] = int(nodes_b[_bj])
+            _w = float(getattr(P, "PLACEMENT_WEIGHT", 0.25))
+            _mc = float(getattr(P, "PLACEMENT_MAX_NEIGHBOUR_CREDIT", 1.0))
+            for _i, _u in enumerate(nodes_a):
+                _rep = node_support(int(_u), _prov, placement_payloads_a,
+                                    placement_payloads_b,
+                                    float(placement_tolerance),
+                                    max_credit=_mc)
+                if _rep is None or _rep["support"] is None:
+                    continue          # uncheckable: no credit, no penalty
+                _f = 1.0 + _w * (float(_rep["support"]) - 0.5)
+                for _j in range(len(nodes_b)):
+                    matrix[_i][_j] *= _f
+        except Exception:
+            # A dark feature may never break the aligner.
+            pass
 
     if not any(any(row) for row in matrix):
         return empty
