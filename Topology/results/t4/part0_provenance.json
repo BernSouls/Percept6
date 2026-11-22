@@ -1,0 +1,35 @@
+{
+  "protocol": "0e Provenance: source diff, stale results, rebuild status",
+  "source_digest_sha256": "2a56807b5d0b79f18d65acee7d42437a960942b6d82f170ad08b23aec542c20c",
+  "source_digest_files": [
+    "eth80_frontend.py", "parameters/_text.py", "perception/contour_field.py",
+    "perception/contour_peak.py", "orchestration/binder.py", "matching/joint_mcs.py",
+    "matching/relation_frame.py", "core/registries.py", "_bootstrap.py",
+    "Topology/frontend.py", "Topology/t4_shift.py"
+  ],
+  "source_diff_note": "The digest changed from the previous session (2fffba98...) because Topology/t4_shift.py was added (new repaired shift helper) and Topology/t4_build_heldout.py was modified to use roll_image(dx, dy) instead of np.roll((shift, 0)). The axis bug is fixed in the build script.",
+  "stale_results": {
+    "predating_sandbox_reset": [
+      "det_seed0.json", "det_seed1729.json", "determinism_check.json",
+      "dev_graphs_B0.json", "dev_graphs_B1.json", "e1_lookup_by_hash.json",
+      "e2_edge_weights.json", "e3_provenance.json", "e4_address.json",
+      "e5_isolated_weight.json", "e8_lens_mi.json", "part0_diagnosis.json"
+    ],
+    "note": "These files were carried across the sandbox reset. They are UNAFFECTED by the axis bug (determinism, lookup_by_hash, edge weights, address work, 0px numbers) or have been superseded (part0_diagnosis superseded by part0_repair + part1_diagnose). The e7_report.md contained INVALID shift-based numbers and has been annotated."
+  },
+  "rebuild_status": {
+    "heldout_graphs": "REBUILDING with repaired axis (roll_image(dx=shift, dy=0) = horizontal). 240 pickles.",
+    "heldout_build_script": "Topology/t4_build_heldout.py fixed: np.roll((shift,0)) -> roll_image(dx=shift, dy=0)",
+    "part0_repair": "COMPLETE (0b i, iii, iv, 0c). 0b(ii) cross-check COMPLETE.",
+    "part1_diagnose": "SCRIPT WRITTEN, awaiting heldout rebuild to finish (CPU contention)."
+  },
+  "invalidated_artifacts": [
+    "measure_4c_INVALID_axisbug.json",
+    "measure_4d_INVALID_axisbug.json",
+    "measure_4e_INVALID_axisbug.json",
+    "e6_flicker_INVALID_axisbug.json",
+    "part0_dev_B0_INVALID_axisbug.json",
+    "part0_dev_B1_INVALID_axisbug.json",
+    "part0_dev_F_INVALID_axisbug.json"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "beta": 0.75,
+  "delta": 0.0,
+  "denom": "checkable",
+  "formula": "pooled",
+  "gamma": 0.5,
+  "isolated": "downweight",
+  "name": "winner_pooled_checkable",
+  "occlusion": 0.5,
+  "presence": true,
+  "reference": false,
+  "unmatched": 0.15,
+  "w": 0.1
+}

@@ -1,0 +1,22 @@
+building references...
+  building 48 refs...
+  refs  10/48
+  refs  20/48
+  refs  30/48
+  refs  40/48
+  refs  48/48
+queries: 16 refs B0: 8 refs F: 8
+mode B0/real...
+  AUC=0.7946 [0.6429, 0.9196] top1=0.5000 (447s)
+mode F/real...
+  AUC=0.7946 [0.6429, 0.9286] top1=0.5625 (706s)
+mode F/rewired...
+  AUC=0.8214 [0.6964, 0.9375] top1=0.5625 (661s)
+=== 4d read-out ===
+  B0/real AUC=0.7946 top1=0.5000
+  F/real AUC=0.7946 top1=0.5625
+  F/rewired AUC=0.8214 top1=0.5625
+  auc_best_minus_b0: 0.0000 [-0.0893, 0.0804]
+  auc_real_minus_rewired: -0.0268 [-0.0714, 0.0089]
+  top1_best_minus_b0: 0.0625 [-0.1250, 0.2500]
+  top1_real_minus_rewired: 0.0000 [0.0000, 0.0000]

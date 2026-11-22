@@ -1,0 +1,38 @@
+=== PART 1: EDGE DIAGNOSIS ===
+dev entries: 24
+
+--- 1a: Edge stability per family ---
+  B1: preserved=5769 lost_ep=3075 lost_both=1241
+  F: preserved=5778 lost_ep=3076 lost_both=1244
+
+--- 1d: Parameter informativeness ---
+
+--- 1g: Edge-weight bands for arm F ---
+  n=10098 share<0.5=0.000 share<0.95=0.000 max=1.000 median=1.000
+
+--- 1e: Edge-effect contrasts (paired, arm F) ---
+  shift=+2
+    real_minus_no_edge                       -0.0019 [-0.0117, 0.0099] hw=0.0108
+    real_minus_rewired_s0                    0.2239 [0.1967, 0.2527] hw=0.0280
+    real_minus_rewired_s1                    0.2098 [0.1781, 0.2418] hw=0.0319
+    real_minus_rewired_s2                    0.2212 [0.1933, 0.2512] hw=0.0290
+    content_content_minus_no_edge            -0.0147 [-0.0232, -0.0061] hw=0.0085
+    equiv_content_minus_no_edge              -0.0023 [-0.0050, -0.0004] hw=0.0023
+    sheet_minus_no_edge                      -0.0033 [-0.0065, -0.0002] hw=0.0031
+    event_edges_minus_no_edge                -0.0172 [-0.0250, -0.0098] hw=0.0076
+    non_event_edges_minus_no_edge            -0.0161 [-0.0238, -0.0083] hw=0.0077
+  shift=-2
+    real_minus_no_edge                       0.0015 [-0.0066, 0.0106] hw=0.0086
+    real_minus_rewired_s0                    0.2388 [0.2148, 0.2655] hw=0.0253
+    real_minus_rewired_s1                    0.2229 [0.1999, 0.2511] hw=0.0256
+    real_minus_rewired_s2                    0.2333 [0.2099, 0.2590] hw=0.0245
+    content_content_minus_no_edge            -0.0178 [-0.0246, -0.0108] hw=0.0069
+    equiv_content_minus_no_edge              -0.0075 [-0.0126, -0.0031] hw=0.0047
+    sheet_minus_no_edge                      -0.0048 [-0.0081, -0.0020] hw=0.0031
+    event_edges_minus_no_edge                -0.0159 [-0.0237, -0.0083] hw=0.0077
+    non_event_edges_minus_no_edge            -0.0233 [-0.0302, -0.0160] hw=0.0071
+
+--- 1h: Seed-mapping pre-check ---
+  FE_VECTOR_ADDRESS is OFF; seed pathway inert
+
+=== PART 1 EDGE DIAGNOSIS complete ===

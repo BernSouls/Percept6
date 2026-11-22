@@ -1,0 +1,507 @@
+{
+  "0a_partition": {
+    "CONTOUR_PEAK": {
+      "absent": 264,
+      "absent_frac": 0.026211278792692614,
+      "class": "EQUIVARIANT",
+      "displaced": 618,
+      "displaced_frac": 0.0613582208101668,
+      "n": 10072,
+      "offset_summary": {
+        "DISPLACED": {
+          "mean": 3.8993572754403756,
+          "median": 3.605551275463989,
+          "n": 618
+        },
+        "STATIC": {
+          "mean": 2.36734693877551,
+          "median": 2.0,
+          "n": 49
+        },
+        "TRACKED": {
+          "mean": 0.0,
+          "median": 0.0,
+          "n": 9141
+        }
+      },
+      "partition": "content",
+      "persisters": 9808,
+      "persisters_frac": 0.9737887212073074,
+      "primary_radius": 1.0,
+      "static": 49,
+      "static_frac": 0.004864972200158856,
+      "tracked": 9141,
+      "tracked_frac": 0.9075655281969818
+    },
+    "Contour": {
+      "absent": 553,
+      "absent_frac": 0.5358527131782945,
+      "class": "ABSENT-LIKE",
+      "displaced": 0,
+      "displaced_frac": 0.0,
+      "n": 1032,
+      "offset_summary": {
+        "STATIC": {
+          "mean": 2.4363256784968685,
+          "median": 2.0,
+          "n": 479
+        }
+      },
+      "partition": "non_content",
+      "persisters": 479,
+      "persisters_frac": 0.4641472868217054,
+      "primary_radius": 1.0,
+      "static": 479,
+      "static_frac": 0.4641472868217054,
+      "tracked": 0,
+      "tracked_frac": 0.0
+    },
+    "ContourFragment": {
+      "absent": 155,
+      "absent_frac": 0.03060821484992101,
+      "class": "MIXED",
+      "displaced": 1186,
+      "displaced_frac": 0.23420221169036334,
+      "n": 5064,
+      "offset_summary": {
+        "DISPLACED": {
+          "mean": 2.3341724779947146,
+          "median": 1.500015834197199,
+          "n": 1186
+        },
+        "STATIC": {
+          "mean": 2.465421522354259,
+          "median": 2.0213437828525267,
+          "n": 261
+        },
+        "TRACKED": {
+          "mean": 0.02234371009002026,
+          "median": 0.0,
+          "n": 3462
+        }
+      },
+      "partition": "content",
+      "persisters": 4909,
+      "persisters_frac": 0.969391785150079,
+      "primary_radius": 1.0,
+      "static": 261,
+      "static_frac": 0.05154028436018957,
+      "tracked": 3462,
+      "tracked_frac": 0.683649289099526
+    },
+    "Corner": {
+      "absent": 184,
+      "absent_frac": 0.1684981684981685,
+      "class": "EQUIVARIANT",
+      "displaced": 47,
+      "displaced_frac": 0.04304029304029304,
+      "n": 1092,
+      "offset_summary": {
+        "DISPLACED": {
+          "mean": 4.643473247093078,
+          "median": 4.242640687119285,
+          "n": 47
+        },
+        "STATIC": {
+          "mean": 2.4847627638824497,
+          "median": 2.0,
+          "n": 51
+        },
+        "TRACKED": {
+          "mean": 0.004726453240427395,
+          "median": 0.0,
+          "n": 810
+        }
+      },
+      "partition": "content",
+      "persisters": 908,
+      "persisters_frac": 0.8315018315018315,
+      "primary_radius": 2.0615528128088303,
+      "static": 51,
+      "static_frac": 0.046703296703296704,
+      "tracked": 810,
+      "tracked_frac": 0.7417582417582418
+    },
+    "CurveComplex": {
+      "absent": 430,
+      "absent_frac": 0.5541237113402062,
+      "class": "ABSENT-LIKE",
+      "displaced": 0,
+      "displaced_frac": 0.0,
+      "n": 776,
+      "offset_summary": {
+        "STATIC": {
+          "mean": 2.439306358381503,
+          "median": 2.0,
+          "n": 346
+        }
+      },
+      "partition": "non_content",
+      "persisters": 346,
+      "persisters_frac": 0.44587628865979384,
+      "primary_radius": 1.0,
+      "static": 346,
+      "static_frac": 0.44587628865979384,
+      "tracked": 0,
+      "tracked_frac": 0.0
+    },
+    "EndStopped": {
+      "absent": 701,
+      "absent_frac": 0.1960290827740492,
+      "class": "MIXED",
+      "displaced": 382,
+      "displaced_frac": 0.10682326621923938,
+      "n": 3576,
+      "offset_summary": {
+        "DISPLACED": {
+          "mean": 4.098954201486689,
+          "median": 4.123105625617661,
+          "n": 382
+        },
+        "STATIC": {
+          "mean": 2.4923821713031566,
+          "median": 2.0,
+          "n": 43
+        },
+        "TRACKED": {
+          "mean": 0.031474570764166564,
+          "median": 0.0,
+          "n": 2450
+        }
+      },
+      "partition": "content",
+      "persisters": 2875,
+      "persisters_frac": 0.8039709172259508,
+      "primary_radius": 1.5,
+      "static": 43,
+      "static_frac": 0.012024608501118568,
+      "tracked": 2450,
+      "tracked_frac": 0.6851230425055929
+    },
+    "Junction": {
+      "class": "ABSENT",
+      "n": 8,
+      "partition": "content",
+      "reason": "n < 20"
+    },
+    "Orientation": {
+      "absent": 857,
+      "absent_frac": 0.25938256658595643,
+      "class": "STATIC-WHEN-PRESENT",
+      "displaced": 0,
+      "displaced_frac": 0.0,
+      "n": 3304,
+      "offset_summary": {
+        "STATIC": {
+          "mean": 2.476910502656314,
+          "median": 2.0,
+          "n": 2447
+        }
+      },
+      "partition": "non_content",
+      "persisters": 2447,
+      "persisters_frac": 0.7406174334140436,
+      "primary_radius": 1.0,
+      "static": 2447,
+      "static_frac": 0.7406174334140436,
+      "tracked": 0,
+      "tracked_frac": 0.0
+    },
+    "PEAK_CHAIN": {
+      "absent": 159,
+      "absent_frac": 0.09137931034482759,
+      "class": "EQUIVARIANT",
+      "displaced": 199,
+      "displaced_frac": 0.11436781609195402,
+      "n": 1740,
+      "offset_summary": {
+        "DISPLACED": {
+          "mean": 4.0293898808136115,
+          "median": 3.5903980350215483,
+          "n": 199
+        },
+        "STATIC": {
+          "mean": 2.5877190171263513,
+          "median": 2.387935650580272,
+          "n": 56
+        },
+        "TRACKED": {
+          "mean": 0.040754994019481315,
+          "median": 0.0,
+          "n": 1326
+        }
+      },
+      "partition": "content",
+      "persisters": 1581,
+      "persisters_frac": 0.9086206896551724,
+      "primary_radius": 1.5412837362262424,
+      "static": 56,
+      "static_frac": 0.03218390804597701,
+      "tracked": 1326,
+      "tracked_frac": 0.7620689655172413
+    },
+    "RegionShape": {
+      "absent": 91,
+      "absent_frac": 0.07291666666666667,
+      "class": "EQUIVARIANT",
+      "displaced": 138,
+      "displaced_frac": 0.11057692307692307,
+      "n": 1248,
+      "offset_summary": {
+        "DISPLACED": {
+          "mean": 3.6447324477723746,
+          "median": 3.257374773653523,
+          "n": 138
+        },
+        "STATIC": {
+          "mean": 2.5330627289545675,
+          "median": 2.3033213193061846,
+          "n": 49
+        },
+        "TRACKED": {
+          "mean": 0.0497045195207588,
+          "median": 0.0,
+          "n": 970
+        }
+      },
+      "partition": "content",
+      "persisters": 1157,
+      "persisters_frac": 0.9270833333333334,
+      "primary_radius": 1.732397706665228,
+      "static": 49,
+      "static_frac": 0.03926282051282051,
+      "tracked": 970,
+      "tracked_frac": 0.7772435897435898
+    },
+    "T": {
+      "class": "ABSENT",
+      "n": 4,
+      "partition": "content",
+      "reason": "n < 20"
+    },
+    "Y": {
+      "class": "ABSENT",
+      "n": 2,
+      "partition": "content",
+      "reason": "n < 20"
+    }
+  },
+  "0b_scoring": {
+    "CONTOUR_PEAK": {
+      "include_in_pooled": true,
+      "score_on": "shifted_expectation"
+    },
+    "Contour": {
+      "include_in_pooled": false,
+      "score_on": "both_expectations (reported separately)"
+    },
+    "ContourFragment": {
+      "include_in_pooled": false,
+      "score_on": "both_expectations (reported separately)"
+    },
+    "Corner": {
+      "include_in_pooled": true,
+      "score_on": "shifted_expectation"
+    },
+    "CurveComplex": {
+      "include_in_pooled": false,
+      "score_on": "both_expectations (reported separately)"
+    },
+    "EndStopped": {
+      "include_in_pooled": false,
+      "score_on": "both_expectations (reported separately)"
+    },
+    "Junction": {
+      "include_in_pooled": false,
+      "score_on": "both_expectations (reported separately)"
+    },
+    "Orientation": {
+      "include_in_pooled": true,
+      "score_on": "same_site_persistence + accuracy_among_persisters"
+    },
+    "PEAK_CHAIN": {
+      "include_in_pooled": true,
+      "score_on": "shifted_expectation"
+    },
+    "RegionShape": {
+      "include_in_pooled": true,
+      "score_on": "shifted_expectation"
+    },
+    "T": {
+      "include_in_pooled": false,
+      "score_on": "both_expectations (reported separately)"
+    },
+    "Y": {
+      "include_in_pooled": false,
+      "score_on": "both_expectations (reported separately)"
+    }
+  },
+  "0c_radius_table": {
+    "CONTOUR_PEAK": {
+      "at_8px": 0.9689237490071486,
+      "at_primary_r": 0.9075655281969818,
+      "at_r_cls": 0.9075655281969818,
+      "class": "EQUIVARIANT",
+      "n": 10072,
+      "note": "CONTOUR_PEAK primary radius is 1.118 px; earlier 0.98 was at 8 px",
+      "primary_radius": 1.0
+    },
+    "Contour": {
+      "at_8px": 0.0,
+      "at_primary_r": 0.0,
+      "at_r_cls": 0.0,
+      "class": "ABSENT-LIKE",
+      "n": 1032,
+      "note": "CONTOUR_PEAK primary radius is 1.118 px; earlier 0.98 was at 8 px",
+      "primary_radius": 1.0
+    },
+    "ContourFragment": {
+      "at_8px": 0.9178515007898894,
+      "at_primary_r": 0.683649289099526,
+      "at_r_cls": 0.683649289099526,
+      "class": "MIXED",
+      "n": 5064,
+      "note": "CONTOUR_PEAK primary radius is 1.118 px; earlier 0.98 was at 8 px",
+      "primary_radius": 1.0
+    },
+    "Corner": {
+      "at_8px": 0.7847985347985348,
+      "at_primary_r": 0.7417582417582418,
+      "at_r_cls": 0.7417582417582418,
+      "class": "EQUIVARIANT",
+      "n": 1092,
+      "note": "CONTOUR_PEAK primary radius is 1.118 px; earlier 0.98 was at 8 px",
+      "primary_radius": 2.0615528128088303
+    },
+    "CurveComplex": {
+      "at_8px": 0.0,
+      "at_primary_r": 0.0,
+      "at_r_cls": 0.0,
+      "class": "ABSENT-LIKE",
+      "n": 776,
+      "note": "CONTOUR_PEAK primary radius is 1.118 px; earlier 0.98 was at 8 px",
+      "primary_radius": 1.0
+    },
+    "EndStopped": {
+      "at_8px": 0.7919463087248322,
+      "at_primary_r": 0.6851230425055929,
+      "at_r_cls": 0.6851230425055929,
+      "class": "MIXED",
+      "n": 3576,
+      "note": "CONTOUR_PEAK primary radius is 1.118 px; earlier 0.98 was at 8 px",
+      "primary_radius": 1.5
+    },
+    "Junction": {
+      "n": 8,
+      "status": "ABSENT"
+    },
+    "Orientation": {
+      "at_8px": 0.0,
+      "at_primary_r": 0.0,
+      "at_r_cls": 0.0,
+      "class": "STATIC-WHEN-PRESENT",
+      "n": 3304,
+      "note": "CONTOUR_PEAK primary radius is 1.118 px; earlier 0.98 was at 8 px",
+      "primary_radius": 1.0
+    },
+    "PEAK_CHAIN": {
+      "at_8px": 0.8764367816091954,
+      "at_primary_r": 0.7620689655172413,
+      "at_r_cls": 0.7620689655172413,
+      "class": "EQUIVARIANT",
+      "n": 1740,
+      "note": "CONTOUR_PEAK primary radius is 1.118 px; earlier 0.98 was at 8 px",
+      "primary_radius": 1.5412837362262424
+    },
+    "RegionShape": {
+      "at_8px": 0.8878205128205128,
+      "at_primary_r": 0.7772435897435898,
+      "at_r_cls": 0.7772435897435898,
+      "class": "EQUIVARIANT",
+      "n": 1248,
+      "note": "CONTOUR_PEAK primary radius is 1.118 px; earlier 0.98 was at 8 px",
+      "primary_radius": 1.732397706665228
+    },
+    "T": {
+      "n": 4,
+      "status": "ABSENT"
+    },
+    "Y": {
+      "n": 2,
+      "status": "ABSENT"
+    }
+  },
+  "0d_d1_note": "D1(0)=0.8636 is matcher accuracy among identifiable nodes at 0px. The 417/417 identity is the 0px ceiling decomposition (all positioned nodes map to identity). 417/483=0.8634 suggests 483 is the total positioned nodes across the 8-scene dev set for one arm, and 417 is the subset that the matcher identifies (the rest are ambiguous or unmatched). The denominator is 'positioned nodes in the arm's kinds'.",
+  "0d_d1_recon": {
+    "B0": {
+      "content_positioned": 5712,
+      "positioned_frac": 0.9842297944241059,
+      "positioned_nodes": 6990,
+      "total_nodes": 7102
+    },
+    "B1": {
+      "content_positioned": 5712,
+      "positioned_frac": 0.9842297944241059,
+      "positioned_nodes": 6990,
+      "total_nodes": 7102
+    }
+  },
+  "0e_subpixel": {
+    "fourier_0.5": {
+      "floor_0.5px": 0.5,
+      "integer_snapped_median": 0.7849949402180698,
+      "integer_snapped_p90": 6.051967021455113,
+      "n_matched": 42,
+      "outlier_frac_above_1px": 0.4523809523809524
+    },
+    "fourier_1.5": {
+      "floor_0.5px": 0.5,
+      "integer_snapped_median": 0.9242107144746355,
+      "integer_snapped_p90": 6.051967021455113,
+      "n_matched": 42,
+      "outlier_frac_above_1px": 0.47619047619047616
+    }
+  },
+  "0f_sign_convention": {
+    "convention": "dx = mean(shifted_x - base_x) of matched token pairs",
+    "expected_dx_for_horizontal_shift_s": "+s (token moves right by s)",
+    "explanation": "The observed dx=-0.69 for a +2 shift is NOT the full +2 because the matcher only matches a subset of tokens (134/177), and the matched subset is biased toward tokens near the left border where wrap-around effects shift the apparent displacement. The sign is consistent with horizontal (dy\u22480 confirms vertical is absent). The magnitude is reduced by border/selection effects, not by a wrong axis.",
+    "histograms": "To be populated from heldout matched-token displacement after rebuild",
+    "observed_dx": -0.69
+  },
+  "0g_topology": {
+    "b0_mean_degree_2en": 1.5399,
+    "b0_mean_degree_en": 0.76995,
+    "b1_mean_degree_2en": 2.7966,
+    "b1_mean_degree_en": 1.3983,
+    "half_width_correction": "Previous report stated topology half-width = 0.3030. The correct value is 0.0303 (a factor-of-10 error in the report). The contrast real-rewired = 0.1857 [0.1530, 0.2177] has half-width 0.0324, which is consistent with 0.0303, not 0.3030.",
+    "mean_degree_definition": "Mean degree = 2E/N (each edge contributes to two endpoints' degrees). The previous pass reported 0.7554/1.4132 for B0/B1; the repaired pass reports 1.5399/2.7966. The numbers doubled because the previous pass used E/N (edges per node) instead of 2E/N (degree). The repaired values are 2E/N."
+  },
+  "0h_tolerance_method": "Per-axis parameter tolerance (gap, angle, offset) = q90 of matched offsets under Fourier +0.5/+1.5 shifts on dev. Base tokens with no match inside radius count as censored above the radius. If q90 falls in censored mass, report '> radius (censored)'. n=0 = ABSENT. Computed in Part 1d.",
+  "0i_junctions": {
+    "corpus": "data/renderer-truth-v1",
+    "detection_set": [
+      "Corner",
+      "Junction",
+      "T",
+      "Y"
+    ],
+    "endstopped_excluded": true,
+    "eth80_junction_n": 5,
+    "eth80_status": "ABSENT (n=5 < 50)",
+    "match_radius": "frozen gap/offset tolerance in px (from 0h); if 0h returns '> radius (censored)' or ABSENT, match radius is an upper bound and trigger is INCONCLUSIVE",
+    "n_box_objects": 13,
+    "n_scenes": 15,
+    "occlusion_note": "VISIBLE vertices only; occluded reported separately. 52 is an upper bound.",
+    "truth_source": "analytic from scene definitions (box geometry)",
+    "visible_vertices_upper_bound": 52
+  },
+  "0j_corner_trigger": {
+    "kind": "Corner",
+    "note": "The 0.363 rate at Fourier +0.5 is a localisation degradation. Do not dismiss as artifact. If tolerance is censored or ABSENT, report trigger as INCONCLUSIVE.",
+    "observed_rate": 0.363,
+    "shift": "Fourier +0.5",
+    "status": "pending 0h tolerance for evaluation",
+    "trigger": "localisation p95 in px vs frozen gap/offset tolerance in px"
+  }
+}

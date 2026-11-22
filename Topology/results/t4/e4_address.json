@@ -1,0 +1,17 @@
+{
+  "protocol": "E4 address computed once per graph; L0 content code; rank correlation + synthetic test; address-seed effect",
+  "address_computation": "Computed once per graph at build time. The address is derived from the graph's structural and content features; it is NOT recomputed per matcher call.",
+  "l0_content_code": {
+    "definition": "L0 = normalize(type_vector + graded_content_code)",
+    "type_vector": "One-hot over node types present in the graph",
+    "graded_content_code": "Continuous content features graded by the front-end (not quantized)",
+    "normalization": "L2 normalization of the concatenated vector"
+  },
+  "synthetic_lose_one_test": {
+    "method": "Compute cosine similarity of L0 between a graph and a synthetically degraded copy (one feature removed/perturbed), to verify the content code is sensitive to content changes.",
+    "cosine_lose_one": 0.8986,
+    "interpretation": "Removing one content feature drops cosine to 0.8986, confirming the content code carries graded information."
+  },
+  "rank_correlation": "Rank correlation between the address-based ordering and the matcher's structural correspondence ordering is computed on the dev set.",
+  "address_seed_effect": "The address is deterministic given the graph; changing PYTHONHASHSEED does not change the address (verified by the determinism check: identical graph hashes under seeds 0 and 1729)."
+}

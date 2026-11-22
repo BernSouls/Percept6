@@ -1,0 +1,23 @@
+arm M0 variant graphs_softoff.json refs 24 heldout 48
+  M0   1/48  apple7-090-000
+  M0   2/48  apple8-090-000
+  M0   3/48  apple8-035-135
+  M0   4/48  apple7-035-135
+  M0   5/48  apple9-035-135
+  M0   6/48  apple9-090-000
+  M0   7/48  car9-090-000
+  M0   8/48  car9-035-135
+  M0   9/48  car11-090-000
+  M0  10/48  car12-090-000
+  M0  11/48  car11-035-135
+  M0  12/48  cow7-090-000
+  M0  13/48  cow7-035-135
+  M0  14/48  car12-035-135
+  M0  15/48  cow8-090-000
+  M0  16/48  cow8-035-135
+  M0  17/48  cow9-035-135
+  M0  18/48  cow9-090-000
+  M0  19/48  cup7-090-000
+  M0  20/48  cup8-090-000
+/usr/lib/python3.11/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 6 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

@@ -1,0 +1,6 @@
+arm M0 variant graphs_softoff.json refs 24 heldout 48
+  M0   1/48  apple7-090-000
+  M0   2/48  apple7-035-135
+  M0   3/48  apple8-090-000
+/usr/lib/python3.11/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 6 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

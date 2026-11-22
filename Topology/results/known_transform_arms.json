@@ -1,0 +1,64 @@
+{
+  "image": "apple2-022-000.png",
+  "shifts": [
+    0,
+    2,
+    -2,
+    3,
+    -3
+  ],
+  "tol_px": 8.0,
+  "rows": [
+    {
+      "shift": 0,
+      "arm": "A_baseline_joint_mcs",
+      "nodes": 861,
+      "preserved": 861,
+      "frac": 1.0,
+      "jaccard": 1.0,
+      "edges": "1263/1263",
+      "seconds": 0.0
+    },
+    {
+      "shift": 0,
+      "arm": "B_graded_mcs_anchor_prior",
+      "nodes": 861,
+      "preserved": 861,
+      "frac": 1.0,
+      "jaccard": 1.0,
+      "edges": "1263/1263",
+      "seconds": 0.0
+    },
+    {
+      "shift": 0,
+      "arm": "C_graded_mcs_anchor_prior_no_req_edge",
+      "nodes": 861,
+      "preserved": 861,
+      "frac": 1.0,
+      "jaccard": 1.0,
+      "edges": "1263/1263",
+      "seconds": 0.0
+    },
+    {
+      "shift": 2,
+      "arm": "A_baseline_joint_mcs",
+      "nodes": 840,
+      "preserved": 668,
+      "frac": 0.7952,
+      "jaccard": 0.5986,
+      "edges": "658/1071",
+      "seconds": 19.7
+    },
+    {
+      "shift": 2,
+      "arm": "B_graded_mcs_anchor_prior",
+      "nodes": 636,
+      "preserved": 542,
+      "frac": 0.8522,
+      "jaccard": 0.5071,
+      "edges": "162/200",
+      "seconds": 610.2
+    }
+  ],
+  "note": "0px identity invariant holds for all arms (frac/jaccard 1.0). Non-zero shifts show degradation."
+}

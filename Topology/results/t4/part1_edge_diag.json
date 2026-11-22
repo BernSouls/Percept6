@@ -1,0 +1,1113 @@
+{
+  "1a_edge_stability": {
+    "B1": {
+      "class_pairs": {
+        "CONTOUR_PEAK-CONTOUR_PEAK": {
+          "lost_both": 199,
+          "lost_ep": 12,
+          "preserved": 656
+        },
+        "CONTOUR_PEAK-Corner": {
+          "lost_both": 44,
+          "lost_ep": 43,
+          "preserved": 155
+        },
+        "CONTOUR_PEAK-EndStopped": {
+          "lost_both": 79,
+          "lost_ep": 148,
+          "preserved": 447
+        },
+        "CONTOUR_PEAK-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 37,
+          "preserved": 0
+        },
+        "CONTOUR_PEAK-Junction": {
+          "lost_both": 0,
+          "lost_ep": 6,
+          "preserved": 0
+        },
+        "CONTOUR_PEAK-PEAK_CHAIN": {
+          "lost_both": 55,
+          "lost_ep": 26,
+          "preserved": 249
+        },
+        "CONTOUR_PEAK-RegionShape": {
+          "lost_both": 76,
+          "lost_ep": 28,
+          "preserved": 438
+        },
+        "CONTOUR_PEAK-T": {
+          "lost_both": 1,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "CONTOUR_PEAK-Y": {
+          "lost_both": 2,
+          "lost_ep": 0,
+          "preserved": 1
+        },
+        "Contour-Contour": {
+          "lost_both": 54,
+          "lost_ep": 710,
+          "preserved": 224
+        },
+        "Contour-Corner": {
+          "lost_both": 0,
+          "lost_ep": 9,
+          "preserved": 3
+        },
+        "Contour-CurveComplex": {
+          "lost_both": 3,
+          "lost_ep": 6,
+          "preserved": 1
+        },
+        "Contour-EndStopped": {
+          "lost_both": 23,
+          "lost_ep": 306,
+          "preserved": 183
+        },
+        "Contour-Junction": {
+          "lost_both": 0,
+          "lost_ep": 3,
+          "preserved": 0
+        },
+        "Contour-Orientation": {
+          "lost_both": 32,
+          "lost_ep": 386,
+          "preserved": 278
+        },
+        "ContourFragment-CONTOUR_PEAK": {
+          "lost_both": 195,
+          "lost_ep": 11,
+          "preserved": 371
+        },
+        "ContourFragment-ContourFragment": {
+          "lost_both": 52,
+          "lost_ep": 11,
+          "preserved": 24
+        },
+        "ContourFragment-Corner": {
+          "lost_both": 13,
+          "lost_ep": 9,
+          "preserved": 20
+        },
+        "ContourFragment-EndStopped": {
+          "lost_both": 53,
+          "lost_ep": 57,
+          "preserved": 93
+        },
+        "ContourFragment-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 11,
+          "preserved": 0
+        },
+        "ContourFragment-Junction": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "ContourFragment-Orientation": {
+          "lost_both": 17,
+          "lost_ep": 10,
+          "preserved": 5
+        },
+        "ContourFragment-PEAK_CHAIN": {
+          "lost_both": 17,
+          "lost_ep": 1,
+          "preserved": 4
+        },
+        "ContourFragment-RegionShape": {
+          "lost_both": 9,
+          "lost_ep": 1,
+          "preserved": 61
+        },
+        "ContourFragment-T": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "ContourFragment-Y": {
+          "lost_both": 0,
+          "lost_ep": 2,
+          "preserved": 0
+        },
+        "Corner-Contour": {
+          "lost_both": 0,
+          "lost_ep": 158,
+          "preserved": 61
+        },
+        "Corner-Corner": {
+          "lost_both": 1,
+          "lost_ep": 3,
+          "preserved": 4
+        },
+        "Corner-EndStopped": {
+          "lost_both": 2,
+          "lost_ep": 22,
+          "preserved": 27
+        },
+        "Corner-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 3,
+          "preserved": 0
+        },
+        "Corner-Orientation": {
+          "lost_both": 0,
+          "lost_ep": 35,
+          "preserved": 27
+        },
+        "Corner-PEAK_CHAIN": {
+          "lost_both": 3,
+          "lost_ep": 3,
+          "preserved": 20
+        },
+        "Corner-RegionShape": {
+          "lost_both": 6,
+          "lost_ep": 4,
+          "preserved": 36
+        },
+        "CurveComplex-Contour": {
+          "lost_both": 9,
+          "lost_ep": 106,
+          "preserved": 86
+        },
+        "CurveComplex-CurveComplex": {
+          "lost_both": 14,
+          "lost_ep": 84,
+          "preserved": 30
+        },
+        "EndStopped-EndStopped": {
+          "lost_both": 32,
+          "lost_ep": 35,
+          "preserved": 58
+        },
+        "EndStopped-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 19,
+          "preserved": 0
+        },
+        "EndStopped-RegionShape": {
+          "lost_both": 2,
+          "lost_ep": 10,
+          "preserved": 24
+        },
+        "IllusoryContour-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "Junction-Contour": {
+          "lost_both": 0,
+          "lost_ep": 83,
+          "preserved": 0
+        },
+        "Junction-EndStopped": {
+          "lost_both": 0,
+          "lost_ep": 4,
+          "preserved": 0
+        },
+        "Junction-Orientation": {
+          "lost_both": 0,
+          "lost_ep": 26,
+          "preserved": 0
+        },
+        "Junction-RegionShape": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "Orientation-Orientation": {
+          "lost_both": 122,
+          "lost_ep": 403,
+          "preserved": 520
+        },
+        "PEAK_CHAIN-CONTOUR_PEAK": {
+          "lost_both": 94,
+          "lost_ep": 104,
+          "preserved": 1469
+        },
+        "PEAK_CHAIN-EndStopped": {
+          "lost_both": 8,
+          "lost_ep": 8,
+          "preserved": 16
+        },
+        "PEAK_CHAIN-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 3,
+          "preserved": 0
+        },
+        "PEAK_CHAIN-PEAK_CHAIN": {
+          "lost_both": 0,
+          "lost_ep": 0,
+          "preserved": 1
+        },
+        "PEAK_CHAIN-RegionShape": {
+          "lost_both": 0,
+          "lost_ep": 0,
+          "preserved": 3
+        },
+        "RegionShape-CurveComplex": {
+          "lost_both": 8,
+          "lost_ep": 67,
+          "preserved": 32
+        },
+        "RegionShape-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 4,
+          "preserved": 0
+        },
+        "RegionShape-RegionShape": {
+          "lost_both": 16,
+          "lost_ep": 17,
+          "preserved": 124
+        },
+        "T-Contour": {
+          "lost_both": 0,
+          "lost_ep": 20,
+          "preserved": 7
+        },
+        "T-EndStopped": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "T-Orientation": {
+          "lost_both": 0,
+          "lost_ep": 5,
+          "preserved": 6
+        },
+        "Y-Contour": {
+          "lost_both": 0,
+          "lost_ep": 5,
+          "preserved": 2
+        },
+        "Y-EndStopped": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 1
+        },
+        "Y-Orientation": {
+          "lost_both": 0,
+          "lost_ep": 4,
+          "preserved": 2
+        }
+      },
+      "partition_pairs": {
+        "content-content": {
+          "lost_both": 959,
+          "lost_ep": 649,
+          "preserved": 4302
+        },
+        "content-non_content": {
+          "lost_both": 25,
+          "lost_ep": 413,
+          "preserved": 142
+        },
+        "non_content-content": {
+          "lost_both": 23,
+          "lost_ep": 318,
+          "preserved": 186
+        },
+        "non_content-non_content": {
+          "lost_both": 234,
+          "lost_ep": 1695,
+          "preserved": 1139
+        }
+      },
+      "per_family": {
+        "14": {
+          "added_new": 264,
+          "added_surv": 116,
+          "lost_both": 60,
+          "lost_ep": 234,
+          "preserved": 302,
+          "total_base": 596
+        },
+        "16": {
+          "added_new": 30,
+          "added_surv": 0,
+          "lost_both": 0,
+          "lost_ep": 26,
+          "preserved": 0,
+          "total_base": 26
+        },
+        "19": {
+          "added_new": 125,
+          "added_surv": 77,
+          "lost_both": 37,
+          "lost_ep": 99,
+          "preserved": 145,
+          "total_base": 281
+        },
+        "20": {
+          "added_new": 197,
+          "added_surv": 206,
+          "lost_both": 199,
+          "lost_ep": 108,
+          "preserved": 520,
+          "total_base": 827
+        },
+        "21": {
+          "added_new": 1397,
+          "added_surv": 490,
+          "lost_both": 696,
+          "lost_ep": 706,
+          "preserved": 2329,
+          "total_base": 3731
+        },
+        "22": {
+          "added_new": 180,
+          "added_surv": 2,
+          "lost_both": 0,
+          "lost_ep": 266,
+          "preserved": 70,
+          "total_base": 336
+        },
+        "23": {
+          "added_new": 108,
+          "added_surv": 5,
+          "lost_both": 6,
+          "lost_ep": 100,
+          "preserved": 85,
+          "total_base": 191
+        },
+        "24": {
+          "added_new": 63,
+          "added_surv": 7,
+          "lost_both": 8,
+          "lost_ep": 67,
+          "preserved": 32,
+          "total_base": 107
+        },
+        "25": {
+          "added_new": 11,
+          "added_surv": 16,
+          "lost_both": 17,
+          "lost_ep": 10,
+          "preserved": 5,
+          "total_base": 32
+        },
+        "27": {
+          "added_new": 478,
+          "added_surv": 152,
+          "lost_both": 126,
+          "lost_ep": 490,
+          "preserved": 1747,
+          "total_base": 2363
+        },
+        "28": {
+          "added_new": 70,
+          "added_surv": 1,
+          "lost_both": 0,
+          "lost_ep": 70,
+          "preserved": 35,
+          "total_base": 105
+        },
+        "31": {
+          "added_new": 66,
+          "added_surv": 6,
+          "lost_both": 10,
+          "lost_ep": 50,
+          "preserved": 13,
+          "total_base": 73
+        },
+        "34": {
+          "added_new": 97,
+          "added_surv": 1,
+          "lost_both": 11,
+          "lost_ep": 78,
+          "preserved": 29,
+          "total_base": 118
+        },
+        "38": {
+          "added_new": 157,
+          "added_surv": 0,
+          "lost_both": 15,
+          "lost_ep": 185,
+          "preserved": 53,
+          "total_base": 253
+        },
+        "39": {
+          "added_new": 47,
+          "added_surv": 0,
+          "lost_both": 0,
+          "lost_ep": 33,
+          "preserved": 18,
+          "total_base": 51
+        },
+        "40": {
+          "added_new": 75,
+          "added_surv": 4,
+          "lost_both": 1,
+          "lost_ep": 75,
+          "preserved": 25,
+          "total_base": 101
+        },
+        "42": {
+          "added_new": 47,
+          "added_surv": 3,
+          "lost_both": 12,
+          "lost_ep": 24,
+          "preserved": 4,
+          "total_base": 40
+        },
+        "43": {
+          "added_new": 10,
+          "added_surv": 29,
+          "lost_both": 16,
+          "lost_ep": 17,
+          "preserved": 123,
+          "total_base": 156
+        },
+        "45": {
+          "added_new": 93,
+          "added_surv": 8,
+          "lost_both": 3,
+          "lost_ep": 77,
+          "preserved": 31,
+          "total_base": 111
+        },
+        "46": {
+          "added_new": 49,
+          "added_surv": 2,
+          "lost_both": 1,
+          "lost_ep": 42,
+          "preserved": 17,
+          "total_base": 60
+        },
+        "51": {
+          "added_new": 262,
+          "added_surv": 57,
+          "lost_both": 23,
+          "lost_ep": 318,
+          "preserved": 186,
+          "total_base": 527
+        }
+      }
+    },
+    "F": {
+      "class_pairs": {
+        "CONTOUR_PEAK-CONTOUR_PEAK": {
+          "lost_both": 200,
+          "lost_ep": 13,
+          "preserved": 660
+        },
+        "CONTOUR_PEAK-Corner": {
+          "lost_both": 46,
+          "lost_ep": 39,
+          "preserved": 158
+        },
+        "CONTOUR_PEAK-EndStopped": {
+          "lost_both": 80,
+          "lost_ep": 151,
+          "preserved": 449
+        },
+        "CONTOUR_PEAK-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 37,
+          "preserved": 0
+        },
+        "CONTOUR_PEAK-Junction": {
+          "lost_both": 0,
+          "lost_ep": 6,
+          "preserved": 0
+        },
+        "CONTOUR_PEAK-PEAK_CHAIN": {
+          "lost_both": 54,
+          "lost_ep": 26,
+          "preserved": 251
+        },
+        "CONTOUR_PEAK-RegionShape": {
+          "lost_both": 75,
+          "lost_ep": 28,
+          "preserved": 435
+        },
+        "CONTOUR_PEAK-T": {
+          "lost_both": 1,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "CONTOUR_PEAK-Y": {
+          "lost_both": 2,
+          "lost_ep": 0,
+          "preserved": 1
+        },
+        "Contour-Contour": {
+          "lost_both": 54,
+          "lost_ep": 711,
+          "preserved": 225
+        },
+        "Contour-Corner": {
+          "lost_both": 0,
+          "lost_ep": 9,
+          "preserved": 3
+        },
+        "Contour-CurveComplex": {
+          "lost_both": 3,
+          "lost_ep": 6,
+          "preserved": 1
+        },
+        "Contour-EndStopped": {
+          "lost_both": 23,
+          "lost_ep": 304,
+          "preserved": 183
+        },
+        "Contour-Junction": {
+          "lost_both": 0,
+          "lost_ep": 3,
+          "preserved": 0
+        },
+        "Contour-Orientation": {
+          "lost_both": 32,
+          "lost_ep": 386,
+          "preserved": 278
+        },
+        "ContourFragment-CONTOUR_PEAK": {
+          "lost_both": 193,
+          "lost_ep": 11,
+          "preserved": 373
+        },
+        "ContourFragment-ContourFragment": {
+          "lost_both": 55,
+          "lost_ep": 11,
+          "preserved": 19
+        },
+        "ContourFragment-Corner": {
+          "lost_both": 13,
+          "lost_ep": 9,
+          "preserved": 17
+        },
+        "ContourFragment-EndStopped": {
+          "lost_both": 55,
+          "lost_ep": 56,
+          "preserved": 91
+        },
+        "ContourFragment-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 11,
+          "preserved": 0
+        },
+        "ContourFragment-Junction": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "ContourFragment-Orientation": {
+          "lost_both": 17,
+          "lost_ep": 10,
+          "preserved": 5
+        },
+        "ContourFragment-PEAK_CHAIN": {
+          "lost_both": 18,
+          "lost_ep": 1,
+          "preserved": 4
+        },
+        "ContourFragment-RegionShape": {
+          "lost_both": 10,
+          "lost_ep": 1,
+          "preserved": 61
+        },
+        "ContourFragment-T": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "ContourFragment-Y": {
+          "lost_both": 0,
+          "lost_ep": 2,
+          "preserved": 0
+        },
+        "Corner-Contour": {
+          "lost_both": 0,
+          "lost_ep": 158,
+          "preserved": 61
+        },
+        "Corner-Corner": {
+          "lost_both": 1,
+          "lost_ep": 2,
+          "preserved": 4
+        },
+        "Corner-EndStopped": {
+          "lost_both": 2,
+          "lost_ep": 22,
+          "preserved": 28
+        },
+        "Corner-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 3,
+          "preserved": 0
+        },
+        "Corner-Orientation": {
+          "lost_both": 0,
+          "lost_ep": 35,
+          "preserved": 27
+        },
+        "Corner-PEAK_CHAIN": {
+          "lost_both": 3,
+          "lost_ep": 4,
+          "preserved": 21
+        },
+        "Corner-RegionShape": {
+          "lost_both": 6,
+          "lost_ep": 5,
+          "preserved": 38
+        },
+        "CurveComplex-Contour": {
+          "lost_both": 7,
+          "lost_ep": 106,
+          "preserved": 88
+        },
+        "CurveComplex-CurveComplex": {
+          "lost_both": 14,
+          "lost_ep": 84,
+          "preserved": 30
+        },
+        "EndStopped-EndStopped": {
+          "lost_both": 30,
+          "lost_ep": 36,
+          "preserved": 60
+        },
+        "EndStopped-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 18,
+          "preserved": 0
+        },
+        "EndStopped-RegionShape": {
+          "lost_both": 3,
+          "lost_ep": 11,
+          "preserved": 24
+        },
+        "IllusoryContour-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "Junction-Contour": {
+          "lost_both": 0,
+          "lost_ep": 83,
+          "preserved": 0
+        },
+        "Junction-EndStopped": {
+          "lost_both": 0,
+          "lost_ep": 4,
+          "preserved": 0
+        },
+        "Junction-Orientation": {
+          "lost_both": 0,
+          "lost_ep": 26,
+          "preserved": 0
+        },
+        "Junction-RegionShape": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "Orientation-Orientation": {
+          "lost_both": 118,
+          "lost_ep": 403,
+          "preserved": 525
+        },
+        "PEAK_CHAIN-CONTOUR_PEAK": {
+          "lost_both": 94,
+          "lost_ep": 104,
+          "preserved": 1464
+        },
+        "PEAK_CHAIN-EndStopped": {
+          "lost_both": 11,
+          "lost_ep": 9,
+          "preserved": 16
+        },
+        "PEAK_CHAIN-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 3,
+          "preserved": 0
+        },
+        "PEAK_CHAIN-PEAK_CHAIN": {
+          "lost_both": 0,
+          "lost_ep": 0,
+          "preserved": 1
+        },
+        "PEAK_CHAIN-RegionShape": {
+          "lost_both": 0,
+          "lost_ep": 0,
+          "preserved": 3
+        },
+        "RegionShape-CurveComplex": {
+          "lost_both": 8,
+          "lost_ep": 67,
+          "preserved": 32
+        },
+        "RegionShape-IllusoryContour": {
+          "lost_both": 0,
+          "lost_ep": 4,
+          "preserved": 0
+        },
+        "RegionShape-RegionShape": {
+          "lost_both": 16,
+          "lost_ep": 17,
+          "preserved": 124
+        },
+        "T-Contour": {
+          "lost_both": 0,
+          "lost_ep": 20,
+          "preserved": 7
+        },
+        "T-EndStopped": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 0
+        },
+        "T-Orientation": {
+          "lost_both": 0,
+          "lost_ep": 5,
+          "preserved": 6
+        },
+        "Y-Contour": {
+          "lost_both": 0,
+          "lost_ep": 5,
+          "preserved": 2
+        },
+        "Y-EndStopped": {
+          "lost_both": 0,
+          "lost_ep": 1,
+          "preserved": 1
+        },
+        "Y-Orientation": {
+          "lost_both": 0,
+          "lost_ep": 4,
+          "preserved": 2
+        }
+      },
+      "partition_pairs": {
+        "content-content": {
+          "lost_both": 968,
+          "lost_ep": 651,
+          "preserved": 4303
+        },
+        "content-non_content": {
+          "lost_both": 25,
+          "lost_ep": 413,
+          "preserved": 142
+        },
+        "non_content-content": {
+          "lost_both": 23,
+          "lost_ep": 316,
+          "preserved": 186
+        },
+        "non_content-non_content": {
+          "lost_both": 228,
+          "lost_ep": 1696,
+          "preserved": 1147
+        }
+      },
+      "per_family": {
+        "14": {
+          "added_new": 265,
+          "added_surv": 115,
+          "lost_both": 59,
+          "lost_ep": 234,
+          "preserved": 304,
+          "total_base": 597
+        },
+        "16": {
+          "added_new": 30,
+          "added_surv": 0,
+          "lost_both": 0,
+          "lost_ep": 26,
+          "preserved": 0,
+          "total_base": 26
+        },
+        "19": {
+          "added_new": 125,
+          "added_surv": 79,
+          "lost_both": 37,
+          "lost_ep": 99,
+          "preserved": 145,
+          "total_base": 281
+        },
+        "20": {
+          "added_new": 196,
+          "added_surv": 204,
+          "lost_both": 193,
+          "lost_ep": 107,
+          "preserved": 528,
+          "total_base": 828
+        },
+        "21": {
+          "added_new": 1404,
+          "added_surv": 476,
+          "lost_both": 708,
+          "lost_ep": 708,
+          "preserved": 2330,
+          "total_base": 3746
+        },
+        "22": {
+          "added_new": 180,
+          "added_surv": 2,
+          "lost_both": 0,
+          "lost_ep": 266,
+          "preserved": 70,
+          "total_base": 336
+        },
+        "23": {
+          "added_new": 107,
+          "added_surv": 6,
+          "lost_both": 4,
+          "lost_ep": 100,
+          "preserved": 87,
+          "total_base": 191
+        },
+        "24": {
+          "added_new": 63,
+          "added_surv": 7,
+          "lost_both": 8,
+          "lost_ep": 67,
+          "preserved": 32,
+          "total_base": 107
+        },
+        "25": {
+          "added_new": 11,
+          "added_surv": 16,
+          "lost_both": 17,
+          "lost_ep": 10,
+          "preserved": 5,
+          "total_base": 32
+        },
+        "27": {
+          "added_new": 478,
+          "added_surv": 150,
+          "lost_both": 126,
+          "lost_ep": 490,
+          "preserved": 1742,
+          "total_base": 2358
+        },
+        "28": {
+          "added_new": 70,
+          "added_surv": 1,
+          "lost_both": 0,
+          "lost_ep": 70,
+          "preserved": 35,
+          "total_base": 105
+        },
+        "31": {
+          "added_new": 66,
+          "added_surv": 6,
+          "lost_both": 10,
+          "lost_ep": 50,
+          "preserved": 13,
+          "total_base": 73
+        },
+        "34": {
+          "added_new": 97,
+          "added_surv": 1,
+          "lost_both": 11,
+          "lost_ep": 78,
+          "preserved": 29,
+          "total_base": 118
+        },
+        "38": {
+          "added_new": 157,
+          "added_surv": 0,
+          "lost_both": 15,
+          "lost_ep": 185,
+          "preserved": 53,
+          "total_base": 253
+        },
+        "39": {
+          "added_new": 47,
+          "added_surv": 0,
+          "lost_both": 0,
+          "lost_ep": 33,
+          "preserved": 18,
+          "total_base": 51
+        },
+        "40": {
+          "added_new": 75,
+          "added_surv": 4,
+          "lost_both": 1,
+          "lost_ep": 75,
+          "preserved": 25,
+          "total_base": 101
+        },
+        "42": {
+          "added_new": 47,
+          "added_surv": 3,
+          "lost_both": 12,
+          "lost_ep": 24,
+          "preserved": 4,
+          "total_base": 40
+        },
+        "43": {
+          "added_new": 10,
+          "added_surv": 37,
+          "lost_both": 16,
+          "lost_ep": 17,
+          "preserved": 123,
+          "total_base": 156
+        },
+        "45": {
+          "added_new": 93,
+          "added_surv": 7,
+          "lost_both": 3,
+          "lost_ep": 79,
+          "preserved": 32,
+          "total_base": 114
+        },
+        "46": {
+          "added_new": 49,
+          "added_surv": 2,
+          "lost_both": 1,
+          "lost_ep": 42,
+          "preserved": 17,
+          "total_base": 60
+        },
+        "51": {
+          "added_new": 263,
+          "added_surv": 58,
+          "lost_both": 23,
+          "lost_ep": 316,
+          "preserved": 186,
+          "total_base": 525
+        }
+      }
+    }
+  },
+  "1d_param_informativeness": {
+    "B1": {}
+  },
+  "1e_contrasts": {
+    "shift_+2": {
+      "contrasts": {
+        "content_content_minus_no_edge": {
+          "hi": -0.0061324045856310525,
+          "hw": 0.008540448365805609,
+          "lo": -0.02321330131724227,
+          "mean": -0.014711002860956737
+        },
+        "equiv_content_minus_no_edge": {
+          "hi": -0.0003591954022988536,
+          "hw": 0.002344721339671667,
+          "lo": -0.005048638081642187,
+          "mean": -0.0023053712346735263
+        },
+        "event_edges_minus_no_edge": {
+          "hi": -0.009756751438962917,
+          "hw": 0.007632309187389595,
+          "lo": -0.025021369813742107,
+          "mean": -0.017165137166754888
+        },
+        "non_event_edges_minus_no_edge": {
+          "hi": -0.008329466947501304,
+          "hw": 0.007726342359047986,
+          "lo": -0.023782151665597277,
+          "mean": -0.016116505475261656
+        },
+        "real_minus_no_edge": {
+          "hi": 0.009911743710899697,
+          "hw": 0.010781543581125916,
+          "lo": -0.011651343451352134,
+          "mean": -0.001933141932667017
+        },
+        "real_minus_rewired_s0": {
+          "hi": 0.25270781981214596,
+          "hw": 0.028012223272737752,
+          "lo": 0.19668337326667046,
+          "mean": 0.22391414702960355
+        },
+        "real_minus_rewired_s1": {
+          "hi": 0.24181989208344343,
+          "hw": 0.031875319250408,
+          "lo": 0.17806925358262743,
+          "mean": 0.20981204890696473
+        },
+        "real_minus_rewired_s2": {
+          "hi": 0.25117845895432006,
+          "hw": 0.02896045055695108,
+          "lo": 0.1932575578404179,
+          "mean": 0.22124945577704422
+        },
+        "sheet_minus_no_edge": {
+          "hi": -0.00020614266613664832,
+          "hw": 0.0031234170665385454,
+          "lo": -0.0064529767992137395,
+          "mean": -0.003257916329220553
+        }
+      },
+      "no_edge_mean": 0.685303075016087,
+      "real_mean": 0.6833699330834199
+    },
+    "shift_-2": {
+      "contrasts": {
+        "content_content_minus_no_edge": {
+          "hi": -0.010760440738187335,
+          "hw": 0.006899510818977332,
+          "lo": -0.024559462376142,
+          "mean": -0.01783838555789902
+        },
+        "equiv_content_minus_no_edge": {
+          "hi": -0.003122011536247889,
+          "hw": 0.004719822333119667,
+          "lo": -0.012561656202487222,
+          "mean": -0.007474148696444513
+        },
+        "event_edges_minus_no_edge": {
+          "hi": -0.008272119592180983,
+          "hw": 0.0077104387801855395,
+          "lo": -0.02369299715255206,
+          "mean": -0.01594261076276847
+        },
+        "non_event_edges_minus_no_edge": {
+          "hi": -0.01599192152157687,
+          "hw": 0.007109826337761834,
+          "lo": -0.03021157419710054,
+          "mean": -0.023257210704016457
+        },
+        "real_minus_no_edge": {
+          "hi": 0.010606538696896785,
+          "hw": 0.008619081967563101,
+          "lo": -0.0066316252382294175,
+          "mean": 0.001517936984436613
+        },
+        "real_minus_rewired_s0": {
+          "hi": 0.26547744115992244,
+          "hw": 0.02531473263109571,
+          "lo": 0.21484797589773102,
+          "mean": 0.23876573943585963
+        },
+        "real_minus_rewired_s1": {
+          "hi": 0.2510745764613718,
+          "hw": 0.025599481891137796,
+          "lo": 0.19987561267909623,
+          "mean": 0.22293885274467695
+        },
+        "real_minus_rewired_s2": {
+          "hi": 0.25897319728786916,
+          "hw": 0.024517878143405503,
+          "lo": 0.20993744100105816,
+          "mean": 0.23331628133926804
+        },
+        "sheet_minus_no_edge": {
+          "hi": -0.001951151808009759,
+          "hw": 0.003092256153739589,
+          "lo": -0.008135664115488937,
+          "mean": -0.004824819291981933
+        }
+      },
+      "no_edge_mean": 0.6872168111132583,
+      "real_mean": 0.6887347480976951
+    }
+  },
+  "1g_edge_weights": {
+    "max_weight": 1.0,
+    "mean": 1.0,
+    "median": 1.0,
+    "n_edges": 10098,
+    "share_below_0.5": 0.0,
+    "share_below_0.95": 0.0
+  },
+  "1h_seed_precheck": {
+    "current_FE_VECTOR_ADDRESS": false,
+    "status": "FE_VECTOR_ADDRESS is OFF. The seed pathway is not active. P3-3 trigger requires the seed pathway to be toggleable. Report: seed pathway inert at current configuration; P3-3 unimplementable unless FE_VECTOR_ADDRESS is turned ON first."
+  }
+}

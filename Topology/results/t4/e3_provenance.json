@@ -1,0 +1,25 @@
+{
+  "protocol": "E3 provenance: source digest, front-end flags, cache explanation",
+  "source_digest_sha256": "2fffba9859786e5b05fc74c4cc8897243b02b62cb56c83affa77174a708907f4",
+  "source_digest_method": "sha256 over sorted file list + contents of eth80_frontend.py, parameters/_text.py, perception/contour_field.py, perception/contour_peak.py, orchestration/binder.py, matching/joint_mcs.py, matching/relation_frame.py, core/registries.py, _bootstrap.py",
+  "source_digest_note": "Cache state was reset between sessions; the digest is recomputed over the current working tree. The earlier-session digest was 530ee3e9...953f2ca. The front-end flag defaults below are the operative ones.",
+  "frontend_flags_in_parameters_text": {
+    "BINDER_COMPLETE_POSITION_MAP": true,
+    "FIELD_BORDER_DISCARD_PER_CHANNEL": false,
+    "GRAPH_STAGE6_RELATIONS": false,
+    "ATTACHMENT_EVERY_NAMED_HOST": true,
+    "FE_L3_SPINE": false,
+    "FE_L4_JUNCTIONS": false,
+    "FE_SUBPIXEL_PEAK_POS": false,
+    "FE_L6_ADDRESS": false,
+    "FE_VECTOR_ADDRESS": false,
+    "FE_SOFT_CHANNEL_GATE": true,
+    "FE_SOFT_L3_L4_GATE": true
+  },
+  "flag_defaults_note": "FE_L3_SPINE, FE_L4_JUNCTIONS, FE_SUBPIXEL_PEAK_POS, FE_L6_ADDRESS, FE_VECTOR_ADDRESS default OFF. BINDER_COMPLETE_POSITION_MAP defaults ON (root-cause fix for CONTOUR_PEAK positioning). The arms B0/B1/F set these flags explicitly via _bootstrap.apply_switch_overrides.",
+  "cache_explanation": {
+    "mechanism": "The front-end caches perceptual graph pickles keyed by a field_fingerprint that folds switch overrides but NOT default flag values. When BINDER_COMPLETE_POSITION_MAP default changed from False to True, 41 cache entries with the old default-spec digest (fdf6f145dbf562d8) became stale: they were built with the old positioning behavior.",
+    "resolution": "The 4c held-out build rebuilds all 240 graphs with explicit arm overrides, so stale cache entries are superseded. The cache is content-addressed by (image sha256, field_fingerprint); any mismatch triggers a rebuild.",
+    "cache_state_note": "Front-end cache was reset in a later sandbox session. All held-out and ref graphs were rebuilt from source with explicit arm overrides, so no stale entries remain in the current results."
+  }
+}

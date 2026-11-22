@@ -1,0 +1,10 @@
+shift +0 A_baseline_joint_mcs                   nodes  861 pres  861 frac 1.0000 jaccard 1.0000 edges 1263/1263    0.0s
+shift +0 solver-at-zero A_baseline_joint_mcs              nodes  875 pres  860 frac 0.9829 jaccard 0.9817
+shift +0 B_graded_mcs_anchor_prior              nodes  861 pres  861 frac 1.0000 jaccard 1.0000 edges 1263/1263    0.0s
+shift +0 solver-at-zero B_graded_mcs_anchor_prior         nodes  801 pres  754 frac 0.9413 jaccard 0.8304
+shift +0 C_graded_mcs_anchor_prior_no_req_edge  nodes  861 pres  861 frac 1.0000 jaccard 1.0000 edges 1263/1263    0.0s
+shift +0 solver-at-zero C_graded_mcs_anchor_prior_no_req_edge nodes  805 pres  776 frac 0.9640 jaccard 0.8656
+shift +2 A_baseline_joint_mcs                   nodes  840 pres  668 frac 0.7952 jaccard 0.5986 edges 658/1071   19.7s
+shift +2 B_graded_mcs_anchor_prior              nodes  636 pres  542 frac 0.8522 jaccard 0.5071 edges 162/200  610.2s
+/usr/lib/python3.11/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 6 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

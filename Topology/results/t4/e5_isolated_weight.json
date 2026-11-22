@@ -1,0 +1,20 @@
+{
+  "protocol": "E5 score-time isolated-weight change",
+  "location": "matching/joint_mcs.py:344-351 (the `nodes=` accumulation)",
+  "mechanism": "After the alignment, each mapped pair's node_sim is scaled by isolated_w when either endpoint has degree 0. isolated_w = MATCH_ISOLATED_NODE_WEIGHT when MATCH_EXCLUDE_ISOLATED_FROM_CORRESPONDENCE is False; when True, isolated_w = min(MATCH_ISOLATED_NODE_WEIGHT, MATCH_EXCLUDE_ISOLATED_FLOOR=0.5).",
+  "code_snippet": "nodes=math.fsum(node_sim(u,v) * (isolated_w if (deg_a.get(u, 0) == 0 or deg_b.get(v, 0) == 0) else 1.0) for u,v in sorted(al.mapping.items()))",
+  "default_state": {
+    "MATCH_EXCLUDE_ISOLATED_FROM_CORRESPONDENCE": false,
+    "MATCH_ISOLATED_NODE_WEIGHT": 1.0,
+    "isolated_w": 1.0,
+    "inert": true,
+    "note": "At the default flag state the multiplier is 1.0 for every pair, so the change is inert. It becomes active only when MATCH_EXCLUDE_ISOLATED_FROM_CORRESPONDENCE is True (the Task-3 winner cell), where isolated_w = min(1.0, 0.5) = 0.5 for pairs with an isolated endpoint."
+  },
+  "winner_cell_state": {
+    "MATCH_EXCLUDE_ISOLATED_FROM_CORRESPONDENCE": true,
+    "MATCH_ISOLATED_NODE_WEIGHT": 1.0,
+    "isolated_w": 0.5,
+    "inert": false,
+    "note": "All arms in this mission use the Task-3 winner cell, so isolated_w = 0.5 for isolated-endpoint pairs."
+  }
+}

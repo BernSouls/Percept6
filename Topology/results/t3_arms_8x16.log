@@ -1,0 +1,28 @@
+arm M0 variant graphs_softoff.json refs 8 heldout 16
+  M0   1/16  apple7-090-000
+  M0   2/16  apple7-035-135
+  M0   3/16  apple8-090-000
+  M0   4/16  apple8-035-135
+  M0   5/16  apple9-090-000
+  M0   6/16  apple9-035-135
+  M0   7/16  car9-090-000
+  M0   8/16  car11-090-000
+  M0   9/16  car9-035-135
+  M0  10/16  car12-090-000
+  M0  11/16  car11-035-135
+  M0  12/16  cow7-090-000
+  M0  13/16  car12-035-135
+  M0  14/16  cow7-035-135
+  M0  15/16  cow8-090-000
+  M0  16/16  cow8-035-135
+Traceback (most recent call last):
+  File "/home/user/Percept6/Topology/t3_measure.py", line 435, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/user/Percept6/Topology/t3_measure.py", line 403, in main
+    results[name] = _run_arm(name, items, args.workers)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Percept6/Topology/t3_measure.py", line 190, in _run_arm
+    row["scores"][cls])
+    ~~~~~~~~~~~~~^^^^^
+KeyError: 'cup'

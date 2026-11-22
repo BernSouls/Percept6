@@ -1,0 +1,261 @@
+{
+  "1b": {
+    "horiz+2": {
+      "Contour": {
+        "base": 88,
+        "found_loose": 41,
+        "found_strict": 0,
+        "no_nearby": 47
+      },
+      "CurveComplex": {
+        "base": 65,
+        "found_loose": 30,
+        "found_strict": 0,
+        "no_nearby": 35
+      }
+    },
+    "vert+2": {
+      "Contour": {
+        "base": 88,
+        "found_loose": 33,
+        "found_strict": 0,
+        "no_nearby": 55
+      },
+      "CurveComplex": {
+        "base": 65,
+        "found_loose": 19,
+        "found_strict": 0,
+        "no_nearby": 46
+      }
+    }
+  },
+  "1c": {
+    "fourier+0.5": {
+      "integer_count": 774,
+      "integer_rms": 2.5245547670451165,
+      "quantization_floor": 0.5,
+      "subpixel_beats_floor": false,
+      "subpixel_count": 71,
+      "subpixel_rms": 2.513983636767521
+    },
+    "fourier+1.5": {
+      "integer_count": 773,
+      "integer_rms": 2.617789110991127,
+      "quantization_floor": 0.5,
+      "subpixel_beats_floor": false,
+      "subpixel_count": 71,
+      "subpixel_rms": 2.602805283073549
+    }
+  },
+  "1d": {
+    "arms": {
+      "B0": {
+        "graph_hashes": [
+          "828691f5399b7745",
+          "cff9c3abd93d2529",
+          "cda628e7409904a0",
+          "78181dc682134720",
+          "033f4875b4ab0d03",
+          "82b9542fc41f704a",
+          "e61616513d2129b0",
+          "96a2606f5c7c607d"
+        ],
+        "per_lens": {
+          "CONTOUR_PEAK": {
+            "frac": 1.0,
+            "total": 890,
+            "with_anchor": 890
+          },
+          "Contour": {
+            "frac": 1.0,
+            "total": 88,
+            "with_anchor": 88
+          },
+          "ContourFragment": {
+            "frac": 1.0,
+            "total": 433,
+            "with_anchor": 433
+          },
+          "Corner": {
+            "frac": 1.0,
+            "total": 90,
+            "with_anchor": 90
+          },
+          "CurveComplex": {
+            "frac": 1.0,
+            "total": 65,
+            "with_anchor": 65
+          },
+          "EndStopped": {
+            "frac": 1.0,
+            "total": 308,
+            "with_anchor": 308
+          },
+          "IllusoryContour": {
+            "frac": 0.0,
+            "total": 23,
+            "with_anchor": 0
+          },
+          "Junction": {
+            "frac": 1.0,
+            "total": 5,
+            "with_anchor": 5
+          },
+          "Orientation": {
+            "frac": 0.9322033898305084,
+            "total": 295,
+            "with_anchor": 275
+          },
+          "PEAK_CHAIN": {
+            "frac": 1.0,
+            "total": 142,
+            "with_anchor": 142
+          },
+          "RegionShape": {
+            "frac": 1.0,
+            "total": 103,
+            "with_anchor": 103
+          }
+        }
+      },
+      "B1": {
+        "graph_hashes": [
+          "62d01396a39ac701",
+          "48cb2abbfd0cd805",
+          "3b9d8f07c611c61d",
+          "a17b2f35219a714a",
+          "286254468c6b7f79",
+          "ed0e47022e6b403c",
+          "c9dcc18e93f0b25d",
+          "055c6db53c77ebba"
+        ],
+        "per_lens": {
+          "CONTOUR_PEAK": {
+            "frac": 1.0,
+            "total": 890,
+            "with_anchor": 890
+          },
+          "Contour": {
+            "frac": 1.0,
+            "total": 88,
+            "with_anchor": 88
+          },
+          "ContourFragment": {
+            "frac": 1.0,
+            "total": 433,
+            "with_anchor": 433
+          },
+          "Corner": {
+            "frac": 1.0,
+            "total": 90,
+            "with_anchor": 90
+          },
+          "CurveComplex": {
+            "frac": 1.0,
+            "total": 65,
+            "with_anchor": 65
+          },
+          "EndStopped": {
+            "frac": 1.0,
+            "total": 308,
+            "with_anchor": 308
+          },
+          "IllusoryContour": {
+            "frac": 0.0,
+            "total": 23,
+            "with_anchor": 0
+          },
+          "Junction": {
+            "frac": 1.0,
+            "total": 5,
+            "with_anchor": 5
+          },
+          "Orientation": {
+            "frac": 0.9322033898305084,
+            "total": 295,
+            "with_anchor": 275
+          },
+          "PEAK_CHAIN": {
+            "frac": 1.0,
+            "total": 142,
+            "with_anchor": 142
+          },
+          "RegionShape": {
+            "frac": 1.0,
+            "total": 103,
+            "with_anchor": 103
+          }
+        }
+      },
+      "F": {
+        "graph_hashes": [
+          "62d01396a39ac701",
+          "48cb2abbfd0cd805",
+          "3b9d8f07c611c61d",
+          "a17b2f35219a714a",
+          "286254468c6b7f79",
+          "ed0e47022e6b403c",
+          "c9dcc18e93f0b25d",
+          "055c6db53c77ebba"
+        ],
+        "per_lens": {
+          "CONTOUR_PEAK": {
+            "frac": 1.0,
+            "total": 890,
+            "with_anchor": 890
+          },
+          "Contour": {
+            "frac": 1.0,
+            "total": 88,
+            "with_anchor": 88
+          },
+          "ContourFragment": {
+            "frac": 1.0,
+            "total": 433,
+            "with_anchor": 433
+          },
+          "Corner": {
+            "frac": 1.0,
+            "total": 90,
+            "with_anchor": 90
+          },
+          "CurveComplex": {
+            "frac": 1.0,
+            "total": 65,
+            "with_anchor": 65
+          },
+          "EndStopped": {
+            "frac": 1.0,
+            "total": 308,
+            "with_anchor": 308
+          },
+          "IllusoryContour": {
+            "frac": 0.0,
+            "total": 23,
+            "with_anchor": 0
+          },
+          "Junction": {
+            "frac": 1.0,
+            "total": 5,
+            "with_anchor": 5
+          },
+          "Orientation": {
+            "frac": 0.9322033898305084,
+            "total": 295,
+            "with_anchor": 275
+          },
+          "PEAK_CHAIN": {
+            "frac": 1.0,
+            "total": 142,
+            "with_anchor": 142
+          },
+          "RegionShape": {
+            "frac": 1.0,
+            "total": 103,
+            "with_anchor": 103
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "protocol": "PART 0 diagnosis (read-only) + 0e dev run",
+  "corpus": "ETH-80, split_tuning() (ref 0-2, dev 3-5, held-out 6-8)",
+  "ruler_sha256": "c0aa914ba511dc20350d4148dcf58f014d901c4da231a1c7819818322a06dfae",
+  "0a_position_origin": {
+    "finding": "CONTOUR_PEAK token position is the INTEGER GRID SITE. No sub-pixel refinement, response-field fit, or line-intersection is applied at token emission.",
+    "trace": "perception/contour_field.py::extract_peaks builds all_peaks from _directional_nms / _local_maxima_2d (scipy maximum_filter) grid-site maxima; peak dict stores x=int(x), y=int(y). peaks_to_contour_peak_detections (perception/contour_peak.py) writes anchor_positions[anchor]=(float(x),float(y)) from those integer coords.",
+    "localisation_error": "Measured: positions are exact integers (no sub-pixel component) for 42/46 CONTOUR_PEAK tokens on apple4; 4/46 have a sub-pixel offset after the FE_SUBPIXEL_PEAK_POS fix."
+  },
+  "0b_tangent_origin": {
+    "finding": "Tangent is the field argmax theta over the (theta, sf) cell. The quantized slot is 12 bins = 15 deg (circular, slot 0). Continuous theta (radians) is carried on the peak dict but the quantized tangent is what the signature stores.",
+    "registries": "core/registries.py CONTOUR_PEAK: {0:12, 4:4} -- slot 0 tangent circular 12 bins, slot 4 phase circular 4 bins.",
+    "continuous_values_on_peak": ["theta (rad)", "signed_curvature", "bend_angle", "sf_axis_pos", "sf_cycles_per_px", "phase", "endstop_magnitude"]
+  },
+  "0c_arc_gaps": {
+    "emitter_unit": "pixels. FRONT_END_REF_DIAGONAL_PX = sqrt(256^2+256^2) = 362.04; extraction_scale = diag/REF = 1.0 for 256x256. The position map and all gap constants are in pixels.",
+    "chain_gap_rule": "chain_max_gap_factor * median_wavelength (perception/chain_formation.py). median_wavelength = 1/sf (px); GABOR_SF_MIN=0.06, GABOR_SF_MAX=0.35 cycles/px -> wavelength 2.9-16.7 px.",
+    "median_nn_gap": "computed separately (see e6/part0 dev results); CONTOUR_PEAK NN gaps are in pixels."
+  },
+  "0d_mean_degree_0.90": {
+    "finding": "Old mean degree 0.90 (321 nodes, 144 edges) came from Task 3 arms where FE_L3_SPINE and FE_L4_JUNCTIONS were OFF -- the matcher never saw L3/L4 edges. With the position-wiring fix, dev mean degree: B0=0.755, B1=1.413, F=1.414.",
+    "per_family_B0": {"27": 359, "14": 250, "51": 241, "21": 137, "19": 125, "22": 120, "20": 93, "38": 89},
+    "per_family_B1": {"21": 1305, "27": 827, "20": 256, "51": 197, "14": 169, "22": 120, "19": 76, "38": 72}
+  },
+  "0e_dev_run": {
+    "arms": {
+      "B0": {"mean_degree": 0.7554, "corr_acc_+2": 0.1421, "corr_acc_-2": 0.1322, "edge_surv_+2": 0.2102, "null_+2": 0.0022},
+      "B1": {"mean_degree": 1.4132, "corr_acc_+2": 0.1421, "corr_acc_-2": 0.1322, "edge_surv_+2": 0.0953, "null_+2": 0.0010},
+      "F":  {"mean_degree": 1.4142, "corr_acc_+2": 0.1423, "corr_acc_-2": 0.1326, "edge_surv_+2": 0.0955, "null_+2": 0.0009}
+    },
+    "frozen_tolerance_px": 2.0,
+    "frozen_tolerance_source": "q90 of B1 +2px counterpart drift on dev (n=327)",
+    "root_cause_fix": "BINDER_COMPLETE_POSITION_MAP=False -> True + note_tier_positions merge moved before bind_intra_step in the tier loop. Before the fix, CONTOUR_PEAK (890 nodes) had 0% positions in anchor_of_node; after, 100% of tier-lens nodes carry positions."
+  },
+  "pre_authorised_check": "B1 edge survival (0.095) is ~95x the shifted null (0.001) on dev -- edges carry placement evidence. The node correspondence (D1=0.14) is limited by the cyclic-roll measurement (the rolled image changes peak detection), not by the sampling. The 4c held-out test with real-vs-rewired contrast will give the decisive paired interval."
+}

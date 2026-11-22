@@ -1,0 +1,28 @@
+{
+  "protocol": "E8 per-lens nodes per frame + per-lens class MI before/after",
+  "scenes": "dev split, lowest-rank dev instance per class, view -090-000 (8 scenes, 1 per class)",
+  "mi_discretisation_rule": "Binary lens-presence per scene (present/absent) vs the 8-class label; MI in bits, computed as sum P(x,y) log2(P(x,y)/(P(x)P(y))) with P(class)=1/8 per scene. 8 scenes, 1 per class.",
+  "before": {
+    "arm": "B1 (L3/L4 ON, integer-grid peak positions)",
+    "per_lens_nodes": {
+      "CONTOUR_PEAK": 890, "Contour": 88, "ContourFragment": 433,
+      "Corner": 91, "CurveComplex": 65, "EndStopped": 308,
+      "IllusoryContour": 23, "Junction": 5, "Orientation": 295,
+      "PEAK_CHAIN": 142, "RegionShape": 103
+    },
+    "per_lens_class_mi_bits": {
+      "CONTOUR_PEAK": 0.0, "Contour": 0.0, "ContourFragment": 0.0,
+      "Corner": 0.0, "CurveComplex": 0.0, "EndStopped": 0.0,
+      "IllusoryContour": 0.9544, "Junction": 1.0,
+      "Orientation": 0.0, "PEAK_CHAIN": 0.0, "RegionShape": 0.0
+    },
+    "note": "CONTOUR_PEAK, Contour, ContourFragment, Corner, CurveComplex, EndStopped, Orientation, PEAK_CHAIN, RegionShape are present in all 8 classes (MI=0). IllusoryContour in 5/8, Junction in 4/8."
+  },
+  "after": {
+    "arm": "F (L3/L4 ON + sub-pixel peak positions + position-wiring fix)",
+    "per_lens_nodes": "identical to before: the sub-pixel fix changes only the (x,y) of CONTOUR_PEAK tokens, not node counts or signatures. Verified: FE_SUBPIXEL_PEAK_POS adds x_sub/y_sub to the peak dict and refines the position written to anchor_positions; it does not add, remove, or re-signature any node.",
+    "per_lens_class_mi_bits": "identical to before (signatures unchanged)",
+    "position_wiring_fix_effect": "BINDER_COMPLETE_POSITION_MAP=True + note_tier_positions merge makes CONTOUR_PEAK/PEAK_CHAIN/EndStopped/etc. nodes carry positions in anchor_of_node (was 0% for CONTOUR_PEAK before). This changes geometry available to the matcher, NOT node counts or class MI."
+  },
+  "information_guard": "No lens loses >30% of nodes or 0.1 bits class information; the fix is do-no-harm (adds positions, never removes nodes)."
+}

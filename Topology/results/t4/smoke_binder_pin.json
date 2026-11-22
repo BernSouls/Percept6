@@ -1,0 +1,24 @@
+{
+  "graph_hash_change": {
+    "content_positioned_delta": 86,
+    "hashes_differ": true,
+    "interpretation": "Graph hashes differ: BINDER_COMPLETE_POSITION_MAP changes the emitted graph structure (edge set / node set), not just positions.",
+    "off_hash": "91ad15813bbe25df9dcf347cf09a17fe4a4ef4d053776aff9103632f4c8c862d",
+    "on_hash": "b47b2e133e604bd366c5fbac90850cea61ef2dfa667d86bbce3d3020118e451a",
+    "positioned_delta": 86
+  },
+  "smoke_pin": {
+    "OFF": {
+      "graph_hash": "91ad15813bbe25df9dcf347cf09a17fe4a4ef4d053776aff9103632f4c8c862d",
+      "positioned_content_nodes": 57,
+      "positioned_nodes": 115,
+      "total_nodes": 201
+    },
+    "ON": {
+      "graph_hash": "b47b2e133e604bd366c5fbac90850cea61ef2dfa667d86bbce3d3020118e451a",
+      "positioned_content_nodes": 143,
+      "positioned_nodes": 201,
+      "total_nodes": 201
+    }
+  }
+}

@@ -1,0 +1,4807 @@
+{
+  "arm": "B1",
+  "radius_table": {
+    "CONTOUR_PEAK": 1.118033988749895,
+    "Contour": 8.0,
+    "ContourFragment": 1.0,
+    "Corner": 3.605551275463989,
+    "CurveComplex": 8.0,
+    "EndStopped": 2.9154759474226504,
+    "Junction": null,
+    "Orientation": 1.0,
+    "PEAK_CHAIN": 3.0005715286832446,
+    "RegionShape": 3.4158129014595855
+  },
+  "shifts": {
+    "fourier+0.5": {
+      "aggregate": {
+        "CONTOUR_PEAK|content": {
+          "ambiguous": 182,
+          "matched": 845,
+          "rate": 0.949438202247191,
+          "total": 890
+        },
+        "ContourFragment|content": {
+          "ambiguous": 272,
+          "matched": 291,
+          "rate": 0.6720554272517321,
+          "total": 433
+        },
+        "Contour|content": {
+          "ambiguous": 0,
+          "matched": 48,
+          "rate": 0.5454545454545454,
+          "total": 88
+        },
+        "Corner|content": {
+          "ambiguous": 6,
+          "matched": 33,
+          "rate": 0.3626373626373626,
+          "total": 91
+        },
+        "CurveComplex|content": {
+          "ambiguous": 0,
+          "matched": 37,
+          "rate": 0.5692307692307692,
+          "total": 65
+        },
+        "EndStopped|content": {
+          "ambiguous": 44,
+          "matched": 221,
+          "rate": 0.7175324675324676,
+          "total": 308
+        },
+        "Junction|content": {
+          "ambiguous": 0,
+          "matched": 3,
+          "rate": 0.6,
+          "total": 5
+        },
+        "Orientation|sheet": {
+          "ambiguous": 0,
+          "matched": 237,
+          "rate": 0.8618181818181818,
+          "total": 275
+        },
+        "PEAK_CHAIN|content": {
+          "ambiguous": 20,
+          "matched": 84,
+          "rate": 0.5915492957746479,
+          "total": 142
+        },
+        "RegionShape|sheet": {
+          "ambiguous": 13,
+          "matched": 61,
+          "rate": 0.5922330097087378,
+          "total": 103
+        }
+      },
+      "per_scene": {
+        "apple4-090-000": {
+          "ambiguous": 43,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 8,
+              "matched": 46,
+              "offset_mean": [
+                0.43478260869565216,
+                -0.10869565217391304
+              ],
+              "offset_rms": 2.3933785470679765,
+              "rate": 1.0,
+              "total": 46
+            },
+            "ContourFragment|content": {
+              "ambiguous": 34,
+              "matched": 34,
+              "offset_mean": [
+                0.2156767101718526,
+                -0.714123250648232
+              ],
+              "offset_rms": 3.7660948059889203,
+              "rate": 0.5964912280701754,
+              "total": 57
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 7,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.5833333333333334,
+              "total": 12
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 3
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.5555555555555556,
+              "total": 9
+            },
+            "EndStopped|content": {
+              "ambiguous": 1,
+              "matched": 22,
+              "offset_mean": [
+                -0.22727272727272727,
+                -0.13636363636363635
+              ],
+              "offset_rms": 1.5739354266527985,
+              "rate": 0.88,
+              "total": 25
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 36,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.972972972972973,
+              "total": 37
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 3,
+              "offset_mean": [
+                0.7111111111111086,
+                -1.7333333333333296
+              ],
+              "offset_rms": 2.183227308706415,
+              "rate": 0.375,
+              "total": 8
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.8166666666666629,
+                -2.3499999999999943
+              ],
+              "offset_rms": 2.626732232684212,
+              "rate": 0.5,
+              "total": 4
+            }
+          },
+          "rate_8px": 0.7711442786069652,
+          "total": 201
+        },
+        "car5-090-000": {
+          "ambiguous": 64,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 39,
+              "matched": 86,
+              "offset_mean": [
+                -0.05813953488372093,
+                0.7093023255813954
+              ],
+              "offset_rms": 3.444746590065435,
+              "rate": 0.9052631578947369,
+              "total": 95
+            },
+            "ContourFragment|content": {
+              "ambiguous": 16,
+              "matched": 16,
+              "offset_mean": [
+                0.48749999999999893,
+                -2.315656638933543
+              ],
+              "offset_rms": 3.7682714369765047,
+              "rate": 0.37209302325581395,
+              "total": 43
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.2857142857142857,
+              "total": 7
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 5
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.4,
+              "total": 5
+            },
+            "EndStopped|content": {
+              "ambiguous": 9,
+              "matched": 18,
+              "offset_mean": [
+                0.5555555555555556,
+                0.7777777777777778
+              ],
+              "offset_rms": 4.512328790226961,
+              "rate": 0.5142857142857142,
+              "total": 35
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 21,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.75,
+              "total": 28
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.375,
+                0.5
+              ],
+              "offset_rms": 0.8838834764831844,
+              "rate": 0.16666666666666666,
+              "total": 12
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                1.4249999999999972,
+                0.25
+              ],
+              "offset_rms": 2.2273863607376208,
+              "rate": 0.25,
+              "total": 8
+            }
+          },
+          "rate_8px": 0.6260504201680672,
+          "total": 238
+        },
+        "cow4-090-000": {
+          "ambiguous": 73,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 24,
+              "matched": 115,
+              "offset_mean": [
+                -0.06956521739130435,
+                0.15217391304347827
+              ],
+              "offset_rms": 2.3824539778391816,
+              "rate": 0.9349593495934959,
+              "total": 123
+            },
+            "ContourFragment|content": {
+              "ambiguous": 36,
+              "matched": 37,
+              "offset_mean": [
+                -0.6364774297759918,
+                0.6521733687686282
+              ],
+              "offset_rms": 3.1854756310622583,
+              "rate": 0.43023255813953487,
+              "total": 86
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.5,
+              "total": 10
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.5,
+                -0.5
+              ],
+              "offset_rms": 0.8660254037844386,
+              "rate": 0.16666666666666666,
+              "total": 12
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 3,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.375,
+              "total": 8
+            },
+            "EndStopped|content": {
+              "ambiguous": 7,
+              "matched": 28,
+              "offset_mean": [
+                0.21428571428571427,
+                -0.03571428571428571
+              ],
+              "offset_rms": 3.005946487500116,
+              "rate": 0.56,
+              "total": 50
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 28,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.7567567567567568,
+              "total": 37
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 2,
+              "matched": 10,
+              "offset_mean": [
+                -0.4273412698412692,
+                -0.38341269841269254
+              ],
+              "offset_rms": 3.235536670571239,
+              "rate": 0.6666666666666666,
+              "total": 15
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 4,
+              "matched": 11,
+              "offset_mean": [
+                0.2586940836940844,
+                0.07460317460318193
+              ],
+              "offset_rms": 4.04665811564017,
+              "rate": 0.6875,
+              "total": 16
+            }
+          },
+          "rate_8px": 0.6675977653631285,
+          "total": 358
+        },
+        "cup4-090-000": {
+          "ambiguous": 106,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 29,
+              "matched": 124,
+              "offset_mean": [
+                -0.12903225806451613,
+                0.08870967741935484
+              ],
+              "offset_rms": 2.460985902621798,
+              "rate": 0.9465648854961832,
+              "total": 131
+            },
+            "ContourFragment|content": {
+              "ambiguous": 61,
+              "matched": 69,
+              "offset_mean": [
+                -0.18094112547442476,
+                -0.427811303722471
+              ],
+              "offset_rms": 1.753825546354466,
+              "rate": 0.8023255813953488,
+              "total": 86
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 11,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.5,
+              "total": 22
+            },
+            "Corner|content": {
+              "ambiguous": 1,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                -1.3
+              ],
+              "offset_rms": 2.1563858652847827,
+              "rate": 0.3125,
+              "total": 16
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 8,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.6153846153846154,
+              "total": 13
+            },
+            "EndStopped|content": {
+              "ambiguous": 11,
+              "matched": 39,
+              "offset_mean": [
+                0.05128205128205128,
+                -0.9358974358974359
+              ],
+              "offset_rms": 3.550911764459145,
+              "rate": 0.639344262295082,
+              "total": 61
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.5,
+              "total": 2
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 49,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.875,
+              "total": 56
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 2,
+              "matched": 13,
+              "offset_mean": [
+                -1.2036907536907544,
+                0.09650349650349181
+              ],
+              "offset_rms": 3.4614023295899794,
+              "rate": 0.65,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 8,
+              "offset_mean": [
+                -2.0309974747474753,
+                0.41515151515150883
+              ],
+              "offset_rms": 4.027393719221595,
+              "rate": 0.47058823529411764,
+              "total": 17
+            }
+          },
+          "rate_8px": 0.7712264150943396,
+          "total": 424
+        },
+        "dog4-090-000": {
+          "ambiguous": 81,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 22,
+              "matched": 139,
+              "offset_mean": [
+                0.2158273381294964,
+                -0.08992805755395683
+              ],
+              "offset_rms": 2.3147167578485166,
+              "rate": 0.9586206896551724,
+              "total": 145
+            },
+            "ContourFragment|content": {
+              "ambiguous": 41,
+              "matched": 42,
+              "offset_mean": [
+                0.5399331340281253,
+                -0.12042611667366085
+              ],
+              "offset_rms": 2.556895483872054,
+              "rate": 0.6885245901639344,
+              "total": 61
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.6666666666666666,
+              "total": 6
+            },
+            "Corner|content": {
+              "ambiguous": 3,
+              "matched": 14,
+              "offset_mean": [
+                0.0,
+                -0.07142857142857142
+              ],
+              "offset_rms": 3.0413812651491097,
+              "rate": 0.7,
+              "total": 20
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.8,
+              "total": 5
+            },
+            "EndStopped|content": {
+              "ambiguous": 10,
+              "matched": 42,
+              "offset_mean": [
+                -0.6428571428571429,
+                -0.023809523809523808
+              ],
+              "offset_rms": 2.792421717366316,
+              "rate": 0.8235294117647058,
+              "total": 51
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 25,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 1.0,
+              "total": 25
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 3,
+              "matched": 18,
+              "offset_mean": [
+                0.4618862618862632,
+                0.024879441546110413
+              ],
+              "offset_rms": 2.908596317198595,
+              "rate": 0.72,
+              "total": 25
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 16,
+              "offset_mean": [
+                0.1446220446220461,
+                0.012364371739374214
+              ],
+              "offset_rms": 2.686380995591259,
+              "rate": 0.8421052631578947,
+              "total": 19
+            }
+          },
+          "rate_8px": 0.8515406162464986,
+          "total": 357
+        },
+        "horse4-090-000": {
+          "ambiguous": 70,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 20,
+              "matched": 118,
+              "offset_mean": [
+                -0.05084745762711865,
+                -0.2288135593220339
+              ],
+              "offset_rms": 2.5767868574010104,
+              "rate": 0.9672131147540983,
+              "total": 122
+            },
+            "ContourFragment|content": {
+              "ambiguous": 42,
+              "matched": 44,
+              "offset_mean": [
+                0.13774944567627367,
+                0.5257740746432602
+              ],
+              "offset_rms": 1.8547657590402804,
+              "rate": 0.9166666666666666,
+              "total": 48
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 6,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.4,
+              "total": 15
+            },
+            "Corner|content": {
+              "ambiguous": 1,
+              "matched": 4,
+              "offset_mean": [
+                -0.5,
+                -0.25
+              ],
+              "offset_rms": 2.958039891549808,
+              "rate": 0.36363636363636365,
+              "total": 11
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.36363636363636365,
+              "total": 11
+            },
+            "EndStopped|content": {
+              "ambiguous": 1,
+              "matched": 41,
+              "offset_mean": [
+                0.0975609756097561,
+                -0.08536585365853659
+              ],
+              "offset_rms": 1.2711623258013058,
+              "rate": 0.7884615384615384,
+              "total": 52
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 1.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 32,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.8205128205128205,
+              "total": 39
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 4,
+              "matched": 15,
+              "offset_mean": [
+                -0.644074074074075,
+                -0.12259259259259257
+              ],
+              "offset_rms": 3.158819386684757,
+              "rate": 0.75,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 9,
+              "offset_mean": [
+                -0.9160493827160505,
+                0.7030864197530869
+              ],
+              "offset_rms": 3.1333262192371714,
+              "rate": 0.6428571428571429,
+              "total": 14
+            }
+          },
+          "rate_8px": 0.8228228228228228,
+          "total": 333
+        },
+        "pear4-090-000": {
+          "ambiguous": 46,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 20,
+              "matched": 120,
+              "offset_mean": [
+                0.16666666666666666,
+                -0.24166666666666667
+              ],
+              "offset_rms": 2.065591117977289,
+              "rate": 0.9523809523809523,
+              "total": 126
+            },
+            "ContourFragment|content": {
+              "ambiguous": 17,
+              "matched": 24,
+              "offset_mean": [
+                -0.0414267558875423,
+                -0.1875
+              ],
+              "offset_rms": 2.4431026856789004,
+              "rate": 0.8888888888888888,
+              "total": 27
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 7,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.875,
+              "total": 8
+            },
+            "Corner|content": {
+              "ambiguous": 1,
+              "matched": 4,
+              "offset_mean": [
+                1.5,
+                -0.25
+              ],
+              "offset_rms": 2.8722813232690143,
+              "rate": 0.3076923076923077,
+              "total": 13
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 6,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.8571428571428571,
+              "total": 7
+            },
+            "EndStopped|content": {
+              "ambiguous": 1,
+              "matched": 17,
+              "offset_mean": [
+                0.0,
+                0.2647058823529412
+              ],
+              "offset_rms": 1.7863864281247313,
+              "rate": 0.9444444444444444,
+              "total": 18
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 25,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.8928571428571429,
+              "total": 28
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 6,
+              "matched": 12,
+              "offset_mean": [
+                -0.14332010582010746,
+                -0.4699074074074048
+              ],
+              "offset_rms": 4.715085153921862,
+              "rate": 0.5454545454545454,
+              "total": 22
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 1,
+              "matched": 5,
+              "offset_mean": [
+                -0.7966666666666697,
+                -1.1580952380952283
+              ],
+              "offset_rms": 2.698975828261891,
+              "rate": 0.4166666666666667,
+              "total": 12
+            }
+          },
+          "rate_8px": 0.842911877394636,
+          "total": 261
+        },
+        "tomato4-090-000": {
+          "ambiguous": 54,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 20,
+              "matched": 97,
+              "offset_mean": [
+                0.061855670103092786,
+                -0.005154639175257732
+              ],
+              "offset_rms": 2.5771597888605178,
+              "rate": 0.9509803921568627,
+              "total": 102
+            },
+            "ContourFragment|content": {
+              "ambiguous": 25,
+              "matched": 25,
+              "offset_mean": [
+                0.7139622641509448,
+                -0.5643183279468019
+              ],
+              "offset_rms": 2.873871647371984,
+              "rate": 1.0,
+              "total": 25
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 6,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.75,
+              "total": 8
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.8660254037844386,
+              "rate": 0.36363636363636365,
+              "total": 11
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.7142857142857143,
+              "total": 7
+            },
+            "EndStopped|content": {
+              "ambiguous": 4,
+              "matched": 14,
+              "offset_mean": [
+                -0.8571428571428571,
+                -0.21428571428571427
+              ],
+              "offset_rms": 3.017804310611087,
+              "rate": 0.875,
+              "total": 16
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 1.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 21,
+              "offset_mean": [
+                0.0,
+                -0.5
+              ],
+              "offset_rms": 0.5,
+              "rate": 0.84,
+              "total": 25
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 3,
+              "matched": 11,
+              "offset_mean": [
+                0.30323691460055163,
+                0.0048012593467167235
+              ],
+              "offset_rms": 2.6354338950363934,
+              "rate": 0.55,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 8,
+              "offset_mean": [
+                0.2919507575757585,
+                -0.5558982683982645
+              ],
+              "offset_rms": 2.6844606061128387,
+              "rate": 0.6153846153846154,
+              "total": 13
+            }
+          },
+          "rate_8px": 0.8421052631578947,
+          "total": 228
+        }
+      }
+    },
+    "fourier+1.5": {
+      "aggregate": {
+        "CONTOUR_PEAK|content": {
+          "ambiguous": 191,
+          "matched": 844,
+          "rate": 0.9483146067415731,
+          "total": 890
+        },
+        "ContourFragment|content": {
+          "ambiguous": 260,
+          "matched": 283,
+          "rate": 0.6535796766743649,
+          "total": 433
+        },
+        "Contour|content": {
+          "ambiguous": 0,
+          "matched": 39,
+          "rate": 0.4431818181818182,
+          "total": 88
+        },
+        "Corner|content": {
+          "ambiguous": 8,
+          "matched": 31,
+          "rate": 0.34065934065934067,
+          "total": 91
+        },
+        "CurveComplex|content": {
+          "ambiguous": 0,
+          "matched": 22,
+          "rate": 0.3384615384615385,
+          "total": 65
+        },
+        "EndStopped|content": {
+          "ambiguous": 43,
+          "matched": 216,
+          "rate": 0.7012987012987013,
+          "total": 308
+        },
+        "Junction|content": {
+          "ambiguous": 0,
+          "matched": 0,
+          "rate": 0.0,
+          "total": 5
+        },
+        "Orientation|sheet": {
+          "ambiguous": 0,
+          "matched": 214,
+          "rate": 0.7781818181818182,
+          "total": 275
+        },
+        "PEAK_CHAIN|content": {
+          "ambiguous": 23,
+          "matched": 84,
+          "rate": 0.5915492957746479,
+          "total": 142
+        },
+        "RegionShape|sheet": {
+          "ambiguous": 12,
+          "matched": 57,
+          "rate": 0.5533980582524272,
+          "total": 103
+        }
+      },
+      "per_scene": {
+        "apple4-090-000": {
+          "ambiguous": 40,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 6,
+              "matched": 46,
+              "offset_mean": [
+                0.391304347826087,
+                -0.1956521739130435
+              ],
+              "offset_rms": 2.3475241351724994,
+              "rate": 1.0,
+              "total": 46
+            },
+            "ContourFragment|content": {
+              "ambiguous": 32,
+              "matched": 34,
+              "offset_mean": [
+                0.2156767101718526,
+                -0.714123250648232
+              ],
+              "offset_rms": 3.7660948059889203,
+              "rate": 0.5964912280701754,
+              "total": 57
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 6,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.5,
+              "total": 12
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 3
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.4444444444444444,
+              "total": 9
+            },
+            "EndStopped|content": {
+              "ambiguous": 1,
+              "matched": 21,
+              "offset_mean": [
+                -0.38095238095238093,
+                -0.11904761904761904
+              ],
+              "offset_rms": 1.7627089541790095,
+              "rate": 0.84,
+              "total": 25
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 33,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.8918918918918919,
+              "total": 37
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 3,
+              "offset_mean": [
+                1.7944444444444418,
+                0.1000000000000038
+              ],
+              "offset_rms": 2.9289898397709564,
+              "rate": 0.375,
+              "total": 8
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                1.5833333333333286,
+                -2.0
+              ],
+              "offset_rms": 2.5508713108356584,
+              "rate": 0.25,
+              "total": 4
+            }
+          },
+          "rate_8px": 0.736318407960199,
+          "total": 201
+        },
+        "car5-090-000": {
+          "ambiguous": 66,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 40,
+              "matched": 86,
+              "offset_mean": [
+                -0.03488372093023256,
+                0.7209302325581395
+              ],
+              "offset_rms": 3.4649406854213787,
+              "rate": 0.9052631578947369,
+              "total": 95
+            },
+            "ContourFragment|content": {
+              "ambiguous": 16,
+              "matched": 16,
+              "offset_mean": [
+                0.48749999999999893,
+                -2.315656638933543
+              ],
+              "offset_rms": 3.7682714369765047,
+              "rate": 0.37209302325581395,
+              "total": 43
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.2857142857142857,
+              "total": 7
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 5
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.2,
+              "total": 5
+            },
+            "EndStopped|content": {
+              "ambiguous": 9,
+              "matched": 19,
+              "offset_mean": [
+                0.47368421052631576,
+                0.7631578947368421
+              ],
+              "offset_rms": 4.399461689558705,
+              "rate": 0.5428571428571428,
+              "total": 35
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 22,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.7857142857142857,
+              "total": 28
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 3,
+              "offset_mean": [
+                1.75,
+                1.1111111111111096
+              ],
+              "offset_rms": 3.0142408908625966,
+              "rate": 0.25,
+              "total": 12
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                1.4249999999999972,
+                0.25
+              ],
+              "offset_rms": 2.2273863607376208,
+              "rate": 0.25,
+              "total": 8
+            }
+          },
+          "rate_8px": 0.634453781512605,
+          "total": 238
+        },
+        "cow4-090-000": {
+          "ambiguous": 71,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 25,
+              "matched": 115,
+              "offset_mean": [
+                0.0,
+                0.1
+              ],
+              "offset_rms": 2.5034758445704695,
+              "rate": 0.9349593495934959,
+              "total": 123
+            },
+            "ContourFragment|content": {
+              "ambiguous": 34,
+              "matched": 35,
+              "offset_mean": [
+                -0.6442761400489055,
+                0.6895160042024218
+              ],
+              "offset_rms": 3.2730432817881243,
+              "rate": 0.4069767441860465,
+              "total": 86
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.4,
+              "total": 10
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.5,
+                -0.5
+              ],
+              "offset_rms": 0.8660254037844386,
+              "rate": 0.16666666666666666,
+              "total": 12
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.25,
+              "total": 8
+            },
+            "EndStopped|content": {
+              "ambiguous": 7,
+              "matched": 28,
+              "offset_mean": [
+                0.0,
+                0.21428571428571427
+              ],
+              "offset_rms": 3.1566256848549075,
+              "rate": 0.56,
+              "total": 50
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 27,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.7297297297297297,
+              "total": 37
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 2,
+              "matched": 10,
+              "offset_mean": [
+                -0.4571031746031757,
+                -0.10126984126983415
+              ],
+              "offset_rms": 3.211924394749401,
+              "rate": 0.6666666666666666,
+              "total": 15
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 3,
+              "matched": 10,
+              "offset_mean": [
+                0.2262301587301586,
+                -0.27626984126983417
+              ],
+              "offset_rms": 3.708164788054071,
+              "rate": 0.625,
+              "total": 16
+            }
+          },
+          "rate_8px": 0.6508379888268156,
+          "total": 358
+        },
+        "cup4-090-000": {
+          "ambiguous": 112,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 32,
+              "matched": 124,
+              "offset_mean": [
+                -0.0967741935483871,
+                0.14516129032258066
+              ],
+              "offset_rms": 2.522479578868073,
+              "rate": 0.9465648854961832,
+              "total": 131
+            },
+            "ContourFragment|content": {
+              "ambiguous": 66,
+              "matched": 69,
+              "offset_mean": [
+                -0.18094112547442476,
+                -0.355347535606529
+              ],
+              "offset_rms": 1.753825546354466,
+              "rate": 0.8023255813953488,
+              "total": 86
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 11,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.5,
+              "total": 22
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                -1.0,
+                -1.0
+              ],
+              "offset_rms": 1.8027756377319946,
+              "rate": 0.125,
+              "total": 16
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.3076923076923077,
+              "total": 13
+            },
+            "EndStopped|content": {
+              "ambiguous": 9,
+              "matched": 40,
+              "offset_mean": [
+                -0.075,
+                -0.725
+              ],
+              "offset_rms": 3.4022051672408,
+              "rate": 0.6557377049180327,
+              "total": 61
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 2
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 39,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.6964285714285714,
+              "total": 56
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 3,
+              "matched": 11,
+              "offset_mean": [
+                -1.0175849403122141,
+                0.467768595041318
+              ],
+              "offset_rms": 4.236265603387112,
+              "rate": 0.55,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 7,
+              "offset_mean": [
+                -1.8276334776334784,
+                -0.0982683982684043
+              ],
+              "offset_rms": 4.025235239072028,
+              "rate": 0.4117647058823529,
+              "total": 17
+            }
+          },
+          "rate_8px": 0.7240566037735849,
+          "total": 424
+        },
+        "dog4-090-000": {
+          "ambiguous": 79,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 24,
+              "matched": 139,
+              "offset_mean": [
+                0.2302158273381295,
+                -0.06115107913669065
+              ],
+              "offset_rms": 2.435868066503207,
+              "rate": 0.9586206896551724,
+              "total": 145
+            },
+            "ContourFragment|content": {
+              "ambiguous": 35,
+              "matched": 41,
+              "offset_mean": [
+                0.5533615383531763,
+                -0.05019260732423794
+              ],
+              "offset_rms": 2.530708454848534,
+              "rate": 0.6721311475409836,
+              "total": 61
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.3333333333333333,
+              "total": 6
+            },
+            "Corner|content": {
+              "ambiguous": 5,
+              "matched": 14,
+              "offset_mean": [
+                -0.21428571428571427,
+                -0.6428571428571429
+              ],
+              "offset_rms": 3.968626966596886,
+              "rate": 0.7,
+              "total": 20
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.2,
+              "total": 5
+            },
+            "EndStopped|content": {
+              "ambiguous": 10,
+              "matched": 36,
+              "offset_mean": [
+                -0.5555555555555556,
+                0.16666666666666666
+              ],
+              "offset_rms": 3.050500869620521,
+              "rate": 0.7058823529411765,
+              "total": 51
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 23,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.92,
+              "total": 25
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 3,
+              "matched": 18,
+              "offset_mean": [
+                0.27855292855292924,
+                -0.022342780676108336
+              ],
+              "offset_rms": 2.987671758480376,
+              "rate": 0.72,
+              "total": 25
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 15,
+              "offset_mean": [
+                0.08759684759684822,
+                -0.09681133681133076
+              ],
+              "offset_rms": 2.8039113829979483,
+              "rate": 0.7894736842105263,
+              "total": 19
+            }
+          },
+          "rate_8px": 0.8095238095238095,
+          "total": 357
+        },
+        "horse4-090-000": {
+          "ambiguous": 69,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 20,
+              "matched": 118,
+              "offset_mean": [
+                -0.05084745762711865,
+                -0.22033898305084745
+              ],
+              "offset_rms": 2.5767868574010104,
+              "rate": 0.9672131147540983,
+              "total": 122
+            },
+            "ContourFragment|content": {
+              "ambiguous": 40,
+              "matched": 44,
+              "offset_mean": [
+                0.1036585365853646,
+                0.4096955879125982
+              ],
+              "offset_rms": 1.7865072451770463,
+              "rate": 0.9166666666666666,
+              "total": 48
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 8,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.5333333333333333,
+              "total": 15
+            },
+            "Corner|content": {
+              "ambiguous": 1,
+              "matched": 4,
+              "offset_mean": [
+                -0.5,
+                -0.25
+              ],
+              "offset_rms": 2.958039891549808,
+              "rate": 0.36363636363636365,
+              "total": 11
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 6,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.5454545454545454,
+              "total": 11
+            },
+            "EndStopped|content": {
+              "ambiguous": 2,
+              "matched": 41,
+              "offset_mean": [
+                -0.04878048780487805,
+                0.012195121951219513
+              ],
+              "offset_rms": 1.594579231907047,
+              "rate": 0.7884615384615384,
+              "total": 52
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 33,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.8461538461538461,
+              "total": 39
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 4,
+              "matched": 15,
+              "offset_mean": [
+                -0.8907407407407409,
+                -0.12925925925925885
+              ],
+              "offset_rms": 3.2838199175699017,
+              "rate": 0.75,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 9,
+              "offset_mean": [
+                -1.3271604938271604,
+                0.6919753086419765
+              ],
+              "offset_rms": 3.340651945112111,
+              "rate": 0.6428571428571429,
+              "total": 14
+            }
+          },
+          "rate_8px": 0.8348348348348348,
+          "total": 333
+        },
+        "pear4-090-000": {
+          "ambiguous": 48,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 21,
+              "matched": 120,
+              "offset_mean": [
+                0.225,
+                -0.35833333333333334
+              ],
+              "offset_rms": 2.204162728414881,
+              "rate": 0.9523809523809523,
+              "total": 126
+            },
+            "ContourFragment|content": {
+              "ambiguous": 17,
+              "matched": 22,
+              "offset_mean": [
+                -1.0223499894736212,
+                0.5909090909090909
+              ],
+              "offset_rms": 3.588159045376554,
+              "rate": 0.8148148148148148,
+              "total": 27
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.25,
+              "total": 8
+            },
+            "Corner|content": {
+              "ambiguous": 2,
+              "matched": 6,
+              "offset_mean": [
+                1.1666666666666667,
+                -1.1666666666666667
+              ],
+              "offset_rms": 3.068658773253661,
+              "rate": 0.46153846153846156,
+              "total": 13
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.14285714285714285,
+              "total": 7
+            },
+            "EndStopped|content": {
+              "ambiguous": 1,
+              "matched": 17,
+              "offset_mean": [
+                -0.058823529411764705,
+                0.3235294117647059
+              ],
+              "offset_rms": 1.7362908403700519,
+              "rate": 0.9444444444444444,
+              "total": 18
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 19,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.6785714285714286,
+              "total": 28
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 6,
+              "matched": 12,
+              "offset_mean": [
+                -0.11554232804232889,
+                -0.49768518518518334
+              ],
+              "offset_rms": 4.716066927853506,
+              "rate": 0.5454545454545454,
+              "total": 22
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 1,
+              "matched": 5,
+              "offset_mean": [
+                -0.7300000000000011,
+                -1.224761904761897
+              ],
+              "offset_rms": 2.7030894812721575,
+              "rate": 0.4166666666666667,
+              "total": 12
+            }
+          },
+          "rate_8px": 0.7816091954022989,
+          "total": 261
+        },
+        "tomato4-090-000": {
+          "ambiguous": 52,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 23,
+              "matched": 96,
+              "offset_mean": [
+                -0.052083333333333336,
+                0.052083333333333336
+              ],
+              "offset_rms": 2.8449516691852605,
+              "rate": 0.9411764705882353,
+              "total": 102
+            },
+            "ContourFragment|content": {
+              "ambiguous": 20,
+              "matched": 22,
+              "offset_mean": [
+                0.29545454545454547,
+                0.3132746273331797
+              ],
+              "offset_rms": 0.8671992765112195,
+              "rate": 0.88,
+              "total": 25
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.5,
+              "total": 8
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 3,
+              "offset_mean": [
+                0.3333333333333333,
+                -0.16666666666666666
+              ],
+              "offset_rms": 0.7637626158259734,
+              "rate": 0.2727272727272727,
+              "total": 11
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 3,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.42857142857142855,
+              "total": 7
+            },
+            "EndStopped|content": {
+              "ambiguous": 4,
+              "matched": 14,
+              "offset_mean": [
+                -0.8571428571428571,
+                -0.21428571428571427
+              ],
+              "offset_rms": 3.017804310611087,
+              "rate": 0.875,
+              "total": 16
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 18,
+              "offset_mean": [
+                0.0,
+                -1.5
+              ],
+              "offset_rms": 1.5,
+              "rate": 0.72,
+              "total": 25
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 3,
+              "matched": 12,
+              "offset_mean": [
+                0.559713203463204,
+                -0.3765512265512238
+              ],
+              "offset_rms": 2.711436049879384,
+              "rate": 0.6,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 8,
+              "offset_mean": [
+                0.2562364718614738,
+                -0.6273268398268357
+              ],
+              "offset_rms": 2.7278237889062287,
+              "rate": 0.6153846153846154,
+              "total": 13
+            }
+          },
+          "rate_8px": 0.7894736842105263,
+          "total": 228
+        }
+      }
+    },
+    "horiz+2": {
+      "aggregate": {
+        "CONTOUR_PEAK|content": {
+          "ambiguous": 20,
+          "matched": 874,
+          "rate": 0.9820224719101124,
+          "total": 890
+        },
+        "ContourFragment|content": {
+          "ambiguous": 116,
+          "matched": 429,
+          "rate": 0.9907621247113164,
+          "total": 433
+        },
+        "Contour|content": {
+          "ambiguous": 3,
+          "matched": 41,
+          "rate": 0.4659090909090909,
+          "total": 88
+        },
+        "Corner|content": {
+          "ambiguous": 4,
+          "matched": 81,
+          "rate": 0.8901098901098901,
+          "total": 91
+        },
+        "CurveComplex|content": {
+          "ambiguous": 0,
+          "matched": 30,
+          "rate": 0.46153846153846156,
+          "total": 65
+        },
+        "EndStopped|content": {
+          "ambiguous": 21,
+          "matched": 242,
+          "rate": 0.7857142857142857,
+          "total": 308
+        },
+        "Junction|content": {
+          "ambiguous": 0,
+          "matched": 0,
+          "rate": 0.0,
+          "total": 5
+        },
+        "Orientation|sheet": {
+          "ambiguous": 0,
+          "matched": 211,
+          "rate": 0.7672727272727272,
+          "total": 275
+        },
+        "PEAK_CHAIN|content": {
+          "ambiguous": 5,
+          "matched": 137,
+          "rate": 0.9647887323943662,
+          "total": 142
+        },
+        "RegionShape|sheet": {
+          "ambiguous": 4,
+          "matched": 100,
+          "rate": 0.970873786407767,
+          "total": 103
+        }
+      },
+      "per_scene": {
+        "apple4-090-000": {
+          "ambiguous": 17,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 4,
+              "matched": 42,
+              "offset_mean": [
+                -0.14285714285714285,
+                0.14285714285714285
+              ],
+              "offset_rms": 1.7593288763724921,
+              "rate": 0.9130434782608695,
+              "total": 46
+            },
+            "ContourFragment|content": {
+              "ambiguous": 13,
+              "matched": 57,
+              "offset_mean": [
+                -0.45611530253389043,
+                -0.04852073752481015
+              ],
+              "offset_rms": 1.0707672963793051,
+              "rate": 1.0,
+              "total": 57
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.3333333333333333,
+              "total": 12
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.6666666666666666,
+              "total": 3
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.1111111111111111,
+              "total": 9
+            },
+            "EndStopped|content": {
+              "ambiguous": 0,
+              "matched": 22,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.88,
+              "total": 25
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 29,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.7837837837837838,
+              "total": 37
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 7,
+              "offset_mean": [
+                -0.5761904761904769,
+                -0.14761904761904734
+              ],
+              "offset_rms": 1.8414107773100632,
+              "rate": 0.875,
+              "total": 8
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 3,
+              "offset_mean": [
+                -0.34444444444444616,
+                -0.8444444444444438
+              ],
+              "offset_rms": 1.5796155181515488,
+              "rate": 0.75,
+              "total": 4
+            }
+          },
+          "rate_8px": 0.8308457711442786,
+          "total": 201
+        },
+        "car5-090-000": {
+          "ambiguous": 22,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 4,
+              "matched": 94,
+              "offset_mean": [
+                -0.031914893617021274,
+                -0.10638297872340426
+              ],
+              "offset_rms": 1.1805155743473255,
+              "rate": 0.9894736842105263,
+              "total": 95
+            },
+            "ContourFragment|content": {
+              "ambiguous": 14,
+              "matched": 43,
+              "offset_mean": [
+                -0.32557624156309267,
+                0.011247377084673592
+              ],
+              "offset_rms": 0.5716249627534823,
+              "rate": 1.0,
+              "total": 43
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.2857142857142857,
+              "total": 7
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 1.0,
+              "total": 5
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.4,
+              "total": 5
+            },
+            "EndStopped|content": {
+              "ambiguous": 4,
+              "matched": 31,
+              "offset_mean": [
+                -0.03225806451612903,
+                -0.22580645161290322
+              ],
+              "offset_rms": 1.1913667943625412,
+              "rate": 0.8857142857142857,
+              "total": 35
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 18,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.6428571428571429,
+              "total": 28
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 9,
+              "offset_mean": [
+                -0.34338624338624235,
+                -0.014285714285714827
+              ],
+              "offset_rms": 1.0310498261559036,
+              "rate": 0.75,
+              "total": 12
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 8,
+              "offset_mean": [
+                -0.38630952380952266,
+                -0.01607142857142918
+              ],
+              "offset_rms": 1.0935934857240754,
+              "rate": 1.0,
+              "total": 8
+            }
+          },
+          "rate_8px": 0.8907563025210085,
+          "total": 238
+        },
+        "cow4-090-000": {
+          "ambiguous": 31,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 1,
+              "matched": 122,
+              "offset_mean": [
+                -0.07377049180327869,
+                0.0
+              ],
+              "offset_rms": 0.4148869093391398,
+              "rate": 0.991869918699187,
+              "total": 123
+            },
+            "ContourFragment|content": {
+              "ambiguous": 25,
+              "matched": 86,
+              "offset_mean": [
+                0.11706260547596324,
+                0.20885251699205198
+              ],
+              "offset_rms": 1.2240927746396604,
+              "rate": 1.0,
+              "total": 86
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.5,
+              "total": 10
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 11,
+              "offset_mean": [
+                -0.2727272727272727,
+                -0.09090909090909091
+              ],
+              "offset_rms": 0.9534625892455924,
+              "rate": 0.9166666666666666,
+              "total": 12
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.625,
+              "total": 8
+            },
+            "EndStopped|content": {
+              "ambiguous": 5,
+              "matched": 36,
+              "offset_mean": [
+                -0.1388888888888889,
+                -0.1111111111111111
+              ],
+              "offset_rms": 2.217355782608345,
+              "rate": 0.72,
+              "total": 50
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 28,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.7567567567567568,
+              "total": 37
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 15,
+              "offset_mean": [
+                -0.023529411764705323,
+                -0.026143790849672163
+              ],
+              "offset_rms": 0.12626395441613586,
+              "rate": 1.0,
+              "total": 15
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 16,
+              "offset_mean": [
+                -0.11580882352941124,
+                -0.003676470588234615
+              ],
+              "offset_rms": 0.38552137437995027,
+              "rate": 1.0,
+              "total": 16
+            }
+          },
+          "rate_8px": 0.9050279329608939,
+          "total": 358
+        },
+        "cup4-090-000": {
+          "ambiguous": 33,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 2,
+              "matched": 129,
+              "offset_mean": [
+                -0.031007751937984496,
+                0.05426356589147287
+              ],
+              "offset_rms": 0.8490761052804039,
+              "rate": 0.9847328244274809,
+              "total": 131
+            },
+            "ContourFragment|content": {
+              "ambiguous": 22,
+              "matched": 86,
+              "offset_mean": [
+                0.1511627906976744,
+                0.1286413367524973
+              ],
+              "offset_rms": 1.7450158554400144,
+              "rate": 1.0,
+              "total": 86
+            },
+            "Contour|content": {
+              "ambiguous": 3,
+              "matched": 11,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.5,
+              "total": 22
+            },
+            "Corner|content": {
+              "ambiguous": 1,
+              "matched": 13,
+              "offset_mean": [
+                -0.46153846153846156,
+                0.0
+              ],
+              "offset_rms": 0.9607689228305228,
+              "rate": 0.8125,
+              "total": 16
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.3076923076923077,
+              "total": 13
+            },
+            "EndStopped|content": {
+              "ambiguous": 3,
+              "matched": 45,
+              "offset_mean": [
+                -0.37777777777777777,
+                -0.06666666666666667
+              ],
+              "offset_rms": 1.577621275493231,
+              "rate": 0.7377049180327869,
+              "total": 61
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 2
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 44,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.7857142857142857,
+              "total": 56
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 19,
+              "offset_mean": [
+                -0.3344497607655512,
+                -0.08357256778309588
+              ],
+              "offset_rms": 1.7572450604578511,
+              "rate": 0.95,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 1,
+              "matched": 16,
+              "offset_mean": [
+                -0.39715909090909207,
+                -0.08882575757576028
+              ],
+              "offset_rms": 1.9144600425085438,
+              "rate": 0.9411764705882353,
+              "total": 17
+            }
+          },
+          "rate_8px": 0.8655660377358491,
+          "total": 424
+        },
+        "dog4-090-000": {
+          "ambiguous": 23,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 4,
+              "matched": 144,
+              "offset_mean": [
+                -0.08333333333333333,
+                -0.11805555555555555
+              ],
+              "offset_rms": 1.227576655221353,
+              "rate": 0.993103448275862,
+              "total": 145
+            },
+            "ContourFragment|content": {
+              "ambiguous": 13,
+              "matched": 61,
+              "offset_mean": [
+                -0.36065573770491804,
+                -0.024108382246686606
+              ],
+              "offset_rms": 0.7727867401977011,
+              "rate": 1.0,
+              "total": 61
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 3,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.5,
+              "total": 6
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 18,
+              "offset_mean": [
+                -0.1111111111111111,
+                0.0
+              ],
+              "offset_rms": 0.4714045207910317,
+              "rate": 0.9,
+              "total": 20
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 3,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.6,
+              "total": 5
+            },
+            "EndStopped|content": {
+              "ambiguous": 4,
+              "matched": 39,
+              "offset_mean": [
+                0.07692307692307693,
+                0.10256410256410256
+              ],
+              "offset_rms": 1.270977818604485,
+              "rate": 0.7647058823529411,
+              "total": 51
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 21,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.84,
+              "total": 25
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 25,
+              "offset_mean": [
+                0.0393517593517592,
+                0.16743700743700743
+              ],
+              "offset_rms": 1.5386519493708235,
+              "rate": 1.0,
+              "total": 25
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 1,
+              "matched": 19,
+              "offset_mean": [
+                0.05177863072599895,
+                0.22031185189079924
+              ],
+              "offset_rms": 1.7649548306813894,
+              "rate": 1.0,
+              "total": 19
+            }
+          },
+          "rate_8px": 0.9327731092436975,
+          "total": 357
+        },
+        "horse4-090-000": {
+          "ambiguous": 25,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 0,
+              "matched": 121,
+              "offset_mean": [
+                -0.049586776859504134,
+                0.01652892561983471
+              ],
+              "offset_rms": 0.4264014327112209,
+              "rate": 0.9918032786885246,
+              "total": 122
+            },
+            "ContourFragment|content": {
+              "ambiguous": 17,
+              "matched": 44,
+              "offset_mean": [
+                0.07954545454545454,
+                -0.06159572700051153
+              ],
+              "offset_rms": 2.2347799016449006,
+              "rate": 0.9166666666666666,
+              "total": 48
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 7,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.4666666666666667,
+              "total": 15
+            },
+            "Corner|content": {
+              "ambiguous": 1,
+              "matched": 10,
+              "offset_mean": [
+                0.5,
+                -0.6
+              ],
+              "offset_rms": 2.4698178070456938,
+              "rate": 0.9090909090909091,
+              "total": 11
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 6,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.5454545454545454,
+              "total": 11
+            },
+            "EndStopped|content": {
+              "ambiguous": 5,
+              "matched": 40,
+              "offset_mean": [
+                -0.35,
+                0.2
+              ],
+              "offset_rms": 2.5592967784139455,
+              "rate": 0.7692307692307693,
+              "total": 52
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 30,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.7692307692307693,
+              "total": 39
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 20,
+              "offset_mean": [
+                -0.22175438596491084,
+                0.18608395989974866
+              ],
+              "offset_rms": 1.9574478215464113,
+              "rate": 1.0,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 1,
+              "matched": 14,
+              "offset_mean": [
+                -0.3167919799498726,
+                0.26583422842821236
+              ],
+              "offset_rms": 2.3395976375915555,
+              "rate": 1.0,
+              "total": 14
+            }
+          },
+          "rate_8px": 0.8768768768768769,
+          "total": 333
+        },
+        "pear4-090-000": {
+          "ambiguous": 12,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 3,
+              "matched": 123,
+              "offset_mean": [
+                0.016260162601626018,
+                0.016260162601626018
+              ],
+              "offset_rms": 0.945679090965551,
+              "rate": 0.9761904761904762,
+              "total": 126
+            },
+            "ContourFragment|content": {
+              "ambiguous": 6,
+              "matched": 27,
+              "offset_mean": [
+                0.7037037037037037,
+                0.0
+              ],
+              "offset_rms": 1.6722129936991568,
+              "rate": 1.0,
+              "total": 27
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.625,
+              "total": 8
+            },
+            "Corner|content": {
+              "ambiguous": 2,
+              "matched": 11,
+              "offset_mean": [
+                0.09090909090909091,
+                0.6363636363636364
+              ],
+              "offset_rms": 2.3741027013091993,
+              "rate": 0.8461538461538461,
+              "total": 13
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.7142857142857143,
+              "total": 7
+            },
+            "EndStopped|content": {
+              "ambiguous": 0,
+              "matched": 15,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.8333333333333334,
+              "total": 18
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 24,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.8571428571428571,
+              "total": 28
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 22,
+              "offset_mean": [
+                0.0016233766233762542,
+                0.046969696969698174
+              ],
+              "offset_rms": 1.3963947564393022,
+              "rate": 1.0,
+              "total": 22
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 11,
+              "offset_mean": [
+                0.04870129870129796,
+                0.22272727272727427
+              ],
+              "offset_rms": 0.7369835224958777,
+              "rate": 0.9166666666666666,
+              "total": 12
+            }
+          },
+          "rate_8px": 0.9310344827586207,
+          "total": 261
+        },
+        "tomato4-090-000": {
+          "ambiguous": 10,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 2,
+              "matched": 99,
+              "offset_mean": [
+                -0.0707070707070707,
+                -0.08080808080808081
+              ],
+              "offset_rms": 0.7849596270902193,
+              "rate": 0.9705882352941176,
+              "total": 102
+            },
+            "ContourFragment|content": {
+              "ambiguous": 6,
+              "matched": 25,
+              "offset_mean": [
+                -0.52,
+                0.07997983870967687
+              ],
+              "offset_rms": 1.0392304894304925,
+              "rate": 1.0,
+              "total": 25
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.5,
+              "total": 8
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 11,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 1.0,
+              "total": 11
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.5714285714285714,
+              "total": 7
+            },
+            "EndStopped|content": {
+              "ambiguous": 0,
+              "matched": 14,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.875,
+              "total": 16
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 17,
+              "offset_mean": [
+                -2.0,
+                0.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.68,
+              "total": 25
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 20,
+              "offset_mean": [
+                -0.33377525252525186,
+                0.005239898989898961
+              ],
+              "offset_rms": 1.181647863385519,
+              "rate": 1.0,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 1,
+              "matched": 13,
+              "offset_mean": [
+                -0.5135003885003875,
+                0.008061383061383017
+              ],
+              "offset_rms": 1.4656537911292808,
+              "rate": 1.0,
+              "total": 13
+            }
+          },
+          "rate_8px": 0.9078947368421053,
+          "total": 228
+        }
+      }
+    },
+    "vert+2": {
+      "aggregate": {
+        "CONTOUR_PEAK|content": {
+          "ambiguous": 31,
+          "matched": 873,
+          "rate": 0.9808988764044944,
+          "total": 890
+        },
+        "ContourFragment|content": {
+          "ambiguous": 26,
+          "matched": 423,
+          "rate": 0.976905311778291,
+          "total": 433
+        },
+        "Contour|content": {
+          "ambiguous": 1,
+          "matched": 33,
+          "rate": 0.375,
+          "total": 88
+        },
+        "Corner|content": {
+          "ambiguous": 7,
+          "matched": 76,
+          "rate": 0.8351648351648352,
+          "total": 91
+        },
+        "CurveComplex|content": {
+          "ambiguous": 1,
+          "matched": 19,
+          "rate": 0.2923076923076923,
+          "total": 65
+        },
+        "EndStopped|content": {
+          "ambiguous": 24,
+          "matched": 251,
+          "rate": 0.814935064935065,
+          "total": 308
+        },
+        "Junction|content": {
+          "ambiguous": 0,
+          "matched": 1,
+          "rate": 0.2,
+          "total": 5
+        },
+        "Orientation|sheet": {
+          "ambiguous": 0,
+          "matched": 206,
+          "rate": 0.7490909090909091,
+          "total": 275
+        },
+        "PEAK_CHAIN|content": {
+          "ambiguous": 6,
+          "matched": 128,
+          "rate": 0.9014084507042254,
+          "total": 142
+        },
+        "RegionShape|sheet": {
+          "ambiguous": 4,
+          "matched": 97,
+          "rate": 0.941747572815534,
+          "total": 103
+        }
+      },
+      "per_scene": {
+        "apple4-090-000": {
+          "ambiguous": 4,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 2,
+              "matched": 45,
+              "offset_mean": [
+                0.13333333333333333,
+                -0.24444444444444444
+              ],
+              "offset_rms": 1.4681810363696826,
+              "rate": 0.9782608695652174,
+              "total": 46
+            },
+            "ContourFragment|content": {
+              "ambiguous": 1,
+              "matched": 57,
+              "offset_mean": [
+                0.008771929824561403,
+                -0.017543859649122806
+              ],
+              "offset_rms": 0.11470786693528089,
+              "rate": 1.0,
+              "total": 57
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.4166666666666667,
+              "total": 12
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.6666666666666666,
+              "total": 3
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 3,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.3333333333333333,
+              "total": 9
+            },
+            "EndStopped|content": {
+              "ambiguous": 0,
+              "matched": 23,
+              "offset_mean": [
+                -0.13043478260869565,
+                0.043478260869565216
+              ],
+              "offset_rms": 0.41702882811414954,
+              "rate": 0.92,
+              "total": 25
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 32,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.8648648648648649,
+              "total": 37
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 6,
+              "offset_mean": [
+                -0.2972222222222207,
+                -0.07499999999999811
+              ],
+              "offset_rms": 2.7911732565622174,
+              "rate": 0.75,
+              "total": 8
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                -0.11250000000000071,
+                -0.23749999999999716
+              ],
+              "offset_rms": 0.5255949010407114,
+              "rate": 1.0,
+              "total": 4
+            }
+          },
+          "rate_8px": 0.8805970149253731,
+          "total": 201
+        },
+        "car5-090-000": {
+          "ambiguous": 11,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 3,
+              "matched": 95,
+              "offset_mean": [
+                0.021052631578947368,
+                -0.08421052631578947
+              ],
+              "offset_rms": 1.0563093645728086,
+              "rate": 1.0,
+              "total": 95
+            },
+            "ContourFragment|content": {
+              "ambiguous": 0,
+              "matched": 43,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 1.0,
+              "total": 43
+            },
+            "Contour|content": {
+              "ambiguous": 1,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.5714285714285714,
+              "total": 7
+            },
+            "Corner|content": {
+              "ambiguous": 1,
+              "matched": 5,
+              "offset_mean": [
+                1.0,
+                0.2
+              ],
+              "offset_rms": 2.280350850198276,
+              "rate": 1.0,
+              "total": 5
+            },
+            "CurveComplex|content": {
+              "ambiguous": 1,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.2,
+              "total": 5
+            },
+            "EndStopped|content": {
+              "ambiguous": 5,
+              "matched": 33,
+              "offset_mean": [
+                0.030303030303030304,
+                0.030303030303030304
+              ],
+              "offset_rms": 0.49236596391733095,
+              "rate": 0.9428571428571428,
+              "total": 35
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 23,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.8214285714285714,
+              "total": 28
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 11,
+              "offset_mean": [
+                -0.1969696969696961,
+                -0.030303030303031164
+              ],
+              "offset_rms": 0.6609604276117321,
+              "rate": 0.9166666666666666,
+              "total": 12
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 8,
+              "offset_mean": [
+                -0.27083333333333215,
+                -0.04166666666666785
+              ],
+              "offset_rms": 0.7750448015724254,
+              "rate": 1.0,
+              "total": 8
+            }
+          },
+          "rate_8px": 0.9369747899159664,
+          "total": 238
+        },
+        "cow4-090-000": {
+          "ambiguous": 13,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 4,
+              "matched": 121,
+              "offset_mean": [
+                0.05785123966942149,
+                0.024793388429752067
+              ],
+              "offset_rms": 1.1427095536342304,
+              "rate": 0.983739837398374,
+              "total": 123
+            },
+            "ContourFragment|content": {
+              "ambiguous": 6,
+              "matched": 84,
+              "offset_mean": [
+                -0.03571428571428571,
+                0.0
+              ],
+              "offset_rms": 0.1336306209562122,
+              "rate": 0.9767441860465116,
+              "total": 86
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.4,
+              "total": 10
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 10,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.8333333333333334,
+              "total": 12
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.125,
+              "total": 8
+            },
+            "EndStopped|content": {
+              "ambiguous": 3,
+              "matched": 38,
+              "offset_mean": [
+                0.02631578947368421,
+                -0.21052631578947367
+              ],
+              "offset_rms": 1.6463676125912687,
+              "rate": 0.76,
+              "total": 50
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 28,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.7567567567567568,
+              "total": 37
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 13,
+              "offset_mean": [
+                0.0045248868778283114,
+                0.0
+              ],
+              "offset_rms": 0.016314711653684137,
+              "rate": 0.8666666666666667,
+              "total": 15
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 14,
+              "offset_mean": [
+                0.004201680672269147,
+                0.0
+              ],
+              "offset_rms": 0.01572124952426115,
+              "rate": 0.875,
+              "total": 16
+            }
+          },
+          "rate_8px": 0.8743016759776536,
+          "total": 358
+        },
+        "cup4-090-000": {
+          "ambiguous": 7,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 1,
+              "matched": 131,
+              "offset_mean": [
+                -0.030534351145038167,
+                0.022900763358778626
+              ],
+              "offset_rms": 0.38083876895469987,
+              "rate": 1.0,
+              "total": 131
+            },
+            "ContourFragment|content": {
+              "ambiguous": 1,
+              "matched": 83,
+              "offset_mean": [
+                0.0,
+                -0.07204906582853161
+              ],
+              "offset_rms": 0.26798089381266116,
+              "rate": 0.9651162790697675,
+              "total": 86
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.22727272727272727,
+              "total": 22
+            },
+            "Corner|content": {
+              "ambiguous": 1,
+              "matched": 13,
+              "offset_mean": [
+                0.0,
+                -0.15384615384615385
+              ],
+              "offset_rms": 0.5547001962252291,
+              "rate": 0.8125,
+              "total": 16
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.3076923076923077,
+              "total": 13
+            },
+            "EndStopped|content": {
+              "ambiguous": 4,
+              "matched": 47,
+              "offset_mean": [
+                -0.2765957446808511,
+                -0.3404255319148936
+              ],
+              "offset_rms": 1.9074322720192256,
+              "rate": 0.7704918032786885,
+              "total": 61
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.5,
+              "total": 2
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 36,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.6428571428571429,
+              "total": 56
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 19,
+              "offset_mean": [
+                -0.1889952153110049,
+                -0.0614035087719297
+              ],
+              "offset_rms": 0.8466458768178614,
+              "rate": 0.95,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 15,
+              "offset_mean": [
+                -0.006060606060606233,
+                0.0
+              ],
+              "offset_rms": 0.02347262634065168,
+              "rate": 0.8823529411764706,
+              "total": 17
+            }
+          },
+          "rate_8px": 0.8349056603773585,
+          "total": 424
+        },
+        "dog4-090-000": {
+          "ambiguous": 20,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 6,
+              "matched": 144,
+              "offset_mean": [
+                -0.1111111111111111,
+                0.04861111111111111
+              ],
+              "offset_rms": 1.2104865871944959,
+              "rate": 0.993103448275862,
+              "total": 145
+            },
+            "ContourFragment|content": {
+              "ambiguous": 0,
+              "matched": 58,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.9508196721311475,
+              "total": 61
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.3333333333333333,
+              "total": 6
+            },
+            "Corner|content": {
+              "ambiguous": 2,
+              "matched": 18,
+              "offset_mean": [
+                -0.1111111111111111,
+                -0.05555555555555555
+              ],
+              "offset_rms": 2.1473497877875207,
+              "rate": 0.9,
+              "total": 20
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.2,
+              "total": 5
+            },
+            "EndStopped|content": {
+              "ambiguous": 7,
+              "matched": 36,
+              "offset_mean": [
+                -0.6111111111111112,
+                0.4722222222222222
+              ],
+              "offset_rms": 2.5549516194593154,
+              "rate": 0.7058823529411765,
+              "total": 51
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 22,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.88,
+              "total": 25
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 3,
+              "matched": 24,
+              "offset_mean": [
+                -0.46411135161135003,
+                0.12661135161135442
+              ],
+              "offset_rms": 2.5623003272712617,
+              "rate": 0.96,
+              "total": 25
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 19,
+              "offset_mean": [
+                -0.21782486519328428,
+                0.23887749677223719
+              ],
+              "offset_rms": 2.3655331123985555,
+              "rate": 1.0,
+              "total": 19
+            }
+          },
+          "rate_8px": 0.907563025210084,
+          "total": 357
+        },
+        "horse4-090-000": {
+          "ambiguous": 14,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 6,
+              "matched": 119,
+              "offset_mean": [
+                -0.1092436974789916,
+                -0.04201680672268908
+              ],
+              "offset_rms": 1.3841843759249062,
+              "rate": 0.9754098360655737,
+              "total": 122
+            },
+            "ContourFragment|content": {
+              "ambiguous": 4,
+              "matched": 48,
+              "offset_mean": [
+                0.0,
+                -0.03648459383753474
+              ],
+              "offset_rms": 0.5388914409447052,
+              "rate": 1.0,
+              "total": 48
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 7,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.4666666666666667,
+              "total": 15
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 9,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.8181818181818182,
+              "total": 11
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.36363636363636365,
+              "total": 11
+            },
+            "EndStopped|content": {
+              "ambiguous": 2,
+              "matched": 45,
+              "offset_mean": [
+                -0.06666666666666667,
+                -0.06666666666666667
+              ],
+              "offset_rms": 1.398411797560202,
+              "rate": 0.8653846153846154,
+              "total": 52
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 31,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.7948717948717948,
+              "total": 39
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 19,
+              "offset_mean": [
+                -0.4936288088642659,
+                -0.02405355493998304
+              ],
+              "offset_rms": 1.8016375122693191,
+              "rate": 0.95,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 1,
+              "matched": 14,
+              "offset_mean": [
+                -0.6699248120300751,
+                -0.032644110275691265
+              ],
+              "offset_rms": 2.09884418510188,
+              "rate": 1.0,
+              "total": 14
+            }
+          },
+          "rate_8px": 0.8888888888888888,
+          "total": 333
+        },
+        "pear4-090-000": {
+          "ambiguous": 21,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 3,
+              "matched": 123,
+              "offset_mean": [
+                0.056910569105691054,
+                -0.08943089430894309
+              ],
+              "offset_rms": 0.8553989227683015,
+              "rate": 0.9761904761904762,
+              "total": 126
+            },
+            "ContourFragment|content": {
+              "ambiguous": 14,
+              "matched": 25,
+              "offset_mean": [
+                -0.6196605352293273,
+                -0.1
+              ],
+              "offset_rms": 2.7239442079857925,
+              "rate": 0.9259259259259259,
+              "total": 27
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.125,
+              "total": 8
+            },
+            "Corner|content": {
+              "ambiguous": 2,
+              "matched": 12,
+              "offset_mean": [
+                0.5,
+                -0.5
+              ],
+              "offset_rms": 2.160246899469287,
+              "rate": 0.9230769230769231,
+              "total": 13
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.14285714285714285,
+              "total": 7
+            },
+            "EndStopped|content": {
+              "ambiguous": 0,
+              "matched": 14,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.3779644730092272,
+              "rate": 0.7777777777777778,
+              "total": 18
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 17,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.6071428571428571,
+              "total": 28
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 20,
+              "offset_mean": [
+                0.07857142857142776,
+                -0.4541208791208781
+              ],
+              "offset_rms": 1.5335879657628706,
+              "rate": 0.9090909090909091,
+              "total": 22
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 1,
+              "matched": 12,
+              "offset_mean": [
+                0.1309523809523796,
+                -0.7568681318681302
+              ],
+              "offset_rms": 1.9798535504479027,
+              "rate": 1.0,
+              "total": 12
+            }
+          },
+          "rate_8px": 0.8620689655172413,
+          "total": 261
+        },
+        "tomato4-090-000": {
+          "ambiguous": 10,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 6,
+              "matched": 95,
+              "offset_mean": [
+                0.08421052631578947,
+                0.10526315789473684
+              ],
+              "offset_rms": 1.635140425323255,
+              "rate": 0.9313725490196079,
+              "total": 102
+            },
+            "ContourFragment|content": {
+              "ambiguous": 0,
+              "matched": 25,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 1.0,
+              "total": 25
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.625,
+              "total": 8
+            },
+            "Corner|content": {
+              "ambiguous": 1,
+              "matched": 7,
+              "offset_mean": [
+                -0.7142857142857143,
+                -0.42857142857142855
+              ],
+              "offset_rms": 2.2038926600773587,
+              "rate": 0.6363636363636364,
+              "total": 11
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.5714285714285714,
+              "total": 7
+            },
+            "EndStopped|content": {
+              "ambiguous": 3,
+              "matched": 15,
+              "offset_mean": [
+                0.4666666666666667,
+                -0.06666666666666667
+              ],
+              "offset_rms": 2.6832815729997477,
+              "rate": 0.9375,
+              "total": 16
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 17,
+              "offset_mean": [
+                0.0,
+                -2.0
+              ],
+              "offset_rms": 2.0,
+              "rate": 0.68,
+              "total": 25
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 16,
+              "offset_mean": [
+                0.36458333333333304,
+                0.11979166666666696
+              ],
+              "offset_rms": 1.1057378758096328,
+              "rate": 0.8,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 11,
+              "offset_mean": [
+                0.5303030303030298,
+                0.17424242424242467
+              ],
+              "offset_rms": 1.3335700547436904,
+              "rate": 0.8461538461538461,
+              "total": 13
+            }
+          },
+          "rate_8px": 0.8552631578947368,
+          "total": 228
+        }
+      }
+    },
+    "vert+3": {
+      "aggregate": {
+        "CONTOUR_PEAK|content": {
+          "ambiguous": 37,
+          "matched": 868,
+          "rate": 0.9752808988764045,
+          "total": 890
+        },
+        "ContourFragment|content": {
+          "ambiguous": 29,
+          "matched": 419,
+          "rate": 0.9676674364896074,
+          "total": 433
+        },
+        "Contour|content": {
+          "ambiguous": 0,
+          "matched": 23,
+          "rate": 0.26136363636363635,
+          "total": 88
+        },
+        "Corner|content": {
+          "ambiguous": 3,
+          "matched": 73,
+          "rate": 0.8021978021978022,
+          "total": 91
+        },
+        "CurveComplex|content": {
+          "ambiguous": 0,
+          "matched": 11,
+          "rate": 0.16923076923076924,
+          "total": 65
+        },
+        "EndStopped|content": {
+          "ambiguous": 32,
+          "matched": 225,
+          "rate": 0.7305194805194806,
+          "total": 308
+        },
+        "Junction|content": {
+          "ambiguous": 0,
+          "matched": 2,
+          "rate": 0.4,
+          "total": 5
+        },
+        "Orientation|sheet": {
+          "ambiguous": 0,
+          "matched": 176,
+          "rate": 0.64,
+          "total": 275
+        },
+        "PEAK_CHAIN|content": {
+          "ambiguous": 10,
+          "matched": 122,
+          "rate": 0.8591549295774648,
+          "total": 142
+        },
+        "RegionShape|sheet": {
+          "ambiguous": 6,
+          "matched": 94,
+          "rate": 0.912621359223301,
+          "total": 103
+        }
+      },
+      "per_scene": {
+        "apple4-090-000": {
+          "ambiguous": 8,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 3,
+              "matched": 45,
+              "offset_mean": [
+                0.044444444444444446,
+                -0.35555555555555557
+              ],
+              "offset_rms": 1.577621275493231,
+              "rate": 0.9782608695652174,
+              "total": 46
+            },
+            "ContourFragment|content": {
+              "ambiguous": 3,
+              "matched": 57,
+              "offset_mean": [
+                -0.08771929824561403,
+                0.052975301107627125
+              ],
+              "offset_rms": 0.6882520939212263,
+              "rate": 1.0,
+              "total": 57
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.16666666666666666,
+              "total": 12
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.6666666666666666,
+              "total": 3
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.1111111111111111,
+              "total": 9
+            },
+            "EndStopped|content": {
+              "ambiguous": 0,
+              "matched": 22,
+              "offset_mean": [
+                0.0,
+                0.13636363636363635
+              ],
+              "offset_rms": 0.9293203772845852,
+              "rate": 0.88,
+              "total": 25
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 23,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.6216216216216216,
+              "total": 37
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 2,
+              "matched": 6,
+              "offset_mean": [
+                -0.061111111111110006,
+                -0.394444444444441
+              ],
+              "offset_rms": 3.2683102441249092,
+              "rate": 0.75,
+              "total": 8
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                -0.21666666666666679,
+                -0.9666666666666615
+              ],
+              "offset_rms": 1.9813014802284672,
+              "rate": 1.0,
+              "total": 4
+            }
+          },
+          "rate_8px": 0.8059701492537313,
+          "total": 201
+        },
+        "car5-090-000": {
+          "ambiguous": 5,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 3,
+              "matched": 94,
+              "offset_mean": [
+                0.010638297872340425,
+                -0.06382978723404255
+              ],
+              "offset_rms": 1.0866697123918505,
+              "rate": 0.9894736842105263,
+              "total": 95
+            },
+            "ContourFragment|content": {
+              "ambiguous": 0,
+              "matched": 43,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 1.0,
+              "total": 43
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.2857142857142857,
+              "total": 7
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 1.0,
+              "total": 5
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 5
+            },
+            "EndStopped|content": {
+              "ambiguous": 2,
+              "matched": 34,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.24253562503633297,
+              "rate": 0.9714285714285714,
+              "total": 35
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 19,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.6785714285714286,
+              "total": 28
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 11,
+              "offset_mean": [
+                -0.21969696969696884,
+                0.01515151515151429
+              ],
+              "offset_rms": 0.7303831843351759,
+              "rate": 0.9166666666666666,
+              "total": 12
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 8,
+              "offset_mean": [
+                -0.30208333333333215,
+                0.02083333333333215
+              ],
+              "offset_rms": 0.8564501996289325,
+              "rate": 1.0,
+              "total": 8
+            }
+          },
+          "rate_8px": 0.907563025210084,
+          "total": 238
+        },
+        "cow4-090-000": {
+          "ambiguous": 19,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 4,
+              "matched": 120,
+              "offset_mean": [
+                0.058333333333333334,
+                0.025
+              ],
+              "offset_rms": 1.1474609652039003,
+              "rate": 0.975609756097561,
+              "total": 123
+            },
+            "ContourFragment|content": {
+              "ambiguous": 6,
+              "matched": 84,
+              "offset_mean": [
+                -0.03571428571428571,
+                0.0
+              ],
+              "offset_rms": 0.1336306209562122,
+              "rate": 0.9767441860465116,
+              "total": 86
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 3,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.3,
+              "total": 10
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 11,
+              "offset_mean": [
+                0.0,
+                -0.2727272727272727
+              ],
+              "offset_rms": 0.9045340337332909,
+              "rate": 0.9166666666666666,
+              "total": 12
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 1,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.125,
+              "total": 8
+            },
+            "EndStopped|content": {
+              "ambiguous": 9,
+              "matched": 32,
+              "offset_mean": [
+                -0.0625,
+                0.0625
+              ],
+              "offset_rms": 3.69120576505835,
+              "rate": 0.64,
+              "total": 50
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 25,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.6756756756756757,
+              "total": 37
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 13,
+              "offset_mean": [
+                0.0045248868778283114,
+                0.0
+              ],
+              "offset_rms": 0.016314711653684137,
+              "rate": 0.8666666666666667,
+              "total": 15
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 14,
+              "offset_mean": [
+                0.004201680672269147,
+                0.0
+              ],
+              "offset_rms": 0.01572124952426115,
+              "rate": 0.875,
+              "total": 16
+            }
+          },
+          "rate_8px": 0.8463687150837989,
+          "total": 358
+        },
+        "cup4-090-000": {
+          "ambiguous": 6,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 1,
+              "matched": 131,
+              "offset_mean": [
+                -0.030534351145038167,
+                0.022900763358778626
+              ],
+              "offset_rms": 0.38083876895469987,
+              "rate": 1.0,
+              "total": 131
+            },
+            "ContourFragment|content": {
+              "ambiguous": 1,
+              "matched": 83,
+              "offset_mean": [
+                0.0,
+                0.10867382573773345
+              ],
+              "offset_rms": 0.5025302488556265,
+              "rate": 0.9651162790697675,
+              "total": 86
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.22727272727272727,
+              "total": 22
+            },
+            "Corner|content": {
+              "ambiguous": 1,
+              "matched": 14,
+              "offset_mean": [
+                0.0,
+                -0.42857142857142855
+              ],
+              "offset_rms": 1.1338934190276817,
+              "rate": 0.875,
+              "total": 16
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.15384615384615385,
+              "total": 13
+            },
+            "EndStopped|content": {
+              "ambiguous": 3,
+              "matched": 44,
+              "offset_mean": [
+                -0.4090909090909091,
+                -0.022727272727272728
+              ],
+              "offset_rms": 1.6854996561581053,
+              "rate": 0.7213114754098361,
+              "total": 61
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 1.0,
+              "total": 2
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 34,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.6071428571428571,
+              "total": 56
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 0,
+              "matched": 18,
+              "offset_mean": [
+                -0.005050505050505194,
+                0.0
+              ],
+              "offset_rms": 0.021427478217774777,
+              "rate": 0.9,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 0,
+              "matched": 15,
+              "offset_mean": [
+                -0.006060606060606233,
+                0.0
+              ],
+              "offset_rms": 0.02347262634065168,
+              "rate": 0.8823529411764706,
+              "total": 17
+            }
+          },
+          "rate_8px": 0.8207547169811321,
+          "total": 424
+        },
+        "dog4-090-000": {
+          "ambiguous": 16,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 7,
+              "matched": 143,
+              "offset_mean": [
+                -0.013986013986013986,
+                0.06993006993006994
+              ],
+              "offset_rms": 1.404289134056079,
+              "rate": 0.9862068965517241,
+              "total": 145
+            },
+            "ContourFragment|content": {
+              "ambiguous": 0,
+              "matched": 57,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.9344262295081968,
+              "total": 61
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 2,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.3333333333333333,
+              "total": 6
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 15,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.75,
+              "total": 20
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 5
+            },
+            "EndStopped|content": {
+              "ambiguous": 4,
+              "matched": 35,
+              "offset_mean": [
+                0.02857142857142857,
+                0.2857142857142857
+              ],
+              "offset_rms": 1.6647608150808246,
+              "rate": 0.6862745098039216,
+              "total": 51
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 21,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.84,
+              "total": 25
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 3,
+              "matched": 23,
+              "offset_mean": [
+                -0.665173473869125,
+                0.24778216952130402
+              ],
+              "offset_rms": 2.576423570757685,
+              "rate": 0.92,
+              "total": 25
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 17,
+              "offset_mean": [
+                -0.29405822935234566,
+                0.3469994058229401
+              ],
+              "offset_rms": 2.2860580452589367,
+              "rate": 0.8947368421052632,
+              "total": 19
+            }
+          },
+          "rate_8px": 0.876750700280112,
+          "total": 357
+        },
+        "horse4-090-000": {
+          "ambiguous": 26,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 6,
+              "matched": 118,
+              "offset_mean": [
+                0.0,
+                -0.03389830508474576
+              ],
+              "offset_rms": 1.352962850405092,
+              "rate": 0.9672131147540983,
+              "total": 122
+            },
+            "ContourFragment|content": {
+              "ambiguous": 3,
+              "matched": 48,
+              "offset_mean": [
+                -0.09375,
+                -0.07000266524520349
+              ],
+              "offset_rms": 0.4680074468028392,
+              "rate": 1.0,
+              "total": 48
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 5,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.3333333333333333,
+              "total": 15
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 9,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.8181818181818182,
+              "total": 11
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 3,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.2727272727272727,
+              "total": 11
+            },
+            "EndStopped|content": {
+              "ambiguous": 13,
+              "matched": 29,
+              "offset_mean": [
+                -0.41379310344827586,
+                0.41379310344827586
+              ],
+              "offset_rms": 4.093729435326078,
+              "rate": 0.5576923076923077,
+              "total": 52
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 25,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.6410256410256411,
+              "total": 39
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 2,
+              "matched": 19,
+              "offset_mean": [
+                -0.6824832980283528,
+                -0.02250556732388388
+              ],
+              "offset_rms": 2.296841227682857,
+              "rate": 0.95,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 2,
+              "matched": 14,
+              "offset_mean": [
+                -0.9262273330384788,
+                -0.030543269939556694
+              ],
+              "offset_rms": 2.6757390551622797,
+              "rate": 1.0,
+              "total": 14
+            }
+          },
+          "rate_8px": 0.8108108108108109,
+          "total": 333
+        },
+        "pear4-090-000": {
+          "ambiguous": 24,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 6,
+              "matched": 122,
+              "offset_mean": [
+                0.04918032786885246,
+                -0.19672131147540983
+              ],
+              "offset_rms": 1.159423259677831,
+              "rate": 0.9682539682539683,
+              "total": 126
+            },
+            "ContourFragment|content": {
+              "ambiguous": 14,
+              "matched": 22,
+              "offset_mean": [
+                -0.7950983059719348,
+                -0.022727272727272728
+              ],
+              "offset_rms": 3.1730028060012008,
+              "rate": 0.8148148148148148,
+              "total": 27
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 8
+            },
+            "Corner|content": {
+              "ambiguous": 2,
+              "matched": 11,
+              "offset_mean": [
+                0.5454545454545454,
+                -0.6363636363636364
+              ],
+              "offset_rms": 2.354878881270658,
+              "rate": 0.8461538461538461,
+              "total": 13
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 7
+            },
+            "EndStopped|content": {
+              "ambiguous": 0,
+              "matched": 16,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.3535533905932738,
+              "rate": 0.8888888888888888,
+              "total": 18
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 15,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.5357142857142857,
+              "total": 28
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 1,
+              "matched": 18,
+              "offset_mean": [
+                0.09833499833499657,
+                -0.5593702593702585
+              ],
+              "offset_rms": 1.6350175672330116,
+              "rate": 0.8181818181818182,
+              "total": 22
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 1,
+              "matched": 12,
+              "offset_mean": [
+                0.14750249750249486,
+                -0.8390553890553877
+              ],
+              "offset_rms": 2.0024793801037837,
+              "rate": 1.0,
+              "total": 12
+            }
+          },
+          "rate_8px": 0.8275862068965517,
+          "total": 261
+        },
+        "tomato4-090-000": {
+          "ambiguous": 13,
+          "per_kind": {
+            "CONTOUR_PEAK|content": {
+              "ambiguous": 7,
+              "matched": 95,
+              "offset_mean": [
+                0.15789473684210525,
+                -0.042105263157894736
+              ],
+              "offset_rms": 1.820930936000652,
+              "rate": 0.9313725490196079,
+              "total": 102
+            },
+            "ContourFragment|content": {
+              "ambiguous": 2,
+              "matched": 25,
+              "offset_mean": [
+                0.04,
+                0.04
+              ],
+              "offset_rms": 0.34641016151377546,
+              "rate": 1.0,
+              "total": 25
+            },
+            "Contour|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.5,
+              "total": 8
+            },
+            "Corner|content": {
+              "ambiguous": 0,
+              "matched": 6,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.5454545454545454,
+              "total": 11
+            },
+            "CurveComplex|content": {
+              "ambiguous": 0,
+              "matched": 4,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.5714285714285714,
+              "total": 7
+            },
+            "EndStopped|content": {
+              "ambiguous": 1,
+              "matched": 13,
+              "offset_mean": [
+                -0.3076923076923077,
+                -0.07692307692307693
+              ],
+              "offset_rms": 1.7759071354792608,
+              "rate": 0.8125,
+              "total": 16
+            },
+            "Junction|content": {
+              "ambiguous": 0,
+              "matched": 0,
+              "offset_mean": [
+                0.0,
+                0.0
+              ],
+              "offset_rms": 0.0,
+              "rate": 0.0,
+              "total": 1
+            },
+            "Orientation|sheet": {
+              "ambiguous": 0,
+              "matched": 14,
+              "offset_mean": [
+                0.0,
+                -3.0
+              ],
+              "offset_rms": 3.0,
+              "rate": 0.56,
+              "total": 25
+            },
+            "PEAK_CHAIN|content": {
+              "ambiguous": 2,
+              "matched": 14,
+              "offset_mean": [
+                0.9428571428571401,
+                0.030952380952381224
+              ],
+              "offset_rms": 2.674764490448657,
+              "rate": 0.7,
+              "total": 20
+            },
+            "RegionShape|sheet": {
+              "ambiguous": 1,
+              "matched": 10,
+              "offset_mean": [
+                0.719999999999996,
+                -0.22333333333333344
+              ],
+              "offset_rms": 2.388514182499232,
+              "rate": 0.7692307692307693,
+              "total": 13
+            }
+          },
+          "rate_8px": 0.8114035087719298,
+          "total": 228
+        }
+      }
+    }
+  }
+}
