@@ -51,7 +51,10 @@ def _rewired_graph_preserve_params(g, seed):
     the control and is NOT corrected.
     """
     sg = g.subgraph
-    edges = list(sg.edges)
+    # [DETERMINISM] canonical order: sg.edges is a frozenset and its
+    # iteration order is salted per process, which made the rewiring (and the
+    # resulting edge count) differ between runs.
+    edges = sorted(sg.edges, key=lambda e: (e[0], e[1], str(e[2])))
     # [BUGFIX] the parameters live on the SUBGRAPH (core.types.Graph has no
     # top-level edge_params); reading g.edge_params silently found none, so
     # this control came out byte-identical to W (parameter-stripped) and the

@@ -122,12 +122,14 @@ paragraph above, so they are reconciled here rather than left to disagree:
   +0.0016 [−0.0013, +0.0043] but `real − params_dropped` =
   **+0.0072 [+0.0026, +0.0130]**. Parameters therefore carry a **small but real**
   net signal of about 0.7 %, and shuffling them is inert. My 1b
-  `W-P − W = +0.0125 [−0.0689, +0.0911]` is consistent with that small positive
-  value but, at n_eff = 8 refs, cannot resolve 0.7 % — a ~7× shortfall in MDE.
-  My 1b is therefore **underpowered for the effect that is actually there**, and
-  its "not distinguishable from rewired topology" must be read as *unresolved*,
-  **not** as "topology is irrelevant". That mission had already withdrawn the
-  historical blanket claim "parameters non-informative".
+  `W-P − W = −0.0044 [−0.0757, +0.0658]` and
+  `R − W-P = +0.0267 [−0.0858, +0.1464]` are both consistent with that small
+  positive value but, at n_eff = 8 refs, cannot resolve 0.7 % — a ~7× shortfall
+  in MDE.
+  My 1b is therefore **underpowered for the effect that is actually there**; its
+  intervals must be read as *unresolved*, **not** as "topology is irrelevant".
+  That mission had already withdrawn the historical blanket claim "parameters
+  non-informative".
 - **Edges net harm the pooled objective, and "edges hurt" is not jitter-robust.**
   On dev, `real − no_edge` pooled = **−0.0172 [−0.0214, −0.0131]** at
   beta = 0.50, worsening monotonically with beta (−0.0016 at 0.25, −0.0348 at
@@ -141,6 +143,34 @@ carries a small real identity signal (+0.7 %), the topology swap alone does not
 expose it, and the pooled benefit of edges at beta 0.50 is slightly negative**
 — none of which changes the Part 3 verdict below, because all of these effects
 are far inside the MDE available at 8 objects.
+
+### 0g The rewired arms were not deterministic across processes (fixed)
+
+While re-running the analysis for reproducibility, the W-P edge count for one
+fixed ref changed between runs: **351, then 350**, with different edge sets.
+Cause: `_rewire_edges` and `_rewired_graph_preserve_params` both derived their
+input list from `sg.edges`, which is a `frozenset`. A `frozenset`'s iteration
+order depends on string hashing, which Python **salts per process**, so
+feeding it to a seeded `random.Random` produced a different rewiring each
+process. The `seed` argument was therefore not doing what it appeared to do.
+This affects the *shipped* W arm too, not just my W-P control.
+
+Fix (both builders): sort the edge list canonically before shuffling —
+
+```python
+edges = sorted(sg.edges, key=lambda e: (e[0], e[1], str(e[2])))
+```
+
+After the fix the same ref yields the same hash (`fc23b2b03a16`) in three
+consecutive processes, and two consecutive full analysis runs produce
+**byte-identical output**.
+
+**This changed a 1b result.** Before the fix, R − W-P on edge-only MRR was
+−0.0134; after it, **+0.0267**, with all three arms' point estimates moving.
+The pre-fix numbers were one draw from a distribution nobody had controlled,
+and the post-fix numbers are reproducible. All 1b figures quoted in this
+report are post-fix. The 1a, 1d, 1e and 1f figures are unaffected (they never
+touch the rewired arms) and were verified to reproduce exactly.
 
 ### Two further findings recorded here (both measured, not assumed)
 1. **`MATCH_SEPARATE_TERM_NORMALIZATION` is inert under the committed
@@ -204,38 +234,45 @@ mapping was formed without ever seeing edge evidence. Edge-only score =
 | arm | edge-only top-1 | 95 % CI | MDE | AUC | mean edge_credit |
 |---|---|---|---|---|---|
 | R | 0.2266 | [0.1016, 0.3594] | 0.1842 | 0.5915 [0.4553, 0.7221] | 24.688 |
-| W | 0.2266 | [0.1250, 0.3438] | 0.1562 | 0.5815 [0.4799, 0.6842] | 18.012 |
-| W-P | 0.2344 | [0.1482, 0.3359] | 0.1341 | 0.6150 [0.5402, 0.6886] | 10.831 |
+| W | 0.1875 | [0.0938, 0.3047] | 0.1507 | 0.5932 [0.4966, 0.6892] | 17.777 |
+| W-P | 0.1797 | [0.1094, 0.2578] | 0.1060 | 0.5993 [0.5324, 0.6641] | 10.565 |
 
-Against chance: **R not demonstrably above** (low end 0.1016 < 0.125),
-**W not above** (low end at the boundary, 0.1250), **W-P above** (low end
-0.1482 > 0.125).
+Against chance: **no arm is above it** in top-1 — R low end 0.1016, W 0.0938,
+W-P 0.1094, all below 0.125. On AUC all three are above 0.5 with intervals
+clear of it (0.59–0.60), and W-P has the **tightest** interval
+(0.5993 [0.5324, 0.6641], MDE 0.094).
 
 But the arm-to-arm contrasts are all indistinguishable:
 
 | contrast | on MRR | 95 % CI | MDE |
 |---|---|---|---|
-| R − W | −0.0009 | [−0.0959, +0.1036] | 0.1425 |
-| R − W-P | −0.0134 | [−0.1358, +0.1185] | 0.1816 |
-| W-P − W | +0.0125 | [−0.0689, +0.0911] | 0.1143 |
+| R − W | **+0.0223** | [−0.0755, +0.1301] | 0.1469 |
+| R − W-P | **+0.0267** | [−0.0858, +0.1464] | 0.1658 |
+| W-P − W | −0.0044 | [−0.0757, +0.0658] | 0.1011 |
 
-**Reading.** Edges carry *some* ref-identifying signal at this mapping —
-all three arms sit well above chance on AUC (0.58–0.62) with intervals clear
-of 0.5. But **R does not exceed W-P**: the point estimates are
-R − W-P = −0.0134 (MRR) and −0.0078 (top-1), i.e. true topology is, if
-anything, marginally *worse* than rewired topology at carrying ref identity.
+On top-1 the same ordering holds: R − W = +0.0391 [−0.0861, +0.1719],
+R − W-P = +0.0469 [−0.0938, +0.1875].
 
-The pre-registered "edges carry identity alone" condition (R above chance
-**and** above W-P) is therefore **not met**, and F-G does not fire. It would
-be wrong, however, to read this as "topology is irrelevant": the cross-check
-above shows the parameter effect that *is* real is about **+0.7 %**, and this
-contrast has an MDE of 0.11–0.18 — roughly **7× too coarse** to see it. The
-correct statement is that 1b is **INCONCLUSIVE and underpowered for the known
-effect size**, not that it returns a null.
+**Reading.** The point estimates now have R **ahead** of both controls on
+edge-only MRR (R − W = +0.0223, R − W-P = +0.0267) and on top-1
+(+0.0391, +0.0469); before the determinism fix the same statistics came out
+negative. Every interval still contains zero, and every MDE (0.10–0.18) is
+several times the estimate, so **nothing here is established** — but the
+direction is now consistently favourable to true topology, and it is
+consistent with the +0.7 % parameter effect that the better-powered
+cross-check measured.
 
-Note also that the three arms' edge-only scores are not on equal footing:
-mean edge credit is R 24.7, W 18.0, W-P 10.8, so the arms are ranked on
-quantities of different magnitude while W-P nonetheless wins on AUC (0.615).
+R is nevertheless **not above chance** on edge-only top-1 (0.2266, low end
+0.1016 < 0.125). The pre-registered "edges carry identity alone" condition —
+R above chance **and** above W-P — therefore **fails on the first limb**, so
+F-G does not fire and no gated policy is proposed. All three arms carry real
+signal on AUC (0.59–0.60, intervals clear of 0.5), so edges are not
+uninformative; they are simply not informative *enough* to beat chance on
+top-1 at this mapping.
+
+Note that the arms are ranked on quantities of different magnitude — mean
+edge credit R 24.7, W 17.8, W-P 10.6 — so a higher AUC for W-P (0.5993) is
+relative to its own distribution, not evidence of stronger absolute credit.
 
 ### 1c Density bias (measured fresh)
 
@@ -355,7 +392,7 @@ interval does not clear the MDE. C2 stays "not object-discriminative" (0e).
 | trigger | condition | measured | fired? | outcome |
 |---|---|---|---|---|
 | **F-S** separate normalization | 1c \|corr\| ≥ 0.5, pooled R | +0.5048 (CI [−0.337, +0.939], 8 refs) | **FIRED** (point estimate) | V1/V2 evaluated in 1d, both **worse** than V0 and both with R−N intervals containing negative values → **DISCARD** |
-| **F-G** edge-gated use | 1b edge-only R above chance **AND** above W-P **AND** 1e P(N wrong) rising as margin shrinks | R not above chance (lo 0.1016 < 0.125); R − W-P = −0.0134 (below, not above); P(N wrong) rising ✓ | **NOT FIRED** (2 of 3 conditions fail) | no gated policy proposed |
+| **F-G** edge-gated use | 1b edge-only R above chance **AND** above W-P **AND** 1e P(N wrong) rising as margin shrinks | R **not above chance** on top-1 (0.2266, lo 0.1016 < 0.125); R − W-P = **+0.0267** (above, ✓); P(N wrong) rising ✓ | **NOT FIRED** (1 of 3 conditions fails) | no gated policy proposed |
 
 **KEEP RULE** (variant − N interval above zero on MRR **and** R beats W-P on
 edge-only or MRR; else INCONCLUSIVE; ties → N): **not met by any variant**.
@@ -383,8 +420,11 @@ Part 3 gate was: edge-only R above chance and above W-P with clustered
 intervals, **or** a pre-registered variant with a positive mean MRR difference
 vs N in ≥ 6/8 objects.
 
-- edge-only R above chance: **no** (low end 0.1016 < 0.125).
-- edge-only R above W-P: **no** (−0.0134 on MRR, −0.0078 on top-1).
+- edge-only R above chance: **no** (edge-only top-1 0.2266, low end 0.1016
+  < 0.125). AUC is clear of 0.5 but top-1 is the pre-registered chance test.
+- edge-only R above W-P: **yes on the point estimate** (+0.0267 MRR,
+  +0.0469 top-1), but the interval [−0.0858, +0.1464] crosses zero, so it is
+  not "above" in the clustered sense the gate requires.
 - variant positive in ≥ 6/8 objects: V1 2/8, V2 2/8 — **no**. (Only the
   shipped V0 reaches 6/8.)
 
@@ -392,8 +432,9 @@ Both limbs of the gate fail, so the mission's pre-registration says stop. The
 outcome is **INCONCLUSIVE at n_eff = 8**, with no variant adopted and nothing
 changed in the shipped configuration.
 
-The honest summary: the instrument now exists and is verified to reproduce the
-matcher's own components to 1e-9, and the intervals are correctly clustered.
+The honest summary: the instrument now exists, is verified to reproduce the
+matcher's own components to 1e-9, is deterministic across processes, and the
+intervals are correctly clustered.
 What the design can say is bounded by its resolution. The effect that the
 best-powered measurement on this branch can actually see is about **+0.7 %**
 (parameters, n = 6241), and a slightly negative pooled edge contribution

@@ -366,9 +366,15 @@ def _rewire_edges(edges, seed):
     destination permutation.  Edge parameters are dropped by the caller."""
     from core.types import UNDIRECTED_EDGE_TYPES
     rng = random.Random(seed)
-    und = [(min(a, b), max(a, b), t) for a, b, t in edges
+    # [DETERMINISM] `edges` is usually a frozenset, whose iteration order
+    # depends on string hashing (salted PER PROCESS), so feeding it to a
+    # seeded RNG made the rewiring -- and hence the W arm -- differ between
+    # runs. Measured: the same ref produced 350 vs 351 edges and different
+    # sets across processes. Sort canonically first so `seed` means something.
+    _edges = sorted(edges, key=lambda e: (e[0], e[1], str(e[2])))
+    und = [(min(a, b), max(a, b), t) for a, b, t in _edges
            if t in UNDIRECTED_EDGE_TYPES]
-    direct = [(a, b, t) for a, b, t in edges if t not in UNDIRECTED_EDGE_TYPES]
+    direct = [(a, b, t) for a, b, t in _edges if t not in UNDIRECTED_EDGE_TYPES]
     out = set(und)
     for _ in range(20 * max(1, len(und))):
         if len(und) < 2:
