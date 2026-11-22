@@ -30,10 +30,21 @@ counterpart_map(q["pos"], r["pos"], 0, 0, 8.0)   # dx=0, dy=0, radius=8.0 px
 
 That is a **same-pixel** proximity test, not a physical correspondence: it
 asks whether the query node and the ref node land within 8 px of the *same
-image coordinate* at two *different viewpoints*. Roughly 32 % of nodes acquire
-a "counterpart" this way. Every number derived from it — CASE ACCURACY, D1,
-the claim that "correspondence is the bottleneck", and the B1 case-(c) +0.367
-citation — is **withdrawn**. Nothing in Part 1 depends on it.
+image coordinate* at two *different viewpoints*.
+
+Measured with the repaired one-to-one `counterpart_map` (mutual pairs only):
+**21.1 % of query nodes acquire a "counterpart" this way** (268/1270 on four
+objects; per object apple 18.2 %, car 22.2 %, cup 14.7 %, dog 27.9 %). The
+pre-filter rate is higher still (e.g. apple 93 candidate pairs collapsing to
+66 mutual). Every number derived from it — CASE ACCURACY, D1, the claim that
+"correspondence is the bottleneck", and the B1 case-(c) +0.367 citation — is
+**withdrawn**. Nothing in Part 1 depends on it.
+
+Note that the *function* is not at fault: `t4_shift.py::counterpart_map` was
+independently repaired to a one-to-one mutual-nearest map with `(mapping, info,
+stats)`, and the caller unpacks three values. The defect is the **arguments** —
+`dx=dy=0` asserts a pure translation between two different viewpoints, which is
+a claim about the geometry, not a measured correspondence.
 
 ### 0b Intervals re-derived; both properties are INCONCLUSIVE
 Recomputed with object clustering (n_eff = 8), MRR primary. The starting
@@ -98,6 +109,38 @@ After the fix W-P carries 248/346/274 params (apple/cup/horse refs) on exactly
 W's edge set. The rewiring is degree-preserving for 97–100 % of nodes and
 preserves the edge-type multiset for some objects but not others (apple, cup,
 dog: False), so "degree-matched" is approximately, not exactly, true.
+
+### Cross-check against the other task-4 lineage on this branch
+The branch also carries an earlier task-4 mission (`t4_mission_report.md`,
+commits `9bbcc69`–`18961ed`) that measured *placement* evidence on dev scenes
+with the repaired map at per-kind radii (CONTOUR_PEAK 1.0, Corner 2.06,
+PEAK_CHAIN 1.54, RegionShape 1.73, …). Two of its results bear directly on the
+paragraph above, so they are reconciled here rather than left to disagree:
+
+- **Parameters are not inert, and the null is not "unmeasured".** That mission
+  measured, on n = 6241 STRICT-LEAD pairs, `real − params_shuffled` =
+  +0.0016 [−0.0013, +0.0043] but `real − params_dropped` =
+  **+0.0072 [+0.0026, +0.0130]**. Parameters therefore carry a **small but real**
+  net signal of about 0.7 %, and shuffling them is inert. My 1b
+  `W-P − W = +0.0125 [−0.0689, +0.0911]` is consistent with that small positive
+  value but, at n_eff = 8 refs, cannot resolve 0.7 % — a ~7× shortfall in MDE.
+  My 1b is therefore **underpowered for the effect that is actually there**, and
+  its "not distinguishable from rewired topology" must be read as *unresolved*,
+  **not** as "topology is irrelevant". That mission had already withdrawn the
+  historical blanket claim "parameters non-informative".
+- **Edges net harm the pooled objective, and "edges hurt" is not jitter-robust.**
+  On dev, `real − no_edge` pooled = **−0.0172 [−0.0214, −0.0131]** at
+  beta = 0.50, worsening monotonically with beta (−0.0016 at 0.25, −0.0348 at
+  0.75). But that −0.0172 lies **inside** the tie-order jitter envelope
+  [−0.0645, +0.0204], so the sign of "edges hurt" is not robust to tie order.
+  The same mission measured tie order as material (**3.06 %** mapping change),
+  which agrees with 0d.
+
+Read together: this branch's best-powered evidence is that **parameter content
+carries a small real identity signal (+0.7 %), the topology swap alone does not
+expose it, and the pooled benefit of edges at beta 0.50 is slightly negative**
+— none of which changes the Part 3 verdict below, because all of these effects
+are far inside the MDE available at 8 objects.
 
 ### Two further findings recorded here (both measured, not assumed)
 1. **`MATCH_SEPARATE_TERM_NORMALIZATION` is inert under the committed
@@ -178,12 +221,21 @@ But the arm-to-arm contrasts are all indistinguishable:
 
 **Reading.** Edges carry *some* ref-identifying signal at this mapping —
 all three arms sit well above chance on AUC (0.58–0.62) with intervals clear
-of 0.5. But the signal does **not** distinguish true topology from rewired
-topology: R is, if anything, marginally *below* W-P on edge-only MRR. On this
-evidence the edge term's ref-identifying content is **not** established to be
-topological, so the pre-registered "edges carry identity alone" reading is
-**not** supported. Equally, it is not refuted: every contrast is INCONCLUSIVE
-at n_eff = 8.
+of 0.5. But **R does not exceed W-P**: the point estimates are
+R − W-P = −0.0134 (MRR) and −0.0078 (top-1), i.e. true topology is, if
+anything, marginally *worse* than rewired topology at carrying ref identity.
+
+The pre-registered "edges carry identity alone" condition (R above chance
+**and** above W-P) is therefore **not met**, and F-G does not fire. It would
+be wrong, however, to read this as "topology is irrelevant": the cross-check
+above shows the parameter effect that *is* real is about **+0.7 %**, and this
+contrast has an MDE of 0.11–0.18 — roughly **7× too coarse** to see it. The
+correct statement is that 1b is **INCONCLUSIVE and underpowered for the known
+effect size**, not that it returns a null.
+
+Note also that the three arms' edge-only scores are not on equal footing:
+mean edge credit is R 24.7, W 18.0, W-P 10.8, so the arms are ranked on
+quantities of different magnitude while W-P nonetheless wins on AUC (0.615).
 
 ### 1c Density bias (measured fresh)
 
@@ -341,8 +393,18 @@ outcome is **INCONCLUSIVE at n_eff = 8**, with no variant adopted and nothing
 changed in the shipped configuration.
 
 The honest summary: the instrument now exists and is verified to reproduce the
-matcher's own components to 1e-9, the intervals are correctly clustered, and
-the answer this design can give is that **the edge contribution is too small
-to separate from zero, from rewired topology, and from a no-edge baseline at
-8 objects** — with an MDE on the headline contrast of 0.12 MRR, roughly five
-times the effect being chased.
+matcher's own components to 1e-9, and the intervals are correctly clustered.
+What the design can say is bounded by its resolution. The effect that the
+best-powered measurement on this branch can actually see is about **+0.7 %**
+(parameters, n = 6241), and a slightly negative pooled edge contribution
+(−0.0172) that is inside its own jitter envelope. At 8 objects the headline
+contrast carries an MDE of **0.1212 MRR**, which is roughly **five times** the
+effect being chased.
+
+So the result is not "edges do not help". It is that **this design cannot
+resolve the effect**, in either direction, on either property, and that the
+one gate that would have licensed the larger test fails on both limbs. The
+contribution of Part 1 is therefore chiefly the demolition of four invalid
+instruments (0a positional CASE ACCURACY, 0f's W as a null, W-P as first
+built, 1d's authorised flag being unreachable) plus a correctly clustered,
+exactly reproducible baseline that any future design can be compared against.
