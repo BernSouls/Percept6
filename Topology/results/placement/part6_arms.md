@@ -257,3 +257,19 @@ is a **frame-validity** wall behind a reach wall: reach fails first, and the
 obvious repair fails on frames. Both are named here rather than one being
 traded for the other, and no weight, threshold or tolerance was tuned to hide
 it.
+
+---
+
+## Fresh-process rerun (stated control)
+
+The whole arms run was repeated in a **new process** after the aligner wiring
+and the binder refactor landed:
+
+```
+run 1  sha256 2131aafdf4328d74
+run 2  sha256 2131aafdf4328d74   BIT-IDENTICAL
+```
+
+Every accuracy, interval, MDE and verdict reproduced exactly, which also
+confirms that the `matching/alignment.py` wiring (dark) and the two spine-filter
+helpers changed no result.
