@@ -1,0 +1,154 @@
+{
+  "by_family_ambiguous": {
+    "CONTROL": {
+      "N": 0.575,
+      "P": 0.625,
+      "P_shuffled": 0.65,
+      "n": 40
+    },
+    "NEGATIVE-A": {
+      "N": 0.23793103448275862,
+      "P": 0.3275862068965517,
+      "P_shuffled": 0.2793103448275862,
+      "n": 290
+    },
+    "NEGATIVE-B": {
+      "N": 0.23793103448275862,
+      "P": 0.3275862068965517,
+      "P_shuffled": 0.2827586206896552,
+      "n": 290
+    },
+    "RESOLVABLE": {
+      "N": 0.3183279742765273,
+      "P": 0.3279742765273312,
+      "P_shuffled": 0.3215434083601286,
+      "n": 311
+    }
+  },
+  "clustering_v1": "family|scene|view -> 24 clusters (4 scenes x 6 views)",
+  "contrasts": {
+    "P-N": {
+      "mean_equal_weight": 0.059739161769597524,
+      "n_scenes": 4,
+      "n_sign_assignments": 16,
+      "p_exact_two_sided": 0.125,
+      "p_floor": 0.125,
+      "per_scene": {
+        "eval_control": 0.05,
+        "eval_neg_a": 0.0896551724137931,
+        "eval_neg_b": 0.0896551724137931,
+        "eval_resolvable": 0.00964630225080386
+      },
+      "published_v1": {
+        "hi": 0.10256489493201483,
+        "lo": 0.022057407946677023,
+        "mde": 0.05750534784666986,
+        "mean": 0.061224489795918366
+      },
+      "scene_boot": {
+        "hi": 0.0896551724137931,
+        "lo": 0.02964851979155117,
+        "mde": 0.04286189473017281
+      }
+    },
+    "P-P_shuffled": {
+      "mean_equal_weight": 0.01863357911076616,
+      "n_scenes": 4,
+      "n_sign_assignments": 16,
+      "p_exact_two_sided": 0.375,
+      "p_floor": 0.125,
+      "per_scene": {
+        "eval_control": -0.025,
+        "eval_neg_a": 0.04827586206896552,
+        "eval_neg_b": 0.04482758620689655,
+        "eval_resolvable": 0.006430868167202572
+      },
+      "published_v1": {
+        "hi": 0.060963456463075896,
+        "lo": 0.0010390758857016526,
+        "mde": 0.04280312898383874,
+        "mean": 0.03007518796992481
+      },
+      "scene_boot": {
+        "hi": 0.04655172413793104,
+        "lo": -0.009284565916398715,
+        "mde": 0.03988306432452125
+      }
+    },
+    "P-W": {
+      "mean_equal_weight": 0.10461387071737444,
+      "n_scenes": 4,
+      "n_sign_assignments": 16,
+      "p_exact_two_sided": 0.125,
+      "p_floor": 0.125,
+      "per_scene": {
+        "eval_control": 0.15,
+        "eval_neg_a": 0.10689655172413794,
+        "eval_neg_b": 0.10689655172413794,
+        "eval_resolvable": 0.05466237942122187
+      },
+      "published_v1": {
+        "hi": 0.13873923351313727,
+        "lo": 0.044989775051124746,
+        "mde": 0.0669638989014375,
+        "mean": 0.09129967776584318
+      },
+      "scene_boot": {
+        "hi": 0.13922413793103447,
+        "lo": 0.06772092249695089,
+        "mde": 0.0510737253100597
+      }
+    },
+    "R-N": {
+      "mean_equal_weight": -0.10460278301363787,
+      "n_scenes": 4,
+      "n_sign_assignments": 16,
+      "p_exact_two_sided": 0.125,
+      "p_floor": 0.125,
+      "per_scene": {
+        "eval_control": -0.15,
+        "eval_neg_a": -0.08275862068965517,
+        "eval_neg_b": -0.08275862068965517,
+        "eval_resolvable": -0.10289389067524116
+      },
+      "published_v1": {
+        "hi": -0.0649646368423891,
+        "lo": -0.12231856903906746,
+        "mde": 0.04096709442619883,
+        "mean": -0.09237379162191192
+      },
+      "scene_boot": {
+        "hi": -0.08275862068965517,
+        "lo": -0.1331896551724138,
+        "mde": 0.03602216748768473
+      }
+    },
+    "R_fixed-R": {
+      "mean_equal_weight": 0.11555951324980596,
+      "n_scenes": 4,
+      "n_sign_assignments": 16,
+      "p_exact_two_sided": 0.125,
+      "p_floor": 0.125,
+      "per_scene": {
+        "eval_control": 0.175,
+        "eval_neg_a": 0.07931034482758621,
+        "eval_neg_b": 0.07931034482758621,
+        "eval_resolvable": 0.12861736334405144
+      },
+      "published_v1": {
+        "hi": 0.13566401468788247,
+        "lo": 0.06877640760312416,
+        "mde": 0.047776862203398794,
+        "mean": 0.09989258861439312
+      },
+      "scene_boot": {
+        "hi": 0.1518086816720257,
+        "lo": 0.07931034482758621,
+        "mde": 0.05178452631745679
+      }
+    }
+  },
+  "n_records": 1809,
+  "n_scenes": 4,
+  "source": "spent EVAL v1 (one read, arms_eval.json sha256 9d421df10728d0bc)"
+}

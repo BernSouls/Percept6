@@ -237,6 +237,8 @@ def total_support(pop: Sequence[int], mapping: Dict[int, int],
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--set", default="dev", choices=("dev", "eval"))
+    ap.add_argument("--dump-nodes", default=None,
+                    help="write per-node records (arm correctness) to this path")
     args = ap.parse_args(argv)
 
     import guard
@@ -281,6 +283,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     acc: Dict[str, Dict[str, List[Tuple[str, float]]]] = defaultdict(
         lambda: defaultdict(list))
     controls: List[Dict[str, Any]] = []
+    records: List[Dict[str, Any]] = []
     flips: Dict[str, List[float]] = defaultdict(list)
 
     for spec in specs:
@@ -405,6 +408,16 @@ def main(argv: Optional[List[str]] = None) -> int:
                     lambda v, s: pick_placement(v, s, sh_idx, sh_inc))
                 scored["W"] = pick(lambda v, s: pick_placement(v, s, w_idx, w_inc))
                 skey = "%s|%s|%s" % (spec.family, spec.name, label)
+                if args.dump_nodes:
+                    records.append({
+                        "scene": spec.name, "view": label,
+                        "family": spec.family, "node": int(u),
+                        "bucket": bucket, "part4": bool(p4),
+                        "margin": (float(row[0][1] - row[1][1])
+                                   if len(row) > 1 else float("nan")),
+                        "top_sim": float(row[0][1]),
+                        "ok": {a: bool(v == truth_v) for a, v in scored.items()},
+                    })
                 for arm, pred in scored.items():
                     acc[arm][bucket].append((skey, 1.0 if pred == truth_v else 0.0))
                     if arm in ("N", "P"):
@@ -572,6 +585,11 @@ def main(argv: Optional[List[str]] = None) -> int:
         "neutral": len(flips["neutral"]),
         "net": len(flips["fixed"]) - len(flips["broken"]),
     }
+
+    if args.dump_nodes:
+        with open(args.dump_nodes, "w") as fh:
+            json.dump(records, fh)
+        print("wrote %s (%d node records)" % (args.dump_nodes, len(records)))
 
     out_path = os.path.join(OUT, "arms_%s.json" % tag)
     with open(out_path, "w") as fh:
