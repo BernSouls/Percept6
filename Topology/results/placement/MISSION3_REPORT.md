@@ -1,8 +1,10 @@
 # Mission 3 — Does placement GEOMETRY carry the gain?
 
 **Verdict: NO.** The gain is carried by a residual-free *presence* term, not by
-the geometry. And the mission's prescribed diagnostic says the bottleneck is the
-**payload and the frames, not the context**.
+the geometry. The mission's prescribed diagnostic says the bottleneck is the
+**payload and the frames, not the context** — and the second geometric
+representation tried (frame-free angle/ratio relations) is null too, which
+sharpens that to a payload-precision statement.
 
 ---
 
@@ -165,10 +167,34 @@ The lever that remains, by the mission's own ordering, is **lever 3
 **lever 4 (payload precision)** — the payload is what the oracle diagnostic
 pointed at.
 
+### Lever 3 was then built and is also null (CHECK look 4)
+
+Frame-free relations: the unsigned angle at u between two neighbours and the
+ratio of their distances. No orientation frame is needed, so this is the one
+geometric read that does not depend on the field provider; it is invariant to
+translation (only position differences enter) and to scale (a ratio of
+distances). Mirror images are not distinguished, which is stated rather than
+hidden. Capped at 6 neighbour pairs per candidate, same padded/clipped/summed
+estimator, densities fitted on FIT.
+
+| contrast | effect | MDE | p | verdict |
+|---|---|---|---|---|
+| **P_ratio − N** | **−0.0042** | 0.0089 | 0.2031 | **INCONCLUSIVE** |
+| P_ratio − P_presence | −0.0446 | 0.0227 | 0.0000 | NEGATIVE |
+| P_ratio − P | −0.0217 | 0.0177 | 0.0009 | NEGATIVE |
+
+**Frame-free geometry does not even beat plain similarity.** P_ratio 0.3045
+against N 0.3080. So the failure is not the choice of geometric *representation*
+— an orientation-frame vector and a frame-free angle/ratio relation both fall
+short of the discrete fact that the corresponding edge exists. That is a
+payload-precision statement (lever 4), not a representation statement.
+
 **Not delivered, and stated rather than hidden:**
 
-* **Lever 3 and lever 4 were not built.** The verdict above did not depend on
-  them, and they are the next thing to do, not something this report can claim.
+* **Lever 4 (payload precision — refined anchor positions, per-edge tolerance
+  scaled by coherence/span/pose) was not built.** It is the lever the evidence
+  now points at, and it requires touching the front end's anchor quantisation
+  rather than the scorer.
 * **EVAL-2 was not run.** It requires a fresh scene set whose graph builds cost
   ~1 min each; at the scene count needed for MDE < the planning effect that is
   60–100 minutes of build time, which this session did not have. No EVAL-2 read
@@ -177,8 +203,8 @@ pointed at.
   *null*. The DEV CHECK result above is decisive on its own terms (MDE 0.014
   against an effect of −0.0229) and is not a confirmation of anything.
 
-**Looks used on CHECK: 3 of 5.** Logged: look 1 (full arms, defective
+**Looks used on CHECK: 4 of 5.** Logged: look 1 (full arms, defective
 R_fixed), look 2 (oracle wiring, R_fixed still defective, no oracle recorded),
-look 3 (R_fixed repaired, oracle recorded). With 5 looks the corrected threshold
-is 0.05 / 3 = 0.0167; every decisive contrast above has p ≤ 0.0034, well inside
-that.
+look 3 (R_fixed repaired, oracle recorded), look 4 (lever 3, frame-free
+relations). With 5 looks the corrected threshold is 0.05 / 4 = 0.0125; every
+decisive contrast above has p ≤ 0.0034, well inside that.

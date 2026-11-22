@@ -160,6 +160,79 @@ def score_candidate(u: int, v: int, mapping: Mapping[int, int],
 
 
 # ---------------------------------------------------------------------------
+# LEVER 3: FRAME-FREE relations -- an angle at u between two neighbours and the
+# ratio of their distances.  Neither needs an orientation frame at all, so this
+# is the one geometric read that does not depend on the field provider, and it
+# is invariant to translation (only differences of positions enter) and to
+# scale (a ratio of distances).  It is reflection-symmetric as an ANGLE only if
+# the order of the two neighbours is dropped, so the angle is taken as the
+# unsigned angle in [0, pi] and the two orders are the same test; the residual
+# is therefore blind to a mirror image, which is stated rather than hidden.
+#: Pairs of neighbours tried per candidate: C(8, 2) = 28 would be 28 checks for
+#: every candidate, so the first RATIO_PAIRS pairs in canonical order are used.
+RATIO_PAIRS = 6
+
+
+def ratio_slots(u: int, v: int, mapping: Mapping[int, int],
+                q_inc: Mapping[int, List[Tuple[int, bool, str]]],
+                pos_q: Mapping[int, Tuple[float, float]],
+                pos_r: Mapping[int, Tuple[float, float]]
+                ) -> List[Tuple[str, Optional[float]]]:
+    """Frame-free (angle, distance-ratio) residuals for the candidate u -> v."""
+    import math
+    nb = sorted({int(o) for (o, _s, _n) in q_inc.get(int(u), ())
+                 if int(o) in mapping and int(o) in pos_q}, )
+    pu = pos_q.get(int(u))
+    pv = pos_r.get(int(v))
+    if pu is None or pv is None:
+        return []
+    out: List[Tuple[str, Optional[float]]] = []
+    pairs = [(nb[i], nb[j]) for i in range(len(nb)) for j in range(i + 1, len(nb))]
+    for (x, y) in pairs[:RATIO_PAIRS]:
+        mx, my = mapping.get(int(x)), mapping.get(int(y))
+        if mx is None or my is None:
+            out.append(("RATIO", None))
+            continue
+        px, py = pos_q.get(int(x)), pos_q.get(int(y))
+        rx, ry = pos_r.get(int(mx)), pos_r.get(int(my))
+        if px is None or py is None or rx is None or ry is None:
+            out.append(("RATIO", None))
+            continue
+        ax, ay = px[0] - pu[0], px[1] - pu[1]
+        bx, by = py[0] - pu[0], py[1] - pu[1]
+        cx, cy = rx[0] - pv[0], rx[1] - pv[1]
+        dx, dy = ry[0] - pv[0], ry[1] - pv[1]
+        na = math.hypot(ax, ay)
+        nb_ = math.hypot(bx, by)
+        nc = math.hypot(cx, cy)
+        nd = math.hypot(dx, dy)
+        if min(na, nb_, nc, nd) < 1e-6:
+            out.append(("RATIO", None))
+            continue
+        ang_q = abs(math.atan2(ax * by - ay * bx, ax * bx + ay * by))
+        ang_r = abs(math.atan2(cx * dy - cy * dx, cx * dx + cy * dy))
+        dang = abs(ang_q - ang_r)                      # in [0, pi], axial-safe
+        lrat = abs(math.log((na / nb_) / (nc / nd)))
+        out.append(("RATIO", math.sqrt((dang / FIXED_TOL) ** 2 +
+                                       (lrat / FIXED_TOL) ** 2)))
+    return out
+
+
+def ratio_score(u: int, v: int, mapping: Mapping[int, int],
+                q_inc: Mapping[int, List[Tuple[int, bool, str]]],
+                pos_q: Mapping[int, Tuple[float, float]],
+                pos_r: Mapping[int, Tuple[float, float]],
+                fit: LLRFit, pair_cap: int = RATIO_PAIRS) -> float:
+    """The same padded/clipped/normalised estimator, on frame-free relations."""
+    slots = ratio_slots(u, v, mapping, q_inc, pos_q, pos_r)[:pair_cap]
+    total = 0.0
+    for (_n, res) in slots:
+        total += fit.of(res)
+    total += float(fit.mu_wrong) * (pair_cap - len(slots))
+    return total / (2.0 * LLR_CLIP * pair_cap) + 0.5
+
+
+# ---------------------------------------------------------------------------
 # P_presence: the same estimator with the residual switched off
 @dataclass
 class PresenceFit:

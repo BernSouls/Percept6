@@ -77,6 +77,8 @@ def collect_fit(specs: Sequence[Any], views: Sequence[Any], limit: Optional[int]
 
     res_t: List[float] = []
     res_w: List[float] = []
+    rat_t: List[float] = []
+    rat_w: List[float] = []
     pre_t: List[Tuple[str, bool]] = []
     pre_w: List[Tuple[str, bool]] = []
     n_cand_t = n_cand_w = 0
@@ -104,6 +106,12 @@ def collect_fit(specs: Sequence[Any], views: Sequence[Any], limit: Optional[int]
             pop = [u for u in sorted(truth) if o1.get(u, -1) >= 0]
             rows = _rows_for(g1, g0, pop, refc)
             nmap = {u: rows[u][0][0] for u in pop if rows.get(u)}
+            pos_q = {int(n): (float(g1.subgraph.anchor_of_node[n][0]),
+                              float(g1.subgraph.anchor_of_node[n][1]))
+                     for n in g1.subgraph.nodes if n in g1.subgraph.anchor_of_node}
+            pos_r = {int(n): (float(g0.subgraph.anchor_of_node[n][0]),
+                              float(g0.subgraph.anchor_of_node[n][1]))
+                     for n in g0.subgraph.nodes if n in g0.subgraph.anchor_of_node}
             for u in pop:
                 row = rows.get(u) or []
                 for v, _s in row[:CAND_CAP]:
@@ -118,8 +126,19 @@ def collect_fit(specs: Sequence[Any], views: Sequence[Any], limit: Optional[int]
                         if exists:
                             (res_t if good else res_w).append(res)
                         (pre_t if good else pre_w).append((name, exists))
+                    for (_n2, rres) in L.ratio_slots(u, v, nmap, q_inc,
+                                                    pos_q, pos_r):
+                        if rres is not None:
+                            (rat_t if good else rat_w).append(rres)
         used += 1
     fit = L.fit_llr(res_t, res_w)
+    ratio_fit = L.fit_llr(rat_t, rat_w)
+    fit.extra["ratio_true_mean"] = (float(np.mean([ratio_fit.of(r) for r in rat_t]))
+                                    if rat_t else float("nan"))
+    fit.extra["ratio_wrong_mean"] = (float(np.mean([ratio_fit.of(r) for r in rat_w]))
+                                     if rat_w else float("nan"))
+    fit.extra["n_ratio_true"] = len(rat_t)
+    fit.extra["n_ratio_wrong"] = len(rat_w)
     # The mandatory sanity check on the fitted densities: a wrong pair must be
     # worth less than nothing and a true pair more than nothing.
     true_mean = float(np.mean([fit.of(r) for r in res_t])) if res_t else float("nan")
@@ -135,12 +154,16 @@ def collect_fit(specs: Sequence[Any], views: Sequence[Any], limit: Optional[int]
             "true_pair_mean_llr": fit.extra.get("true_pair_mean_llr"),
             "wrong_pair_mean_llr": fit.extra.get("wrong_pair_mean_llr"),
             "presence_llr": dict(pfit.llr)}
-    return fit, pfit, meta
+    meta["ratio_true_mean_llr"] = fit.extra["ratio_true_mean"]
+    meta["ratio_wrong_mean_llr"] = fit.extra["ratio_wrong_mean"]
+    meta["n_ratio_true"] = fit.extra["n_ratio_true"]
+    meta["n_ratio_wrong"] = fit.extra["n_ratio_wrong"]
+    return fit, pfit, meta, ratio_fit
 
 
 # ---------------------------------------------------------------------------
 def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
-              limit: Optional[int]) -> List[Dict[str, Any]]:
+              limit: Optional[int], ratio_fit: Any = None) -> List[Dict[str, Any]]:
     import guard
     guard.activate()
     from matching import placement_edges as PE
@@ -204,6 +227,12 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
             pop = [u for u in sorted(truth) if o1.get(u, -1) >= 0]
             rows = _rows_for(g1, g0, pop, refc)
             nmap = {u: rows[u][0][0] for u in pop if rows.get(u)}
+            pos_q = {int(n): (float(g1.subgraph.anchor_of_node[n][0]),
+                              float(g1.subgraph.anchor_of_node[n][1]))
+                     for n in g1.subgraph.nodes if n in g1.subgraph.anchor_of_node}
+            pos_r = {int(n): (float(g0.subgraph.anchor_of_node[n][0]),
+                              float(g0.subgraph.anchor_of_node[n][1]))
+                     for n in g0.subgraph.nodes if n in g0.subgraph.anchor_of_node}
             for u in pop:
                 row = rows.get(u) or []
                 if not row:
@@ -223,7 +252,7 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
                     return best
 
                 if ORACLE:
-                    ARMS_ALL = ARMS + ("P_oracle", "P_oracle_presence")
+                    ARMS_ALL = ARMS + ("P_oracle", "P_oracle_presence", "P_ratio")
                 else:
                     ARMS_ALL = ARMS
                 scored: Dict[str, int] = {"N": cand[0][0]}
@@ -235,6 +264,8 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
                     L.score_candidate(u, v, nmap, q_inc, q_idx, r_idx, fit), s))
                 scored["P_presence"] = pick(lambda v, s: blend(
                     L.presence_score(u, v, nmap, q_inc, q_idx, r_idx, pfit), s))
+                scored["P_ratio"] = pick(lambda v, s: blend(
+                    L.ratio_score(u, v, nmap, q_inc, pos_q, pos_r, ratio_fit), s))
                 scored["P_shuffled"] = pick(lambda v, s: blend(
                     L.score_candidate(u, v, nmap, sh_inc, sh_idx, r_idx, fit), s))
                 scored["W"] = pick(lambda v, s: blend(
@@ -342,7 +373,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     print("DEV-3: %d scenes -> FIT %d / CHECK %d"
           % (len(specs), len(fit_specs), len(check_specs)))
 
-    fit, pfit, meta = collect_fit(fit_specs, VIEWS, args.fit_limit)
+    fit, pfit, meta, ratio_fit = collect_fit(fit_specs, VIEWS, args.fit_limit)
     print("FIT: %d scenes, %d true residuals, %d wrong residuals, mu_wrong %.4f"
           % (meta["scenes"], meta["n_res_true"], meta["n_res_wrong"],
              meta["mu_wrong"]))
@@ -351,13 +382,14 @@ def main(argv: Optional[List[str]] = None) -> int:
           % (meta["wrong_pair_mean_llr"], meta["true_pair_mean_llr"],
              "OK" if ok_fit else "*** FIT IS MISFIT ***"))
 
-    records = run_check(check_specs, VIEWS, fit, pfit, args.check_limit)
+    records = run_check(check_specs, VIEWS, fit, pfit, args.check_limit,
+                        ratio_fit)
     res: Dict[str, Any] = {"fit": meta, "n_records": len(records),
                            "scenes": len({r["scene"] for r in records}),
                            "arms": {}, "contrasts": {}}
 
     print("\n== CHECK, near-tie ambiguous nodes")
-    arms_here = list(ARMS) + [a for a in ("P_oracle", "P_oracle_presence")
+    arms_here = list(ARMS) + [a for a in ("P_oracle", "P_oracle_presence", "P_ratio")
                               if records and a in records[0]["ok"]]
     for arm in arms_here:
         s = scene_stats(records, arm)
@@ -371,7 +403,8 @@ def main(argv: Optional[List[str]] = None) -> int:
              ("P_presence", "N")]
     if "P_oracle" in records[0]["ok"] if records else False:
         pairs += [("P_oracle", "P"), ("P_oracle", "P_presence"),
-                  ("P_oracle_presence", "P_presence"), ("P_oracle", "P_oracle_presence")]
+                  ("P_oracle_presence", "P_presence"), ("P_oracle", "P_oracle_presence"),
+                  ("P_ratio", "N"), ("P_ratio", "P_presence"), ("P_ratio", "P")]
     for a, b in pairs:
         c = contrast(records, a, b)
         res["contrasts"]["%s-%s" % (a, b)] = c
