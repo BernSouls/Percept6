@@ -1,0 +1,46 @@
+{
+  "detector_sigma_px": 1.0,
+  "note": "q90 of TRUE-correspondence residual per view step; the tolerance is max(q90, detector floor) and is FROZEN here",
+  "views": {
+    "v1_rot5": {
+      "detector_floor": 0.16666666666666666,
+      "max": 3.0517515344975408,
+      "median": 0.37211031842578435,
+      "n_residuals": 264,
+      "q90": 2.4851970687816234,
+      "tolerance": 2.4851970687816234
+    },
+    "v2_rot10": {
+      "detector_floor": 0.16666666666666666,
+      "max": 3.0081183031976764,
+      "median": 0.6122221029955841,
+      "n_residuals": 264,
+      "q90": 2.4415638374817625,
+      "tolerance": 2.4415638374817625
+    },
+    "v3_rot15": {
+      "detector_floor": 0.16666666666666666,
+      "max": 2.9685503189913094,
+      "median": 0.875887253660216,
+      "n_residuals": 264,
+      "q90": 2.4007762791473533,
+      "tolerance": 2.4007762791473533
+    },
+    "v4_translate": {
+      "detector_floor": 0.16666666666666666,
+      "max": 0.6038859503062791,
+      "median": 0.17772262644526157,
+      "n_residuals": 264,
+      "q90": 0.6038859503062791,
+      "tolerance": 0.6038859503062791
+    },
+    "v5_scale": {
+      "detector_floor": 0.16666666666666666,
+      "max": 0.0,
+      "median": 0.0,
+      "n_residuals": 264,
+      "q90": 0.0,
+      "tolerance": 0.16666666666666666
+    }
+  }
+}

@@ -2408,6 +2408,43 @@ MATCH_CONSENSUS_COUNT_ABSTENTIONS: bool = False
 #   repair: it is measured as an arm and the numbers are reported.
 MATCH_PRESENCE_ONLY_EDGES_ARE_NOT_EVIDENCE: bool = False
 MATCH_SEPARATE_TERM_NORMALIZATION: bool = False
+
+# ============================================================================
+# [PLACEMENT] Correspondence decided by WHERE a node sits, not by what it is.
+# ============================================================================
+# An edge u->v says "v sits THERE relative to u", carried in u's OWN frame:
+# a signed direction over the full 2*pi measured from u's CONTINUOUS
+# orientation, a distance in u's scale units, and a scale ratio
+# (matching/placement.py).  Mapping u->u' is supported when v' sits where the
+# edge says, measured in u''s own frame -- never in image coordinates.
+#
+# NO CHECKABLE EDGES = NO CREDIT AND NO PENALTY: an edge whose neighbour is
+# unmapped, or whose endpoints carry no measurable frame, leaves both the
+# numerator and the denominator.  Presence is never rewarded.
+#
+# EVERY FLAG BELOW IS DARK (False / None) until Part 6 names one arm.
+# These are in `_FRONTEND_SWITCHES` (eth80_frontend.py), so a graph built
+# under one setting can never be served from the cache under another.
+# ----------------------------------------------------------------------------
+# Build the payload and attach it to the graph (Part 2).
+PLACEMENT_PAYLOAD_ENABLED: bool = False
+# Let placement support modify node similarity in assignment (Part 3).
+PLACEMENT_SCORER_ENABLED: bool = False
+# Gate placement use on a TRUTH-FREE quantity (the similarity margin, Part 4).
+PLACEMENT_GATE_ENABLED: bool = False
+#: ONE pre-stated weight; no sweep (Part 4).  The modifier is
+#: ``sim * (1 + w * (support - 0.5))`` with support in [0, 1], so it can never
+#: more than halve or 1.5x a similarity, and it is neutral at support = 0.5.
+PLACEMENT_WEIGHT: float = 0.25
+#: The frozen residual tolerance in scale units (Part 3).  None means "read
+#: the frozen table written by Topology/placement_tolerance.py"; a number
+#: overrides it and is reported as an override.
+PLACEMENT_TOLERANCE: Optional[float] = None
+#: Cap on ONE neighbour's contribution to a node's support (Part 3).
+PLACEMENT_MAX_NEIGHBOUR_CREDIT: float = 1.0
+#: Support is a bounded function of residual/tolerance.  Gaussian with this
+#: width, truncated at 3 sigma; support is exactly 0 beyond it.
+PLACEMENT_SUPPORT_SIGMA: float = 1.0
 # [P4b] core/schema.py edge_measured_axes (the n of the edge-mass
 # facilitation f(n) = 1 + log2(n + 1) in mcs_score / mcs_similarity): a slot
 # the unit table declares a categorical LOOKUP KEY is not a measured axis.

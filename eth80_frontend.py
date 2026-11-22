@@ -82,7 +82,17 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       "FE_SUBPIXEL_PEAK_POS",
                       "FE_L6_ADDRESS",
                       "FE_SOFT_CHANNEL_GATE", "FE_SOFT_L3_L4_GATE",
-                      "FE_VECTOR_ADDRESS")
+                      "FE_VECTOR_ADDRESS",
+                      # [PLACEMENT] the payload/scorer/gate flags change what
+                      # the graph carries, so they MUST enter the digest or a
+                      # graph built dark could be served to a lit run.
+                      "PLACEMENT_PAYLOAD_ENABLED",
+                      "PLACEMENT_SCORER_ENABLED",
+                      "PLACEMENT_GATE_ENABLED",
+                      "PLACEMENT_WEIGHT",
+                      "PLACEMENT_TOLERANCE",
+                      "PLACEMENT_MAX_NEIGHBOUR_CREDIT",
+                      "PLACEMENT_SUPPORT_SIGMA")
 
 _log = logging.getLogger("eth80_frontend")
 
