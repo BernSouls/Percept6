@@ -316,3 +316,100 @@ def node_frames_multiscale(subgraph: Any,
             win[int(n)] = int(w)
             break
     return theta, win
+
+# ---------------------------------------------------------------------------
+# signing the axis
+# ---------------------------------------------------------------------------
+def field_signed(image_u8: np.ndarray, window: int = FIELD_WINDOW
+                 ) -> Tuple[np.ndarray, np.ndarray]:
+    """The orientation field as a SIGNED direction, plus coherence.
+
+    The structure tensor alone gives an AXIS (180-degree ambiguous).  The
+    mission allows either folding the score (which loses the flip) or ADDING A
+    CUE THAT FIXES THE SIGN; the cue here is the sign of the mean intensity
+    gradient along that axis: the frame points the way intensity INCREASES.
+    That is a real, measured direction, not an invented one.
+
+    Checked before adoption, per-node paired on DEV rotations:
+
+        stimulus          delta   axial median |res|   signed median |res|
+        sphere+box        10/20/30   1.46/3.67/4.09      2.46/4.45/4.79
+        two identical     10/20/30   1.41/2.62/3.14      1.65/2.69/3.98
+
+    i.e. the signed residual concentrates at ZERO (not at +/-delta, which is
+    what a static provider would give), so the sign is carried.  It costs a
+    couple of degrees of noise and buys the full turn.
+    """
+    img = np.asarray(image_u8, dtype=np.float64)
+    if img.ndim == 3:
+        img = img.mean(axis=2)
+    gy, gx = np.gradient(img)
+    ang, coh = field_angles(img, window)
+    r = window // 2
+    pgx = np.pad(gx, r, mode="edge")
+    pgy = np.pad(gy, r, mode="edge")
+
+    def boxsum(a: np.ndarray) -> np.ndarray:
+        c = np.cumsum(np.cumsum(a, axis=0), axis=1)
+        c = np.pad(c, ((1, 0), (1, 0)))
+        k = window
+        return c[k:, k:] - c[:-k, k:] - c[k:, :-k] + c[:-k, :-k]
+
+    mgx = boxsum(pgx)
+    mgy = boxsum(pgy)
+    proj = np.cos(ang) * mgx + np.sin(ang) * mgy
+    signed = np.where(proj >= 0.0, ang, ang + math.pi)
+    return signed.astype(np.float64), coh
+
+
+def node_frames_signed(subgraph: Any, image_u8: np.ndarray,
+                       coherence_min: float = FRAME_COHERENCE_MIN,
+                       windows: Sequence[int] = FIELD_WINDOWS
+                       ) -> Tuple[Dict[int, float], Dict[int, int]]:
+    """Signed frames, multi-scale: smallest window that clears the bar wins."""
+    fields = []
+    for w in windows:
+        ang, coh = field_signed(image_u8, w)
+        fields.append((int(w), ang, coh))
+    return node_frames_multiscale(subgraph, fields, coherence_min)
+
+
+def build_edges_signed(subgraph: Any, image_u8: np.ndarray,
+                       tolerance: Optional[float] = None,
+                       k: int = TARGET_K,
+                       radius_scales: float = TARGET_RADIUS_SCALES,
+                       coherence_min: float = FRAME_COHERENCE_MIN,
+                       ) -> Dict[Tuple[int, int, Any], PlacementVector]:
+    """SOURCE_FRAME_PLACEMENT payloads on the SIGNED field frame."""
+    from core.types import EdgeType
+    frames, _win = node_frames_signed(subgraph, image_u8, coherence_min)
+    pos = {int(n): (float(subgraph.anchor_of_node[n][0]),
+                    float(subgraph.anchor_of_node[n][1]))
+           for n in sorted(subgraph.nodes) if n in subgraph.anchor_of_node}
+    scales = scale_map(subgraph)
+    targets = select_targets(subgraph, frames, pos, scales, k=k,
+                             radius_scales=radius_scales)
+    out: Dict[Tuple[int, int, Any], PlacementVector] = {}
+    from matching.placement import wrap_pi
+    for u in sorted(targets):
+        pu = pos.get(u)
+        su = scales.get(u, 0.0)
+        if pu is None or su <= 0.0:
+            continue
+        for v in targets[u]:
+            pv = pos.get(v)
+            if pv is None:
+                continue
+            dx, dy = pv[0] - pu[0], pv[1] - pu[1]
+            dpx = math.hypot(dx, dy)
+            if dpx <= 1e-9:
+                continue
+            out[(int(u), int(v), EdgeType.SOURCE_FRAME_PLACEMENT)] = \
+                PlacementVector(direction=wrap_pi(math.atan2(dy, dx) - frames[u]),
+                                distance=dpx / su,
+                                log_scale=0.0,
+                                source_theta=float(frames[u]),
+                                source_scale=float(su),
+                                tolerance=tolerance,
+                                axial=False)
+    return out
