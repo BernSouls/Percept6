@@ -63,14 +63,34 @@ import numpy as np
 from _bootstrap import CACHE_DIR, DATA_DIR, ROOT
 
 #: Source files whose bytes decide what the front end emits.  A change to any
-#: of them invalidates the graph cache.  The matcher (memory/, matching/) is
-#: deliberately absent.
+#: of them invalidates the graph cache.  The matcher USED to be deliberately
+#: absent; the closure audit showed the matcher is on the build path, so it is
+#: covered now.
+# [MISSION 5 / 0d] THE DIGEST MUST COVER THE IMPORT CLOSURE OF THE BUILD PATH.
+#
+# The closure was computed by walking imports from build_graph over repository
+# files (Topology/placement_cacheclosure_m5.py).  The old list covered
+# perception/, lenses/, parameters/, core/, dynamics/ and four files -- and
+# silently omitted, among others, eth80_frontend.py ITSELF, sensory_floor.py,
+# derived_lenses.py, consolidator.py, Topology/guard.py, _bootstrap.py, and the
+# whole of matching/, memory/, learning/ and action/.  An edit to any of those
+# would have been served a stale graph: the key did not move while the graph did.
 _FRONTEND_SOURCE_DIRS = ("perception", "lenses", "parameters", "core",
-                         "dynamics")
+                         "dynamics",
+                         # added by the closure audit
+                         "matching", "memory", "learning", "action")
 _FRONTEND_SOURCE_FILES = ("orchestration/binder.py",
                           "orchestration/pipeline.py",
                           "concept_graph.py",
-                          "diagnostics/eth80_frontend.py")
+                          "diagnostics/eth80_frontend.py",
+                          # added by the closure audit
+                          "eth80_frontend.py",
+                          "eth80_split.py",
+                          "sensory_floor.py",
+                          "derived_lenses.py",
+                          "consolidator.py",
+                          "_bootstrap.py",
+                          "Topology/guard.py")
 
 #: Parameters the FRONT END's output depends on that a diagnostic may set at
 #: run time (`eth80_benchmark.run_config`).  They are part of the cache key.

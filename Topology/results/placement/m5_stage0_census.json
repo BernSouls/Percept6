@@ -1,0 +1,258 @@
+{
+  "flags": {
+    "FE_L3_SPINE": false,
+    "FE_L4_JUNCTIONS": false,
+    "FE_SUBPIXEL_PEAK_POS": false,
+    "ORIENTATION_PIXEL_ANCHORS": true
+  },
+  "scene": {
+    "by_lens": {
+      "BorderOwnership": {
+        "distinct": 24,
+        "integer": 86,
+        "n": 86,
+        "pop": 18,
+        "pop_shared": 12,
+        "shared": 62
+      },
+      "Boundary": {
+        "distinct": 33,
+        "integer": 66,
+        "n": 74,
+        "pop": 13,
+        "pop_shared": 11,
+        "shared": 41
+      },
+      "CONTOUR_PEAK": {
+        "distinct": 55,
+        "integer": 119,
+        "n": 119,
+        "pop": 13,
+        "pop_shared": 12,
+        "shared": 64
+      },
+      "Color": {
+        "distinct": 0,
+        "integer": 4,
+        "n": 6,
+        "pop": 5,
+        "pop_shared": 5,
+        "shared": 6
+      },
+      "Contour": {
+        "distinct": 0,
+        "integer": 6,
+        "n": 6,
+        "pop": 2,
+        "pop_shared": 2,
+        "shared": 6
+      },
+      "ContourFragment": {
+        "distinct": 1,
+        "integer": 14,
+        "n": 74,
+        "pop": 62,
+        "pop_shared": 61,
+        "shared": 73
+      },
+      "Corner": {
+        "distinct": 0,
+        "integer": 9,
+        "n": 9,
+        "pop": 0,
+        "pop_shared": 0,
+        "shared": 9
+      },
+      "CurveComplex": {
+        "distinct": 0,
+        "integer": 5,
+        "n": 5,
+        "pop": 2,
+        "pop_shared": 2,
+        "shared": 5
+      },
+      "EndStopped": {
+        "distinct": 25,
+        "integer": 25,
+        "n": 25,
+        "pop": 4,
+        "pop_shared": 0,
+        "shared": 0
+      },
+      "Junction": {
+        "distinct": 0,
+        "integer": 1,
+        "n": 1,
+        "pop": 0,
+        "pop_shared": 0,
+        "shared": 1
+      },
+      "Onset": {
+        "distinct": 0,
+        "integer": 1,
+        "n": 1,
+        "pop": 0,
+        "pop_shared": 0,
+        "shared": 1
+      },
+      "Orientation": {
+        "distinct": 5,
+        "integer": 25,
+        "n": 25,
+        "pop": 4,
+        "pop_shared": 4,
+        "shared": 20
+      },
+      "PEAK_CHAIN": {
+        "distinct": 1,
+        "integer": 1,
+        "n": 18,
+        "pop": 5,
+        "pop_shared": 5,
+        "shared": 17
+      },
+      "Polarity": {
+        "distinct": 0,
+        "integer": 3,
+        "n": 3,
+        "pop": 0,
+        "pop_shared": 0,
+        "shared": 3
+      },
+      "Position": {
+        "distinct": 54,
+        "integer": 91,
+        "n": 96,
+        "pop": 9,
+        "pop_shared": 6,
+        "shared": 42
+      },
+      "RegionShape": {
+        "distinct": 1,
+        "integer": 1,
+        "n": 18,
+        "pop": 6,
+        "pop_shared": 5,
+        "shared": 17
+      },
+      "Surface": {
+        "distinct": 0,
+        "integer": 0,
+        "n": 7,
+        "pop": 3,
+        "pop_shared": 3,
+        "shared": 7
+      },
+      "T": {
+        "distinct": 0,
+        "integer": 1,
+        "n": 1,
+        "pop": 0,
+        "pop_shared": 0,
+        "shared": 1
+      },
+      "Texture": {
+        "distinct": 5,
+        "integer": 27,
+        "n": 32,
+        "pop": 9,
+        "pop_shared": 8,
+        "shared": 27
+      },
+      "TextureBoundary": {
+        "distinct": 0,
+        "integer": 0,
+        "n": 32,
+        "pop": 24,
+        "pop_shared": 24,
+        "shared": 32
+      },
+      "Y": {
+        "distinct": 0,
+        "integer": 1,
+        "n": 1,
+        "pop": 0,
+        "pop_shared": 0,
+        "shared": 1
+      }
+    },
+    "distinct": 354,
+    "label": "d3_resolvable_00",
+    "max_at_one_site": 16,
+    "nodes": 639,
+    "nodes_per_place_hist": {
+      "1": 19,
+      "2": 34,
+      "3": 6,
+      "4": 12,
+      "5": 20,
+      "6": 6,
+      "7": 21,
+      "8": 16,
+      "9": 18,
+      "11": 11,
+      "16": 16
+    },
+    "share_shared": 0.4460093896713615,
+    "top_cross_lens": [
+      [
+        [
+          "BorderOwnership",
+          "CONTOUR_PEAK"
+        ],
+        55
+      ],
+      [
+        [
+          "Boundary",
+          "Position"
+        ],
+        18
+      ],
+      [
+        [
+          "Position",
+          "Texture"
+        ],
+        8
+      ],
+      [
+        [
+          "PEAK_CHAIN",
+          "RegionShape"
+        ],
+        7
+      ],
+      [
+        [
+          "BorderOwnership",
+          "CONTOUR_PEAK",
+          "Corner"
+        ],
+        5
+      ],
+      [
+        [
+          "PEAK_CHAIN",
+          "RegionShape",
+          "Surface"
+        ],
+        4
+      ],
+      [
+        [
+          "Boundary",
+          "Orientation"
+        ],
+        3
+      ],
+      [
+        [
+          "Boundary",
+          "ContourFragment"
+        ],
+        3
+      ]
+    ]
+  }
+}

@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import math
 import sys
+import os
 import unittest
 from typing import Dict, List, Tuple
 
@@ -220,6 +221,43 @@ class CanaryTests(unittest.TestCase):
         s_bad = L.score_candidate(0, 8, m, inc, q_idx, r_idx, fit)
         self.assertGreater(s_good, s_bad,
                            "P cannot distinguish a good candidate from a bad one")
+
+
+class CacheClosureTests(unittest.TestCase):
+    def test_the_digest_covers_the_whole_build_closure(self):
+        """Every repository file on the build path is hashed into the cache key.
+
+        Without this, editing a module the graph build actually calls (as
+        `eth80_frontend.py` itself once was) serves a stale graph while the key
+        stays put.
+        """
+        import guard
+        guard.activate()
+        from Topology import placement_cacheclosure_m5 as CC
+        files = CC.closure()
+        self.assertGreater(len(files), 40)
+        missing = sorted(r for r in files if not CC.covered(r))
+        self.assertEqual(missing, [],
+                         "cache digest does not cover: %s" % (missing,))
+
+    def test_editing_a_covered_root_module_moves_the_digest(self):
+        """Sensitivity, proved on a file the OLD digest list omitted."""
+        import guard
+        guard.activate()
+        import eth80_frontend as F
+        path = os.path.join(F.ROOT, "sensory_floor.py")
+        orig = open(path, "rb").read()
+        try:
+            F._SOURCE_DIGEST.clear()
+            before = F.frontend_source_digest()
+            open(path, "wb").write(orig + b"\n# digest sensitivity probe\n")
+            F._SOURCE_DIGEST.clear()
+            after = F.frontend_source_digest()
+        finally:
+            open(path, "wb").write(orig)     # BINARY write: a text-mode
+            F._SOURCE_DIGEST.clear()         # rewrite would convert CRLF and
+        self.assertNotEqual(before, after)   # corrupt the file.
+        self.assertEqual(F.frontend_source_digest(), before)
 
 
 if __name__ == "__main__":
