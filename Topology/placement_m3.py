@@ -189,11 +189,16 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
             sh_idx, sh_inc = payload_index(q_sh), incident_index(q_sh)
             w_idx, w_inc = payload_index(q_w), incident_index(q_w)
             ship_inc: Dict[int, List[Tuple[int, bool, str]]] = defaultdict(list)
-            for (s, d, et) in sorted(g1.subgraph.edges,
+            q_by: Dict[int, Dict[str, List[Tuple[int, Any]]]] = defaultdict(
+                lambda: defaultdict(list))
+            q_ship = shipped_edges(g1.subgraph)
+            for (s, d, et) in sorted(q_ship,
                                      key=lambda e: (int(e[0]), int(e[1]),
                                                     getattr(e[2], "name", ""))):
                 nm = getattr(et, "name", None) or str(et).replace("EdgeType.", "")
                 ship_inc[int(s)].append((int(d), True, nm))
+                q_by[int(s)][nm].append((int(d), q_ship[(s, d, et)]))
+                q_by[int(d)][nm].append((int(s), q_ship[(s, d, et)]))
             truth = {int(q): int(r)
                      for r, q in track_optimal(spec.scene, r0, sc1, r1, g0, g1).items()}
             pop = [u for u in sorted(truth) if o1.get(u, -1) >= 0]
@@ -217,11 +222,15 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
                             bs, best = val, v
                     return best
 
+                if ORACLE:
+                    ARMS_ALL = ARMS + ("P_oracle", "P_oracle_presence")
+                else:
+                    ARMS_ALL = ARMS
                 scored: Dict[str, int] = {"N": cand[0][0]}
                 scored["R"] = pick(lambda v, s: blend(
                     presence_credit(u, v, ship_inc, ref_by_src), s))
                 scored["R_fixed"] = pick(lambda v, s: blend(
-                    geometry_credit(u, v, ship_inc, ref_by, nmap, q_idx), s))
+                    geometry_credit(u, v, ship_inc, ref_by, nmap, q_by), s))
                 scored["P"] = pick(lambda v, s: blend(
                     L.score_candidate(u, v, nmap, q_inc, q_idx, r_idx, fit), s))
                 scored["P_presence"] = pick(lambda v, s: blend(
@@ -250,7 +259,7 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
                     "part4": bool(is_ambiguous_part4(row)),
                     "margin": float(row[0][1] - row[1][1]) if len(row) > 1 else None,
                     "top_sim": float(row[0][1]),
-                    "ok": {a: bool(scored[a] == tv) for a in ARMS},
+                    "ok": {a: bool(scored[a] == tv) for a in ARMS_ALL},
                     "n_cand": len(cand),
                 })
     return records

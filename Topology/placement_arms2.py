@@ -146,11 +146,30 @@ def presence_credit(u: int, v: int,
 GEOM_AGREE_UNITS = 1.0
 
 
+def params_agree(a: Any, b: Any, tol: float = 1.0) -> bool:
+    """Do two SHIPPED edge parameter records describe the same relation?
+
+    Public fields only: same registered class, same sign, and every quantized
+    axis within ``tol`` bins.  Fixed before CHECK was evaluated.
+    """
+    if a is None or b is None:
+        return False
+    if getattr(a, "class_", None) != getattr(b, "class_", None):
+        return False
+    if int(getattr(a, "sign", 1)) != int(getattr(b, "sign", 1)):
+        return False
+    qa = getattr(a, "quantized", ()) or ()
+    qb = getattr(b, "quantized", ()) or ()
+    if len(qa) != len(qb):
+        return False
+    return all(abs(float(x) - float(y)) <= tol for x, y in zip(qa, qb))
+
+
 def geometry_credit(u: int, v: int,
                     inc: Dict[int, List[Tuple[int, bool, str]]],
                     ref_by: Dict[int, Dict[str, List[Tuple[int, Any]]]],
                     mapping: Dict[int, int],
-                    q_idx: Optional[Dict[Tuple[int, int, str], Any]] = None
+                    q_by: Optional[Dict[int, Dict[str, List[Tuple[int, Any]]]]] = None
                     ) -> float:
     """R-fixed's term: a counterpart must AGREE, and silence is subtracted.
 
@@ -169,11 +188,16 @@ def geometry_credit(u: int, v: int,
     for (other, _is_src, name) in es:
         cand_edges = ref_by.get(v, {}).get(name, [])
         mo = mapping.get(int(other))
-        if q_idx is not None:
-            qv = (q_idx.get((int(u), int(other), name)) if _is_src
-                  else q_idx.get((int(other), int(u), name)))
-        else:
-            qv = None
+        qv = None
+        if q_by is not None:
+            src = int(u) if _is_src else int(other)
+            for (d1, params) in q_by.get(src, {}).get(name, []):
+                if _is_src and int(d1) == int(other):
+                    qv = params
+                    break
+                if (not _is_src) and int(d1) == int(u):
+                    qv = params
+                    break
         hit = None
         for (d2, params) in cand_edges:
             if mo is not None and int(d2) == int(mo):
@@ -185,16 +209,10 @@ def geometry_credit(u: int, v: int,
         # different denominator -- measured: it returned 1.0 for a matched and
         # a wildly mismatched relation alike (canary in test_placement_m3),
         # which is why mission 2 found R_fixed "only matched N".
-        if hit is None or qv is None:
+        if hit is None or qv is None or not params_agree(qv, hit):
             dis += 1
             continue
-        from matching.placement_llr import FIXED_TOL
-        from matching.placement_scorer import payload_residual
-        res = payload_residual(qv, hit, FIXED_TOL)
-        if math.isfinite(res) and res <= GEOM_AGREE_UNITS:
-            agree += 1
-        else:
-            dis += 1
+        agree += 1
     return (agree - dis) / len(es)
 
 

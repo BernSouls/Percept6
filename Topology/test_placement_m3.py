@@ -190,14 +190,17 @@ class CanaryTests(unittest.TestCase):
         reading its parameters, so it returned the same credit for a matched and
         a wildly mismatched relation.  This canary fails loudly if that returns.
         """
+        from core.schema import EdgeParams
         from Topology.placement_arms2 import geometry_credit
         inc = {0: [(1, True, "A")]}
-        q_idx = {(0, 1, "A"): _vec(0.0, 1.0)}
-        good = _vec(0.0, 1.0)
-        bad = _vec(1.4, 4.0)          # a very different relation
-        ref_by = {10: {"A": [(1, good)]}, 11: {"A": [(1, bad)]}}
-        v_good = geometry_credit(0, 10, inc, ref_by, {1: 1}, q_idx)
-        v_bad = geometry_credit(0, 11, inc, ref_by, {1: 1}, q_idx)
+        q_params = EdgeParams(class_="EDGE_REGION_CONTENT", quantized=(1.0,),
+                              sign=1)
+        same = EdgeParams(class_="EDGE_REGION_CONTENT", quantized=(1.0,), sign=1)
+        differ = EdgeParams(class_="EDGE_OCCLUSION", quantized=(9.0,), sign=-1)
+        q_by = {0: {"A": [(1, q_params)]}}
+        ref_by = {10: {"A": [(1, same)]}, 11: {"A": [(1, differ)]}}
+        v_good = geometry_credit(0, 10, inc, ref_by, {1: 1}, q_by)
+        v_bad = geometry_credit(0, 11, inc, ref_by, {1: 1}, q_by)
         self.assertGreater(v_good, v_bad,
                            "R_fixed cannot tell a matching relation from a "
                            "mismatched one")
