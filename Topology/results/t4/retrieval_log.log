@@ -1,0 +1,11 @@
+=== Part 1: component logging R/N/W (8 refs x 128 queries) ===
+refs=8 queries=128
+  query 16/128 (773s)
+  query 32/128 (1642s)
+  query 48/128 (2451s)
+  query 64/128 (3836s)
+  query 80/128 (4528s)
+  query 96/128 (5257s)
+  query 112/128 (6032s)
+  query 128/128 (6778s)
+done 128 queries (6778s) -> /home/user/Percept6/Topology/results/t4/retrieval_components.jsonl
