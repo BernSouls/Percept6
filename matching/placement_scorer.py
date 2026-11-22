@@ -276,3 +276,73 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+# ---------------------------------------------------------------------------
+# CANDIDATE-DEPENDENT support
+# ---------------------------------------------------------------------------
+# The Part 4 modifier was applied as `sim * (1 + w*(support(u) - 0.5))`, where
+# support depended on the SOURCE only.  That factor multiplies EVERY candidate
+# of u by the same number, so it cannot change which candidate wins: the arm is
+# arithmetically incapable of differing from N.  Measured on the denser graphs:
+# net flips 0 of 2373 nodes, twice.  The support has to be read against the
+# correspondence the candidate INDUCES -- u -> v -- which is what this does.
+def payload_index(pay: Mapping[Tuple[int, int, Any], Any]
+                  ) -> Dict[Tuple[int, int, str], Any]:
+    """(source, target, class name) -> vector."""
+    out: Dict[Tuple[int, int, str], Any] = {}
+    for key in pay:
+        s, d, et = key
+        name = getattr(et, "name", None) or str(et).replace("EdgeType.", "")
+        out[(int(s), int(d), name)] = pay[key]
+    return out
+
+
+def incident_index(pay: Mapping[Tuple[int, int, Any], Any]
+                   ) -> Dict[int, List[Tuple[int, bool, str]]]:
+    """node -> [(neighbour, is_source, class name)] for BOTH directions."""
+    out: Dict[int, List[Tuple[int, bool, str]]] = {}
+    for key in sorted(pay, key=lambda k: (int(k[0]), int(k[1]),
+                                          getattr(k[2], "name", ""))):
+        s, d, et = key
+        name = getattr(et, "name", None) or str(et).replace("EdgeType.", "")
+        out.setdefault(int(s), []).append((int(d), True, name))
+        out.setdefault(int(d), []).append((int(s), False, name))
+    return out
+
+
+def support_for_candidate(u: int, v: int,
+                          mapping: Mapping[int, int],
+                          q_inc: Mapping[int, List[Tuple[int, bool, str]]],
+                          q_idx: Mapping[Tuple[int, int, str], Any],
+                          r_idx: Mapping[Tuple[int, int, str], Any],
+                          tol: float,
+                          max_credit: float = 1.0,
+                          sigma: float = 1.0) -> Optional[float]:
+    """Support for the SPECIFIC correspondence u -> v.
+
+    Only u's own incident edges are scored, each framed in ITS source: when u is
+    the source the frame is u's; when u is the target the frame is the
+    neighbour's.  `mapping` supplies the neighbours' images; u's image is
+    overridden by `v`.  Returns None when nothing is checkable -- and None means
+    NO CREDIT AND NO PENALTY, never zero support.
+    """
+    mu = int(v)
+    credits: List[float] = []
+    for (other, is_source, name) in q_inc.get(int(u), ()):
+        mo = mapping.get(int(other))
+        if mo is None:
+            continue
+        if is_source:
+            qv = q_idx.get((int(u), int(other), name))
+            rv = r_idx.get((mu, int(mo), name))
+        else:
+            qv = q_idx.get((int(other), int(u), name))
+            rv = r_idx.get((int(mo), mu, name))
+        if qv is None or rv is None:
+            continue
+        res = payload_residual(qv, rv, tol)
+        credits.append(min(float(max_credit), support_from_residual(res, sigma)))
+    if not credits:
+        return None
+    return float(sum(credits) / len(credits))

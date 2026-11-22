@@ -151,9 +151,19 @@ class EdgeClassTests(unittest.TestCase):
         self.assertEqual(EdgeType.SOURCE_FRAME_PLACEMENT.value, 55)
 
     def test_field_provider_constants_are_frozen(self):
+        """The frozen values are the ones derived and measured on DEV.
+
+        FRAME_COHERENCE_MIN moved 0.30 -> 0.50 when it was re-derived from the
+        paired per-node frame-accuracy table (coherence 0.30-0.50 -> 14.68 deg
+        median error, 0.90-1.01 -> 2.12 deg); TARGET_K moved 4 -> 16 from the
+        DEV k sweep (coverage 26.3 % -> 65.8 % with survival 46.3 % -> 67.1 %).
+        This test PINS the frozen values so an unnoticed drift fails loudly; it
+        is updated only when a constant is re-derived and recorded, never to
+        make a run look better.
+        """
         from matching import placement_edges as PE
-        self.assertEqual(PE.FRAME_COHERENCE_MIN, 0.30)
-        self.assertEqual(PE.TARGET_K, 4)
+        self.assertEqual(PE.FRAME_COHERENCE_MIN, 0.50)
+        self.assertEqual(PE.TARGET_K, 16)
         self.assertEqual(PE.TARGET_RADIUS_SCALES, 4.0)
 
 

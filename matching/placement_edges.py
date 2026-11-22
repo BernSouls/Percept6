@@ -239,8 +239,19 @@ def build_edges(subgraph: Any, image_u8: np.ndarray,
                 tolerance: Optional[float] = None,
                 k: int = TARGET_K,
                 radius_scales: float = TARGET_RADIUS_SCALES,
+                object_of: Optional[Dict[int, int]] = None,
+                intra_only: bool = False,
                 **sel_kw: Any) -> Dict[Tuple[int, int, Any], PlacementVector]:
-    """The SOURCE_FRAME_PLACEMENT payloads for one graph."""
+    """The SOURCE_FRAME_PLACEMENT payloads for one graph.
+
+    ``intra_only`` drops every edge whose endpoints sit on DIFFERENT objects.
+    That is the NEGATIVE-A control, and it belongs in the BUILDER: with
+    intra-object edges only, the two identical objects contribute exactly the
+    same geometry, so a correct score cannot tell the identity mapping from the
+    swap -- any difference is a positional leak.  NEGATIVE-B is the same scene
+    with this left False, where the swap reverses the cross-object vectors and
+    identity must WIN.
+    """
     from core.types import EdgeType
     ang, coh = field_angles(image_u8)
     frames = node_frames(subgraph, ang, coh)
@@ -253,6 +264,9 @@ def build_edges(subgraph: Any, image_u8: np.ndarray,
     out: Dict[Tuple[int, int, Any], PlacementVector] = {}
     for u in sorted(targets):
         for v in targets[u]:
+            if intra_only and object_of is not None:
+                if object_of.get(int(u)) != object_of.get(int(v)):
+                    continue
             pv = placement_vector_from(subgraph, u, v, frames[u],
                                        scales.get(u, 0.0), tolerance)
             if pv is not None:

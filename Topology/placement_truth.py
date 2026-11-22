@@ -278,3 +278,84 @@ def track_optimal(scene0: Scene, render0: Any, scene1: Scene, render1: Any,
 
 def LENS(sig: Any) -> str:
     return str(sig[0]) if sig is not None else "?"
+
+
+def node_objects(render: Any, g: Any) -> Dict[int, int]:
+    """node -> object index at its anchor (-1 background)."""
+    return {int(n): object_id_at(render, g.subgraph.anchor_of_node.get(n))
+            for n in sorted(int(x) for x in g.subgraph.nodes)}
+
+
+def local_points(scene: Scene, render: Any, g: Any) -> Dict[int, np.ndarray]:
+    """node -> its position in its OWN OBJECT's local frame.
+
+    Two identical objects placed differently have the same local geometry; this
+    is what makes an explicit SWAP correspondence well defined, which is what
+    the NEGATIVE-A control needs and never had (its earlier "truth" was built
+    from image position, so no swap was ever produced and the control could not
+    test anything).
+    """
+    names = [o.name for o in scene.objects]
+    by_name = {o.name: o for o in scene.objects}
+    out: Dict[int, np.ndarray] = {}
+    for n in sorted(int(x) for x in g.subgraph.nodes):
+        a = g.subgraph.anchor_of_node.get(n)
+        if a is None:
+            continue
+        p = world_point_at(scene, render, float(a[0]), float(a[1]))
+        if p is None:
+            continue
+        oid = object_id_at(render, a)
+        if oid < 0 or oid >= len(names):
+            continue
+        o = by_name[names[oid]]
+        c = np.asarray(o.centre, dtype=np.float64)
+        R = np.asarray(o.rotation, dtype=np.float64)
+        out[int(n)] = R.T @ (p - c)
+    return out
+
+
+#: Swap partner tolerance, in WORLD units.  Node spacing is ~5 px and
+#: pixel_scale is 1/128, so 0.06 is roughly twice a node spacing.
+SWAP_RADIUS_WORLD = 0.06
+
+
+def swap_truth(scene0: Scene, render0: Any, g0: Any, g_q: Any,
+               truth: Dict[int, int],
+               radius: float = SWAP_RADIUS_WORLD) -> Dict[int, int]:
+    """q node -> the SAME local point on the OTHER object, in the base graph.
+
+    Built from the renderer's local frames, never from appearance, so the two
+    identical objects are genuinely interchangeable and the swap is a real
+    alternative correspondence rather than a relabelling.
+    """
+    objs0 = node_objects(render0, g0)
+    loc0 = local_points(scene0, render0, g0)
+    # group base nodes by (object, lens)
+    by_obj_lens: Dict[Tuple[int, str], List[int]] = defaultdict(list)
+    for n in sorted(loc0):
+        by_obj_lens[(objs0[n], LENS(g0.sigs.get(n)))].append(n)
+    obj_ids = sorted({o for o in objs0.values() if o >= 0})
+    q_objs = {int(u): objs0.get(int(r), -1) for u, r in truth.items()}
+    out: Dict[int, int] = {}
+    for u in sorted(truth):
+        r = truth[u]
+        if r not in loc0:
+            continue
+        this_obj = q_objs[u]
+        others = [o for o in obj_ids if o != this_obj]
+        if not others:
+            continue
+        lens = LENS(g_q.sigs.get(u))
+        best = None
+        best_d = float("inf")
+        for o in others:
+            for cand in by_obj_lens.get((o, lens), ()):
+                if cand == r:
+                    continue
+                d = float(np.linalg.norm(loc0[cand] - loc0[r]))
+                if d < best_d:
+                    best_d, best = d, cand
+        if best is not None and best_d <= radius:
+            out[int(u)] = int(best)
+    return out
