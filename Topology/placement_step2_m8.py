@@ -254,9 +254,9 @@ def main() -> int:
     recs = M3.run_check(fit_specs, VIEWS5, fit, pfit, None, ratio_fit,
                         pose_fn=pose_fn)
 
-    arms = ("N", "R", "R_fixed", "P", "P_presence", "P_plus", "P_presence",
-            "P_plus_ctx", "P_shuffled", "W", "P_oracle", "P_oracle_presence",
-            "P_ratio")
+    arms = ("N", "R", "R_fixed", "P", "P_presence", "P_plus",
+            "P_plus_presence", "P_plus_ctx", "P_plus_ctx_presence",
+            "P_shuffled", "W", "P_oracle", "P_oracle_presence", "P_ratio")
     table = {}
     print("\n  FIT TABLE (ambiguous bank, scene-clustered)")
     for a in arms:
@@ -267,6 +267,7 @@ def main() -> int:
         print("    %-18s %.4f" % (a, table[a]))
 
     pairs = (("P_plus", "P_plus_presence"), ("P_plus", "N"),
+             ("P_plus_ctx", "P_plus_ctx_presence"),
              ("P_plus", "P"), ("P_plus", "P_presence"),
              ("P_plus_ctx", "P_plus"), ("P_plus_ctx", "P_plus_presence"),
              ("P_plus_ctx", "N"), ("P", "P_presence"),

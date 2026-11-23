@@ -49,6 +49,7 @@ def main() -> int:
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--step2", default="m8_step2")
+    ap.add_argument("--variant", default="P_plus_ctx")
     ap.add_argument("--step0", default="m8_step0")
     ap.add_argument("--tag", default="m8_preregistration")
     args = ap.parse_args()
@@ -106,7 +107,10 @@ def main() -> int:
         n_fit = len(fit_specs)
     except Exception:
         pass
-    prim = ("P_plus_ctx - P_plus", "P_plus_ctx - N")
+    # The variant FIT chose is P_plus_ctx (P_plus scored against the iterated
+    # context), so BOTH primaries are stated for that variant: geometry beyond
+    # presence under the deployed context, and placement beyond similarity.
+    prim = ("P_plus_ctx - P_plus_ctx_presence", "P_plus_ctx - N")
     mde = {}
     for k in prim:
         c = s2["contrasts"].get(k) or {}
@@ -160,11 +164,21 @@ def main() -> int:
                        "note": "P_oracle / P_ratio are DEV diagnostics only and "
                                "are NOT contrasts in this read"},
         },
+        "deployed_variant": {
+            "arm": args.variant,
+            "chosen_on_fit_only": True,
+            "fit_accuracy": s2["arms"].get(args.variant),
+            "why": ("highest FIT accuracy of every arm on the same graph "
+                    "(%.4f), ahead of P_plus by more than its FIT MDE"
+                    % float(s2["arms"].get(args.variant, float("nan")))),
+        },
         "arms": ["N", "P", "P_presence", "P_plus", "P_plus_presence",
-                 "P_plus_ctx", "P_shuffled", "P_oracle", "P_oracle_presence"],
+                 "P_plus_ctx", "P_plus_ctx_presence", "P_shuffled",
+                 "P_oracle", "P_oracle_presence"],
         "primary_contrasts": list(prim),
         "secondary_contrasts": ["P_plus - P_plus_presence", "P - P_presence",
-                                "P_plus - P", "P_plus_ctx - P_plus_presence"],
+                                "P_plus - P", "P_plus_ctx - P_plus",
+                                "P_plus_ctx - P_plus_presence"],
         "correction": ("two primary contrasts, both must reach p <= 0.025 "
                        "(Holm on two); the reported p values are also given "
                        "UNCORRECTED so nothing is hidden"),
@@ -182,10 +196,10 @@ def main() -> int:
             "corrected": s0b,
             "note": ("the first audit in m8_step0.json compared query node ids "
                      "against reference node ids and is superseded by m8_step0b"),
-            "filter": ("confident-context filter is optional by the >50% rule "
-                       "(wrong share %.3f) and is kept anyway: the rival-count "
-                       "refusal never relaxes"
-                       % float(s0b.get("wrong_share", float("nan")))
+            "filter": (("confident-context filter is optional by the >50%% rule "
+                        "(wrong share %.3f) and is kept anyway: the rival-count "
+                        "refusal never relaxes"
+                        % float(s0b.get("wrong_share", float("nan"))))
                        if s0b else "not measured"),
         },
         "step0_oracle_gap": (s0.get("oracle_gap") if s0 else {}),

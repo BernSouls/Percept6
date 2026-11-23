@@ -1,0 +1,277 @@
+{
+  "analysis": {
+    "also_reported": [
+      "unambiguous bank",
+      "per family",
+      "net flips",
+      "both labels",
+      "P_oracle diagnostics"
+    ],
+    "bank": "ambiguous (margin < AMBIGUOUS_MARGIN)",
+    "unit": "scene"
+  },
+  "arms": [
+    "N",
+    "P",
+    "P_presence",
+    "P_plus",
+    "P_plus_presence",
+    "P_plus_ctx",
+    "P_plus_ctx_presence",
+    "P_shuffled",
+    "P_oracle",
+    "P_oracle_presence"
+  ],
+  "confirmation_set": {
+    "justification_of_size": "the mission caps the build at 128 scenes / 512 graphs; this is 16 scenes / 80 graphs, and the MDE below is what that buys.",
+    "n_graphs": 80,
+    "n_scenes": 16,
+    "scenes": [
+      {
+        "family": "SPHERE",
+        "name": "d5_sphere_08",
+        "seed": "seed 9108"
+      },
+      {
+        "family": "BOX",
+        "name": "d5_box_08",
+        "seed": "seed 9281"
+      },
+      {
+        "family": "CYLINDER",
+        "name": "d5_cylinder_08",
+        "seed": "seed 9454"
+      },
+      {
+        "family": "OCCLUSION",
+        "name": "d5_occlusion_08",
+        "seed": "seed 9627"
+      },
+      {
+        "family": "SPHERE",
+        "name": "d5_sphere_09",
+        "seed": "seed 9109"
+      },
+      {
+        "family": "BOX",
+        "name": "d5_box_09",
+        "seed": "seed 9282"
+      },
+      {
+        "family": "CYLINDER",
+        "name": "d5_cylinder_09",
+        "seed": "seed 9455"
+      },
+      {
+        "family": "OCCLUSION",
+        "name": "d5_occlusion_09",
+        "seed": "seed 9628"
+      },
+      {
+        "family": "SPHERE",
+        "name": "d5_sphere_10",
+        "seed": "seed 9110"
+      },
+      {
+        "family": "BOX",
+        "name": "d5_box_10",
+        "seed": "seed 9283"
+      },
+      {
+        "family": "CYLINDER",
+        "name": "d5_cylinder_10",
+        "seed": "seed 9456"
+      },
+      {
+        "family": "OCCLUSION",
+        "name": "d5_occlusion_10",
+        "seed": "seed 9629"
+      },
+      {
+        "family": "SPHERE",
+        "name": "d5_sphere_11",
+        "seed": "seed 9111"
+      },
+      {
+        "family": "BOX",
+        "name": "d5_box_11",
+        "seed": "seed 9284"
+      },
+      {
+        "family": "CYLINDER",
+        "name": "d5_cylinder_11",
+        "seed": "seed 9457"
+      },
+      {
+        "family": "OCCLUSION",
+        "name": "d5_occlusion_11",
+        "seed": "seed 9630"
+      }
+    ],
+    "selection": "DEV-5 ranks i >= 8 of the same generator, one pose list (VIEWS5: rot5, translate, rot15, scale).  No scene of this set was fitted, scored or looked at in Missions 5-8; the cache held none of its graphs when this file was written.",
+    "views": [
+      "v1_rot5",
+      "v2_trans",
+      "v3_rot15",
+      "v4_scale"
+    ]
+  },
+  "correction": "two primary contrasts, both must reach p <= 0.025 (Holm on two); the reported p values are also given UNCORRECTED so nothing is hidden",
+  "decision_rule": {
+    "credit": "P_plus_ctx - P_plus > its MDE AND P_plus_ctx - N > its MDE, both in the pre-registered direction, scene-clustered",
+    "null": "neither clears: reported as a null with the size that would decide",
+    "partial": "one of the two clears its MDE and the other is positive: reported as partial, not credited"
+  },
+  "deployed_variant": {
+    "arm": "P_plus_ctx",
+    "chosen_on_fit_only": true,
+    "fit_accuracy": 0.3817698753321071,
+    "why": "highest FIT accuracy of every arm on the same graph (0.3818), ahead of P_plus by more than its FIT MDE"
+  },
+  "frozen_configuration": {
+    "context": {
+      "enabled": true,
+      "iters": 5,
+      "margin": 0.0,
+      "max_rivals": 1,
+      "mutual": false,
+      "rival_tol": 0.02
+    },
+    "endpoint_whitelist": [
+      "Orientation",
+      "Texture",
+      "Color",
+      "Contour",
+      "Boundary",
+      "CornerPoint",
+      "Blob",
+      "BoundaryArc"
+    ],
+    "frontend": {
+      "FE_KEYPOINTS": 0,
+      "FE_PLACE_LAYER": 1,
+      "FE_SUBPIXEL_GABOR_ANCHOR": 0,
+      "FE_SUBPIXEL_PEAK_POS": 0,
+      "file_sha256_16": {
+        "eth80_frontend.py": "7416d8452ae68937",
+        "lenses/base.py": "e0f2107d18d3e510"
+      },
+      "flag_off_fingerprint": {
+        "edges": 3652,
+        "hash": "c0ab7a1b670d0540",
+        "nodes": 2003,
+        "note": "3 scenes, identical before and after the edit"
+      },
+      "flag_on_fingerprint": {
+        "edges": 3962,
+        "hash": "65ae879ac7f21f82",
+        "nodes": 2789,
+        "note": "3 scenes, two fresh processes agree"
+      },
+      "match_side_unchanged": "arcbin / orientation matching untouched; only the place position of each segment changed",
+      "orientation_change": "each segment of a multi-segment Orientation place now carries its own midpoint on the polyline at half its own arc; the place centroid is no longer shared",
+      "orientation_distinct_positions": "45/45 on spec 0 (was 30/45)",
+      "source_digest": "4644a39f867240e1fb91f623ce9093b6f4f0e7ec6bc512ceb48d8cb66a468450",
+      "switch_suffix": "FIELD_BORDER_DISCARD_PER_CHANNEL=False;BINDER_COMPLETE_POSITION_MAP=True;GRAPH_STAGE6_RELATIONS=False;ATTACHMENT_EVERY_NAMED_HOST=True;FE_L3_SPINE=False;FE_L4_JUNCTIONS=False;FE_SUBPIXEL_PEAK_POS=False;FE_SUBPIXEL_GABOR_ANCHOR=False;FE_KEYPOINTS=False;FE_L6_ADDRESS=False;FE_SOFT_CHANNEL_GATE=True;FE_SOFT_L3_L4_GATE=True;FE_VECTOR_ADDRESS=False;PLACEMENT_PAYLOAD_ENABLED=False;PLACEMENT_SCORER_ENABLED=False;PLACEMENT_GATE_ENABLED=False;PLACEMENT_WEIGHT=0.25;PLACEMENT_TOLERANCE=None;PLACEMENT_MAX_NEIGHBOUR_CREDIT=1.0;PLACEMENT_SUPPORT_SIGMA=1.0;set="
+    },
+    "oracle": {
+      "note": "P_oracle / P_ratio are DEV diagnostics only and are NOT contrasts in this read",
+      "used_in_read": false
+    },
+    "place_layer": true,
+    "plus": {
+      "a_exist": 0.40625,
+      "a_geom": 0.84375,
+      "fixed_tol": 1.7009,
+      "llr_clip": 3.0,
+      "n_bins": 24,
+      "pseudo": 0.5,
+      "res_max": 6.0,
+      "slot_cap": 8
+    },
+    "scorer": {
+      "ambiguous_margin": 0.05,
+      "cand_cap": 6,
+      "edge_beta": 0.5
+    }
+  },
+  "mde": {
+    "P_plus_ctx - N": {
+      "fit_effect": 0.07006758785803724,
+      "fit_n_scenes": 16,
+      "fit_se_scene": 0.008341945224416773,
+      "mde": 0.023357446628366963,
+      "se_at_confirmation_size": 0.008341945224416773
+    },
+    "P_plus_ctx - P_plus_ctx_presence": {
+      "fit_effect": 0.023508321347849914,
+      "fit_n_scenes": 16,
+      "fit_se_scene": 0.004508405422012998,
+      "mde": 0.012623535181636395,
+      "se_at_confirmation_size": 0.004508405422012998
+    }
+  },
+  "mission": 8,
+  "primary_contrasts": [
+    "P_plus_ctx - P_plus_ctx_presence",
+    "P_plus_ctx - N"
+  ],
+  "read_budget": {
+    "looks_on_this_set": 1,
+    "looks_used": 0
+  },
+  "secondary_contrasts": [
+    "P_plus - P_plus_presence",
+    "P - P_presence",
+    "P_plus - P",
+    "P_plus_ctx - P_plus",
+    "P_plus_ctx - P_plus_presence"
+  ],
+  "step0_context_audit": {
+    "corrected": {
+      "by_family": {
+        "BOX": 0.5938303341902313,
+        "CYLINDER": 0.5939278937381404,
+        "OCCLUSION": 0.3683304647160069,
+        "SPHERE": 0.5345413363533409
+      },
+      "by_lens": {
+        "Boundary": {
+          "correct": 0.5208446128857607,
+          "n": 1847
+        },
+        "Color": {
+          "correct": 0.3888111888111888,
+          "n": 715
+        },
+        "Contour": {
+          "correct": 0.7282608695652174,
+          "n": 92
+        },
+        "Orientation": {
+          "correct": 0.6519337016574586,
+          "n": 905
+        },
+        "Texture": {
+          "correct": 0.4687760199833472,
+          "n": 1201
+        }
+      },
+      "correct_share": 0.5168067226890757,
+      "map_correct_share": 0.37698561601000624,
+      "n_context_edges": 4760,
+      "n_mapped_nodes": 7995,
+      "res_right_mean": 0.14948852234322946,
+      "res_right_median": 0.09556090337925216,
+      "res_wrong_mean": 0.5611276856400874,
+      "res_wrong_median": 0.5518813744205582,
+      "wrong_share": 0.4831932773109243
+    },
+    "filter": "confident-context filter is optional by the >50% rule (wrong share 0.483) and is kept anyway: the rival-count refusal never relaxes",
+    "note": "the first audit in m8_step0.json compared query node ids against reference node ids and is superseded by m8_step0b"
+  },
+  "step0_oracle_gap": {
+    "context": 0.0026568567341099802,
+    "intrinsic": 0.040261598201512316
+  }
+}

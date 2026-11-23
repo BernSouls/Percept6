@@ -125,7 +125,8 @@ def main() -> int:
                         pose_fn=pose_fn)
 
     arms = ["N", "P", "P_presence", "P_plus", "P_plus_presence",
-            "P_plus_ctx", "P_shuffled", "P_oracle", "P_oracle_presence"]
+            "P_plus_ctx", "P_plus_ctx_presence", "P_shuffled", "P_oracle",
+            "P_oracle_presence"]
     table = {}
     print("ARMS (ambiguous bank, scene-clustered)")
     for a in arms:

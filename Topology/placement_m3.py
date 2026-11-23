@@ -56,7 +56,7 @@ PLUS_META: Dict[str, Any] = {}
 PLUS_NODES: List[Any] = []    # per-node (terms, truth_index) over the FIT pass
 CTX_STATS: List[Any] = []     # per view: context accuracy before/after and moves
 ARMS = ("N", "R", "R_fixed", "P", "P_presence", "P_plus", "P_plus_presence",
-        "P_plus_ctx", "P_shuffled", "W")
+        "P_plus_ctx", "P_plus_ctx_presence", "P_shuffled", "W")
 #: [MISSION 8] Placement context iteration.  Thresholds are FITTED ON FIT and
 #: then frozen; the arm is harness-side, so no deployed behaviour changes.
 CONTEXT = True
@@ -414,6 +414,13 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
                 scored["P_plus_ctx"] = pick(lambda v, s: blend(
                     L.plus_score(u, v, ctx_map, q_inc, q_idx, r_idx, fit, pfit,
                                  A_E, A_G), s))
+                # The deployed variant's presence-only counterpart: same slots,
+                # same caps, same padding, same iterated context, geometry
+                # coefficient ZERO.  Without it the geometry contrast could not
+                # be stated for the arm FIT actually chose.
+                scored["P_plus_ctx_presence"] = pick(lambda v, s: blend(
+                    L.plus_score(u, v, ctx_map, q_inc, q_idx, r_idx, fit, pfit,
+                                 A_E, 0.0), s))
                 scored["P_shuffled"] = pick(lambda v, s: blend(
                     L.score_candidate(u, v, nmap, sh_inc, sh_idx, r_idx, fit), s))
                 scored["W"] = pick(lambda v, s: blend(
