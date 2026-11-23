@@ -1,7 +1,24 @@
 # Mission 10 — refit under the deployed objective, confirm out of plane, move toward real images
 
-Branch `arena/c316ca3a-percept6`, from `a6d23fb`. This report is written as the
-runs land; the last section says what is still running and what it costs.
+Branch `arena/c316ca3a-percept6`, from `a6d23fb`. All four steps are complete and
+every run below is finished; §7 is the plain verdict.
+
+**One paragraph, if that is all you read.** The Mission-8 bundle survives a refit
+against the deployed objective (Step 1: the best variant is +0.0308 against a FIT
+MDE of 0.0634, so it is kept, and the deployed gain splits into +0.0850 presence,
++0.0038 geometry *on top of presence*, and +0.0204 for the context iteration —
+which is worth nothing (+0.0004) without the geometry term). Out of plane, on 20
+fresh scenes registered before their graphs existed, geometry beats presence by
+**+0.0221** (CI [+0.0096, +0.0345], p 0.0025) and the unambiguous bank is unharmed:
+**the confirmation passes**. On synthetic scene retrieval the placement score loses
+(0.500 vs 0.750 top-1) and the reason is measured rather than guessed: a sum over
+correspondences is a coverage statistic. The same mechanism explains ETH-80: the
+pre-registered score edges up (+0.075) but stays inside its MDE, while the mean over
+correspondences lifts same-class instance retrieval from 0.150 to **0.380**
+(+0.230, CI [+0.120, +0.345]) against a 1/8 chance floor. The four DEV-5 families at
+the deployed matcher on all twelve FIT scenes show no regression anywhere
+(+0.0178 pooled). Everything new is dark and every default is byte-identical, with a
+fresh-process reproduction of the Step-2 read to prove it.
 
 ---
 
