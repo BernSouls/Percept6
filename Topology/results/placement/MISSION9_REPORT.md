@@ -278,26 +278,55 @@ run; no constant was changed here, and none should be before that number exists.
 
 ---
 
-## 8. Step 3 — not run
+## 8. Step 3 — the shortlist is measured; the rescoring is not run
 
-Budget first, as required: a pair costs 18–25 s through the deployed matcher
-(19.9 s flag off, 24.9 s with geometry on one DEV-5 pair, 18 s mean on the
-irregular scenes). A 64-scene gallery at reference pose is 64 graph builds
-(≈ 16 s each), plus two query views per scene (128 builds), plus, for a 24-query
-shortlist with K = 8 and two arms, 384 rescored pairs — **≈ 2.6 h of matching and
-50 min of building** on the single core this session has left. It was not started
-rather than started and left half-read, because a partial shortlist would have to
-be reported as a result.
+Budget first, as required, and it is the reason this step stops where it does. A
+rescored pair costs 18–25 s through the deployed matcher (19.9 s flag off, 24.9 s
+with geometry, 18 s mean on the irregular scenes). The gallery is 64 fresh scenes
+(seeds 28000+), each rendered at reference pose and under both query poses: 192
+graph builds, done (2946 s). The cheap node similarity that defines the ONE
+shared shortlist costs 1.7 s per (query, gallery) pair, measured.
 
-The design is fixed and can be run as-is: gallery of 64 scenes at reference pose,
-queries = the same scenes under one in-plane and one out-of-plane change with the
-other 63 as distractors, ONE shortlist (top 8 by cheap node similarity) shared by
-both arms, pair score = Σ over matched pairs of the blended per-pair score for
-the placement arm and Σ of raw similarity for the node-only arm, shortlist recall
-@8 reported first, and scene-clustered intervals plus MDE — with the explicit
-rule that recall below 0.95 enlarges K before anything is judged.
+**Shortlist recall@8 on 8 query scenes (16 queries over the two poses):**
 
----
+| | value |
+|---|---|
+| recall@8 | **0.875** |
+| top-1 | 0.625 |
+| MRR | 0.745 |
+| in-plane 12° | 0.750 |
+| out-of-plane y20° | **1.000** |
+
+The pre-registered rule was explicit: if recall@8 is below 0.95, enlarge K or
+shrink the gallery *before* judging. Recall does not move between K = 4 and
+K = 16 (0.875 at all of them, because one in-plane query ranks its own scene 18th
+and another 32nd), reaches 0.938 at K = 24 and 1.000 at K = 32. So on a
+64-scene gallery of aperiodic scenes the cheap node similarity does **not** make
+a shortlist small enough to rescore: the honest K is 32, and 16 queries × 32
+candidates × 2 arms is 1024 rescored pairs ≈ 5.7 h, which this session did not
+have.
+
+Two things are worth keeping from a measurement that otherwise blocks the step.
+
+First, the *out-of-plane* queries are the **easy** ones for the shortlist: every
+y20 query puts its own scene in the top two, while 12° in-plane does worse. That
+is the opposite of the intuition that relations only pay off when appearance
+fails — at 20° about y the object's silhouette and place layout still identify it,
+while a 12° in-plane turn reproduces the same layout shifted, and the confusions
+are between scenes whose layouts nearly coincide. Whatever Step 3 eventually
+tests, it must be a gallery where the in-plane queries are the hard ones.
+
+Second, this is a *degenerate* gallery for the purpose: scenes drawn from one
+generator with the same seven-element structure are all about equally similar,
+which is exactly why recall plateaus. A 24-scene gallery (or scenes from distinct
+generators) is the cheap repair and is the first thing to try, because it also
+divides the rescoring budget by eight.
+
+The design is otherwise fixed and can be run unchanged: one shortlist shared by
+both arms, pair score = Σ over matched pairs of the blended per-pair score for the
+placement arm and Σ of raw similarity over the same pairs for the node-only arm,
+scene-clustered intervals plus MDE, and the rule that recall is reported before
+anything is judged.
 
 ## 9. Hygiene
 
@@ -319,7 +348,10 @@ front end's own determinism check remains the Mission-8 one.
 2. **Step 5, second half** — the true-pair residual regressed on local place
    spacing, which decides how the tolerance should scale (the spacing itself is
    measured above: 5.83 px real, 6.32 px synthetic).
-3. **Step 3 as specified in section 8.**
+3. **Step 3, with the shortlist repaired** — a 24-scene gallery (or generators
+   that differ), which is the only way K = 8 reaches 0.95; then the rescoring
+   specified in section 8, ≈ 1.4 h at K = 8 and ≈ 5.7 h at the K = 32 this gallery
+   actually needs.
 4. Re-run the four DEV-5 families at the deployed matcher as report-only
    regression (currently 1 FIT scene: off 0.3305 / geometry 0.4237 / presence
    0.4047).
