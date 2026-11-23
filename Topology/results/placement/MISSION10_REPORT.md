@@ -246,8 +246,53 @@ blended score it used. Scene = object instance.
 | 280 builds (64 references + 216 one-off) | 1381 s |
 | shortlist, 200 queries × 8 candidates | 160 s |
 | one placement match, real pair | 13.4 s flag off, 15.2 s flag on |
-| per query (8 matches, two workers) | ~33 s |
-| 200 queries | ~1.8 h |
+| per query (8 matches, two workers) | 35–90 s (80 s when a stale worker pair was alive) |
+| 200 queries, end to end | ~3.3 h wall including one restart after a broken pool |
+
+One cost bug was mine and worth recording: the first version asked
+`similarity_rows` for a full query × reference matrix per candidate pair to read
+**one** number, the similarity of the single mapped pair. The mapping is 1-to-1, so
+that is one `similarity` call per pair — the same number, ~1.7 s cheaper per
+candidate, ~14 s per query.
+
+### The result
+
+200 queries, K = 8 same-class gallery, both arms on the same shortlist, real
+images only, nothing tuned on them (`m10_eth80_agg.json`):
+
+| arm | top-1 | MRR | paired Δ vs node-only (per instance) |
+|---|---|---|---|
+| node-only similarity | **0.150** | 0.368 | — |
+| placement, **pre-registered** (sum over mapped pairs) | **0.225** | 0.439 | +0.075, SE 0.068, **MDE 0.191**, CI [−0.055, +0.205] |
+| placement, mean over mapped pairs (post-hoc) | **0.380** | 0.607 | **+0.230, SE 0.060, MDE 0.168, CI [+0.120, +0.345]** |
+
+Read honestly:
+
+* **The pre-registered score does not clear its MDE.** +0.075 against an MDE of
+  0.191. On this data the deployment's own score, summed, is a coin flip away from
+  no effect. That is the answer to the question as it was registered.
+* **The mechanism is the one Step 3 already named.** The sum over correspondences
+  is a coverage statistic: the number of mapped pairs varies from 800 to 990
+  across candidates and swamps the per-pair quality. Dividing by the number of
+  mapped pairs removes exactly that variation, and the effect that appears is
+  +0.230 with a CI that excludes zero — five times the resolution, same data, same
+  matches. This is post-hoc and is labelled as such in both the code and this
+  table.
+* **Node similarity is at the floor here.** 0.150 against 1/8 = 0.125 for a
+  *same-class* gallery: on ETH-80 the front end cannot tell two apples apart by
+  appearance, so a placement signal has room that synthetic circles never had.
+* **Per class**, placement (mean) - node-only: car .50 - .03, dog .47 - .13,
+  cow .38 - .16, horse .38 - .06, apple .34 - .28, cup .31 - .16. The exception is
+  **pear (n = 8): .00 - .50** — one class, eight queries, in the wrong direction.
+  It is small and it is not hidden.
+* **The dark flags moved nothing.** `rescored` 879,744 (the spacing tolerance is
+  consulted on every rescore), `raised` 0, `fell_back` 0, `skipped` 0: with the
+  radius cap dark, no node in any of the 1600 matches was moved by it, which is
+  exactly what a dark flag has to do.
+* **Coverage on real images**: 907 of ~950 query nodes mapped per pair (95 %), and
+  the spacing attachment is 18.0 % of nodes — the place layer attaches far less on
+  real images than on synthetic ones, which is the first thing to chase if the
+  mean-based score is ever to become the deployed one.
 
 ---
 
@@ -259,7 +304,61 @@ refuses a drifted cap. The two new spacing flags are dark and in the switch tupl
 The pre-registration was written at 0/140 graphs and committed before the graph
 count moved.
 
-## 7. Still running, with the cost of finishing
+## 7. The plain verdict
 
-1. ETH-80 — 280 builds (done) + shortlist + 1600 placement matches at ~15 s each;
-2. the report's final verdict section, once ETH-80 has run.
+**Does placement help recognition? Yes — on synthetic scenes at the deployed
+matcher, and on real images in retrieval — but not through the score that is
+currently deployed, and not on every class.**
+
+Where it helps, and by how much, measured once per set and never re-tuned:
+
+| setting | what was measured | verdict |
+|---|---|---|
+| irregular FIT (7995 nodes, no AMBIGUOUS_MARGIN gate) | existence .5384 → geometry .5794 | **helps, +0.041**, and Step 1 showed +0.0850 of the deployed gain is presence alone |
+| out of plane, 20 fresh scenes, ambiguous bank | .5655 vs .5434 | **helps, +0.0221**, CI [+.0096, +.0345], p .0025 |
+| out of plane, unambiguous bank (no-harm) | +0.0108 | **no harm**, CI [+.0027, +.0189] |
+| scene retrieval, 16 queries, sum score | .500 vs .750 node-only | **hurts**: a sum over correspondences is a coverage statistic |
+| ETH-80 retrieval, 200 queries, sum score (pre-registered) | .225 vs .150 | direction right, **below its MDE** |
+| ETH-80 retrieval, mean over correspondences (post-hoc) | .380 vs .150 | **helps, +0.230**, CI [+.120, +.345] |
+
+So the honest one-liner: **the geometry term is real and it is worth about +0.02 to
++0.04 in matcher accuracy, and it only becomes a large effect on real images when
+it is read as correspondence quality rather than as a count of correspondences.**
+The deployed score adds the two together under one cap, which is why the deployed
+score is the weak version of a signal that is measurably there. The single lever
+that would convert this into deployed accuracy is the one Step 3 and this step both
+pointed at: normalise the placement term by the pairs it actually judged, so that a
+candidate is not rewarded for covering more nodes. That change is not made here —
+it changes the deployed score, and this mission's rules put the deployed score
+behind a pre-registered read.
+
+Where it does **not** help: the pear class (n = 8) inverts, and the four DEV-5
+families are flat-to-slightly-positive, not large — see below.
+
+## 8. The four families at the deployed matcher, on all FIT scenes
+
+Mission 9 could only report **one** FIT scene for this regression, and one scene
+says "no crash", not "no regression". This is all twelve FIT scenes of DEV-5 (the
+families SPHERE, BOX, CYLINDER, OCCLUSION, the stratified split that puts every
+family at every pose step on both sides), four pose steps each — 48 view-pairs,
+1170 s of matching, report-only, nothing fitted, nothing decided
+(`m10_dev5_fit.json`).
+
+| family | ambiguous nodes | geometry | presence | Δ |
+|---|---|---|---|---|
+| BOX | 589 | **0.531** | 0.492 | **+0.039** |
+| SPHERE | 1449 | **0.384** | 0.368 | +0.016 |
+| CYLINDER | 868 | 0.484 | 0.482 | +0.002 |
+| OCCLUSION | 1056 | 0.195 | 0.186 | +0.009 |
+| **all FIT, scene-clustered** | 3962 | **0.3995** | 0.3817 | **+0.0178, SE 0.0058, MDE 0.0162** |
+
+**No family regresses.** The unambiguous bank, which is the no-harm check, agrees
+in direction on every family (BOX +.012, CYLINDER +.010, OCCLUSION +.007,
+SPHERE +.005). The pooled +0.0178 just clears its MDE (2.8 × SE), so the honest
+statement is "small, positive, and everywhere non-negative", not "a large gain".
+OCCLUSION sits at 0.195 in both arms: occlusion is where the front end loses the
+nodes, so there is little for a placement term to reorder.
+
+Non-vacuity counters across all 96 matches: `rescored` 4704, `raised` 0,
+`fell_back` 0, `skipped` 0 — the dark spacing flags ran their lookup and moved
+nothing, as they must.
