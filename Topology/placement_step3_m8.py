@@ -70,6 +70,10 @@ def main() -> int:
         s0 = json.load(open(os.path.join(OUT, "%s.json" % args.step0)))
     except Exception:
         s0 = {}
+    try:
+        s0b = json.load(open(os.path.join(OUT, "m8_step0b.json")))
+    except Exception:
+        s0b = {}
 
     specs = fresh_specs()
     print("confirmation set: %d scenes" % len(specs))
@@ -174,7 +178,16 @@ def main() -> int:
         },
         "mde": mde,
         "read_budget": {"looks_on_this_set": 1, "looks_used": 0},
-        "step0_context_audit": (s0.get("context_audit") if s0 else {}),
+        "step0_context_audit": {
+            "corrected": s0b,
+            "note": ("the first audit in m8_step0.json compared query node ids "
+                     "against reference node ids and is superseded by m8_step0b"),
+            "filter": ("confident-context filter is optional by the >50% rule "
+                       "(wrong share %.3f) and is kept anyway: the rival-count "
+                       "refusal never relaxes"
+                       % float(s0b.get("wrong_share", float("nan")))
+                       if s0b else "not measured"),
+        },
         "step0_oracle_gap": (s0.get("oracle_gap") if s0 else {}),
         "analysis": {
             "unit": "scene", "bank": "ambiguous (margin < AMBIGUOUS_MARGIN)",

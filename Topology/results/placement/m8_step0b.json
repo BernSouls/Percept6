@@ -1,0 +1,39 @@
+{
+  "by_family": {
+    "BOX": 0.5938303341902313,
+    "CYLINDER": 0.5939278937381404,
+    "OCCLUSION": 0.3683304647160069,
+    "SPHERE": 0.5345413363533409
+  },
+  "by_lens": {
+    "Boundary": {
+      "correct": 0.5208446128857607,
+      "n": 1847
+    },
+    "Color": {
+      "correct": 0.3888111888111888,
+      "n": 715
+    },
+    "Contour": {
+      "correct": 0.7282608695652174,
+      "n": 92
+    },
+    "Orientation": {
+      "correct": 0.6519337016574586,
+      "n": 905
+    },
+    "Texture": {
+      "correct": 0.4687760199833472,
+      "n": 1201
+    }
+  },
+  "correct_share": 0.5168067226890757,
+  "map_correct_share": 0.37698561601000624,
+  "n_context_edges": 4760,
+  "n_mapped_nodes": 7995,
+  "res_right_mean": 0.14948852234322946,
+  "res_right_median": 0.09556090337925216,
+  "res_wrong_mean": 0.5611276856400874,
+  "res_wrong_median": 0.5518813744205582,
+  "wrong_share": 0.4831932773109243
+}
