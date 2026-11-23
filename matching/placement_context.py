@@ -27,16 +27,24 @@ from __future__ import annotations
 
 from typing import Any, Callable, Dict, List, Mapping, Sequence, Tuple
 
-#: Synchronous sweeps.  Small and fixed on purpose.
-ITERS = 3
+#: Synchronous sweeps.  Small and fixed on purpose.  FIT context accuracy
+#: saturates at four to five sweeps (k=1 .4304, k=2 .4452, k=3 .4524, k=5 .4550,
+#: k=8 .4553 on the FIT probe), so five is the last sweep that buys anything.
+ITERS = 5
 #: A move must beat the incumbent by this much (score units, [0, 1] scale).
-MARGIN = 0.02
+#: Fitted on FIT: 0.00 (.4398 at three sweeps) beats 0.01 (.4370) and 0.02
+#: (.4301); the binding damping is therefore the rival-count refusal, which is
+#: never relaxed.  Kept as a knob so the sweep can re-measure it.
+MARGIN = 0.0
 #: Two candidates closer than this are a "near-tie" and the move is refused.
 RIVAL_TOL = 0.02
 #: More rivals than this inside RIVAL_TOL of the best -> refuse the move.
 MAX_RIVALS = 1
-#: Require the picked node to pick this one back.
-MUTUAL = True
+#: Require the picked node to pick this one back.  OFF: with six candidates a
+#: mutual claim is rare, so the requirement froze the mapping in place --
+#: measured context accuracy .3998 (mutual) against .4550 (rival count only) at
+#: five sweeps, on the same views.  Reported rather than quietly dropped.
+MUTUAL = False
 
 
 def pick_once(u: int, cand: Sequence[Tuple[int, float]],

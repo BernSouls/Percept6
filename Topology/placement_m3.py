@@ -60,9 +60,9 @@ ARMS = ("N", "R", "R_fixed", "P", "P_presence", "P_plus", "P_plus_presence",
 #: [MISSION 8] Placement context iteration.  Thresholds are FITTED ON FIT and
 #: then frozen; the arm is harness-side, so no deployed behaviour changes.
 CONTEXT = True
-CTX_ITERS = 3
-CTX_MARGIN = 0.02
-CTX_MUTUAL = True
+CTX_ITERS = 5
+CTX_MARGIN = 0.0
+CTX_MUTUAL = False
 
 
 def fit_plus() -> Dict[str, Any]:

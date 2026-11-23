@@ -335,6 +335,17 @@ def main() -> int:
            "fit_meta": {k: meta[k] for k in
                         ("mu_wrong", "presence_mu_wrong", "true_pair_mean_llr",
                          "wrong_pair_mean_llr", "n_res_true", "n_res_wrong")}}
+    # Keep the fitted densities and presence rates so the fresh read uses the
+    # EXACT objects this FIT produced, not a re-fit that could drift.
+    cache = os.path.join(OUT, "_fitcache")
+    os.makedirs(cache, exist_ok=True)
+    import pickle
+    with open(os.path.join(cache, "%s_fit.pkl" % args.tag), "wb") as fh:
+        pickle.dump({"fit": fit, "pfit": pfit, "ratio_fit": ratio_fit,
+                     "a_exist": plus["a_exist"], "a_geom": plus["a_geom"],
+                     "ctx_margin": M3.CTX_MARGIN, "ctx_iters": M3.CTX_ITERS,
+                     "ctx_mutual": M3.CTX_MUTUAL}, fh, protocol=4)
+
     path = os.path.join(OUT, "%s.json" % args.tag)
     with open(path, "w") as fh:
         json.dump(res, fh, indent=2, sort_keys=True, default=str)
