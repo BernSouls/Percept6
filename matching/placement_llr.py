@@ -151,7 +151,8 @@ def score_candidate(u: int, v: int, mapping: Mapping[int, int],
                     q_idx: Mapping[Tuple[int, int, str], Any],
                     r_idx: Mapping[Tuple[int, int, str], Any],
                     fit: LLRFit, slot_cap: int = SLOT_CAP,
-                    pad: Optional[float] = None) -> float:
+                    pad: Optional[float] = None,
+                    tol: Optional[float] = None) -> float:
     """The padded, clipped, summed LLR score for u -> v, mapped to [0, 1].
 
     ``pad`` overrides the padding value.  The default is ``mu_wrong`` -- an
@@ -289,7 +290,8 @@ def presence_score(u: int, v: int, mapping: Mapping[int, int],
                    q_idx: Mapping[Tuple[int, int, str], Any],
                    r_idx: Mapping[Tuple[int, int, str], Any],
                    pfit: PresenceFit, slot_cap: int = SLOT_CAP,
-                   pad: Optional[float] = None) -> float:
+                   pad: Optional[float] = None,
+                   tol: Optional[float] = None) -> float:
     """Presence credit under P's normalisation, caps and padding."""
     padv = float(pfit.mu_wrong) if pad is None else float(pad)
     slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx,

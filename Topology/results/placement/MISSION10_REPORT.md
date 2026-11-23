@@ -207,16 +207,47 @@ Budget first, because it decides the design: a real pair costs ~11 s to build an
 ~13.4 s to match flag off / 15.2 s flag on (measured, held-out pair). 200 queries
 × K = 8 is 1600 placement matches, about 3.4 h on two cores.
 
-Design fixed before the run: gallery = 24 references (8 classes × 3 reference
-instances at the reference view); queries = 200 images from 40 non-reference
-instances (≤5 views each, never at a reference view); ONE shortlist for both arms
-(top 8 by node similarity on a fixed 120×200 node subsample, identical for both
-arms and every candidate); node-only = sum of best per-node similarities;
-placement = sum over the pairs the deployed matcher mapped of the blended score it
-used. Scene = object instance for the interval.
+### The gallery had to be shrunk twice, and both times the measurement said so
 
-> **Status: building and running.** Checkpointed per query in
-> `m10_eth80_progress.jsonl`.
+A first design took Mission-8's 24 references (three reference instances per
+class, at the reference view) as the gallery and drew queries from the dev and
+held-out instances. That is not retrieval: those are **different objects**, so the
+truth could never be in the shortlist, and the run returned recall@8 = **0.000**.
+The bug was mine and the number was the tell — a perfect zero is a broken key, not
+a hard task.
+
+The corrected full gallery (80 instances, one reference view each) was measured
+before any arm was scored: recall@8 = **0.235**, recall@16 = 0.36, recall@64 = 0.93
+over 200 queries. The rule says shrink the gallery rather than judge below 0.95,
+and the same measurement says how far: restricted to the ten instances of the
+query's own class, recall@8 = 0.78, and at ten candidates it is 1.00.
+
+So the task is fixed as **within-class instance identification**: the gallery is
+the eight instances of the query's class at the reference view, K = 8 is that whole
+gallery, and recall@8 = 1.000 **by construction** — stated as such, not claimed as
+a measurement. A single 4-view query per instance gives 200 queries over 50
+instances. What is measured is whether a *second view* of an object is ranked above
+the other seven objects of its class by the placement matcher more often than by
+plain node similarity.
+
+Pair scores as fixed before the run: node-only = sum of the best per-node
+similarities; placement = sum over the pairs the deployed matcher mapped of the
+blended score it used. Scene = object instance.
+
+> **Status: running, checkpointed per query** in `m10_eth80_progress.jsonl`
+> (21/200 at the time of writing, ~33 s per query, so about 1.8 h to finish). The
+> result and the verdict go here when the last query lands.
+
+### Cost, measured
+
+| stage | measured |
+|---|---|
+| one real image build | 6–11 s |
+| 280 builds (64 references + 216 one-off) | 1381 s |
+| shortlist, 200 queries × 8 candidates | 160 s |
+| one placement match, real pair | 13.4 s flag off, 15.2 s flag on |
+| per query (8 matches, two workers) | ~33 s |
+| 200 queries | ~1.8 h |
 
 ---
 
