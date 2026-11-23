@@ -318,9 +318,20 @@ tests, it must be a gallery where the in-plane queries are the hard ones.
 
 Second, this is a *degenerate* gallery for the purpose: scenes drawn from one
 generator with the same seven-element structure are all about equally similar,
-which is exactly why recall plateaus. A 24-scene gallery (or scenes from distinct
-generators) is the cheap repair and is the first thing to try, because it also
-divides the rescoring budget by eight.
+which is exactly why recall plateaus. The cheap repair was tried rather than
+proposed: a **24-scene gallery of mixed structure** (16 irregular scenes plus the
+8 out-of-plane scenes, which have a different object count) gives
+
+| gallery | K | recall |
+|---|---|---|
+| 64 irregular | 8 | 0.875 (plateau from K = 4) |
+| **24 mixed** | **8** | **0.938** (ranks: fourteen 1st, one 7th, one 10th) |
+| 24 mixed | 16 | **1.000** |
+
+So heterogeneity buys the plateau back, but not the rule: with 16 queries a
+threshold of 0.95 can only be met perfectly, and one query still misses at K = 8.
+At K = 16 the 24-scene gallery is clean, at a rescoring cost of 16 queries × 16
+candidates × 2 arms = 512 pairs ≈ 2.8 h — half of that with 8 query scenes.
 
 The design is otherwise fixed and can be run unchanged: one shortlist shared by
 both arms, pair score = Σ over matched pairs of the blended per-pair score for the

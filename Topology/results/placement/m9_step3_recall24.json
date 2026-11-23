@@ -1,0 +1,22 @@
+{
+  "recall_at_8_24scene": 0.9375,
+  "ranks": {
+    "gal_00|q_inplane12": 1,
+    "gal_00|q_y20": 1,
+    "gal_01|q_inplane12": 1,
+    "gal_01|q_y20": 1,
+    "gal_02|q_inplane12": 10,
+    "gal_02|q_y20": 1,
+    "gal_03|q_inplane12": 7,
+    "gal_03|q_y20": 1,
+    "gal_04|q_inplane12": 1,
+    "gal_04|q_y20": 1,
+    "gal_05|q_inplane12": 1,
+    "gal_05|q_y20": 1,
+    "gal_06|q_inplane12": 1,
+    "gal_06|q_y20": 1,
+    "gal_07|q_inplane12": 1,
+    "gal_07|q_y20": 1
+  },
+  "seconds": 322.10456013679504
+}
