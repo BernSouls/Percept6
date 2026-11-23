@@ -120,7 +120,15 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       "PLACEMENT_WEIGHT",
                       "PLACEMENT_TOLERANCE",
                       "PLACEMENT_MAX_NEIGHBOUR_CREDIT",
-                      "PLACEMENT_SUPPORT_SIGMA")
+                      "PLACEMENT_SUPPORT_SIGMA",
+                      # [MISSION 8] the place layer changes both the node KEY
+                      # and the place a segment carries (657 -> 913 nodes on
+                      # DEV-5), and it was NOT in this tuple.  Measured cost of
+                      # the omission: a step-5 run with the flags OFF was served
+                      # the flags-ON graphs -- identical node and edge counts and
+                      # 0.0 s of build time -- so a dark run could read a lit
+                      # graph.  It must key the cache like every other switch.
+                      "FE_PLACE_LAYER")
 
 _log = logging.getLogger("eth80_frontend")
 

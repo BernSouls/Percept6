@@ -1,0 +1,61 @@
+{
+  "attach_coverage": {
+    "coverage": 0.31117146905999055,
+    "median_dist": 7.0,
+    "n": 8468,
+    "radius_px": 4.0
+  },
+  "build_seconds": {
+    "max": 17.53847026824951,
+    "mean": 15.294596418738365
+  },
+  "collapsed": [
+    "Onset",
+    "Surface",
+    "Contour",
+    "Corner",
+    "Polarity",
+    "RegionShape",
+    "CurveComplex",
+    "T",
+    "IllusoryContour",
+    "Y",
+    "Junction"
+  ],
+  "edges": {
+    "mean": 2220.625
+  },
+  "images": 16,
+  "nodes": {
+    "max": 898,
+    "mean": 725.75,
+    "min": 607
+  },
+  "per_lens": {
+    "BorderOwnership": 1186,
+    "Boundary": 1195,
+    "CONTOUR_PEAK": 1656,
+    "Color": 631,
+    "Contour": 161,
+    "ContourFragment": 819,
+    "Corner": 189,
+    "CurveComplex": 124,
+    "EndStopped": 574,
+    "IllusoryContour": 33,
+    "Junction": 3,
+    "Onset": 16,
+    "Orientation": 583,
+    "PEAK_CHAIN": 293,
+    "Polarity": 48,
+    "Position": 1631,
+    "RegionShape": 207,
+    "Surface": 229,
+    "T": 4,
+    "Texture": 541,
+    "TextureBoundary": 1486,
+    "Y": 3
+  },
+  "place_nodes": {
+    "mean": 194.4375
+  }
+}

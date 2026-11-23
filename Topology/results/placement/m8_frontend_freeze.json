@@ -1,4 +1,15 @@
 {
+  "cache_key_fix": {
+    "content_neutrality": "verified on apple1-090-000: pre-fix cache entry and post-fix fresh build both give 904 nodes / 1946 edges and graph hash 3d9853b6ca8eed2c; only the key moved (0.1 s -> 17.0 s)",
+    "fix": "FE_PLACE_LAYER added to _FRONTEND_SWITCHES",
+    "graph_fingerprints_after_fix": {
+      "off": "c0ab7a1b670d0540",
+      "on": "65ae879ac7f21f82"
+    },
+    "how_found": "a step-5 run with the flags OFF reused the flags-ON graphs: identical node and edge counts and 0.0 s of build time",
+    "note": "the fresh read was performed with the pre-fix digest recorded above; the fix changes no graph, so the read stands",
+    "what": "FE_PLACE_LAYER was missing from eth80_frontend._FRONTEND_SWITCHES, so the graph cache did not key on it"
+  },
   "frontend": {
     "FE_KEYPOINTS": 0,
     "FE_PLACE_LAYER": 1,
@@ -6,6 +17,7 @@
     "FE_SUBPIXEL_PEAK_POS": 0,
     "file_sha256_16": {
       "eth80_frontend.py": "7416d8452ae68937",
+      "eth80_frontend.py_after_keyfix": "8754d98ea63ab733",
       "lenses/base.py": "e0f2107d18d3e510"
     },
     "flag_off_fingerprint": {
@@ -23,6 +35,7 @@
     "match_side_unchanged": "arcbin / orientation matching untouched; only the place position of each segment changed",
     "orientation_change": "each segment of a multi-segment Orientation place now carries its own midpoint on the polyline at half its own arc; the place centroid is no longer shared",
     "orientation_distinct_positions": "45/45 on spec 0 (was 30/45)",
+    "read_time_source_digest": "4644a39f867240e1fb91f623ce9093b6f4f0e7ec6bc512ceb48d8cb66a468450",
     "source_digest": "4644a39f867240e1fb91f623ce9093b6f4f0e7ec6bc512ceb48d8cb66a468450",
     "switch_suffix": "FIELD_BORDER_DISCARD_PER_CHANNEL=False;BINDER_COMPLETE_POSITION_MAP=True;GRAPH_STAGE6_RELATIONS=False;ATTACHMENT_EVERY_NAMED_HOST=True;FE_L3_SPINE=False;FE_L4_JUNCTIONS=False;FE_SUBPIXEL_PEAK_POS=False;FE_SUBPIXEL_GABOR_ANCHOR=False;FE_KEYPOINTS=False;FE_L6_ADDRESS=False;FE_SOFT_CHANNEL_GATE=True;FE_SOFT_L3_L4_GATE=True;FE_VECTOR_ADDRESS=False;PLACEMENT_PAYLOAD_ENABLED=False;PLACEMENT_SCORER_ENABLED=False;PLACEMENT_GATE_ENABLED=False;PLACEMENT_WEIGHT=0.25;PLACEMENT_TOLERANCE=None;PLACEMENT_MAX_NEIGHBOUR_CREDIT=1.0;PLACEMENT_SUPPORT_SIGMA=1.0;set="
   },
