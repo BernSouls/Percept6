@@ -259,17 +259,22 @@ Measured, `m9_step5_spacing.json`:
 | | places | median nearest-place distance | p10 | p90 |
 |---|---|---|---|---|
 | synthetic IRREGULAR (FIT) | 5132 | **6.32 px** | 2.03 | 16.0 |
+| real ETH-80 (16 held-out images) | 28709 | **5.83 px** | 2.00 | 16.0 |
 
-So the mission's premise holds on the synthetic side: the place layer is dense
-relative to the 1.7 tolerance, and duplicate places (distance 0) exist. The real
-ETH-80 column is still building at the time of writing — the graphs have to be
-rebuilt under the current digest — and is reported in section 10 rather than
-guessed.
+The mission's premise holds and it holds on both sides: real photographs are
+*denser* than synthetic scenes, not less — 5.83 px median against 6.32 — and
+32.6 % of real places have a neighbour inside 4 px.
 
-The tolerance-vs-spacing relation itself is the one measurement that would decide
-whether the rule should scale, and it needs the true-pair residual regressed on
-the local spacing. That regression is written (`Topology/placement_m9_step5.py`)
-and blocked on the same real-image build; it is the first thing to finish.
+Two conclusions follow from the ratio rather than from a fitted constant. The
+frozen tolerance (1.70 px) is 29 % of the median spacing, so a matched pair one
+place off is still inside it more than a quarter of the time; it is the *radius*
+that is out of proportion, because 4 px is 69 % of the way to the neighbouring
+place — an attachment rule that reaches two thirds of the way to the next place
+cannot be spacing-blind on real images. What is still missing is the second half
+of the question: the true-pair residual regressed on local spacing, which decides
+*how* the tolerance should scale rather than whether it is mis-sized. That code
+exists (`Topology/placement_m9_step5.py`) and the regression is the next thing to
+run; no constant was changed here, and none should be before that number exists.
 
 ---
 
@@ -311,8 +316,9 @@ front end's own determinism check remains the Mission-8 one.
 
 1. **Out-of-plane, 18 fresh scenes.** The decision is a power statement, not a
    design statement; the family, the arms and the rule already exist.
-2. **Step 5's real column** — finish the real-image spacing and the
-   residual-on-spacing regression, then say whether the tolerance should scale.
+2. **Step 5, second half** — the true-pair residual regressed on local place
+   spacing, which decides how the tolerance should scale (the spacing itself is
+   measured above: 5.83 px real, 6.32 px synthetic).
 3. **Step 3 as specified in section 8.**
 4. Re-run the four DEV-5 families at the deployed matcher as report-only
    regression (currently 1 FIT scene: off 0.3305 / geometry 0.4237 / presence
