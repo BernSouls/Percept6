@@ -54,8 +54,15 @@ A_E = 1.0             # fitted existence coefficient (overwritten by fit_plus)
 A_G = 1.0             # fitted geometry coefficient  (overwritten by fit_plus)
 PLUS_META: Dict[str, Any] = {}
 PLUS_NODES: List[Any] = []    # per-node (terms, truth_index) over the FIT pass
+CTX_STATS: List[Any] = []     # per view: context accuracy before/after and moves
 ARMS = ("N", "R", "R_fixed", "P", "P_presence", "P_plus", "P_plus_presence",
-        "P_shuffled", "W")
+        "P_plus_ctx", "P_shuffled", "W")
+#: [MISSION 8] Placement context iteration.  Thresholds are FITTED ON FIT and
+#: then frozen; the arm is harness-side, so no deployed behaviour changes.
+CONTEXT = True
+CTX_ITERS = 3
+CTX_MARGIN = 0.02
+CTX_MUTUAL = True
 
 
 def fit_plus() -> Dict[str, Any]:
@@ -191,23 +198,21 @@ def collect_fit(specs: Sequence[Any], views: Sequence[Any], limit: Optional[int]
 
 
 # ---------------------------------------------------------------------------
-# [MISSION 8] P_plus: the coefficient fit.  A SECOND pass over FIT, after the
-# densities exist, because a term sum cannot be formed until the LLRs and the
-# presence rates are known.  Graphs come from the cache, so this pass is cheap.
-def collect_plus(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
-                 limit: Optional[int] = None,
-                 pose_fn: Optional[Any] = None) -> int:
+# [MISSION 8] One loader used by everything that needs the FIT scene/view
+# decomposition: reference graph, query graph, payload indices, truth tracks and
+# the top-similarity mapping.  Kept in one place so the coefficient fit, the
+# context probe and the arms cannot drift apart about what "the context" is.
+def iter_views(specs: Sequence[Any], views: Sequence[Any],
+               limit: Optional[int] = None, pose_fn: Optional[Any] = None):
     import guard
     guard.activate()
     from matching import placement_edges as PE
-    from matching import placement_llr as L
     from matching.placement_scorer import incident_index, payload_index
     from Topology.placement_cache import get_or_build
     from Topology.placement_dev3 import view_pose
     from Topology.placement_scenes import posed
     from Topology.placement_truth import node_objects, track_optimal
 
-    PLUS_NODES.clear()
     for spec in (specs[:limit] if limit else specs):
         r0 = spec.scene.render()
         g0 = get_or_build(r0.image_u8, spec.name + "|ref")
@@ -234,19 +239,36 @@ def collect_plus(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any
             pop = [u for u in sorted(truth) if o1.get(u, -1) >= 0]
             rows = _rows_for(g1, g0, pop, refc)
             nmap = {u: rows[u][0][0] for u in pop if rows.get(u)}
-            for u in pop:
-                row = rows.get(u) or []
-                if not row:
-                    continue
-                cand = row[:CAND_CAP]
-                tv = truth.get(u)
-                terms = []
-                for (v, _s) in cand:
-                    terms.append(L.plus_terms(u, int(v), nmap, q_inc, q_idx,
-                                              r_idx, fit, pfit))
-                PLUS_NODES.append(
-                    (terms, next((k for k, (v, _s) in enumerate(cand)
-                                  if v == tv), -1)))
+            yield {"spec": spec, "label": label, "scene": spec.scene,
+                   "r0": r0, "r1": r1, "g0": g0, "g1": g1, "o0": o0, "o1": o1,
+                   "r_idx": r_idx, "q_idx": q_idx, "q_inc": q_inc,
+                   "truth": truth, "pop": pop, "rows": rows, "nmap": nmap}
+
+
+# ---------------------------------------------------------------------------
+# [MISSION 8] P_plus: the coefficient fit.  A SECOND pass over FIT, after the
+# densities exist, because a term sum cannot be formed until the LLRs and the
+# presence rates are known.  Graphs come from the cache, so this pass is cheap.
+def collect_plus(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
+                 limit: Optional[int] = None,
+                 pose_fn: Optional[Any] = None) -> int:
+    from matching import placement_llr as L
+    PLUS_NODES.clear()
+    for vw in iter_views(specs, views, limit, pose_fn):
+        q_inc, q_idx = vw["q_inc"], vw["q_idx"]
+        r_idx, nmap, truth = vw["r_idx"], vw["nmap"], vw["truth"]
+        rows = vw["rows"]
+        for u in vw["pop"]:
+            row = rows.get(u) or []
+            if not row:
+                continue
+            cand = row[:CAND_CAP]
+            tv = truth.get(u)
+            terms = [L.plus_terms(u, int(v), nmap, q_inc, q_idx, r_idx,
+                                  fit, pfit) for (v, _s) in cand]
+            PLUS_NODES.append(
+                (terms, next((k for k, (v, _s) in enumerate(cand)
+                              if v == tv), -1)))
     return len(PLUS_NODES)
 
 
@@ -320,6 +342,30 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
             pop = [u for u in sorted(truth) if o1.get(u, -1) >= 0]
             rows = _rows_for(g1, g0, pop, refc)
             nmap = {u: rows[u][0][0] for u in pop if rows.get(u)}
+            ctx_map = nmap
+            if CONTEXT:
+                from matching import placement_context as Ctx
+                _cands = {int(u): [(int(v), float(sc))
+                                   for (v, sc) in (rows.get(u) or [])[:CAND_CAP]]
+                          for u in pop if rows.get(u)}
+                _sim = {(int(u), int(v)): float(sc)
+                        for u, cl in _cands.items() for (v, sc) in cl}
+
+                def _ctx_score(u, v, m, _sim=_sim):
+                    term = L.plus_score(u, v, m, q_inc, q_idx, r_idx, fit,
+                                        pfit, A_E, A_G)
+                    return ((1.0 - EDGE_BETA) * _sim.get((int(u), int(v)), 0.0)
+                            + EDGE_BETA * term)
+
+                _st: Dict[str, Any] = {}
+                ctx_map = Ctx.iterate_context(pop, _cands, nmap, _ctx_score,
+                                              iters=CTX_ITERS,
+                                              margin=CTX_MARGIN,
+                                              mutual=CTX_MUTUAL, stats=_st)
+                CTX_STATS.append({"scene": spec.name, "view": label,
+                                  "ctx_acc": Ctx.agreement(ctx_map, truth),
+                                  "n_acc": Ctx.agreement(nmap, truth),
+                                  **_st})
             pos_q = {int(n): (float(g1.subgraph.anchor_of_node[n][0]),
                               float(g1.subgraph.anchor_of_node[n][1]))
                      for n in g1.subgraph.nodes if n in g1.subgraph.anchor_of_node}
@@ -365,6 +411,9 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
                 scored["P_plus_presence"] = pick(lambda v, s: blend(
                     L.plus_score(u, v, nmap, q_inc, q_idx, r_idx, fit, pfit,
                                  A_E, 0.0), s))
+                scored["P_plus_ctx"] = pick(lambda v, s: blend(
+                    L.plus_score(u, v, ctx_map, q_inc, q_idx, r_idx, fit, pfit,
+                                 A_E, A_G), s))
                 scored["P_shuffled"] = pick(lambda v, s: blend(
                     L.score_candidate(u, v, nmap, sh_inc, sh_idx, r_idx, fit), s))
                 scored["W"] = pick(lambda v, s: blend(
