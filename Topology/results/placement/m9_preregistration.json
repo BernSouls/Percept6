@@ -1,0 +1,237 @@
+{
+  "analysis": {
+    "also_reported": [
+      "unambiguous bank",
+      "net flips",
+      "moved nodes per match",
+      "the four DEV-5 families as regression"
+    ],
+    "bank": "ambiguous (margin < 0.05)",
+    "unit": "scene"
+  },
+  "arms": {
+    "geom": "P_plus_ctx (deployed)",
+    "off": "shipped matcher",
+    "pres": "P_plus_ctx_presence (a_geom = 0, same machinery)"
+  },
+  "correction": "Holm across the two primaries (both must reach p <= 0.025)",
+  "decision_rule": {
+    "credit": "both primaries positive beyond their MDE, Holm-corrected",
+    "null": "neither clears: reported with the size that would decide",
+    "partial": "one clears, reported as partial"
+  },
+  "families": {
+    "IRREGULAR": {
+      "scenes_confirmation": [
+        "irc_00",
+        "irc_01",
+        "irc_02",
+        "irc_03",
+        "irc_04",
+        "irc_05"
+      ],
+      "scenes_fit": [
+        "ir_01",
+        "ir_03",
+        "ir_05",
+        "ir_07",
+        "ir_09",
+        "ir_11"
+      ],
+      "validity": {
+        "ambiguous": 899,
+        "ambiguous_share": 0.5178571428571429,
+        "arms_ambiguous": {
+          "N": 0.5539488320355951,
+          "P_oracle": 0.6262513904338154,
+          "P_oracle_presence": 0.5628476084538376,
+          "P_plus": 0.5539488320355951,
+          "P_plus_presence": 0.5083426028921023
+        },
+        "arms_overall": {
+          "N": 0.5929839739628393,
+          "P_oracle": 0.6303299962921765,
+          "P_oracle_presence": 0.5968359906068471,
+          "P_plus": 0.5929839739628393,
+          "P_plus_presence": 0.5695834878259795
+        },
+        "headroom_amb": 0.0723025583982203,
+        "headroom_oracle_minus_N": 0.03734602232933715,
+        "nodes": 1736,
+        "valid": false
+      },
+      "views": [
+        "i1_rot5",
+        "i2_trans",
+        "i3_rot15",
+        "i4_scale"
+      ]
+    },
+    "OUT_OF_PLANE": {
+      "premise": {
+        "o1_y5": {
+          "checkable_share": 0.3632051957378461,
+          "inside_fixed_tol": 0.998320738874895,
+          "n_true_edges": 2382,
+          "ratio_to_5deg": 1.1368887304036879,
+          "res_median": 0.06559572911817552,
+          "res_p90": 0.31971453954129947
+        },
+        "o2_y10": {
+          "checkable_share": 0.31305310120577945,
+          "inside_fixed_tol": 1.0,
+          "n_true_edges": 1874,
+          "ratio_to_5deg": 1.3852812639942442,
+          "res_median": 0.07992737733725667,
+          "res_p90": 0.3697428359311856
+        },
+        "o3_y20": {
+          "checkable_share": 0.22624382046877473,
+          "inside_fixed_tol": 1.0,
+          "n_true_edges": 1112,
+          "ratio_to_5deg": 2.263777208976994,
+          "res_median": 0.13061446790067735,
+          "res_p90": 0.4911876053149823
+        },
+        "o4_x5": {
+          "checkable_share": 0.3815059120713368,
+          "inside_fixed_tol": 1.0,
+          "n_true_edges": 2906,
+          "ratio_to_5deg": 0.8631112695963121,
+          "res_median": 0.04979943201581462,
+          "res_p90": 0.2997411783384103
+        },
+        "o5_x10": {
+          "checkable_share": 0.38466958420923564,
+          "inside_fixed_tol": 1.0,
+          "n_true_edges": 2784,
+          "ratio_to_5deg": 1.1368887304036879,
+          "res_median": 0.06559572911817552,
+          "res_p90": 0.4401654174184617
+        },
+        "o6_x20": {
+          "checkable_share": 0.29763697654038873,
+          "inside_fixed_tol": 1.0,
+          "n_true_edges": 1810,
+          "ratio_to_5deg": 3.053453150988006,
+          "res_median": 0.17617685918667542,
+          "res_p90": 0.6207598079454315
+        }
+      },
+      "scenes_confirmation": [
+        "oopc_sphere_00",
+        "oopc_box_00",
+        "oopc_cylinder_00",
+        "oopc_irregular_00",
+        "oopc_sphere_01",
+        "oopc_box_01"
+      ],
+      "scenes_fit": [
+        "oop_sphere_01",
+        "oop_box_01",
+        "oop_cylinder_01",
+        "oop_irregular_01",
+        "oop_sphere_03",
+        "oop_box_03",
+        "oop_cylinder_03",
+        "oop_irregular_03"
+      ],
+      "validity": {
+        "ambiguous": 1379,
+        "ambiguous_share": 0.48149441340782123,
+        "arms_ambiguous": {
+          "N": 0.5373459028281363,
+          "P_oracle": 0.5881073241479333,
+          "P_oracle_presence": 0.5279187817258884,
+          "P_plus": 0.5373459028281363,
+          "P_plus_presence": 0.49891225525743294
+        },
+        "arms_overall": {
+          "N": 0.5552049379460546,
+          "P_oracle": 0.5836159516362562,
+          "P_oracle_presence": 0.5471243740279274,
+          "P_plus": 0.5552049379460546,
+          "P_plus_presence": 0.5326211107936997
+        },
+        "headroom_amb": 0.050761421319796995,
+        "headroom_oracle_minus_N": 0.028411013690201603,
+        "nodes": 2864,
+        "valid": false
+      },
+      "views": [
+        "o1_y5",
+        "o2_y10",
+        "o3_y20",
+        "o4_x5",
+        "o5_x10",
+        "o6_x20"
+      ]
+    }
+  },
+  "frozen_configuration": {
+    "beta": 0.5,
+    "cand_cap": 6,
+    "constants": {
+      "fixed_tol": 1.7009,
+      "llr_clip": 3.0,
+      "n_bins": 24,
+      "res_max": 6.0,
+      "slot_cap": 8
+    },
+    "endpoint_lenses": [
+      "Orientation",
+      "Texture",
+      "Color",
+      "Contour",
+      "Boundary",
+      "CornerPoint",
+      "Blob",
+      "BoundaryArc"
+    ],
+    "flags": {
+      "PLACEMENT_MATCHER_ENABLED": true,
+      "PLACEMENT_MATCHER_PRESENCE": "per arm",
+      "PLACEMENT_MATCHER_STRICT": false
+    },
+    "frontend_digest": "989de05515a80ee831217e087c376988f9a2f9f5a69e27d7457b456e87405f04",
+    "frozen_bundle_sha256": "8494fed7d44cd2e2dbb97d16311aadbe09ee9ccae15530db31fbe98071e36ba8",
+    "iteration": {
+      "iters": 5,
+      "margin": 0.0,
+      "max_rivals": 1,
+      "mutual": false,
+      "rival_tol": 0.02
+    },
+    "place_layer": true,
+    "plus": {
+      "a_exist": 0.40625,
+      "a_geom": 0.84375
+    },
+    "switch_suffix": "FIELD_BORDER_DISCARD_PER_CHANNEL=False;BINDER_COMPLETE_POSITION_MAP=True;GRAPH_STAGE6_RELATIONS=False;ATTACHMENT_EVERY_NAMED_HOST=True;FE_L3_SPINE=False;FE_L4_JUNCTIONS=False;FE_SUBPIXEL_PEAK_POS=False;FE_SUBPIXEL_GABOR_ANCHOR=False;FE_KEYPOINTS=False;FE_L6_ADDRESS=False;FE_SOFT_CHANNEL_GATE=True;FE_SOFT_L3_L4_GATE=True;FE_VECTOR_ADDRESS=False;PLACEMENT_PAYLOAD_ENABLED=False;PLACEMENT_SCORER_ENABLED=False;PLACEMENT_GATE_ENABLED=False;PLACEMENT_WEIGHT=0.25;PLACEMENT_TOLERANCE=None;PLACEMENT_MAX_NEIGHBOUR_CREDIT=1.0;PLACEMENT_SUPPORT_SIGMA=1.0;FE_PLACE_LAYER=True;PLACEMENT_MATCHER_ENABLED=False;PLACEMENT_MATCHER_PRESENCE=False;PLACEMENT_MATCHER_STRICT=False;set="
+  },
+  "mission": 9,
+  "primaries": {
+    "IRREGULAR: P_plus_ctx - P_plus_ctx_presence (ambiguous)": {
+      "confirmation_scenes": 6,
+      "fit_effect": 0.032706923136648976,
+      "fit_scenes": 6,
+      "fit_se_scene": 0.02403129804930918,
+      "mde": 0.0672876345380657,
+      "se_at_confirmation": 0.02403129804930918
+    },
+    "OUT_OF_PLANE: P_plus_ctx - P_plus_ctx_presence (ambiguous)": {
+      "confirmation_scenes": 6,
+      "fit_effect": 0.04061844623479949,
+      "fit_scenes": 4,
+      "fit_se_scene": 0.02314467016686476,
+      "mde": 0.05291312336224605,
+      "se_at_confirmation": 0.01889754405794502
+    }
+  },
+  "read_budget": {
+    "looks_per_family": 1,
+    "looks_used": 0
+  },
+  "validity_rule": "headroom is judged on the bank the primary is defined on (near-tie ambiguous nodes), because that is the only population where a relational term can change a decision; the overall-bank headroom is reported beside it and is smaller only because unambiguous nodes are already decided by appearance",
+  "visibility_rule": "a node is countable iff it has a truth partner in the posed image; oracle arms use the truth mapping and count every such node, so self-occlusion shows up as a smaller checkable-edge share, not as a hidden exclusion"
+}

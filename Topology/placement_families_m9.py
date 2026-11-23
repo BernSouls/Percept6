@@ -82,18 +82,29 @@ def _twins(rng: np.random.Generator, kind: str) -> Tuple[Material, Material]:
 
 
 def _irregular_objects(rng: np.random.Generator) -> List[SceneObject]:
-    """Five aperiodic elements on an irregular layout, two of them twins."""
-    twin_a, twin_b = _twins(rng, "twin")
+    """Seven aperiodic elements on an irregular layout, TWO twin pairs.
+
+    The first version had one twin pair out of five elements and measured an
+    overall oracle-minus-N headroom of +0.0415 against the mission's 0.05 bar:
+    the family was too easy, because most nodes were unambiguous.  Four of the
+    seven elements now come in two appearance-identical pairs (same shape, same
+    noise frequency, same contrast, albedo inside the renderer's own step), so a
+    node on one of them can only be told from its twin by the relation between
+    them.
+    """
     pieces: List[SceneObject] = []
-    # the twin pair: same shape, same material, different place
-    he = (float(rng.uniform(0.12, 0.17)), float(rng.uniform(0.12, 0.17)),
-          float(rng.uniform(0.12, 0.17)))
-    for name, mat, cx in (("ta", twin_a, -0.30), ("tb", twin_b, 0.30)):
-        pieces.append(SceneObject(
-            name=name, shape=Box(he), rotation=np.eye(3),
-            centre=np.array([cx, float(rng.uniform(-0.03, 0.03)),
-                             float(rng.uniform(-0.04, 0.04))]),
-            material=mat))
+    for pair in range(2):
+        twin_a, twin_b = _twins(rng, "twin")
+        he = (float(rng.uniform(0.12, 0.17)), float(rng.uniform(0.12, 0.17)),
+              float(rng.uniform(0.12, 0.17)))
+        cx0 = -0.34 + 0.22 * pair
+        for name, mat, cx in (("t%da" % pair, twin_a, cx0),
+                              ("t%db" % pair, twin_b, cx0 + 0.46)):
+            pieces.append(SceneObject(
+                name=name, shape=Box(he), rotation=np.eye(3),
+                centre=np.array([cx, float(rng.uniform(-0.03, 0.03)),
+                                 float(rng.uniform(-0.04, 0.04))]),
+                material=mat))
     # three further elements, each its own frequency and shape, deliberately
     # NOT on a lattice
     for name, kind in (("c", "sphere"), ("d", "cyl"), ("e", "box")):
@@ -130,28 +141,36 @@ def _base_kwargs(rng: np.random.Generator) -> Dict[str, Any]:
 def _oop_scene(shape: str, rng: np.random.Generator) -> Scene:
     if shape == "IRREGULAR":
         return Scene(objects=_irregular_objects(rng), **_base_kwargs(rng))
+    # [MISSION 9 / repair] Both objects now carry the SAME noise material.  With
+    # different frequencies the pair was merely a hard view, and the measured
+    # oracle-minus-N headroom was +0.0296 against the 0.05 bar; with one material
+    # the two bodies tie on appearance and only the relation between them can
+    # separate their nodes -- which is the premise the family is supposed to test.
+    _oop_mat = _noise_mat(rng, float(rng.uniform(7.0, 10.0)),
+                          float(rng.uniform(0.5, 0.65)),
+                          float(rng.uniform(0.6, 0.8)), (1.0, 0.0, 0.0))
     if shape == "SPHERE":
         objs = [SceneObject(name="a", shape=Sphere(radius=float(rng.uniform(0.20, 0.26))),
                             rotation=np.eye(3), centre=np.array([-0.20, 0.0, 0.0]),
-                            material=_noise_mat(rng, 7.0, 0.6, 0.7, (1.0, 0.0, 0.0))),
+                            material=_oop_mat),
                 SceneObject(name="b", shape=Sphere(radius=float(rng.uniform(0.20, 0.26))),
                             rotation=np.eye(3), centre=np.array([0.20, 0.0, 0.06]),
-                            material=_noise_mat(rng, 9.0, 0.55, 0.65, (1.0, 0.0, 0.0)))]
+                            material=_oop_mat)]
     elif shape == "BOX":
         he = tuple(float(x) for x in rng.uniform(0.15, 0.20, size=3))
         objs = [SceneObject(name="a", shape=Box(he), rotation=np.eye(3),
                             centre=np.array([-0.20, 0.0, 0.0]),
-                            material=_noise_mat(rng, 8.0, 0.6, 0.7, (1.0, 0.0, 0.0))),
+                            material=_oop_mat),
                 SceneObject(name="b", shape=Box(he), rotation=np.eye(3),
                             centre=np.array([0.20, 0.0, 0.06]),
-                            material=_noise_mat(rng, 10.0, 0.55, 0.7, (1.0, 0.0, 0.0)))]
+                            material=_oop_mat)]
     else:  # CYLINDER
         objs = [SceneObject(name="a", shape=Cylinder(radius=0.18, half_height=0.28),
                             rotation=np.eye(3), centre=np.array([-0.20, 0.0, 0.0]),
-                            material=_noise_mat(rng, 8.0, 0.6, 0.7, (1.0, 0.0, 0.0))),
+                            material=_oop_mat),
                 SceneObject(name="b", shape=Cylinder(radius=0.18, half_height=0.28),
                             rotation=np.eye(3), centre=np.array([0.20, 0.0, 0.06]),
-                            material=_noise_mat(rng, 10.0, 0.55, 0.7, (1.0, 0.0, 0.0)))]
+                            material=_oop_mat)]
     return Scene(objects=objs, **_base_kwargs(rng))
 
 
@@ -235,3 +254,47 @@ def pose_fn(spec: SceneSpec, view: Dict[str, Any]):
           "scale": float(view.get("scale", 1.0))}
     return posed(spec.scene, pv["rot_deg"], pv["shift"], pv["scale"],
                  rot_y_deg=pv["rot_y_deg"], rot_x_deg=pv["rot_x_deg"]), pv
+
+
+# ---------------------------------------------------------------------------
+# CONFIRMATION SETS -- scenes that did not exist when the family was developed.
+#
+# The 12 irregular and 16 out-of-plane scenes above were used to REPAIR the
+# families (two twin pairs instead of one; one shared material instead of two
+# frequencies) and to plan the read, so their graphs exist and they can never
+# be confirmation data.  These are drawn from fresh seed ranges, are named
+# differently, and were registered in the pre-registration BEFORE any of their
+# graphs was built -- which is what `placement_m9_prereg.py` checks.
+# ---------------------------------------------------------------------------
+SEED_BASE_IRREGULAR_CONF = 24200
+SEED_BASE_OOP_CONF = 26200
+
+
+def confirmation_specs_irregular(n: int = 6) -> List[SceneSpec]:
+    out: List[SceneSpec] = []
+    for i in range(int(n)):
+        seed = SEED_BASE_IRREGULAR_CONF + i
+        rng = np.random.default_rng(seed)
+        sc = Scene(objects=_irregular_objects(rng), **_base_kwargs(rng))
+        out.append(SceneSpec(name="irc_%02d" % i, family="IRREGULAR",
+                             scene=sc, features=_features_for(sc, rng),
+                             views=VIEWS_IRREGULAR,
+                             notes="confirmation seed %d" % seed))
+    return out
+
+
+def confirmation_specs_oop(n: int = 6) -> List[SceneSpec]:
+    out: List[SceneSpec] = []
+    for i in range(int(n)):
+        for fi, shape in enumerate(OOP_SHAPES):
+            if len(out) >= int(n):
+                return out
+            seed = SEED_BASE_OOP_CONF + 173 * fi + i
+            rng = np.random.default_rng(seed)
+            sc = _oop_scene(shape, rng)
+            out.append(SceneSpec(name="oopc_%s_%02d" % (shape.lower(), i),
+                                 family="OUT_OF_PLANE", scene=sc,
+                                 features=_features_for(sc, rng),
+                                 views=VIEWS_OOP,
+                                 notes="confirmation seed %d" % seed))
+    return out

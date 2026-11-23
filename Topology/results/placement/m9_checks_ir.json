@@ -1,0 +1,33 @@
+{
+  "irregular": {
+    "ambiguous": 899,
+    "ambiguous_share": 0.5178571428571429,
+    "arms_ambiguous": {
+      "N": 0.5539488320355951,
+      "P_oracle": 0.6262513904338154,
+      "P_oracle_presence": 0.5628476084538376,
+      "P_plus": 0.5539488320355951,
+      "P_plus_presence": 0.5083426028921023
+    },
+    "arms_overall": {
+      "N": 0.5929839739628393,
+      "P_oracle": 0.6303299962921765,
+      "P_oracle_presence": 0.5968359906068471,
+      "P_plus": 0.5929839739628393,
+      "P_plus_presence": 0.5695834878259795
+    },
+    "headroom_amb": 0.0723025583982203,
+    "headroom_oracle_minus_N": 0.03734602232933715,
+    "nodes": 1736,
+    "valid": false
+  },
+  "note": "frozen Mission-8 densities are used for the oracle arms; no fitting happens on either family here",
+  "oop_arms": null,
+  "oop_premise": null,
+  "sizes": {
+    "ir_check": 6,
+    "ir_fit": 6,
+    "oop_check": 8,
+    "oop_fit": 8
+  }
+}

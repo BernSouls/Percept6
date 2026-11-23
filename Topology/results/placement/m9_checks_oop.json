@@ -1,0 +1,82 @@
+{
+  "irregular": null,
+  "note": "frozen Mission-8 densities are used for the oracle arms; no fitting happens on either family here",
+  "oop_arms": {
+    "ambiguous": 1379,
+    "ambiguous_share": 0.48149441340782123,
+    "arms_ambiguous": {
+      "N": 0.5373459028281363,
+      "P_oracle": 0.5881073241479333,
+      "P_oracle_presence": 0.5279187817258884,
+      "P_plus": 0.5373459028281363,
+      "P_plus_presence": 0.49891225525743294
+    },
+    "arms_overall": {
+      "N": 0.5552049379460546,
+      "P_oracle": 0.5836159516362562,
+      "P_oracle_presence": 0.5471243740279274,
+      "P_plus": 0.5552049379460546,
+      "P_plus_presence": 0.5326211107936997
+    },
+    "headroom_amb": 0.050761421319796995,
+    "headroom_oracle_minus_N": 0.028411013690201603,
+    "nodes": 2864,
+    "valid": false
+  },
+  "oop_premise": {
+    "o1_y5": {
+      "checkable_share": 0.3632051957378461,
+      "inside_fixed_tol": 0.998320738874895,
+      "n_true_edges": 2382,
+      "ratio_to_5deg": 1.1368887304036879,
+      "res_median": 0.06559572911817552,
+      "res_p90": 0.31971453954129947
+    },
+    "o2_y10": {
+      "checkable_share": 0.31305310120577945,
+      "inside_fixed_tol": 1.0,
+      "n_true_edges": 1874,
+      "ratio_to_5deg": 1.3852812639942442,
+      "res_median": 0.07992737733725667,
+      "res_p90": 0.3697428359311856
+    },
+    "o3_y20": {
+      "checkable_share": 0.22624382046877473,
+      "inside_fixed_tol": 1.0,
+      "n_true_edges": 1112,
+      "ratio_to_5deg": 2.263777208976994,
+      "res_median": 0.13061446790067735,
+      "res_p90": 0.4911876053149823
+    },
+    "o4_x5": {
+      "checkable_share": 0.3815059120713368,
+      "inside_fixed_tol": 1.0,
+      "n_true_edges": 2906,
+      "ratio_to_5deg": 0.8631112695963121,
+      "res_median": 0.04979943201581462,
+      "res_p90": 0.2997411783384103
+    },
+    "o5_x10": {
+      "checkable_share": 0.38466958420923564,
+      "inside_fixed_tol": 1.0,
+      "n_true_edges": 2784,
+      "ratio_to_5deg": 1.1368887304036879,
+      "res_median": 0.06559572911817552,
+      "res_p90": 0.4401654174184617
+    },
+    "o6_x20": {
+      "checkable_share": 0.29763697654038873,
+      "inside_fixed_tol": 1.0,
+      "n_true_edges": 1810,
+      "ratio_to_5deg": 3.053453150988006,
+      "res_median": 0.17617685918667542,
+      "res_p90": 0.6207598079454315
+    }
+  },
+  "sizes": {
+    "ir_check": 6,
+    "ir_fit": 6,
+    "oop_check": 8,
+    "oop_fit": 8
+  }
+}

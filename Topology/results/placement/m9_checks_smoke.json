@@ -1,0 +1,103 @@
+{
+  "irregular": {
+    "ambiguous": 337,
+    "ambiguous_share": 0.5692567567567568,
+    "arms_ambiguous": {
+      "N": 0.5519287833827893,
+      "P_oracle": 0.6350148367952523,
+      "P_oracle_presence": 0.5608308605341247,
+      "P_plus": 0.5519287833827893,
+      "P_plus_presence": 0.5044510385756676
+    },
+    "arms_overall": {
+      "N": 0.5857683132600221,
+      "P_oracle": 0.6273113399662535,
+      "P_oracle_presence": 0.5862977832082388,
+      "P_plus": 0.5857683132600221,
+      "P_plus_presence": 0.5581078722290103
+    },
+    "headroom_amb": 0.083086053412463,
+    "headroom_oracle_minus_N": 0.041543026706231445,
+    "nodes": 592,
+    "valid": false
+  },
+  "note": "frozen Mission-8 densities are used for the oracle arms; no fitting happens on either family here",
+  "oop_arms": {
+    "ambiguous": 949,
+    "ambiguous_share": 0.5658914728682171,
+    "arms_ambiguous": {
+      "N": 0.5669125395152792,
+      "P_oracle": 0.6164383561643836,
+      "P_oracle_presence": 0.58377239199157,
+      "P_plus": 0.5669125395152792,
+      "P_plus_presence": 0.5405690200210748
+    },
+    "arms_overall": {
+      "N": 0.5780991269004967,
+      "P_oracle": 0.6076697275327412,
+      "P_oracle_presence": 0.5837818003913895,
+      "P_plus": 0.5780991269004967,
+      "P_plus_presence": 0.5621801144061418
+    },
+    "headroom_amb": 0.04952581664910438,
+    "headroom_oracle_minus_N": 0.02957060063224448,
+    "nodes": 1677,
+    "valid": false
+  },
+  "oop_premise": {
+    "o1_y5": {
+      "checkable_share": 0.42364138298254156,
+      "inside_fixed_tol": 1.0,
+      "n_true_edges": 1650,
+      "ratio_to_5deg": 0.9328112676733342,
+      "res_median": 0.02736448790674133,
+      "res_p90": 0.16011205104815265
+    },
+    "o2_y10": {
+      "checkable_share": 0.36826863559192874,
+      "inside_fixed_tol": 1.0,
+      "n_true_edges": 1298,
+      "ratio_to_5deg": 3.58257458172455,
+      "res_median": 0.10509662802543654,
+      "res_p90": 0.3014395631543751
+    },
+    "o3_y20": {
+      "checkable_share": 0.2344537408457706,
+      "inside_fixed_tol": 1.0,
+      "n_true_edges": 542,
+      "ratio_to_5deg": 3.657621161240706,
+      "res_median": 0.10729815719728539,
+      "res_p90": 0.5251850295916778
+    },
+    "o4_x5": {
+      "checkable_share": 0.439697255215134,
+      "inside_fixed_tol": 0.9977777777777778,
+      "n_true_edges": 1800,
+      "ratio_to_5deg": 1.0671887323266658,
+      "res_median": 0.03130651844804948,
+      "res_p90": 0.19203838315064278
+    },
+    "o5_x10": {
+      "checkable_share": 0.41711304355688206,
+      "inside_fixed_tol": 1.0,
+      "n_true_edges": 1676,
+      "ratio_to_5deg": 1.7588915256757767,
+      "res_median": 0.051597967940155594,
+      "res_p90": 0.3403249384972943
+    },
+    "o6_x20": {
+      "checkable_share": 0.3069417637623143,
+      "inside_fixed_tol": 1.0,
+      "n_true_edges": 1076,
+      "ratio_to_5deg": 6.266271368215952,
+      "res_median": 0.18382422363272088,
+      "res_p90": 0.7357585609280647
+    }
+  },
+  "sizes": {
+    "ir_check": 2,
+    "ir_fit": 2,
+    "oop_check": 4,
+    "oop_fit": 4
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "arms": {
+    "ambiguous": {
+      "geom": 0.43951612903225806,
+      "off": 0.3588709677419355,
+      "pres": 0.4032258064516129
+    },
+    "unambiguous": {
+      "geom": 0.47619047619047616,
+      "off": 0.4583333333333333,
+      "pres": 0.48214285714285715
+    }
+  },
+  "contrasts": {
+    "geom - off (ambiguous)": {
+      "mde": NaN,
+      "mean": NaN,
+      "n_scenes": 1,
+      "se_scene": NaN
+    },
+    "geom - off (unambiguous)": {
+      "mde": NaN,
+      "mean": NaN,
+      "n_scenes": 1,
+      "se_scene": NaN
+    },
+    "geom - pres (ambiguous)": {
+      "mde": NaN,
+      "mean": NaN,
+      "n_scenes": 1,
+      "se_scene": NaN
+    },
+    "geom - pres (unambiguous)": {
+      "mde": NaN,
+      "mean": NaN,
+      "n_scenes": 1,
+      "se_scene": NaN
+    },
+    "pres - off (ambiguous)": {
+      "mde": NaN,
+      "mean": NaN,
+      "n_scenes": 1,
+      "se_scene": NaN
+    },
+    "pres - off (unambiguous)": {
+      "mde": NaN,
+      "mean": NaN,
+      "n_scenes": 1,
+      "se_scene": NaN
+    }
+  },
+  "family": "ir",
+  "moved": 261.0,
+  "scenes": [
+    "ir_01"
+  ],
+  "split": "fit"
+}

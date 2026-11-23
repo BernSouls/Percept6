@@ -64,7 +64,7 @@ def ambiguity_and_oracle(M3, L, A2, fit, pfit, specs, views, pose_fn,
     res_true: List[float] = []
     ok: Dict[str, List[float]] = defaultdict(list)
     a_e, a_g = 0.40625, 0.84375     # the frozen M8 coefficients
-    import Topology.placement_matcher as PM
+    from matching import placement_matcher as PM
     b = PM.frozen()
     a_e, a_g = float(b["_a_exist"]), float(b["_a_geom"])
     for vw in M3.iter_views(specs, views, None, pose_fn):
@@ -179,9 +179,10 @@ def oop_premise(M3, L, payload_residual, specs, views, pose_fn) -> Dict[str, Any
 def main() -> int:
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--ir", type=int, default=8)
+    ap.add_argument("--ir", type=int, default=12)
     ap.add_argument("--oop", type=int, default=4)
     ap.add_argument("--tag", default="m9_checks")
+    ap.add_argument("--only", choices=("ir", "oop", "both"), default="both")
     args = ap.parse_args()
 
     (M3, L, PM, payload_residual, A2, FM, VIEWS5, posed5,
@@ -191,40 +192,45 @@ def main() -> int:
     ir_fit, ir_check = FM.split_scenes(ir)
     oop = FM.all_specs_oop(args.oop)
     oop_fit, oop_check = FM.split_scenes(oop)
-
     print("FIT/CHECK by scene: irregular %d/%d, out-of-plane %d/%d\n"
           % (len(ir_fit), len(ir_check), len(oop_fit), len(oop_check)), flush=True)
-    print("2a -- IRREGULAR validity (FIT only)", flush=True)
-    v_ir = ambiguity_and_oracle(M3, L, A2, fit, pfit, ir_fit,
-                                FM.VIEWS_IRREGULAR, FM.pose_fn, "ir")
-    print("  nodes %d  ambiguous %d (%.3f)"
-          % (v_ir["nodes"], v_ir["ambiguous"], v_ir["ambiguous_share"]))
-    for a, x in v_ir["arms_overall"].items():
-        print("    %-20s %.4f  (ambiguous %.4f)"
-              % (a, x, v_ir["arms_ambiguous"][a]))
-    print("  headroom (oracle - N): overall %+0.4f  ambiguous %+0.4f  -> %s"
-          % (v_ir["headroom_oracle_minus_N"], v_ir["headroom_amb"],
-             "VALID" if v_ir["valid"] else "NOT VALID"), flush=True)
 
-    print("\n2b -- OUT-OF-PLANE premise (FIT only)", flush=True)
-    p_oop = oop_premise(M3, L, payload_residual, oop_fit, FM.VIEWS_OOP, FM.pose_fn)
-    print("  %-8s %8s %10s %10s %10s %10s" % ("step", "n edges", "res med",
-                                              "res p90", "checkable", "in tol"))
-    for k, d in p_oop.items():
-        print("  %-8s %8d %10.3f %10.3f %10.3f %10.3f"
-              % (k, d["n_true_edges"], d["res_median"], d["res_p90"],
-                 d["checkable_share"], d["inside_fixed_tol"]))
-    print("  ratio of residual median to the 5-degree step:")
-    for k, d in p_oop.items():
-        print("    %-8s %.2f" % (k, d["ratio_to_5deg"]), flush=True)
-    v_oop = ambiguity_and_oracle(M3, L, A2, fit, pfit, oop_fit, FM.VIEWS_OOP,
-                                 FM.pose_fn, "oop")
-    print("\n  OUT-OF-PLANE arms (FIT), overall and ambiguous:")
-    for a, x in v_oop["arms_overall"].items():
-        print("    %-20s %.4f  (ambiguous %.4f)" % (a, x, v_oop["arms_ambiguous"][a]))
-    print("  headroom (oracle - N): overall %+0.4f  ambiguous %+0.4f  -> %s"
-          % (v_oop["headroom_oracle_minus_N"], v_oop["headroom_amb"],
-             "VALID" if v_oop["valid"] else "NOT VALID"))
+    v_ir, p_oop, v_oop = None, None, None
+    if args.only in ("ir", "both"):
+        print("2a -- IRREGULAR validity (FIT only)", flush=True)
+        v_ir = ambiguity_and_oracle(M3, L, A2, fit, pfit, ir_fit,
+                                    FM.VIEWS_IRREGULAR, FM.pose_fn, "ir")
+        print("  nodes %d  ambiguous %d (%.3f)"
+              % (v_ir["nodes"], v_ir["ambiguous"], v_ir["ambiguous_share"]))
+        for a, x in v_ir["arms_overall"].items():
+            print("    %-20s %.4f  (ambiguous %.4f)"
+                  % (a, x, v_ir["arms_ambiguous"][a]))
+        print("  headroom (oracle - N): overall %+0.4f  ambiguous %+0.4f  -> %s"
+              % (v_ir["headroom_oracle_minus_N"], v_ir["headroom_amb"],
+                 "VALID" if v_ir["valid"] else "NOT VALID"), flush=True)
+
+    if args.only in ("oop", "both"):
+        print("\n2b -- OUT-OF-PLANE premise (FIT only)", flush=True)
+        p_oop = oop_premise(M3, L, payload_residual, oop_fit, FM.VIEWS_OOP,
+                            FM.pose_fn)
+        print("  %-8s %8s %10s %10s %10s %10s"
+              % ("step", "n edges", "res med", "res p90", "checkable", "in tol"))
+        for k, d in p_oop.items():
+            print("  %-8s %8d %10.3f %10.3f %10.3f %10.3f"
+                  % (k, d["n_true_edges"], d["res_median"], d["res_p90"],
+                     d["checkable_share"], d["inside_fixed_tol"]))
+        print("  ratio of residual median to the 5-degree step:")
+        for k, d in p_oop.items():
+            print("    %-8s %.2f" % (k, d["ratio_to_5deg"]), flush=True)
+        v_oop = ambiguity_and_oracle(M3, L, A2, fit, pfit, oop_fit,
+                                     FM.VIEWS_OOP, FM.pose_fn, "oop")
+        print("\n  OUT-OF-PLANE arms (FIT), overall and ambiguous:")
+        for a, x in v_oop["arms_overall"].items():
+            print("    %-20s %.4f  (ambiguous %.4f)"
+                  % (a, x, v_oop["arms_ambiguous"][a]))
+        print("  headroom (oracle - N): overall %+0.4f  ambiguous %+0.4f  -> %s"
+              % (v_oop["headroom_oracle_minus_N"], v_oop["headroom_amb"],
+                 "VALID" if v_oop["valid"] else "NOT VALID"))
 
     res = {"irregular": v_ir, "oop_arms": v_oop, "oop_premise": p_oop,
            "sizes": {"ir_fit": len(ir_fit), "ir_check": len(ir_check),
