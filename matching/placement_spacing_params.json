@@ -1,0 +1,14 @@
+{
+  "fitted_on": "synthetic FIT only (irregular FIT, rot5/rot15)",
+  "radius": {
+    "factor": 2.5,
+    "min_px": 1.0
+  },
+  "spacing_ref": 6.324555320336759,
+  "tol": {
+    "gamma": 1.0,
+    "hi": 2.0,
+    "lo": 0.5
+  },
+  "version": 1
+}
