@@ -1,0 +1,88 @@
+{
+  "arms": {
+    "geometry": "PLACEMENT_MATCHER_ENABLED on, a_geom frozen",
+    "presence": "PLACEMENT_MATCHER_ENABLED on, a_geom = 0"
+  },
+  "bundle": {
+    "beta": 0.5,
+    "cand_cap": 6,
+    "iteration": {
+      "iters": 5,
+      "margin": 0.0,
+      "max_rivals": 1,
+      "mutual": false,
+      "rival_tol": 0.02
+    },
+    "plus": {
+      "a_exist": 0.40625,
+      "a_geom": 0.84375
+    },
+    "sha256": "8494fed7d44cd2e2dbb97d16311aadbe09ee9ccae15530db31fbe98071e36ba8",
+    "version": 1
+  },
+  "family": "OUT_OF_PLANE (third seed range)",
+  "fit_estimate": {
+    "effect": 0.03832281524308249,
+    "mde_if_same_spread": 0.023930372331443524,
+    "n_fit_scenes": 8,
+    "se_scene": 0.01351330032557774,
+    "unambiguous_effect": -0.0001992828818386666
+  },
+  "flags": {
+    "PLACEMENT_MATCHER_ENABLED": true,
+    "PLACEMENT_MATCHER_PRESENCE": "per arm",
+    "PLACEMENT_MATCHER_STRICT": false
+  },
+  "frontend_digest": "79dfeff2ec2f0f7e508096346102ef87206b597800dbcb36b4d195b2cc449880",
+  "looks": {
+    "planned": 1,
+    "used": 0
+  },
+  "mde_at_registration": 0.023930372331443524,
+  "mission": 10,
+  "no_harm": "unambiguous bank must not fall by more than its own MDE",
+  "place_layer": true,
+  "pooling": "none: this set alone decides",
+  "primary": "geometry - presence, ambiguous bank, scene-clustered paired t",
+  "scenes": [
+    "oopm_sphere_00",
+    "oopm_box_00",
+    "oopm_cylinder_00",
+    "oopm_irregular_00",
+    "oopm_sphere_01",
+    "oopm_box_01",
+    "oopm_cylinder_01",
+    "oopm_irregular_01",
+    "oopm_sphere_02",
+    "oopm_box_02",
+    "oopm_cylinder_02",
+    "oopm_irregular_02",
+    "oopm_sphere_03",
+    "oopm_box_03",
+    "oopm_cylinder_03",
+    "oopm_irregular_03",
+    "oopm_sphere_04",
+    "oopm_box_04",
+    "oopm_cylinder_04",
+    "oopm_irregular_04"
+  ],
+  "scenes_by_shape": {
+    "BOX": 5,
+    "CYLINDER": 5,
+    "IRREGULAR": 5,
+    "SPHERE": 5
+  },
+  "se_at_registration": 0.008546561546944116,
+  "step1_refit_decision": {
+    "adopted": false,
+    "best": "a_exist=0.55"
+  },
+  "view_labels": [
+    "o1_y5",
+    "o2_y10",
+    "o3_y20",
+    "o4_x5",
+    "o5_x10",
+    "o6_x20"
+  ]
+}
