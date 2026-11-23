@@ -47,7 +47,24 @@ CAND_CAP = 6
 #: Run the DEV-only oracle-context ceiling diagnostic.
 ORACLE = True
 
-ARMS = ("N", "R", "R_fixed", "P", "P_presence", "P_shuffled", "W")
+#: [MISSION 8] Two-coefficient estimator: existence and geometry in ONE arm,
+#: with the weights fitted on FIT by maximum likelihood and then frozen.
+#: Harness-side only: no deployed graph changes because of these arms.
+A_E = 1.0             # fitted existence coefficient (overwritten by fit_plus)
+A_G = 1.0             # fitted geometry coefficient  (overwritten by fit_plus)
+PLUS_META: Dict[str, Any] = {}
+PLUS_NODES: List[Any] = []    # per-node (terms, truth_index) over the FIT pass
+ARMS = ("N", "R", "R_fixed", "P", "P_presence", "P_plus", "P_plus_presence",
+        "P_shuffled", "W")
+
+
+def fit_plus() -> Dict[str, Any]:
+    """Fit the (existence, geometry) coefficients on the collected FIT nodes."""
+    global A_E, A_G, PLUS_META
+    from matching import placement_llr as L
+    A_E, A_G, meta = L.fit_plus_coefficients(PLUS_NODES)
+    PLUS_META = dict(meta)
+    return PLUS_META
 
 
 def _rows_for(g_q: Any, g_r: Any, pop: Sequence[int],
@@ -174,6 +191,66 @@ def collect_fit(specs: Sequence[Any], views: Sequence[Any], limit: Optional[int]
 
 
 # ---------------------------------------------------------------------------
+# [MISSION 8] P_plus: the coefficient fit.  A SECOND pass over FIT, after the
+# densities exist, because a term sum cannot be formed until the LLRs and the
+# presence rates are known.  Graphs come from the cache, so this pass is cheap.
+def collect_plus(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
+                 limit: Optional[int] = None,
+                 pose_fn: Optional[Any] = None) -> int:
+    import guard
+    guard.activate()
+    from matching import placement_edges as PE
+    from matching import placement_llr as L
+    from matching.placement_scorer import incident_index, payload_index
+    from Topology.placement_cache import get_or_build
+    from Topology.placement_dev3 import view_pose
+    from Topology.placement_scenes import posed
+    from Topology.placement_truth import node_objects, track_optimal
+
+    PLUS_NODES.clear()
+    for spec in (specs[:limit] if limit else specs):
+        r0 = spec.scene.render()
+        g0 = get_or_build(r0.image_u8, spec.name + "|ref")
+        o0 = node_objects(r0, g0)
+        refc = [v for v in sorted(int(n) for n in g0.subgraph.nodes)
+                if o0.get(v, -1) >= 0]
+        intra = (spec.family == "NEGATIVE-A")
+        r_idx = payload_index(_payload(PE, g0, r0.image_u8, o0, intra))
+        for label, view in views:
+            if pose_fn is not None:
+                sc1, pv = pose_fn(spec, view)
+            else:
+                pv = view_pose(spec, view)
+                sc1 = posed(spec.scene, pv["rot_deg"], tuple(pv["shift"]),
+                            pv["scale"])
+            r1 = sc1.render()
+            g1 = get_or_build(r1.image_u8, spec.name + "|" + label)
+            o1 = node_objects(r1, g1)
+            q_pay = _payload(PE, g1, r1.image_u8, o1, intra)
+            q_idx, q_inc = payload_index(q_pay), incident_index(q_pay)
+            truth = {int(q): int(r)
+                     for r, q in track_optimal(spec.scene, r0, sc1, r1,
+                                               g0, g1).items()}
+            pop = [u for u in sorted(truth) if o1.get(u, -1) >= 0]
+            rows = _rows_for(g1, g0, pop, refc)
+            nmap = {u: rows[u][0][0] for u in pop if rows.get(u)}
+            for u in pop:
+                row = rows.get(u) or []
+                if not row:
+                    continue
+                cand = row[:CAND_CAP]
+                tv = truth.get(u)
+                terms = []
+                for (v, _s) in cand:
+                    terms.append(L.plus_terms(u, int(v), nmap, q_inc, q_idx,
+                                              r_idx, fit, pfit))
+                PLUS_NODES.append(
+                    (terms, next((k for k, (v, _s) in enumerate(cand)
+                                  if v == tv), -1)))
+    return len(PLUS_NODES)
+
+
+# ---------------------------------------------------------------------------
 def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
               limit: Optional[int], ratio_fit: Any = None,
               pose_fn: Optional[Any] = None) -> List[Dict[str, Any]]:
@@ -282,6 +359,12 @@ def run_check(specs: Sequence[Any], views: Sequence[Any], fit: Any, pfit: Any,
                     L.presence_score(u, v, nmap, q_inc, q_idx, r_idx, pfit), s))
                 scored["P_ratio"] = pick(lambda v, s: blend(
                     L.ratio_score(u, v, nmap, q_inc, pos_q, pos_r, ratio_fit), s))
+                scored["P_plus"] = pick(lambda v, s: blend(
+                    L.plus_score(u, v, nmap, q_inc, q_idx, r_idx, fit, pfit,
+                                 A_E, A_G), s))
+                scored["P_plus_presence"] = pick(lambda v, s: blend(
+                    L.plus_score(u, v, nmap, q_inc, q_idx, r_idx, fit, pfit,
+                                 A_E, 0.0), s))
                 scored["P_shuffled"] = pick(lambda v, s: blend(
                     L.score_candidate(u, v, nmap, sh_inc, sh_idx, r_idx, fit), s))
                 scored["W"] = pick(lambda v, s: blend(

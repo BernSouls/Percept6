@@ -300,3 +300,120 @@ def presence_score(u: int, v: int, mapping: Mapping[int, int],
             total += float(pfit.llr.get(name, 0.0))
     total += padv * (slot_cap - len(slots))
     return total / (2.0 * LLR_CLIP * slot_cap) + 0.5
+
+
+# ---------------------------------------------------------------------------
+# P_plus: existence and geometry in ONE estimator.
+#
+# Mission 7 shipped the two terms as separate arms, so a node was decided either
+# by "does the candidate carry the edge" or by "is the residual small" -- never
+# by a combination whose weights were themselves fitted.  P_plus keeps both
+# terms exactly as they are (same slots, same caps, same padding, same clip,
+# same [0, 1] map) and lets ONE pair of coefficients decide how much each is
+# worth.  The pair is fitted by maximum likelihood on FIT and then frozen; the
+# geometry coefficient is the only thing P_plus_presence removes, which makes
+# "P_plus - P_plus_presence" the clean geometry contrast.
+PLUS_SLOTS = SLOT_CAP
+
+
+def plus_terms(u: int, v: int, mapping: Mapping[int, int],
+               q_inc: Mapping[int, List[Tuple[int, bool, str]]],
+               q_idx: Mapping[Tuple[int, int, str], Any],
+               r_idx: Mapping[Tuple[int, int, str], Any],
+               fit: "LLRFit", pfit: "PresenceFit",
+               slot_cap: int = SLOT_CAP) -> Tuple[float, float]:
+    """Raw (existence, geometry) sums for u -> v, under P's caps and padding.
+
+    The two sums are exactly the numerators of ``presence_score`` and
+    ``score_candidate``: same slot list, same order, same cap, and the same
+    padding value per term for slots that do not exist at all.
+    """
+    slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx)[:slot_cap]
+    e_sum = 0.0
+    g_sum = 0.0
+    for (name, _other, res) in slots:
+        if res is not None:
+            e_sum += float(pfit.llr.get(name, 0.0))
+        g_sum += fit.of(res)
+    miss = slot_cap - len(slots)
+    if miss:
+        e_sum += float(pfit.mu_wrong) * miss
+        g_sum += float(fit.mu_wrong) * miss
+    return e_sum, g_sum
+
+
+def plus_map(e_sum: float, g_sum: float, a_e: float, a_g: float,
+             slot_cap: int = SLOT_CAP) -> float:
+    """The same [0, 1] map P uses, applied to the weighted sum."""
+    raw = 0.5 + (float(a_e) * e_sum + float(a_g) * g_sum) / (
+        2.0 * LLR_CLIP * slot_cap)
+    return float(min(1.0, max(0.0, raw)))
+
+
+def plus_score(u: int, v: int, mapping: Mapping[int, int],
+               q_inc: Mapping[int, List[Tuple[int, bool, str]]],
+               q_idx: Mapping[Tuple[int, int, str], Any],
+               r_idx: Mapping[Tuple[int, int, str], Any],
+               fit: "LLRFit", pfit: "PresenceFit",
+               a_e: float, a_g: float, slot_cap: int = SLOT_CAP) -> float:
+    """``plus_map`` of ``plus_terms`` -- the deployable arm."""
+    e_sum, g_sum = plus_terms(u, v, mapping, q_inc, q_idx, r_idx,
+                              fit, pfit, slot_cap=slot_cap)
+    return plus_map(e_sum, g_sum, a_e, a_g, slot_cap=slot_cap)
+
+
+#: Coarse grid, then one refinement.  Chosen before looking at any accuracy: the
+#: quantity maximised is the multinomial likelihood of the TRUE candidate, so the
+#: grid only has to be dense enough not to quantise the optimum.
+PLUS_GRID = (0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5)
+PLUS_REFINE = 6
+
+
+def _plus_ll(nodes: Sequence[Tuple[Sequence[Tuple[float, float]], int]],
+             a_e: float, a_g: float) -> float:
+    """Sum of log p(true candidate) under a softmax over the candidates."""
+    tot = 0.0
+    for terms, ti in nodes:
+        if ti < 0 or ti >= len(terms):
+            continue
+        logits = [a_e * e + a_g * g for (e, g) in terms]
+        m = max(logits)
+        z = m + float(np.log(np.sum(np.exp([x - m for x in logits]))))
+        tot += logits[ti] - z
+    return tot
+
+
+def fit_plus_coefficients(nodes: Sequence[Tuple[Sequence[Tuple[float, float]],
+                                                int]]
+                          ) -> Tuple[float, float, Dict[str, Any]]:
+    """Maximum-likelihood (a_e, a_g) on FIT, by deterministic grid + refine.
+
+    ``nodes`` holds, per node, the (existence, geometry) sums of every candidate
+    the assignment sees, plus the index of the TRUE one.  Nothing here touches
+    CHECK; the returned pair is meant to be written down and frozen.
+    """
+    used = [(t, i) for (t, i) in nodes if 0 <= i < len(t)]
+    best = (float("-inf"), 0.0, 0.0)
+    for a_e in PLUS_GRID:
+        for a_g in PLUS_GRID:
+            v = _plus_ll(used, a_e, a_g)
+            if v > best[0]:
+                best = (v, float(a_e), float(a_g))
+    step = 0.125
+    for _ in range(PLUS_REFINE):
+        improved = False
+        for d_e in (-step, 0.0, step):
+            for d_g in (-step, 0.0, step):
+                a_e = max(0.0, best[1] + d_e)
+                a_g = max(0.0, best[2] + d_g)
+                v = _plus_ll(used, a_e, a_g)
+                if v > best[0] + 1e-12:
+                    best = (v, a_e, a_g)
+                    improved = True
+        if not improved:
+            step *= 0.5
+    meta = {"a_exist": float(best[1]), "a_geom": float(best[2]),
+            "loglik": float(best[0]), "n_nodes": len(used),
+            "n_candidates_mean": float(np.mean([len(t) for (t, _i) in used]))
+            if used else 0.0}
+    return best[1], best[2], meta

@@ -2121,6 +2121,8 @@ class LensExecutor:
         anchors: List[Any] = []
         orient_bins: List[Tuple[float, ...]] = []
         emission_mode: List[str] = []
+        # segment anchor -> its own midpoint on the polyline
+        _seg_mid: Dict[Tuple[int, int], Tuple[float, float]] = {}
         closed_flags: List[bool] = []
         num_seg_per_region: List[int] = []
 
@@ -2163,6 +2165,14 @@ class LensExecutor:
                     )
                     n_seg = len(segments)
                     for seg_idx, (angle, arc_len, _mid) in enumerate(segments):
+                        # [MISSION 8 / STEP 1] THE SEGMENT'S OWN POSITION.
+                        # `_segment_polyline` returns the point exactly on the
+                        # polyline at the segment's half-arc and this loop used
+                        # to discard it, so every segment of a region took the
+                        # REGION CENTROID -- which is why 15 of 45 Orientation
+                        # places shared a position.  Kept and handed over below.
+                        _seg_mid[(int(u), int(seg_idx))] = (
+                            float(_mid[0]), float(_mid[1]))
                         theta_bin = (
                             int(math.floor((angle % math.pi) * n_theta / math.pi))
                             % n_theta
@@ -2298,7 +2308,15 @@ class LensExecutor:
                     continue
                 _a7 = getattr(_d7, "alpha", None)
                 _u7 = int(_a7[0]) if isinstance(_a7, tuple) and _a7 else None
-                if _u7 is None or not callable(_gp):
+                if _u7 is None:
+                    continue
+                # [MISSION 8 / STEP 1] a segment has its OWN place
+                _m8 = _seg_mid.get((_u7, int(_a7[1]))) \
+                    if isinstance(_a7, tuple) and len(_a7) >= 2 else None
+                if _m8 is not None:
+                    object.__setattr__(_d7, "_place_pos", _m8)
+                    continue
+                if not callable(_gp):
                     continue
                 _p7 = _gp(_u7)
                 if _p7 is not None and len(_p7) >= 2:
