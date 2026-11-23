@@ -137,7 +137,10 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       "PLACEMENT_MATCHER_PRESENCE",
                       "PLACEMENT_MATCHER_STRICT",
                       "PLACEMENT_SPACING_TOL",
-                      "PLACEMENT_SPACING_RADIUS")
+                      "PLACEMENT_SPACING_RADIUS",
+                      # [MISSION 10 / step 4b] changes the SHAPE of the placement
+                      # term, so a matcher-result cache must never survive it.
+                      "PLACEMENT_PAIR_NORMALISED")
 
 _log = logging.getLogger("eth80_frontend")
 

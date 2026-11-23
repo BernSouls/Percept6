@@ -335,6 +335,33 @@ behind a pre-registered read.
 Where it does **not** help: the pear class (n = 8) inverts, and the four DEV-5
 families are flat-to-slightly-positive, not large — see below.
 
+## 7b. The lever, in code and dark
+
+The plain verdict names one lever, so it is shipped rather than just described:
+`PLACEMENT_PAIR_NORMALISED` makes the placement term the mean over the slots the
+pair actually judged (no padding with `mu_wrong`, denominator = judged slots) instead
+of a sum over a cap of 24. It is in `_FRONTEND_SWITCHES` and in the matcher-result
+cache key, and it defaults off.
+
+It has **no read behind it**. The ETH-80 number it is aimed at (+0.230) came from
+dividing the blended pair score after the fact, not from this term. On the one
+out-of-plane view-pair I checked it against, it changed the term's value on true
+pairs (0.5227 -> 0.5543) and moved **0 of 91** ambiguous nodes — so it is dark,
+wired, and unproven. Believing it needs a pre-registered read on a fresh query set.
+
+Two checks were run on the defaults while adding it, and both are the kind that
+have to be run rather than assumed:
+
+* **Fresh-process reproduction of the Step-2 read.** One recorded view-pair
+  (`oop_m10_...`, arms geometry and presence) re-run in a clean process after the
+  flag was added: per-node results **identical** to the checkpoint, 91 nodes each
+  arm, accuracy 0.5934 / 0.5824 exactly as recorded.
+* **A control that fell out of a mistake of mine.** The same re-run without
+  `FE_PLACE_LAYER=1` gave geometry and presence the *same* accuracy, node for node
+  (0.4638 both). Without the place layer there are no places, so the placement term
+  is a no-op — which is what a non-vacuity control should look like, and a reminder
+  that every one of these runs has to carry the flag.
+
 ## 8. The four families at the deployed matcher, on all FIT scenes
 
 Mission 9 could only report **one** FIT scene for this regression, and one scene

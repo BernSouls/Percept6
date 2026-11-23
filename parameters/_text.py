@@ -1246,6 +1246,22 @@ PLACEMENT_SPACING_TOL: bool = os.environ.get(
 PLACEMENT_SPACING_RADIUS: bool = os.environ.get(
     "PLACEMENT_SPACING_RADIUS", "0") != "0"
 
+#: [MISSION 10 / step 4b] The placement term as a MEAN over the pairs it judged,
+#: not a sum over the slot cap.  DARK, and with no read behind it yet.
+#:
+#: Why it exists: both retrieval measurements (16 synthetic scenes, 200 ETH-80
+#: queries) found the same thing -- a sum over correspondences is a COVERAGE
+#: statistic.  Across the eight candidates of one query the number of mapped
+#: pairs ran 800-990 while the per-pair quality was nearly flat, so the sum ranked
+#: candidates by how much they covered.  Divided by the pairs it judged, the same
+#: matches rank ETH-80 instances at top-1 0.380 against node-only 0.150
+#: (m10_eth80_agg.json, post-hoc).  That measurement was NOT made with this flag --
+#: it divided the blended score after the fact -- so this flag changes the SHAPE of
+#: the term (padding removed, denominator = judged slots) and must be read on a
+#: fresh query set before it is believed, let alone deployed.
+PLACEMENT_PAIR_NORMALISED: bool = os.environ.get(
+    "PLACEMENT_PAIR_NORMALISED", "0") != "0"
+
 # Lenses minted per PLACE.  Attribute lenses are deliberately NOT here: an
 # attribute describes what a place is like, so folding its detections is right.
 PLACE_LAYER_LENSES: Tuple[str, ...] = ("Orientation", "Texture", "Color",

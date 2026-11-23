@@ -180,6 +180,19 @@ def enun_rows(matrix, nodes_b, rows):
         yield i, cells
 
 
+def _pair_normalised() -> bool:
+    """Is the placement term the mean over judged pairs (DARK, M10 step 4b)?
+
+    Off by default: reading the flag is the only cost, and every caller then uses
+    the same sum-over-the-cap arithmetic it used before the flag existed.
+    """
+    try:
+        import parameters as P
+        return bool(getattr(P, "PLACEMENT_PAIR_NORMALISED", False))
+    except Exception:
+        return False
+
+
 def _spacing_tol_fn(side_a: "Side", side_b: "Side"):
     """A per-pair tolerance function, or None when the spacing rule is dark.
 
@@ -239,11 +252,13 @@ def context_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
         base[u] = int(row[0][1])
 
     tol_of = _spacing_tol_fn(side_a, side_b)
+    norm = _pair_normalised()
 
     def score(u: int, v: int, m: Mapping[int, int]) -> float:
         term = L.plus_score(u, int(v), m, side_a.incident, side_a.index,
                             side_b.index, fit, pfit, float(a_e), float(a_g),
-                            tol=(None if tol_of is None else tol_of(u, v)))
+                            tol=(None if tol_of is None else tol_of(u, v)),
+                            normalise=norm)
         return (1.0 - beta) * sim.get((int(u), int(v)), 0.0) + beta * term
 
     return Ctx.iterate_context(sorted(cands), cands, base, score, iters=it,
@@ -280,12 +295,14 @@ def rescore_matrix(matrix: Sequence[Sequence[float]],
     # literal "top six only" reading: the deployed matcher's ambiguous accuracy
     # fell from 0.4226 to 0.2234 and it re-parted 708 nodes per match.
     tol_of = _spacing_tol_fn(side_a, side_b)
+    norm = _pair_normalised()
     for i, row_all in enun_rows(matrix, nodes_b, rows):
         u = int(nodes_a[i])
         for (j, vid, s) in row_all:
             term = L.plus_score(u, int(vid), ctx, side_a.incident, side_a.index,
                                 side_b.index, fit, pfit, a_e, a_g,
-                                tol=(None if tol_of is None else tol_of(u, vid)))
+                                tol=(None if tol_of is None else tol_of(u, vid)),
+                                normalise=norm)
             new = (1.0 - beta) * float(s) + beta * float(term)
             if abs(new - out[i][j]) > 1e-12:
                 changed += 1
@@ -318,6 +335,7 @@ def argmax_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
     beta = float(b["beta"])
     ctx = context_mapping(rows, nodes_a, side_a, side_b,
                           use_geometry=use_geometry)
+    norm = _pair_normalised()
     out: Dict[int, int] = {}
     for i, row in enumerate(rows):
         if not row:
@@ -326,7 +344,8 @@ def argmax_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
         best_vid, best_val = -1, -float("inf")
         for (_j, vid, s) in row:
             term = L.plus_score(u, int(vid), ctx, side_a.incident, side_a.index,
-                                side_b.index, fit, pfit, a_e, a_g)
+                                side_b.index, fit, pfit, a_e, a_g,
+                                normalise=norm)
             val = (1.0 - beta) * float(s) + beta * float(term)
             if val > best_val:
                 best_val, best_vid = val, int(vid)

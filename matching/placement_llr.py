@@ -328,8 +328,15 @@ def plus_terms(u: int, v: int, mapping: Mapping[int, int],
                r_idx: Mapping[Tuple[int, int, str], Any],
                fit: "LLRFit", pfit: "PresenceFit",
                slot_cap: int = SLOT_CAP,
-               tol: Optional[float] = None) -> Tuple[float, float]:
+               tol: Optional[float] = None,
+               normalise: bool = False) -> Tuple[float, float]:
     """Raw (existence, geometry) sums for u -> v, under P's caps and padding.
+
+    ``normalise`` (DARK, PLACEMENT_PAIR_NORMALISED) turns the sum into the mean
+    over the slots this pair actually judged: the slots that do not exist are NOT
+    padded with ``mu_wrong``.  A sum over a cap of 24 is a coverage statistic -- a
+    pair that keeps more edges scores higher even when every one of them is worse
+    -- and both retrieval measurements in Mission 10 hit exactly that.
 
     The two sums are exactly the numerators of ``presence_score`` and
     ``score_candidate``: same slot list, same order, same cap, and the same
@@ -343,7 +350,7 @@ def plus_terms(u: int, v: int, mapping: Mapping[int, int],
         if res is not None:
             e_sum += float(pfit.llr.get(name, 0.0))
         g_sum += fit.of(res)
-    miss = slot_cap - len(slots)
+    miss = 0 if normalise else slot_cap - len(slots)
     if miss:
         e_sum += float(pfit.mu_wrong) * miss
         g_sum += float(fit.mu_wrong) * miss
@@ -364,16 +371,28 @@ def plus_score(u: int, v: int, mapping: Mapping[int, int],
                r_idx: Mapping[Tuple[int, int, str], Any],
                fit: "LLRFit", pfit: "PresenceFit",
                a_e: float, a_g: float, slot_cap: int = SLOT_CAP,
-               tol: Optional[float] = None) -> float:
+               tol: Optional[float] = None,
+               normalise: bool = False) -> float:
     """``plus_map`` of ``plus_terms`` -- the deployable arm.
 
     ``tol`` is the per-pair tolerance of the spacing-aware rule (Mission 10 step
     4a).  It is None unless that dark flag is on, in which case the frozen
     ``FIXED_TOL`` is used exactly as before.
+
+    ``normalise`` (DARK) divides by the slots this pair judged instead of by the
+    cap, and stops padding the missing ones -- the mean-quality reading rather
+    than the coverage reading.  Off, this function is byte-for-byte the old one.
     """
     e_sum, g_sum = plus_terms(u, v, mapping, q_inc, q_idx, r_idx,
-                              fit, pfit, slot_cap=slot_cap, tol=tol)
-    return plus_map(e_sum, g_sum, a_e, a_g, slot_cap=slot_cap)
+                              fit, pfit, slot_cap=slot_cap, tol=tol,
+                              normalise=normalise)
+    if not normalise:
+        return plus_map(e_sum, g_sum, a_e, a_g, slot_cap=slot_cap)
+    n = len(slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx,
+                                tol=tol)[:slot_cap])
+    raw = 0.5 + (float(a_e) * e_sum + float(a_g) * g_sum) / (
+        2.0 * LLR_CLIP * max(1, n))
+    return float(min(1.0, max(0.0, raw)))
 
 
 #: Coarse grid, then one refinement.  Chosen before looking at any accuracy: the
