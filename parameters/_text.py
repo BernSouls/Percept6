@@ -1231,6 +1231,21 @@ PLACEMENT_MATCHER_PRESENCE: bool = os.environ.get(
 PLACEMENT_MATCHER_STRICT: bool = os.environ.get(
     "PLACEMENT_MATCHER_STRICT", "0") != "0"
 
+#: [MISSION 10 / step 4] Spacing-aware geometry.  The frozen tolerance and the
+#: target radius are absolute pixel numbers fitted where places sit ~6 px apart,
+#: while real photographs put them 5.83 px apart and the synthetic p10 is 2 px.
+#: Both rules are DARK and both read their numbers from
+#: matching/placement_spacing_params.json, which is fitted on synthetic FIT only.
+#:  * PLACEMENT_SPACING_TOL     the per-pair residual tolerance scales with the
+#:                             local place spacing (max over the two places).
+#:  * PLACEMENT_SPACING_RADIUS  the neighbour radius is capped by the local place
+#:                             spacing, so a target selection cannot reach past
+#:                             the neighbouring place on a dense image.
+PLACEMENT_SPACING_TOL: bool = os.environ.get(
+    "PLACEMENT_SPACING_TOL", "0") != "0"
+PLACEMENT_SPACING_RADIUS: bool = os.environ.get(
+    "PLACEMENT_SPACING_RADIUS", "0") != "0"
+
 # Lenses minted per PLACE.  Attribute lenses are deliberately NOT here: an
 # attribute describes what a place is like, so folding its detections is right.
 PLACE_LAYER_LENSES: Tuple[str, ...] = ("Orientation", "Texture", "Color",

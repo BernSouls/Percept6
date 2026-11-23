@@ -172,12 +172,40 @@ def select_targets(subgraph: Any, frames: Dict[int, float],
     """
     out: Dict[int, List[int]] = {}
     pool = sorted(positions)
+    # [MISSION 10 / step 4] The radius is a multiple of the source's own scale,
+    # which on a dense image can reach past the neighbouring place.  When the dark
+    # PLACEMENT_SPACING_RADIUS flag is on, the radius is CAPPED by the local place
+    # spacing (nearest neighbour among places).  It is only ever a cap: a scene
+    # whose places are far apart keeps the scale-relative radius it had.
+    spacing: Dict[int, float] = {}
+    try:
+        from matching import placement_spacing as _SP
+        if _SP.enabled("radius"):
+            for u in pool:
+                pu0 = positions[u]
+                best = float("inf")
+                for v in pool:
+                    if v == u:
+                        continue
+                    pv0 = positions[v]
+                    d = math.hypot(pv0[0] - pu0[0], pv0[1] - pu0[1])
+                    if 1e-9 < d < best:
+                        best = d
+                if math.isfinite(best):
+                    spacing[u] = best
+    except Exception:
+        spacing = {}
     for u in sorted(frames):
         pu = positions.get(u)
         su = scales.get(u)
         if pu is None or not su or su <= 0.0:
             continue
         radius = float(radius_scales) * float(su)
+        if spacing:
+            from matching import placement_spacing as _SP
+            cap = _SP.radius_cap(spacing.get(u))
+            if cap is not None:
+                radius = min(radius, float(cap))
         cand: List[Tuple[float, Tuple, int]] = []
         for v in pool:
             if v == u:

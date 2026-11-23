@@ -298,3 +298,34 @@ def confirmation_specs_oop(n: int = 6) -> List[SceneSpec]:
                                  views=VIEWS_OOP,
                                  notes="confirmation seed %d" % seed))
     return out
+
+
+# ---------------------------------------------------------------------------
+# MISSION 10 confirmation set: the OUT-OF-PLANE family, third seed range.
+#
+# Mission 9's out-of-plane read was underpowered at six scenes (effect +0.0203,
+# MDE 0.0355).  This set is about eighteen scenes from a seed range that has
+# never been rendered, and it decides on its own: the earlier six are reported
+# beside it and are never pooled with it.
+# ---------------------------------------------------------------------------
+SEED_BASE_OOP_CONF10 = 30000
+
+
+def confirmation_specs_oop_m10(n: int = 18) -> List[SceneSpec]:
+    out: List[SceneSpec] = []
+    i = 0
+    while len(out) < int(n):
+        for fi, shape in enumerate(OOP_SHAPES):
+            if len(out) >= int(n):
+                break
+            seed = SEED_BASE_OOP_CONF10 + 1009 * i + 211 * fi
+            rng = np.random.default_rng(seed)
+            sc = _oop_scene(shape, rng)
+            out.append(SceneSpec(name="oopm_%s_%02d" % (shape.lower(), i),
+                                 family="OUT_OF_PLANE", scene=sc,
+                                 features=_features_for(sc, rng),
+                                 views=VIEWS_OOP,
+                                 notes="m10 confirmation seed %d shape %s"
+                                       % (seed, shape)))
+        i += 1
+    return out

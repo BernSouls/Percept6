@@ -135,7 +135,9 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       # digest every such key folds in.
                       "PLACEMENT_MATCHER_ENABLED",
                       "PLACEMENT_MATCHER_PRESENCE",
-                      "PLACEMENT_MATCHER_STRICT")
+                      "PLACEMENT_MATCHER_STRICT",
+                      "PLACEMENT_SPACING_TOL",
+                      "PLACEMENT_SPACING_RADIUS")
 
 _log = logging.getLogger("eth80_frontend")
 

@@ -65,7 +65,8 @@ def slots_for_candidate(u: int, v: int,
                         mapping: Mapping[int, int],
                         q_inc: Mapping[int, List[Tuple[int, bool, str]]],
                         q_idx: Mapping[Tuple[int, int, str], Any],
-                        r_idx: Mapping[Tuple[int, int, str], Any]
+                        r_idx: Mapping[Tuple[int, int, str], Any],
+                        tol: Optional[float] = None
                         ) -> List[Slot]:
     """The (class, neighbour, residual) slots of u under the candidate u -> v.
 
@@ -91,7 +92,8 @@ def slots_for_candidate(u: int, v: int,
             out.append((name, int(other), None))
             continue
         out.append((name, int(other),
-                    float(payload_residual(qv, rv, FIXED_TOL))))
+                    float(payload_residual(qv, rv,
+                                           FIXED_TOL if tol is None else tol))))
     return out[:SLOT_CAP]
 
 
@@ -159,7 +161,8 @@ def score_candidate(u: int, v: int, mapping: Mapping[int, int],
     geometry.
     """
     padv = float(fit.mu_wrong) if pad is None else float(pad)
-    slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx)[:slot_cap]
+    slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx,
+                                tol=tol)[:slot_cap]
     total = 0.0
     for (_name, _other, res) in slots:
         total += fit.of(res)
@@ -289,7 +292,8 @@ def presence_score(u: int, v: int, mapping: Mapping[int, int],
                    pad: Optional[float] = None) -> float:
     """Presence credit under P's normalisation, caps and padding."""
     padv = float(pfit.mu_wrong) if pad is None else float(pad)
-    slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx)[:slot_cap]
+    slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx,
+                                tol=tol)[:slot_cap]
     total = 0.0
     for (name, _other, res) in slots:
         # Credit ONLY when the candidate actually carries that class of edge;
@@ -321,14 +325,16 @@ def plus_terms(u: int, v: int, mapping: Mapping[int, int],
                q_idx: Mapping[Tuple[int, int, str], Any],
                r_idx: Mapping[Tuple[int, int, str], Any],
                fit: "LLRFit", pfit: "PresenceFit",
-               slot_cap: int = SLOT_CAP) -> Tuple[float, float]:
+               slot_cap: int = SLOT_CAP,
+               tol: Optional[float] = None) -> Tuple[float, float]:
     """Raw (existence, geometry) sums for u -> v, under P's caps and padding.
 
     The two sums are exactly the numerators of ``presence_score`` and
     ``score_candidate``: same slot list, same order, same cap, and the same
     padding value per term for slots that do not exist at all.
     """
-    slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx)[:slot_cap]
+    slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx,
+                                tol=tol)[:slot_cap]
     e_sum = 0.0
     g_sum = 0.0
     for (name, _other, res) in slots:
@@ -355,10 +361,16 @@ def plus_score(u: int, v: int, mapping: Mapping[int, int],
                q_idx: Mapping[Tuple[int, int, str], Any],
                r_idx: Mapping[Tuple[int, int, str], Any],
                fit: "LLRFit", pfit: "PresenceFit",
-               a_e: float, a_g: float, slot_cap: int = SLOT_CAP) -> float:
-    """``plus_map`` of ``plus_terms`` -- the deployable arm."""
+               a_e: float, a_g: float, slot_cap: int = SLOT_CAP,
+               tol: Optional[float] = None) -> float:
+    """``plus_map`` of ``plus_terms`` -- the deployable arm.
+
+    ``tol`` is the per-pair tolerance of the spacing-aware rule (Mission 10 step
+    4a).  It is None unless that dark flag is on, in which case the frozen
+    ``FIXED_TOL`` is used exactly as before.
+    """
     e_sum, g_sum = plus_terms(u, v, mapping, q_inc, q_idx, r_idx,
-                              fit, pfit, slot_cap=slot_cap)
+                              fit, pfit, slot_cap=slot_cap, tol=tol)
     return plus_map(e_sum, g_sum, a_e, a_g, slot_cap=slot_cap)
 
 

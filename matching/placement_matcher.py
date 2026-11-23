@@ -40,6 +40,8 @@ FROZEN_PATH = os.path.join(_HERE, "placement_frozen_params.json")
 FAILURES: Dict[str, int] = {"rescored": 0, "raised": 0, "fell_back": 0, "skipped": 0}
 
 _BUNDLE: Optional[Dict[str, Any]] = None
+#: set while a FIT-only candidate bundle is installed; production leaves it None
+OVERRIDE: Optional[Dict[str, Any]] = None
 _FIT = None
 _PFIT = None
 
@@ -60,6 +62,33 @@ def frozen() -> Dict[str, Any]:
 def fit_objects():
     frozen()
     return _FIT, _PFIT
+
+
+def override(bundle: Optional[Dict[str, Any]]) -> None:
+    """FIT-ONLY: install a candidate bundle, or None to fall back to the file.
+
+    The deployed path reads whatever `frozen()` returns, so a search over
+    coefficients has to be able to present a candidate without touching the file
+    on disk.  This is the seam: it validates the candidate exactly like the file
+    (``from_jsonbundle`` refuses a bundle whose caps disagree with the live
+    constants), it records that it is active in ``OVERRIDE`` so a caller can see
+    it, and production never calls it -- nothing in the matcher, the alignment or
+    the front end refers to it.
+    """
+    global _BUNDLE, _FIT, _PFIT, OVERRIDE
+    if bundle is None:
+        _BUNDLE = None
+        _FIT = None
+        _PFIT = None
+        OVERRIDE = None
+        return
+    from matching import placement_llr as L
+    b = dict(bundle)
+    fit, pfit, ae, ag = L.from_jsonbundle(b)
+    b["_a_exist"], b["_a_geom"] = float(ae), float(ag)
+    _FIT, _PFIT = fit, pfit
+    _BUNDLE = b
+    OVERRIDE = {k: b[k] for k in ("beta", "cand_cap", "plus", "iteration") if k in b}
 
 
 # ---------------------------------------------------------------------------
@@ -151,6 +180,30 @@ def enun_rows(matrix, nodes_b, rows):
         yield i, cells
 
 
+def _spacing_tol_fn(side_a: "Side", side_b: "Side"):
+    """A per-pair tolerance function, or None when the spacing rule is dark.
+
+    Mission 10 step 4a: the frozen tolerance was fitted where places sit ~6 px
+    apart; on a denser image an absolute tolerance covers a different fraction of
+    a place spacing.  When PLACEMENT_SPACING_TOL is on, the tolerance for a pair is
+    scaled from the local spacing of the two places (maximum of the two, so the
+    coarser place decides), using numbers fitted on synthetic FIT only.
+    """
+    try:
+        from matching import placement_spacing as SP
+        if not SP.enabled("tol"):
+            return None
+    except Exception:
+        return None
+    from matching import placement_llr as L
+
+    def tol_of(u: int, v: int) -> float:
+        return SP.tol_for(side_a.spacing_by_node.get(int(u)),
+                          side_b.spacing_by_node.get(int(v)),
+                          L.FIXED_TOL, fallback=side_a.spacing_median)
+    return tol_of
+
+
 def context_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
                     nodes_a: Sequence[int],
                     side_a: Side, side_b: Side, *,
@@ -185,9 +238,12 @@ def context_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
             sim[(u, int(vid))] = float(sim_v)
         base[u] = int(row[0][1])
 
+    tol_of = _spacing_tol_fn(side_a, side_b)
+
     def score(u: int, v: int, m: Mapping[int, int]) -> float:
         term = L.plus_score(u, int(v), m, side_a.incident, side_a.index,
-                            side_b.index, fit, pfit, float(a_e), float(a_g))
+                            side_b.index, fit, pfit, float(a_e), float(a_g),
+                            tol=(None if tol_of is None else tol_of(u, v)))
         return (1.0 - beta) * sim.get((int(u), int(v)), 0.0) + beta * term
 
     return Ctx.iterate_context(sorted(cands), cands, base, score, iters=it,
@@ -223,11 +279,13 @@ def rescore_matrix(matrix: Sequence[Sequence[float]],
     # a slightly worse raw similarity suddenly outranks it.  Measured with the
     # literal "top six only" reading: the deployed matcher's ambiguous accuracy
     # fell from 0.4226 to 0.2234 and it re-parted 708 nodes per match.
+    tol_of = _spacing_tol_fn(side_a, side_b)
     for i, row_all in enun_rows(matrix, nodes_b, rows):
         u = int(nodes_a[i])
         for (j, vid, s) in row_all:
             term = L.plus_score(u, int(vid), ctx, side_a.incident, side_a.index,
-                                side_b.index, fit, pfit, a_e, a_g)
+                                side_b.index, fit, pfit, a_e, a_g,
+                                tol=(None if tol_of is None else tol_of(u, vid)))
             new = (1.0 - beta) * float(s) + beta * float(term)
             if abs(new - out[i][j]) > 1e-12:
                 changed += 1
