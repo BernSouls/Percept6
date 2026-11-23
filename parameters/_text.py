@@ -1206,6 +1206,31 @@ FE_KEYPOINTS: bool = os.environ.get("FE_KEYPOINTS", "0") != "0"
 # stored signature stays position-free, so matching is unchanged.
 FE_PLACE_LAYER: bool = os.environ.get("FE_PLACE_LAYER", "0") != "0"
 
+# [MISSION 9] THE CREDITED SCORER IN THE DEPLOYED MATCHER.
+#
+# Mission 8 credited P_plus_ctx -- existence + geometry with two fitted
+# coefficients, iterated truth-free context, blended per CANDIDATE -- while the
+# shipped hook (PLACEMENT_SCORER_ENABLED) is the old ROW-factor modifier that
+# cannot reorder candidates at all.  These three switches put the credited arm in
+# the matcher and leave the old one exactly as it was.
+#
+# DARK by default and byte-identical when off: with no side supplied the block
+# never runs.  They are in eth80_frontend._FRONTEND_SWITCHES because a graph is
+# not the only thing a switch can invalidate -- a matcher result built under one
+# setting must not be served under another (Mission 8 found FE_PLACE_LAYER
+# missing from that tuple and a dark run reading a lit graph).
+PLACEMENT_MATCHER_ENABLED: bool = os.environ.get(
+    "PLACEMENT_MATCHER_ENABLED", "0") != "0"
+#: The geometry coefficient set to ZERO, everything else identical.  This is the
+#: arm the primary contrast in Mission 9 is taken against.
+PLACEMENT_MATCHER_PRESENCE: bool = os.environ.get(
+    "PLACEMENT_MATCHER_PRESENCE", "0") != "0"
+#: TEST MODE: a failure in the dark path RAISES instead of falling back, and a
+#: missing side is an error rather than a silent skip.  Production keeps the
+#: fallback and counts it in placement_matcher.FAILURES.
+PLACEMENT_MATCHER_STRICT: bool = os.environ.get(
+    "PLACEMENT_MATCHER_STRICT", "0") != "0"
+
 # Lenses minted per PLACE.  Attribute lenses are deliberately NOT here: an
 # attribute describes what a place is like, so folding its detections is right.
 PLACE_LAYER_LENSES: Tuple[str, ...] = ("Orientation", "Texture", "Color",

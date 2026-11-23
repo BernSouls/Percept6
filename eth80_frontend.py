@@ -128,7 +128,14 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       # the flags-ON graphs -- identical node and edge counts and
                       # 0.0 s of build time -- so a dark run could read a lit
                       # graph.  It must key the cache like every other switch.
-                      "FE_PLACE_LAYER")
+                      "FE_PLACE_LAYER",
+                      # [MISSION 9] the deployed matcher switches.  They are not
+                      # graph switches, but a MATCHER-RESULT cache must never be
+                      # served across them either, and this tuple is the one
+                      # digest every such key folds in.
+                      "PLACEMENT_MATCHER_ENABLED",
+                      "PLACEMENT_MATCHER_PRESENCE",
+                      "PLACEMENT_MATCHER_STRICT")
 
 _log = logging.getLogger("eth80_frontend")
 

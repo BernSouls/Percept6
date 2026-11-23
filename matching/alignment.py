@@ -768,6 +768,8 @@ def global_consistency_alignment(
     placement_payloads_a: Optional[Dict[Any, Any]] = None,
     placement_payloads_b: Optional[Dict[Any, Any]] = None,
     placement_tolerance: Optional[float] = None,
+    placement_side_a: Optional[Any] = None,
+    placement_side_b: Optional[Any] = None,
 ) -> Alignment:
     """Global-consistency alignment seeded from the approximate Hungarian.
 
@@ -891,6 +893,49 @@ def global_consistency_alignment(
         except Exception:
             # A dark feature may never break the aligner.
             pass
+
+    # [MISSION 9 / dark] THE CREDITED SCORER, at the CANDIDATE level.
+    #
+    # The block above is the old modifier: one factor per row, which cannot
+    # reorder the candidates inside that row, and which reads its context from
+    # the seed argmax it then leaves alone.  Mission 8 credited a different arm
+    # (P_plus_ctx: existence + geometry, two fitted coefficients, iterated
+    # context, blended per CANDIDATE), and this is that arm applied to the seed
+    # matrix the aligner is about to use.
+    #
+    # Dark: PLACEMENT_MATCHER_ENABLED is False, and both sides must be supplied,
+    # so a caller that passes nothing gets exactly the old matrix.
+    if (bool(getattr(P, "PLACEMENT_MATCHER_ENABLED", False))
+            and placement_side_a is not None
+            and placement_side_b is not None
+            and getattr(placement_side_a, "usable", False)
+            and getattr(placement_side_b, "usable", False)):
+        from matching import placement_matcher as PM
+        _strict = bool(getattr(P, "PLACEMENT_MATCHER_STRICT", False))
+        _geom = not bool(getattr(P, "PLACEMENT_MATCHER_PRESENCE", False))
+        _stats: Dict[str, Any] = {}
+        try:
+            PM.frozen()          # refuses to run with drifted caps
+            matrix = PM.rescore_matrix(matrix, nodes_a, nodes_b,
+                                       placement_side_a, placement_side_b,
+                                       use_geometry=_geom, stats=_stats)
+            PM.FAILURES["rescored"] += 1
+            _placement_stats = _stats
+        except Exception as _exc:      # pragma: no cover - loud in test mode
+            PM.FAILURES["raised" if _strict else "fell_back"] += 1
+            if _strict:
+                raise
+            import logging
+            logging.getLogger("matching.alignment").warning(
+                "placement matcher fell back to the raw matrix: %r", _exc)
+    else:
+        if (bool(getattr(P, "PLACEMENT_MATCHER_ENABLED", False))
+                and bool(getattr(P, "PLACEMENT_MATCHER_STRICT", False))):
+            from matching import placement_matcher as _PM
+            _PM.FAILURES["skipped"] += 1
+            raise ValueError(
+                "PLACEMENT_MATCHER_STRICT is on and no usable placement side was "
+                "supplied: the deployed scorer would have been silently skipped")
 
     if not any(any(row) for row in matrix):
         return empty

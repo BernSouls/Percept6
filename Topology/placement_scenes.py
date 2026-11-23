@@ -101,8 +101,27 @@ def _rot_z(deg: float) -> np.ndarray:
     return np.array([[c, -s, 0.0], [s, c, 0.0], [0.0, 0.0, 1.0]], dtype=np.float64)
 
 
+# [MISSION 9] OUT-OF-PLANE.  Every scene in Missions 5-8 was posed with `_rot_z`
+# only, i.e. in the image plane, where a 2-D similarity of the source frame is
+# an exact model of the change.  A rotation about y (or x) is not: the object
+# turns out of the image plane, the surface normal changes, and the same
+# source-frame vector projects differently.  These two matrices let the families
+# ask the question the 2-D model cannot answer by construction.
+def _rot_y(deg: float) -> np.ndarray:
+    t = math.radians(deg)
+    c, s = math.cos(t), math.sin(t)
+    return np.array([[c, 0.0, s], [0.0, 1.0, 0.0], [-s, 0.0, c]], dtype=np.float64)
+
+
+def _rot_x(deg: float) -> np.ndarray:
+    t = math.radians(deg)
+    c, s = math.cos(t), math.sin(t)
+    return np.array([[1.0, 0.0, 0.0], [0.0, c, -s], [0.0, s, c]], dtype=np.float64)
+
+
 def posed(scene: Scene, rot_deg: float = 0.0, shift: Tuple[float, float] = (0.0, 0.0),
-          scale: float = 1.0, occluder: bool = False) -> Scene:
+          scale: float = 1.0, occluder: bool = False,
+          rot_y_deg: float = 0.0, rot_x_deg: float = 0.0) -> Scene:
     """A copy of ``scene`` under one pose step.
 
     Rotation is about each object's own centre (so a rigid rotation, which is
@@ -110,9 +129,12 @@ def posed(scene: Scene, rot_deg: float = 0.0, shift: Tuple[float, float] = (0.0,
     by the same world vector; ``scale`` scales the primitive radii.  ``occluder``
     adds a near occluding bar in front of the scene's front object.
     """
+    # Composition order is fixed here and used by every caller: in-plane first,
+    # then y, then x, all in WORLD space and all about the object's own centre.
+    R = _rot_z(float(rot_deg)) @ _rot_y(float(rot_y_deg)) @ _rot_x(float(rot_x_deg))
     objs: List[SceneObject] = []
     for o in scene.objects:
-        r = _rot_z(rot_deg) @ np.asarray(o.rotation, dtype=np.float64)
+        r = R @ np.asarray(o.rotation, dtype=np.float64)
         sh = np.zeros(3, dtype=np.float64)
         sh[:len(shift)] = np.asarray(shift, dtype=np.float64)[:3]
         c = np.asarray(o.centre, dtype=np.float64) + sh
@@ -186,8 +208,10 @@ def derive_track(spec: SceneSpec, view_label: str) -> Dict[str, Tuple[float, flo
     if pose is None:
         raise KeyError("unknown view step %r (known: %s)"
                        % (view_label, [v[0] for v in spec.views]))
-    sc = posed(spec.scene, pose["rot_deg"], tuple(pose["shift"]),
-               float(pose["scale"]))
+    sc = posed(spec.scene, pose.get("rot_deg", 0.0), tuple(pose.get("shift", (0.0, 0.0))),
+               float(pose.get("scale", 1.0)),
+               rot_y_deg=float(pose.get("rot_y_deg", 0.0)),
+               rot_x_deg=float(pose.get("rot_x_deg", 0.0)))
     by_name = {o.name: o for o in sc.objects}
     out: Dict[str, Tuple[float, float]] = {}
     for f in spec.features:

@@ -1,0 +1,189 @@
+{
+  "agree_argmax": 1.0,
+  "agree_matrix": 0.9962476547842402,
+  "examples": [
+    {
+      "deployed": 284,
+      "gap": 0.21237732629323966,
+      "harness": 284,
+      "matrix": 0,
+      "node": 324,
+      "scene": "d5_sphere_01",
+      "view": "v4_scale"
+    },
+    {
+      "deployed": 744,
+      "gap": 0.2149381958587425,
+      "harness": 744,
+      "matrix": 7,
+      "node": 868,
+      "scene": "d5_occlusion_01",
+      "view": "v2_trans"
+    },
+    {
+      "deployed": 281,
+      "gap": 0.2561833600229782,
+      "harness": 281,
+      "matrix": 19,
+      "node": 288,
+      "scene": "d5_sphere_03",
+      "view": "v2_trans"
+    },
+    {
+      "deployed": 281,
+      "gap": 0.21402775551046463,
+      "harness": 281,
+      "matrix": 19,
+      "node": 334,
+      "scene": "d5_sphere_03",
+      "view": "v4_scale"
+    },
+    {
+      "deployed": 276,
+      "gap": 0.2134291360869432,
+      "harness": 276,
+      "matrix": 0,
+      "node": 325,
+      "scene": "d5_occlusion_03",
+      "view": "v2_trans"
+    },
+    {
+      "deployed": 278,
+      "gap": 0.23922475292358675,
+      "harness": 278,
+      "matrix": 0,
+      "node": 278,
+      "scene": "d5_sphere_05",
+      "view": "v1_rot5"
+    },
+    {
+      "deployed": 278,
+      "gap": 0.27868499631136895,
+      "harness": 278,
+      "matrix": 0,
+      "node": 280,
+      "scene": "d5_sphere_05",
+      "view": "v1_rot5"
+    },
+    {
+      "deployed": 277,
+      "gap": 0.28677795757176017,
+      "harness": 277,
+      "matrix": 0,
+      "node": 292,
+      "scene": "d5_sphere_05",
+      "view": "v1_rot5"
+    },
+    {
+      "deployed": 278,
+      "gap": 0.2572351698166817,
+      "harness": 278,
+      "matrix": 0,
+      "node": 294,
+      "scene": "d5_sphere_05",
+      "view": "v1_rot5"
+    },
+    {
+      "deployed": 500,
+      "gap": -0.0005986194235214626,
+      "harness": 500,
+      "matrix": 499,
+      "node": 513,
+      "scene": "d5_sphere_05",
+      "view": "v1_rot5"
+    },
+    {
+      "deployed": 284,
+      "gap": 0.2610444875261949,
+      "harness": 284,
+      "matrix": 0,
+      "node": 270,
+      "scene": "d5_sphere_05",
+      "view": "v2_trans"
+    },
+    {
+      "deployed": 278,
+      "gap": 0.23971192602256988,
+      "harness": 278,
+      "matrix": 0,
+      "node": 278,
+      "scene": "d5_sphere_05",
+      "view": "v2_trans"
+    },
+    {
+      "deployed": 278,
+      "gap": 0.2803354255285939,
+      "harness": 278,
+      "matrix": 0,
+      "node": 282,
+      "scene": "d5_sphere_05",
+      "view": "v2_trans"
+    },
+    {
+      "deployed": 278,
+      "gap": 0.2765000245144228,
+      "harness": 278,
+      "matrix": 0,
+      "node": 286,
+      "scene": "d5_sphere_05",
+      "view": "v2_trans"
+    },
+    {
+      "deployed": 277,
+      "gap": 0.23699371565684998,
+      "harness": 277,
+      "matrix": 0,
+      "node": 300,
+      "scene": "d5_cylinder_05",
+      "view": "v1_rot5"
+    },
+    {
+      "deployed": 277,
+      "gap": 0.21453621478552787,
+      "harness": 277,
+      "matrix": 0,
+      "node": 291,
+      "scene": "d5_cylinder_05",
+      "view": "v3_rot15"
+    },
+    {
+      "deployed": 280,
+      "gap": 0.21237732629323966,
+      "harness": 280,
+      "matrix": 0,
+      "node": 372,
+      "scene": "d5_occlusion_05",
+      "view": "v2_trans"
+    },
+    {
+      "deployed": 281,
+      "gap": 0.23862613350006529,
+      "harness": 281,
+      "matrix": 0,
+      "node": 288,
+      "scene": "d5_sphere_07",
+      "view": "v2_trans"
+    },
+    {
+      "deployed": 279,
+      "gap": 0.2134291360869432,
+      "harness": 279,
+      "matrix": 0,
+      "node": 292,
+      "scene": "d5_sphere_07",
+      "view": "v2_trans"
+    },
+    {
+      "deployed": 276,
+      "gap": 0.23862613350006529,
+      "harness": 276,
+      "matrix": 0,
+      "node": 295,
+      "scene": "d5_sphere_07",
+      "view": "v2_trans"
+    }
+  ],
+  "n_disagree": 30,
+  "nodes": 7995,
+  "verdict": "EQUIVALENT"
+}

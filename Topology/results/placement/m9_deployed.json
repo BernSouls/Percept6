@@ -1,0 +1,51 @@
+{
+  "arms": {
+    "ambiguous": {
+      "geom": 0.423728813559322,
+      "off": 0.3305084745762712,
+      "pres": 0.4046610169491525
+    },
+    "unambiguous": {
+      "geom": 0.4112903225806452,
+      "off": 0.3870967741935484,
+      "pres": 0.4032258064516129
+    }
+  },
+  "contrasts": {
+    "geom - off (ambiguous)": {
+      "mean": NaN,
+      "n_scenes": 1
+    },
+    "geom - off (unambiguous)": {
+      "mean": NaN,
+      "n_scenes": 1
+    },
+    "geom - pres (ambiguous)": {
+      "mean": NaN,
+      "n_scenes": 1
+    },
+    "geom - pres (unambiguous)": {
+      "mean": NaN,
+      "n_scenes": 1
+    },
+    "pres - off (ambiguous)": {
+      "mean": NaN,
+      "n_scenes": 1
+    },
+    "pres - off (unambiguous)": {
+      "mean": NaN,
+      "n_scenes": 1
+    }
+  },
+  "modes": {
+    "assignment": true,
+    "failures": {
+      "fell_back": 0,
+      "raised": 0,
+      "rescored": 16,
+      "skipped": 0
+    },
+    "nodes_moved_by_flag_mean": 259.0
+  },
+  "non_vacuous": true
+}

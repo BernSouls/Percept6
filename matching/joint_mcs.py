@@ -125,8 +125,19 @@ class JointMCS:
         return self.graded_edge_similarity_sum / self.graded_edges if self.graded_edges else None
 
 
+def _as_image_graph(subgraph: Any, sigs: Any) -> Any:
+    """A minimal ImageGraph-shaped view of (subgraph, sigs).
+
+    The placement payload builder needs `.subgraph` and `.sigs` and nothing else;
+    production call sites already hold the two pieces separately, so this avoids
+    forcing every caller to build a wrapper.
+    """
+    from types import SimpleNamespace
+    return SimpleNamespace(subgraph=subgraph, sigs=dict(sigs or {}))
+
+
 def _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None,
-                           address_k=None):
+                           address_k=None, placement_images=None):
     """Two graphs in; no labels, training sets, filtering or learned masses.
 
     Each matched node contributes its signature similarity; each preserved
@@ -237,6 +248,18 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None,
         unmatched_cost = ((math.fsum(positive) / len(positive)) * price_scale
                           if positive else 0.0)
 
+    # [MISSION 9] Build the placement sides for the credited scorer.  The
+    # builder needs the PIXELS (the source frame is read off the field), so a
+    # caller that wants the scorer must hand them over; when it does not, the
+    # flag is on and STRICT is on, the aligner raises instead of skipping.
+    _side_a = _side_b = None
+    if bool(getattr(P, "PLACEMENT_MATCHER_ENABLED", False)) and placement_images:
+        from matching import placement_matcher as _PM
+        _img_a, _img_b = placement_images[0], placement_images[1]
+        if _img_a is not None and _img_b is not None:
+            _side_a = _PM.build_side(_as_image_graph(a, sigs_a), _img_a)
+            _side_b = _PM.build_side(_as_image_graph(b, sigs_b), _img_b)
+
     @lru_cache(maxsize=None)
     def edge_sim(x,y,u,v,et):
         return edge_pair_credit(a,b,x,y,u,v,et,edge_weight_fn=_align_edge_weight)
@@ -259,7 +282,13 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None,
         addrs_a=getattr(a,"addrs",None) if addrs_a is None else addrs_a,
         addrs_b=getattr(b,"addrs",None) if addrs_b is None else addrs_b,
         address_k=address_k,
-        edge_weight_fn=_align_edge_weight)
+        edge_weight_fn=_align_edge_weight,
+        # [MISSION 9 / dark] the credited scorer.  Sides are built HERE, from
+        # the graph and the pixels it came from, only when the flag is on and a
+        # caller supplied the images; otherwise both stay None and the aligner's
+        # new block never runs.
+        placement_side_a=_side_a,
+        placement_side_b=_side_b)
     assert len(set(al.mapping.values()))==len(al.mapping)
     b_und={(min(x,y),max(x,y),et) for x,y,et in b.edges if et in UNDIRECTED_EDGE_TYPES}
     b_dir={(x,y,et) for x,y,et in b.edges if et not in UNDIRECTED_EDGE_TYPES}
@@ -481,7 +510,7 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None,
     return JointMCS(score,dict(al.mapping),len(credits),len(graded),math.fsum(graded),presence,al.budget_exhausted,presence_credit,nodes,edge_credit_total,node_term,edge_term,float(denom))
 
 
-def joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None, address_k=None):
+def joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None, address_k=None, placement_images=None):
     """Symmetric score: retain the better of both directional heuristic solves.
 
     This does not certify optimality. Reversing graph arguments considers the
@@ -492,9 +521,10 @@ def joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None, address_k=None):
     structure beside the graph).  They seed the alignment only.
     """
     forward = _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a, addrs_b,
-                                     address_k)
-    reverse = _directional_joint_mcs(b, a, sigs_b, sigs_a, addrs_b, addrs_a,
-                                     address_k)
+                                     address_k, placement_images)
+    reverse = _directional_joint_mcs(
+        b, a, sigs_b, sigs_a, addrs_b, addrs_a, address_k,
+        (placement_images[1], placement_images[0]) if placement_images else None)
     if forward.score >= reverse.score:
         # symmetric budget reporting: the other direction's exhaustion is
         # still information about this pair.

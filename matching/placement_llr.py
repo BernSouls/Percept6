@@ -417,3 +417,60 @@ def fit_plus_coefficients(nodes: Sequence[Tuple[Sequence[Tuple[float, float]],
             "n_candidates_mean": float(np.mean([len(t) for (t, _i) in used]))
             if used else 0.0}
     return best[1], best[2], meta
+
+
+# ---------------------------------------------------------------------------
+# FREEZING.  A deployed matcher cannot fit anything, so the fitted densities
+# travel as plain numbers: these two methods are the whole contract.
+def _fit_to_dict(fit: "LLRFit") -> Dict[str, Any]:
+    return {"edges": [float(x) for x in fit.edges],
+            "llr": [float(x) for x in fit.llr],
+            "mu_wrong": float(fit.mu_wrong),
+            "n_true": int(fit.n_true), "n_wrong": int(fit.n_wrong)}
+
+
+def _fit_from_dict(d: Mapping[str, Any]) -> "LLRFit":
+    return LLRFit(edges=np.asarray(d["edges"], dtype=float),
+                  llr=np.asarray(d["llr"], dtype=float),
+                  mu_wrong=float(d["mu_wrong"]),
+                  n_true=int(d.get("n_true", 0)),
+                  n_wrong=int(d.get("n_wrong", 0)))
+
+
+def _pres_to_dict(p: "PresenceFit") -> Dict[str, Any]:
+    return {"llr": {k: float(v) for k, v in p.llr.items()},
+            "mu_wrong": float(p.mu_wrong),
+            "n_true": int(p.n_true), "n_wrong": int(p.n_wrong)}
+
+
+def _pres_from_dict(d: Mapping[str, Any]) -> "PresenceFit":
+    return PresenceFit(llr={k: float(v) for k, v in d["llr"].items()},
+                       mu_wrong=float(d["mu_wrong"]),
+                       n_true=int(d.get("n_true", 0)),
+                       n_wrong=int(d.get("n_wrong", 0)))
+
+
+def to_jsonbundle(fit: "LLRFit", pfit: "PresenceFit", a_e: float,
+                  a_g: float) -> Dict[str, Any]:
+    """Everything the deployed scorer needs, as JSON-able numbers."""
+    return {"version": 1,
+            "plus": {"a_exist": float(a_e), "a_geom": float(a_g)},
+            "fit": _fit_to_dict(fit), "presence": _pres_to_dict(pfit),
+            "constants": {"slot_cap": int(SLOT_CAP),
+                          "llr_clip": float(LLR_CLIP),
+                          "fixed_tol": float(FIXED_TOL),
+                          "res_max": float(RES_MAX),
+                          "n_bins": int(N_BINS)}}
+
+
+def from_jsonbundle(b: Mapping[str, Any]) -> Tuple["LLRFit", "PresenceFit", float, float]:
+    c = b.get("constants") or {}
+    for name, mine in (("slot_cap", SLOT_CAP), ("llr_clip", LLR_CLIP),
+                       ("fixed_tol", FIXED_TOL)):
+        if name in c and abs(float(c[name]) - float(mine)) > 1e-12:
+            raise ValueError(
+                "frozen %s %r does not match the live constant %r: a deployed "
+                "score must not be read with different caps" %
+                (name, c[name], mine))
+    return (_fit_from_dict(b["fit"]), _pres_from_dict(b["presence"]),
+            float(b["plus"]["a_exist"]), float(b["plus"]["a_geom"]))
