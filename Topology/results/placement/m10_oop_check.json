@@ -1,0 +1,108 @@
+{
+  "arms": {
+    "amb": {
+      "ci": [
+        0.009641829225994885,
+        0.03453770336599053
+      ],
+      "delta": 0.02208976629599271,
+      "geom": 0.5654904198881858,
+      "mde": 0.017782767242854033,
+      "n_scenes": 20,
+      "nodes": 5518,
+      "p": 0.002517003714458438,
+      "per_scene": {
+        "oopm_box_00": 0.06338028169014087,
+        "oopm_box_01": 0.0,
+        "oopm_box_02": 0.08045977011494254,
+        "oopm_box_03": 0.011363636363636354,
+        "oopm_box_04": 0.0,
+        "oopm_cylinder_00": 0.022388059701492602,
+        "oopm_cylinder_01": 0.06470588235294117,
+        "oopm_cylinder_02": -0.006535947712418277,
+        "oopm_cylinder_03": -0.035928143712574856,
+        "oopm_cylinder_04": 0.0,
+        "oopm_irregular_00": 0.051094890510948954,
+        "oopm_irregular_01": 0.035211267605633756,
+        "oopm_irregular_02": 0.04166666666666663,
+        "oopm_irregular_03": 0.03437499999999999,
+        "oopm_irregular_04": 0.02803738317757004,
+        "oopm_sphere_00": 0.007936507936507908,
+        "oopm_sphere_01": 0.005050505050505083,
+        "oopm_sphere_02": 0.02689486552567244,
+        "oopm_sphere_03": 0.008116883116883078,
+        "oopm_sphere_04": 0.003577817531305927
+      },
+      "pres": 0.5434006535921931,
+      "se_scene": 0.006350988301019298,
+      "t": 3.4781620196729737
+    },
+    "un": {
+      "ci": [
+        0.002721792234508285,
+        0.018882408732508568
+      ],
+      "delta": 0.010802100483508426,
+      "geom": 0.4297150081968296,
+      "mde": 0.01154329749857163,
+      "n_scenes": 20,
+      "nodes": 2698,
+      "p": 0.016842094608153217,
+      "per_scene": {
+        "oopm_box_00": 0.0,
+        "oopm_box_01": -0.019230769230769218,
+        "oopm_box_02": 0.027027027027026973,
+        "oopm_box_03": 0.014925373134328346,
+        "oopm_box_04": 0.02439024390243902,
+        "oopm_cylinder_00": 0.04918032786885246,
+        "oopm_cylinder_01": 0.03797468354430378,
+        "oopm_cylinder_02": 0.01282051282051283,
+        "oopm_cylinder_03": 0.0,
+        "oopm_cylinder_04": 0.0,
+        "oopm_irregular_00": 0.0,
+        "oopm_irregular_01": 0.015267175572519054,
+        "oopm_irregular_02": 0.009803921568627472,
+        "oopm_irregular_03": 0.046875,
+        "oopm_irregular_04": 0.014184397163120588,
+        "oopm_sphere_00": 0.0031948881789137795,
+        "oopm_sphere_01": -0.006578947368421073,
+        "oopm_sphere_02": -0.004854368932038833,
+        "oopm_sphere_03": -0.0029850746268657025,
+        "oopm_sphere_04": -0.005952380952380931
+      },
+      "pres": 0.41891290771332124,
+      "se_scene": 0.004122606249489868,
+      "t": 2.620211543327738
+    }
+  },
+  "counters": {
+    "fell_back": 0,
+    "raised": 0,
+    "rescored": 29048,
+    "skipped": 0
+  },
+  "scenes": [
+    "oopm_box_00",
+    "oopm_box_01",
+    "oopm_box_02",
+    "oopm_box_03",
+    "oopm_box_04",
+    "oopm_cylinder_00",
+    "oopm_cylinder_01",
+    "oopm_cylinder_02",
+    "oopm_cylinder_03",
+    "oopm_cylinder_04",
+    "oopm_irregular_00",
+    "oopm_irregular_01",
+    "oopm_irregular_02",
+    "oopm_irregular_03",
+    "oopm_irregular_04",
+    "oopm_sphere_00",
+    "oopm_sphere_01",
+    "oopm_sphere_02",
+    "oopm_sphere_03",
+    "oopm_sphere_04"
+  ],
+  "seconds": 4049.784862756729,
+  "view_pairs": 120
+}

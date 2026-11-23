@@ -59,24 +59,30 @@ def _load_u8(path: str) -> np.ndarray:
 
 
 def catalog() -> Tuple[List[dict], List[dict]]:
-    """(gallery references, queries), deterministic, via the corpus's own parser."""
+    """(gallery references, queries), deterministic, via the corpus's own parser.
+
+    [MISSION 10 / corrected] The first version took only the three REFERENCE
+    instances into the gallery and drew queries from the dev/held-out instances --
+    which are DIFFERENT OBJECTS, so the "truth" could never be in the shortlist and
+    recall came out 0.000.  View-to-view retrieval asks whether a second view of an
+    object finds that object, so the gallery is one reference view of EVERY
+    instance and the queries are other views of the SAME instances.
+    """
     from Topology import corpus
     refs: List[dict] = []
     queries: List[dict] = []
     for cls in corpus.CLASSES:
-        insts = corpus._instances(cls)          # {instance: {view: path}}
-        ids = sorted(insts)
-        for rank, inst in enumerate(ids):
+        insts = corpus._instances(cls)
+        for inst in sorted(insts):
             for view in sorted(insts[inst]):
-                e = {"key": "%s/%d" % (cls, inst), "cls": cls, "inst": "%s%d" % (cls, inst),
-                     "view": view, "path": insts[inst][view]}
-                if rank in tuple(corpus.REF_RANKS):
-                    if view in corpus.REF_VIEWS:
-                        refs.append(e)
-                elif rank in tuple(corpus.DEV_RANKS) + tuple(corpus.HELDOUT_RANKS):
-                    if view not in corpus.REF_VIEWS:
-                        queries.append(e)
-    refs.sort(key=lambda e: (e["cls"], e["key"], e["view"]))
+                e = {"key": "%s/%d" % (cls, inst), "cls": cls,
+                     "inst": "%s%d" % (cls, inst), "view": view,
+                     "path": insts[inst][view]}
+                if view in corpus.REF_VIEWS:
+                    refs.append(e)
+                else:
+                    queries.append(e)
+    refs.sort(key=lambda e: (e["cls"], e["key"]))
     queries.sort(key=lambda e: (e["cls"], e["key"], e["view"]))
     out: List[dict] = []
     per_inst: Dict[str, int] = {}
@@ -84,7 +90,7 @@ def catalog() -> Tuple[List[dict], List[dict]]:
         if len(out) >= N_QUERIES:
             break
         c = per_inst.get(e["key"], 0)
-        if c >= 5:                 # at most five views per instance
+        if c >= 3:                 # at most three query views per instance
             continue
         per_inst[e["key"]] = c + 1
         out.append(e)
