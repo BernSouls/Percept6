@@ -782,21 +782,19 @@ invented.**
 | 1 | **done** — 20 packaged photographs at 256×256, 6 reserved for validation, manifest with hashes and licence pointers; ETH-80 **BLOCKED**, killed, nothing claimed from it |
 | 2 | **done** — frame test rewritten (anchor-rotating, signed residual, sign calibrated 24/24 to −1), three real providers, per-structure table; keypoint wins the frame test on photographs (0.913 vs 0.598 within 3°) but **is not adopted**, because the deployed matcher's FIT interval for near-tie accuracy is [+0.000, +0.188] and does not exclude zero (MDE ≈ 0.18 at 8 pairs). Stays DARK |
 | 3 | **done, bar not met and said so** — redundancy measured (1.00× inside a pair, 1.78× across a 576-pair run), content-keyed cache landed DARK and **bit-identical on 30 pairs at 0.97×**; the 3× bar is unreachable from the similarity lever (≤1.28× even if the similarity were free), and the profile shows the cost is the aligner's swap evaluation |
-| 4 | **RUNNING** — 352/1 008 cells checkpointed; gates declared in code; **no gate evaluated, no read spent** |
+| 4 | **done, gate FAILED** — 1 008/1 008 cells; the 2-D fit is degenerate (corner at w=1.55, T=0.015) and the identifiable 1-D fit (w=1.60) loses held-out top-1 (0.730 vs 0.794); held-out is flat from w=0 to w=0.375 and falls after. **The read was NOT spent**, by the declared rule |
 | 5 | **done** — pre-registered real-photo read executed once: **NOT DETECTED**, P − N = −0.0022 [−0.0118, +0.0067]; mechanism measured (translation-transitive, rotation/scale-intolerant in both arms), instrument limits quantified |
 | 6 | **BLOCKED** — no corpus, no ETH-80 read, nothing invented |
 
-### To continue when the refit finishes
+### The confirmation read
 
-```
-.venv/bin/python Topology/placement_m12_fit_w.py --report     # evaluates and prints gates
-#   gates.passed false -> fix the fit, re-report, do NOT start the read
-.venv/bin/python Topology/placement_m12_read_synth.py --start --workers 1
-.venv/bin/python Topology/placement_m12_read_synth.py --report
-```
-
-The read refuses to start unless `m12_fit_w.json` carries `gates.passed`. The fit is
-resumable from `m12_fit_w_progress.jsonl` at any point with `--start`.
+`Topology/placement_m12_read_synth.py --start` refuses to run unless
+`m12_fit_w.json` carries `gates.passed`; it does not, so **the read is queued and
+unspent**, which is what Step 4 asked for. It becomes runnable only if a fit is
+found that is both interior and not worse on held-out — and the sweep shows that
+no w in the admissible range satisfies both, because the likelihood has no interior
+maximum in w at the shipped temperature. Changing the criterion is a new
+pre-registration, not a re-run.
 
 ## Step 4 (continued) — the refit finished, its gates REFUSED it, and the read was not spent
 
