@@ -335,15 +335,32 @@ by maximum likelihood over FIT shortlists, with E on the STEP-2 scale
 
 ---
 
-## STEP 5 — the shortlist (running)
+## STEP 5 — the shortlist: done
 
-`Topology/placement_m12_synth_shortlist.py` — recall at K = 8/16/32/48 for the
-node-similarity shortlist score, for the structural prefilter alone (place count,
-edge-type histogram, degree distribution as normalised histograms) and for the
-blends, over 51 FIT queries against the whole 28-scene M9 gallery (chance 1/28).
-Status: RUNNING (the run is serialised behind the OOM-safe pipeline). The number to
-beat is recall ≥ 0.95 at the smallest K; if no K reaches it, the ceiling is reported
-and retrieval is reported conditional on the shortlist.
+`Topology/placement_m12_synth_shortlist.py`, 51 FIT queries against the whole
+28-scene M9 gallery (chance 1/28), every scorer truth-free:
+
+| scorer | recall@8 | recall@16 | recall@32 | recall@48 | MRR |
+|---|---|---|---|---|---|
+| node similarity | 0.804 | 0.863 | 1.000 | 1.000 | 0.620 |
+| structure alone (place count, edge-type histogram, degree distribution) | 0.647 | 0.863 | 1.000 | 1.000 | 0.294 |
+| blend, λ = 0.25 | 0.784 | **0.902** | 1.000 | 1.000 | **0.650** |
+| blend, λ = 0.50 | 0.765 | 0.902 | 1.000 | 1.000 | 0.650 |
+| blend, λ = 1.00 | 0.765 | 0.863 | 1.000 | 1.000 | 0.560 |
+
+**The ceiling, stated rather than met.** No K below the gallery size reaches
+recall ≥ 0.95: the best is 0.804 at K = 8 and 0.902 at K = 16. K = 32 reads 1.000
+only because the gallery has 28 scenes, i.e. it is the whole gallery and the number
+is vacuous. So the honest statement is:
+
+* **K = 16 with the λ = 0.25 blend is the smallest useful shortlist**: recall 0.902,
+  MRR 0.650, against 0.863 / 0.620 for node similarity alone at the same K;
+* at K = 8 the best recall is 0.804, and retrieval must be reported **conditional on
+  the shortlist** — which is what the Step-6a registration says it does (K = 8), and
+  the read's report carries this 0.804 with it;
+* the structural prefilter ALONE is a real filter (0.647 at K = 8, 0.863 at K = 16)
+  — two thirds of the gallery is discarded for the price of three histograms — and
+  blending it into the node score buys 0.04 of recall@16 and 0.03 of MRR.
 
 ---
 
@@ -402,6 +419,6 @@ tree's own rule for a flag that can change what a payload reads.
 | 2 | **done** — audit + FIT-chosen reading, dark, cache-keyed, defaults identical |
 | 3 | **partial by necessity** — keypoint frames landed dark (+16.7 points of frame coverage) but WORSE at the known 5° rotation, and the real-photo half cannot run without the corpus. Frame-free relations not landed |
 | 4 | **running** — checkpointed, resumable; no number claimed |
-| 5 | **running** — recall-vs-K table not yet written |
+| 5 | **done** — K = 16 blended (recall 0.902) is the smallest useful K; the 0.95 bar is not reachable below the gallery size and is stated as a ceiling |
 | 6a | **registered and powered (MDE 0.097), not run** |
 | 6b | **blocked on the corpus** — no ETH-80 read exists and none is invented |

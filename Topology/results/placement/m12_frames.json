@@ -4,7 +4,7 @@
  "mapped_mean": 606.0,
  "note": "the frame providers are compared with the SAME graphs and the same images; the rotation validation rotates the image 5 degrees about its own centre and compares each node's frame with itself. Nothing is fitted.",
  "real": {
-  "skipped": "FileNotFoundError: /home/user/Percept6/data/ETH-80-master/3"
+  "skipped": "FileNotFoundError: /home/user/Percept6/data/ETH-80-master/4"
  },
  "synthetic": {
   "field": {
