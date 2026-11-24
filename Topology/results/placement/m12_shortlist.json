@@ -1,0 +1,61 @@
+{
+ "blend": {
+  "lam=0.00": {
+   "mrr": NaN,
+   "n": 0,
+   "recall": {
+    "K16": NaN,
+    "K32": NaN,
+    "K48": NaN,
+    "K8": NaN
+   }
+  },
+  "lam=0.25": {
+   "mrr": NaN,
+   "n": 0,
+   "recall": {
+    "K16": NaN,
+    "K32": NaN,
+    "K48": NaN,
+    "K8": NaN
+   }
+  },
+  "lam=0.50": {
+   "mrr": NaN,
+   "n": 0,
+   "recall": {
+    "K16": NaN,
+    "K32": NaN,
+    "K48": NaN,
+    "K8": NaN
+   }
+  },
+  "lam=1.00": {
+   "mrr": NaN,
+   "n": 0,
+   "recall": {
+    "K16": NaN,
+    "K32": NaN,
+    "K48": NaN,
+    "K8": NaN
+   }
+  }
+ },
+ "gallery": 24,
+ "node_only": {
+  "mrr": NaN,
+  "n": 0,
+  "recall": {
+   "K16": NaN,
+   "K32": NaN,
+   "K48": NaN,
+   "K8": NaN
+  }
+ },
+ "queries": 0,
+ "structure_only": {
+  "mrr": NaN,
+  "n": 0,
+  "recall": {}
+ }
+}

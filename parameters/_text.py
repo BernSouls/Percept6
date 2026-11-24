@@ -1281,6 +1281,15 @@ PLACEMENT_E_NORMALISED: bool = os.environ.get(
     "PLACEMENT_E_NORMALISED", "0") != "0"
 PLACEMENT_E_MIN_JUDGED: int = int(os.environ.get("PLACEMENT_E_MIN_JUDGED", "0"))
 
+#: [MISSION 12 / step 3] THE FRAME SOURCE.  The keypoint estimator (Gaussian
+#: structure tensor at the keypoint layer's sigma ladder, sub-pixel bilinear
+#: sampling at the anchor) runs first; the multiscale field provider is the
+#: fallback.  A node without a frame earns no payload edge and no judged pair, so
+#: this is the link that caps the judged share.  Dark: off, the payload builder
+#: reads the same provider it read before.
+PLACEMENT_FRAME_KEYPOINT: bool = os.environ.get(
+    "PLACEMENT_FRAME_KEYPOINT", "0") != "0"
+
 #: [MISSION 11 / step 1] THE PAIR SCORE ITSELF.  Until now placement only moved
 #: the MAPPING: `JointMCS.score` is computed after alignment from raw node
 #: similarity and knows nothing about the placement evidence that produced the

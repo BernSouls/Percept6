@@ -146,6 +146,10 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       # graph or matcher cache must never survive a change of them.
                       "PLACEMENT_E_NORMALISED",
                       "PLACEMENT_E_MIN_JUDGED",
+                      # [MISSION 12 / step 3] the frame source changes which nodes
+                      # carry payload edges, so the graph the payload builder reads
+                      # is not the same graph under a different source.
+                      "PLACEMENT_FRAME_KEYPOINT",
                       # [MISSION 11 / step 1] the pair score itself.  A cached
                       # match result must never survive a change of the score's
                       # shape or of its one fitted weight.

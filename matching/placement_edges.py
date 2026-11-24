@@ -134,6 +134,103 @@ def frame_at(ang: np.ndarray, coh: np.ndarray, x: float, y: float
     return float(a), float(c)
 
 
+#: [MISSION 12 / step 3] THE KEYPOINT LAYER'S OWN FRAME.  The field providers read
+#: the orientation off a BOX window of the gradient tensor and sample it at the
+#: nearest pixel.  The keypoint layer (`lenses/keypoints.py`) reads it off a
+#: GAUSSIAN-smoothed tensor at its own sigma ladder and at SUB-PIXEL positions, and
+#: those two differences are exactly what the ambiguous (low-contrast) places need:
+#: `frame_at` rounds a sub-pixel anchor to a neighbour pixel that may be below the
+#: coherence bar while the keypoint's own (x, y) sits on the ridge.
+#:
+#: Ladder and bar are the keypoint layer's own constants; nothing is fitted here.
+KEYPOINT_SIGMAS: Tuple[float, ...] = (1.0, 1.6, 2.5, 4.0)
+
+
+def _tensor_at_sigma(gx: np.ndarray, gy: np.ndarray, sigma: float
+                     ) -> Tuple[np.ndarray, np.ndarray]:
+    """(angle, coherence) of the Gaussian-smoothed structure tensor at `sigma`."""
+    from scipy.ndimage import gaussian_filter
+    jxx = gaussian_filter(gx * gx, sigma, mode="nearest")
+    jyy = gaussian_filter(gy * gy, sigma, mode="nearest")
+    jxy = gaussian_filter(gx * gy, sigma, mode="nearest")
+    tr = jxx + jyy
+    ang = 0.5 * np.arctan2(2.0 * jxy, jxx - jyy)
+    disc = np.sqrt((jxx - jyy) ** 2 + 4.0 * jxy ** 2)
+    coh = np.where(tr > 1e-9, disc / np.maximum(tr, 1e-9), 0.0)
+    return ang.astype(np.float64), np.maximum(coh, 0.0).astype(np.float64)
+
+
+def _bilinear(field: np.ndarray, x: float, y: float) -> Optional[float]:
+    h, w = field.shape
+    if not (0.0 <= x <= w - 1 and 0.0 <= y <= h - 1):
+        return None
+    x0, y0 = int(np.floor(x)), int(np.floor(y))
+    x1, y1 = min(x0 + 1, w - 1), min(y0 + 1, h - 1)
+    fx, fy = x - x0, y - y0
+    v = (field[y0, x0] * (1 - fx) * (1 - fy) + field[y0, x1] * fx * (1 - fy)
+         + field[y1, x0] * (1 - fx) * fy + field[y1, x1] * fx * fy)
+    return float(v)
+
+
+def node_frames_keypoint(subgraph: Any, image_u8: np.ndarray,
+                         coherence_min: float = FRAME_COHERENCE_MIN,
+                         sigmas: Sequence[float] = KEYPOINT_SIGMAS
+                         ) -> Tuple[Dict[int, float], Dict[int, int]]:
+    """node -> axial frame from the KEYPOINT estimator, and the sigma it came from.
+
+    The smallest sigma whose SUB-PIXEL (bilinear) coherence at the node's anchor
+    clears the bar wins.  No frame is invented: a node incoherent at every sigma
+    gets none, exactly as every other provider behaves.
+    """
+    img = np.asarray(image_u8, dtype=np.float64)
+    if img.ndim == 3:
+        img = img.mean(axis=2)
+    gy, gx = np.gradient(img)
+    fields = [(float(sig),) + _tensor_at_sigma(gx, gy, float(sig))
+              for sig in sigmas]
+    theta: Dict[int, float] = {}
+    sig_of: Dict[int, int] = {}
+    for n in sorted(subgraph.nodes):
+        a = subgraph.anchor_of_node.get(n)
+        if a is None:
+            continue
+        x, y = float(a[0]), float(a[1])
+        for sig, ang, coh in fields:
+            c = _bilinear(coh, x, y)
+            if c is None or c < coherence_min:
+                continue
+            v = _bilinear(ang, x, y)
+            if v is None or not np.isfinite(v):
+                continue
+            theta[int(n)] = float(v)
+            sig_of[int(n)] = int(round(sig * 10))
+            break
+    return theta, sig_of
+
+
+def node_frames_keypoint_then_field(subgraph: Any, image_u8: np.ndarray,
+                                    coherence_min: float = FRAME_COHERENCE_MIN,
+                                    ) -> Tuple[Dict[int, float], Dict[int, int]]:
+    """The keypoint frame where it exists, the multiscale field where it does not.
+
+    This is the whole of the M12 step-3 frame change: a provider that ADDS frames
+    (it never moves one the keypoint estimator already gave) and a fallback that is
+    the provider the tree already ships.
+    """
+    theta, src = node_frames_keypoint(subgraph, image_u8, coherence_min)
+    theta = dict(theta)
+    src = dict(src)
+    miss = [n for n in sorted(subgraph.nodes) if int(n) not in theta]
+    if miss:
+        f_theta, wins = node_frames_multiscale(subgraph, field_multiscale(image_u8),
+                                               coherence_min)
+        for n in miss:
+            if int(n) in f_theta:
+                theta[int(n)] = float(f_theta[int(n)])
+                src[int(n)] = -int(wins[int(n)])   # negative: the field provider
+    return theta, src
+
+
 def node_frames(subgraph: Any, ang: np.ndarray, coh: np.ndarray
                 ) -> Dict[int, float]:
     """node -> axial frame angle, for every node whose anchor carries one."""
@@ -324,7 +421,14 @@ def build_edges(subgraph: Any, image_u8: np.ndarray,
     # PLACEMENT_FRAME_MULTISCALE the smallest window that clears the bar wins, which
     # is the provider the module already ships for exactly this reason.  Off, this is
     # the old line.
-    if bool(_param("PLACEMENT_FRAME_MULTISCALE", False)):
+    # [MISSION 12 / step 3, DARK] The keypoint estimator first (Gaussian tensor at
+    # the keypoint layer's own sigmas, sub-pixel bilinear sampling), the multiscale
+    # field where it has no frame.  It can only ADD frames, never move one the
+    # keypoint estimator gave, so a node that had a frame keeps the same value when
+    # the multiscale flag is also on.
+    if bool(_param("PLACEMENT_FRAME_KEYPOINT", False)):
+        frames, _wins = node_frames_keypoint_then_field(subgraph, image_u8)
+    elif bool(_param("PLACEMENT_FRAME_MULTISCALE", False)):
         frames, _wins = node_frames_multiscale(subgraph, field_multiscale(image_u8))
     else:
         ang, coh = field_angles(image_u8)

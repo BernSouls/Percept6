@@ -1,0 +1,27 @@
+{
+ "judged_mean": 0.0,
+ "judged_share": 0.0,
+ "mapped_mean": 606.0,
+ "note": "the frame providers are compared with the SAME graphs and the same images; the rotation validation rotates the image 5 degrees about its own centre and compares each node's frame with itself. Nothing is fitted.",
+ "real": {
+  "skipped": "FileNotFoundError: /home/user/Percept6/data/ETH-80-master/3"
+ },
+ "synthetic": {
+  "field": {
+   "frame_share": 0.37333294710194487,
+   "median_abs_residual_deg": 6.2152315594614445,
+   "share_within_5deg": 0.2667000718296706
+  },
+  "keypoint": {
+   "frame_share": 0.5399039378954608,
+   "median_abs_residual_deg": 8.166224573292824,
+   "share_within_5deg": 0.30269521806192395
+  },
+  "multiscale": {
+   "frame_share": 0.4998873040798521,
+   "median_abs_residual_deg": 6.7466181119933335,
+   "share_within_5deg": 0.27882346793240637
+  }
+ },
+ "synthetic_pairs": 6
+}

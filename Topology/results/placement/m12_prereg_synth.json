@@ -1,0 +1,84 @@
+{
+ "arms": {
+  "A": "placement off, JointMCS.score",
+  "B": "placement on, score_shipped from the placement-on mapping",
+  "C": "placement on, score_shipped + w*E, E on the STEP-2 scale (PLACEMENT_E_NORMALISED), w frozen before the read"
+ },
+ "freshness": {
+  "graphs_in_cache_at_registration": 0,
+  "note": "a fresh seed range, and the registration checks the graph cache: any hit would mean the read is not fresh",
+  "scenes": [
+   "m12ir_00",
+   "m12ir_01",
+   "m12ir_02",
+   "m12ir_03",
+   "m12ir_04",
+   "m12ir_05",
+   "m12ir_06",
+   "m12ir_07",
+   "m12oop_sphere_00",
+   "m12oop_box_01",
+   "m12oop_cylinder_02",
+   "m12oop_irregular_03"
+  ],
+  "seed_base_irregular": 38200,
+  "seed_base_oop": 40200
+ },
+ "gallery": {
+  "chance": 0.08333333333333333,
+  "rule": "the fresh scenes themselves: one reference per scene, so the truth is in the gallery and every rival is a different instance of the same construction"
+ },
+ "graphs_built_at_registration": 0,
+ "interval": "paired bootstrap over SCENES, 4000 draws, 2.5/97.5 percentiles",
+ "mde": {
+  "assumed_sd": 0.48,
+  "formula": "MDE = 2.8 * SD/sqrt(n_queries)",
+  "mde": 0.09699484522385712,
+  "planning_effect": 0.1,
+  "se": 0.034641016151377546,
+  "verdict_on_design": "POWERED"
+ },
+ "mission": "12 step 6a -- fresh synthetic retrieval, arms A/B/C",
+ "multiplicity": "one primary; Holm is vacuous here and is reported as such",
+ "one_read": true,
+ "prediction": {
+  "B<=A": true,
+  "why": "B changes the MAPPING and nothing else. The score it reports is computed from the correspondence the scorer steered, so when the placement term points the wrong way on a hard pair B can only lose: it pays the cost of a moved mapping without being paid for the evidence that moved it. That is why C, not B, is the arm under test."
+ },
+ "primary_contrast": "C - A on top-1, paired per query, clustered by SCENE",
+ "queries": {
+  "n": 192,
+  "order": "deterministic: scene then view",
+  "target": 128,
+  "views": [
+   "i05",
+   "i10",
+   "i15",
+   "i20",
+   "i30",
+   "i35",
+   "s09",
+   "s11",
+   "sh16",
+   "sh8",
+   "x10",
+   "x15",
+   "y10",
+   "y15",
+   "y25",
+   "y30"
+  ]
+ },
+ "secondary": [
+  "B - A",
+  "C - A per view family (in-plane vs out-of-plane)",
+  "judged-pair share per arm",
+  "per-scene table"
+ ],
+ "shortlist": {
+  "K": 8,
+  "note": "retrieval is conditional on the shortlist and the report says so",
+  "rule": "top 8 of the 12 fresh references by the node-similarity shortlist score (M12 step 5), recall reported with the read"
+ },
+ "verdict_rule": "DETECTED iff the scene-clustered interval excludes zero in the pre-registered direction; a detected effect below the design MDE is labelled possibly inflated (Type M)"
+}
