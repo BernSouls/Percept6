@@ -318,8 +318,17 @@ def build_edges(subgraph: Any, image_u8: np.ndarray,
     identity must WIN.
     """
     from core.types import EdgeType
-    ang, coh = field_angles(image_u8)
-    frames = node_frames(subgraph, ang, coh)
+    # [MISSION 11 / step 5, DARK] The frame provider.  The single 7x7 window leaves
+    # 59 % of real-image anchors below the coherence bar (measured, m11_coverage.json)
+    # and a node without a frame earns no payload edge and no judged pair.  With
+    # PLACEMENT_FRAME_MULTISCALE the smallest window that clears the bar wins, which
+    # is the provider the module already ships for exactly this reason.  Off, this is
+    # the old line.
+    if bool(_param("PLACEMENT_FRAME_MULTISCALE", False)):
+        frames, _wins = node_frames_multiscale(subgraph, field_multiscale(image_u8))
+    else:
+        ang, coh = field_angles(image_u8)
+        frames = node_frames(subgraph, ang, coh)
     pos = {int(n): (float(subgraph.anchor_of_node[n][0]),
                     float(subgraph.anchor_of_node[n][1]))
            for n in sorted(subgraph.nodes) if n in subgraph.anchor_of_node}

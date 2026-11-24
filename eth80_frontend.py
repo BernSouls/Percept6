@@ -146,7 +146,9 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       # shape or of its one fitted weight.
                       "PLACEMENT_SCORE_EVIDENCE",
                       "PLACEMENT_SCORE_SHRINK",
-                      "PLACEMENT_SCORE_WEIGHT")
+                      "PLACEMENT_SCORE_WEIGHT",
+                      # the frame provider under the payloads (M11 step 5)
+                      "PLACEMENT_FRAME_MULTISCALE")
 
 _log = logging.getLogger("eth80_frontend")
 

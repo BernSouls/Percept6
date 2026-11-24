@@ -1301,6 +1301,27 @@ PLACEMENT_SCORE_SHRINK: float = float(os.environ.get(
 PLACEMENT_SCORE_WEIGHT: float = float(os.environ.get(
     "PLACEMENT_SCORE_WEIGHT", "0.0"))
 
+#: [MISSION 11 / step 5] WHICH FRAME PROVIDER THE PAYLOADS ARE BUILT ON.  DARK.
+#:
+#: `build_edges` has always used the SINGLE 7x7 structure-tensor window, and a node
+#: whose anchor does not clear FRAME_COHERENCE_MIN at that window gets no frame, no
+#: payload edges, and therefore no judged pair.  Measured on eight fresh ETH-80
+#: apple pairs (m11_coverage.json): 59.3 % of anchors sit below the 0.5 bar at the
+#: 7x7 window, only 40.6 % of nodes carry a frame, and only 31.7 % carry any payload
+#: edge -- so the estimator can judge 42.6 % of the pairs the aligner maps, and the
+#: arm that needs judged pairs has ~1/3 of the graph to work with.
+#:
+#: The multi-scale provider (`field_multiscale` + `node_frames_multiscale`, already
+#: in matching/placement_edges.py with its own measured motivation) takes the
+#: SMALLEST window that clears the bar, so a smooth region still gets a frame.  The
+#: same eight pairs: 50.4 % of nodes get a frame (+9.8 points, +24 % relative).
+#:
+#: It is not free and it is not credited: the frames differ, so the payload geometry
+#: differs, so the matches differ.  Flag off, the builder is byte-for-byte the old
+#: one.  Crediting it needs a fresh read.
+PLACEMENT_FRAME_MULTISCALE: bool = os.environ.get(
+    "PLACEMENT_FRAME_MULTISCALE", "0") != "0"
+
 # Lenses minted per PLACE.  Attribute lenses are deliberately NOT here: an
 # attribute describes what a place is like, so folding its detections is right.
 PLACE_LAYER_LENSES: Tuple[str, ...] = ("Orientation", "Texture", "Color",

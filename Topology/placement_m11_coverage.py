@@ -141,6 +141,7 @@ def main() -> int:
     from concurrent.futures import ProcessPoolExecutor
     ap = argparse.ArgumentParser()
     ap.add_argument("--workers", type=int, default=2)
+    ap.add_argument("--tag", default="", help="suffix for the output file")
     args = ap.parse_args()
     import guard
     guard.activate()
@@ -168,13 +169,16 @@ def main() -> int:
                                         "mapped_share", "share_judged",
                                         "edges_both_mapped", "match_s")},
            "per_pair": rows,
-           "constants": {"FRAME_COHERENCE_MIN": None, "FIELD_WINDOWS": None}}
+           "constants": {"FRAME_COHERENCE_MIN": None, "FIELD_WINDOWS": None},
+           "frame_flag": None}
+    import parameters as _P
+    res["frame_flag"] = bool(getattr(_P, "PLACEMENT_FRAME_MULTISCALE", False))
     from matching import placement_edges as PE
     res["constants"]["FRAME_COHERENCE_MIN"] = PE.FRAME_COHERENCE_MIN
     res["constants"]["FIELD_WINDOWS"] = list(PE.FIELD_WINDOWS)
     res["constants"]["TARGET_K"] = PE.TARGET_K
     res["constants"]["TARGET_RADIUS_SCALES"] = PE.TARGET_RADIUS_SCALES
-    path = os.path.join(OUT, "m11_coverage.json")
+    path = os.path.join(OUT, "m11_coverage%s.json" % args.tag)
     with open(path, "w") as fh:
         json.dump(res, fh, indent=1, sort_keys=True, default=float)
     print(json.dumps(res["mean"], indent=1, sort_keys=True))
