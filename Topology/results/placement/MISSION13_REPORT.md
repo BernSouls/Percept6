@@ -293,3 +293,28 @@ the tarball never finished (it stalls at 322 534 399 B) and pooch is unreachable
 this sandbox. There is therefore **no ETH-80 result in this mission**, and none is
 invented. The real-image set stays the package-bundled photographs with their
 licence manifest (`m12_real_photos.json`), which is what Steps 2 and 5 used.
+
+## CLOSING — state of the tree
+
+* **Defaults byte-identical.** `placement_m12_perf.py --save` then `--check` in a fresh
+  process: **0/112 numeric diffs, 0/28 mapping diffs, `identical: True`**; wall
+  4.61 s (arm A) / 5.22 s (arm C) per pair against 4.44 / 5.07 in the Step-1 baseline.
+  Everything this mission added to the shipped path is behind a switch that is **off**
+  (`PLACEMENT_FRAME_FALLBACK="none"` and `PLACEMENT_FRAME_KEYPOINT_SIGMA="largest"` are
+  the adopted defaults; `FE_SUBPIXEL_PEAK_POS` / `FE_SUBPIXEL_GABOR_ANCHOR` stay off
+  and are turned on only by the M13 read arms).
+* **The `attachment: mapping` "nondeterminism" was a measurement bug, now fixed.** The
+  checker compared the JSON-round-tripped `mapping` (a list of `[int, int]` lists) with
+  the fresh run's list of `(int, int)` tuples, so *every* cell reported a diff (28/28)
+  while every number matched. `_norm()` in `placement_m12_perf.py` normalises before
+  comparing, and the run is then bit-identical. Mappings were never nondeterministic.
+* **Suites pass:** `Topology/test_placement.py` 17 tests OK, `Topology/test_placement_m3.py`
+  12 tests OK, `python -m unittest discover -s tests` 17 tests OK.
+* **What moved, in one line:** the frame provider is fixed (+0.138 equivariance at
+  equal judged coverage), the collapse is attributed to **detection / anchor
+  quantisation** rather than appearance, that term is repaired to the extent the tree
+  allows (sub-pixel anchors: arm A under 5°/15°/1.15× goes 0.047/0.045/0.039 →
+  0.064/0.093/0.073, all intervals excluding zero), w is shown to be **unidentifiable**
+  and left at the shipped 0.375, and the real-photo read is re-registered by regime and
+  taken once: the working regime says **no effect at all** (C − A = 0.000), the broken
+  regimes stay broken by declaration and by measurement.

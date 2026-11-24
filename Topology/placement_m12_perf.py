@@ -140,11 +140,18 @@ def main() -> int:
     if args.check:
         with open(BASE) as fh:
             base = json.load(fh)
+        def _norm(v: Any) -> Any:
+            # `mapping` is stored as a sorted list of (int, int) pairs; JSON gives
+            # back lists, the fresh run has tuples, so a raw != compares list vs
+            # tuple and EVERY cell "differs" (28/28) even when nothing changed.
+            if isinstance(v, list):
+                return [list(x) if isinstance(x, (list, tuple)) else x for x in v]
+            return v
         diffs = []
         for a, b in zip(base["rows"], rows):
             for arm in ("A", "C"):
                 for k in ("score", "shipped", "ev", "judged", "mapping"):
-                    if a[arm][k] != b[arm][k]:
+                    if _norm(a[arm][k]) != _norm(b[arm][k]):
                         diffs.append((a["q"], a["r"], arm, k))
         print("identical: %s  (%d diffs)" % (not diffs, len(diffs)))
         if diffs:
