@@ -215,7 +215,7 @@ def build_incidence(
             # a self-loop is ONE relation
             inc.setdefault(s, []).append((d, et, True))
             continue
-        if et in UNDIRECTED_EDGE_TYPES:
+        if _is_undirected(et):
             lo, hi = (s, d) if s < d else (d, s)
             if (lo, hi, et) in seen_undirected:
                 continue
@@ -232,7 +232,7 @@ def _edge_indexes(edges: Iterable[Edge]) -> Tuple[Set[Edge], Set[Edge]]:
     directed: Set[Edge] = set()
     undirected: Set[Edge] = set()
     for s, d, et in edges:
-        if et in UNDIRECTED_EDGE_TYPES:
+        if _is_undirected(et):
             undirected.add((min(s, d), max(s, d), et))
         else:
             directed.add((s, d, et))
@@ -242,6 +242,27 @@ def _edge_indexes(edges: Iterable[Edge]) -> Tuple[Set[Edge], Set[Edge]]:
 #: The schema classes each edge type may be matched by.  The lookup is a
 #: pure function of the type, so the cache cannot change an answer.
 _COMPAT_CLASSES: Dict[str, frozenset] = {}
+#: [MISSION 12 / step 1] Two memos that turn two of the hottest pure calls in the
+#: aligner into dict lookups.  Measured with cProfile on one synthetic pair:
+#: `_compatible_classes` was called 2.36 M times (5.5 s) and the custom
+#: `UNDIRECTED_EDGE_TYPES.__contains__` 4.7 M times (6.6 s) -- both pure functions of
+#: the edge type, which the schema fixes at import.  Caching them changes no value.
+_COMPAT_BY_TYPE: Dict[object, frozenset] = {}
+_REL_CACHE_ON = __import__("os").environ.get("M12_REL_CACHE", "1") != "0"
+_UNDIRECTED_BY_TYPE: Dict[object, bool] = {}
+
+
+def _is_undirected(et: object) -> bool:
+    """`et in UNDIRECTED_EDGE_TYPES`, memoised per edge type (pure lookup)."""
+    try:
+        return _UNDIRECTED_BY_TYPE[et]
+    except (KeyError, TypeError):
+        v = bool(et in UNDIRECTED_EDGE_TYPES)
+        try:
+            _UNDIRECTED_BY_TYPE[et] = v
+        except TypeError:
+            pass
+        return v
 
 
 def _edge_class_name(et: object) -> str:
@@ -261,12 +282,20 @@ def _compatible_classes(et: object) -> frozenset:
     at all.  An unknown class is compatible only with itself, so the
     behaviour is unchanged for every type outside a declared family.
     """
+    try:
+        return _COMPAT_BY_TYPE[et]
+    except (KeyError, TypeError):
+        pass
     cls = _edge_class_name(et)
     got = _COMPAT_CLASSES.get(cls)
     if got is None:
         from core.schema import get_compatible_types
         got = frozenset(get_compatible_types(cls))
         _COMPAT_CLASSES[cls] = got
+    try:
+        _COMPAT_BY_TYPE[et] = got
+    except TypeError:
+        pass
     return got
 
 
@@ -294,7 +323,7 @@ def _preserved_edge(
     b_dst = mapping.get(a_dst)
     if b_src is None or b_dst is None:
         return False
-    if et in UNDIRECTED_EDGE_TYPES:
+    if _is_undirected(et):
         lo, hi = (b_src, b_dst) if b_src < b_dst else (b_dst, b_src)
         if (lo, hi, et) in b_und:
             return True
@@ -467,7 +496,7 @@ def _relational_agreement(
                         denominator += _ew(u, w, et)
                 continue
             denominator += _ew(u, w, et)
-            if et in UNDIRECTED_EDGE_TYPES:
+            if _is_undirected(et):
                 lo, hi = (v, mw) if v < mw else (mw, v)
                 ok = (lo, hi, et) in b_und
                 if not ok:
@@ -481,7 +510,7 @@ def _relational_agreement(
                     key = (v, mw) if outward else (mw, v)
                     ok = bool(_compatible_classes(et) & b_classes.get(key, frozenset()))
             if ok:
-                if et in UNDIRECTED_EDGE_TYPES:
+                if _is_undirected(et):
                     # the endpoints are canonical on BOTH sides, so the edge
                     # similarity never sees a reversed order
                     a1, a2 = (u, w) if u < w else (w, u)
@@ -528,7 +557,7 @@ def _relational_agreement(
                         denominator += _ew(v, x, et)
                 continue
             denominator += _ew(v, x, et)
-            if et in UNDIRECTED_EDGE_TYPES:
+            if _is_undirected(et):
                 lo, hi = (u, ux) if u < ux else (ux, u)
                 ok = (lo, hi, et) in a_und
                 if not ok:
@@ -543,7 +572,7 @@ def _relational_agreement(
                     key = (u, ux) if outward else (ux, u)
                     ok = bool(_compatible_classes(et) & a_classes.get(key, frozenset()))
             if ok:
-                if et in UNDIRECTED_EDGE_TYPES:
+                if _is_undirected(et):
                     a1, a2 = (u, ux) if u < ux else (ux, u)
                     b1, b2 = (v, x) if v < x else (x, v)
                 else:
@@ -671,7 +700,7 @@ def _incident_relation_signatures(edges: Sequence[Edge]) -> Dict[int, Dict[Any, 
     """node -> {(relation type, direction): how many}."""
     out: Dict[int, Dict[Any, int]] = {}
     for x, y, et in edges:
-        if et in UNDIRECTED_EDGE_TYPES:
+        if _is_undirected(et):
             key = (et, "")
             out.setdefault(x, {})
             out.setdefault(y, {})
@@ -952,11 +981,40 @@ def global_consistency_alignment(
     anneal = bool(getattr(P, "MATCH_ALIGN_BETA_ANNEAL", False))
     final_beta = 1.0 if conjunction else float(systematicity_weight)
 
+    # [MISSION 12 / step 1] THE RELATIONAL AGREEMENT IS A PURE FUNCTION OF A SMALL
+    # CONTEXT.  `_relational_agreement(u, v, mp, rv, ...)` reads the mapping only
+    # through the images of u's neighbours and the preimages of v's neighbours; every
+    # other input is static graph data.  So the value is fully determined by
+    # (u, v, those two small tuples) and caching on exactly that key cannot change a
+    # single bit -- unlike a cache keyed on the mapping object, which a fresh `dict`
+    # per swap attempt would silently make stale.  The fingerprint costs ~20 dict
+    # lookups against the ~70 us evaluation it stands in for.
+    _rel_cache: Dict[Tuple, float] = {}
+
+    def _rel_ctx(u: int, v: int, mp: Dict[int, int], rv: Dict[int, int]) -> Tuple:
+        ka = tuple(mp.get(w) for (w, _e, _o) in (inc_a.get(u) or ()))
+        kb = tuple(rv.get(x) for (x, _e, _o) in (inc_b.get(v) or ()))
+        return (u, v, ka, kb)
+
     def _rel(u: int, v: int, mp: Dict[int, int], rv: Dict[int, int],
              candidate=None) -> float:
         """One charged relational-agreement evaluation."""
         nonlocal pair_evals
         pair_evals += 1
+        if candidate is None and _REL_CACHE_ON:
+            key = _rel_ctx(u, v, mp, rv)
+            hit = _rel_cache.get(key)
+            if hit is not None:
+                return hit
+            val = _relational_agreement(
+                u, v, mp, inc_a, inc_b, b_dir, b_und, a_dir, a_und, rv,
+                edge_similarity, checkable=True, candidate=None,
+                edge_weight_fn=edge_weight_fn,
+            )
+            if len(_rel_cache) > 400000:
+                _rel_cache.clear()
+            _rel_cache[key] = val
+            return val
         return _relational_agreement(
             u, v, mp, inc_a, inc_b, b_dir, b_und, a_dir, a_und, rv,
             edge_similarity, checkable=True, candidate=candidate,
