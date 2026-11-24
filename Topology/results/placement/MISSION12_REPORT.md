@@ -422,3 +422,155 @@ tree's own rule for a flag that can change what a payload reads.
 | 5 | **done** — K = 16 blended (recall 0.902) is the smallest useful K; the 0.95 bar is not reachable below the gallery size and is stated as a ceiling |
 | 6a | **registered and powered (MDE 0.097), not run** |
 | 6b | **blocked on the corpus** — no ETH-80 read exists and none is invented |
+
+---
+
+# MISSION 12, SECOND BRIEF — steps 1–6
+
+The brief asked for six things; this section reports them in order. Nothing in it
+changes a default: every new switch is off, and the defaults harness still returns
+`0cfa87a2` / `2865d93d` with scores `0.4182298669434846` / `0.3895824615188941`.
+
+## Step 1 — photographs, and ETH-80 closed
+
+**ETH-80: BLOCKED.** The download never advanced past 322 534 399 B of a ~4.5 GB
+tarball, twice, from scratch; the fetcher is killed and there is no ETH-80 query
+set, no fresh view, no read. Nothing from that corpus is measured, quoted, or
+implied anywhere in this mission.
+
+**Photographs: 20, at working resolution.** `Topology/placement_m12_realphotos.py`
+loads images that ship *inside the installed wheels* — nothing is fetched, so the
+sandbox's blocked TLS cannot silently change the corpus:
+
+* scikit-image 0.26.0: `astronaut, chelsea, coffee, camera, clock_motion, rocket,
+  coins, motorcycle_left, motorcycle_right, page, brick, grass, gravel, moon,
+  hubble, ihc, retina, cell`
+* scikit-learn 1.9.1: `china, flower`
+
+Each is resized (bilinear for defocus) to **256×256 uint8 RGB** — the resolution the
+payload actually consumes — and cached under `.cache/m12_real_photos/`. The
+manifest `m12_real_photos.json` records package, loader, shape, the sha256 of the
+resized array, and points at the package's own documentation for the licence;
+**the pixels are not committed**. Six are reserved for frame validation
+(`gravel, grass, page, moon, cell, retina` — texture, text, astronomy, histology);
+fourteen are held for the pre-registered read.
+
+## Step 2 — the frame validation, rewritten and run
+
+The M11 test rotated the image and then compared node frames *sampled at the
+original pixel*, so every node read a different piece of the scene: the number it
+reported was coverage under a broken correspondence, not frame error. That test is
+replaced by `Topology/placement_m12_frames2.py`, which:
+
+1. rotates the image about its centre by `delta` (`scipy.ndimage.rotate`,
+   `reshape=False`, bilinear, `mode='nearest'`);
+2. rotates the node anchors by the *same* transform, `p -> c + R(sign*delta)(p-c)`
+   with `c = (255/2, 255/2)` in (x, y) = (col, row) order;
+3. samples the provider at the **transformed** anchor in the rotated image;
+4. reports the **SIGNED** residual `angle_rot - angle_orig - sign*delta`, wrapped
+   into the axial range (−90°, 90°], as median, MAD, and share within 3°;
+5. drops anchors that land outside the image or within the 8 px border, in either
+   image, and drops anchors whose coherence is below `FRAME_COHERENCE_MIN`.
+
+**Sign convention.** It is calibrated, not asserted: for every image × delta the
+residual median is computed under both signs on the shipped field provider and the
+sign with the smaller |median| is kept. That choice was **−1 for all 24 cases
+unanimously** (e.g. `syn|m11ir_00`, delta 5°: median −9.36° under +1 vs −1.12°
+under −1). Reported convention: with the image rotated by `+delta`, the axial angle
+the field yields changes by `−delta`, i.e. `theta_rot = theta_orig − delta`, which is
+what the anchor map `R(−delta)` expresses. One consequence is stated rather than
+hidden: because the sign is chosen per image by |median| on the field provider, the
+field row's median and its within-3° share are mildly optimistic; the keypoint and
+multiscale rows are scored under the same sign and are not.
+
+**Providers** are now genuinely three, at field level:
+
+* `field` — the deployed 7×7 box tensor (`field_angles`), nearest sampling;
+* `multiscale` — the deployed ladder `field_multiscale` over `FIELD_WINDOWS =
+  (7, 15, 23, 31)`, where at each anchor the smallest window clearing the coherence
+  bar wins, independently in each image, exactly as `node_frames_multiscale` does;
+* `keypoint` — the Gaussian tensor at the largest keypoint sigma, bilinear sampling.
+
+(The first run of the harness had `multiscale` aliased to the field array — a
+placeholder, producing numbers identical to `field` to sixteen digits. It was
+replaced by the real ladder before anything was recorded here; the numbers below
+are from the corrected run.)
+
+**Result, 24 image × delta cases** (6 irregular synthetic scenes, 6 real
+photographs; delta = 5° and 15°; 279–857 anchors per provider per scene):
+
+| provider | class | cases | median signed | median MAD | mean share ≤3° |
+|---|---|---|---|---|---|
+| field | synthetic | 12 | −0.65° | 1.42° | 0.655 |
+| field | real | 12 | +0.22° | 1.58° | 0.598 |
+| field | all | 24 | −0.10° | 1.47° | 0.626 |
+| multiscale | synthetic | 12 | −0.98° | 1.85° | 0.557 |
+| multiscale | real | 12 | +0.22° | 1.83° | 0.505 |
+| multiscale | all | 24 | −0.43° | 1.83° | 0.531 |
+| keypoint | synthetic | 12 | −1.29° | 1.09° | 0.720 |
+| keypoint | real | 9 | −0.07° | 0.15° | **0.913** |
+| keypoint | all | 21 | −0.64° | 0.83° | **0.803** |
+
+Per structure class, share ≤3° (pooled over the two deltas; `n` anchors):
+
+| scene | field | multiscale | keypoint |
+|---|---|---|---|
+| syn m11ir_00 | 0.583 / 368 | 0.525 / 566 | 0.722 / 351 |
+| syn m11ir_01 | 0.714 / 330 | 0.560 / 562 | 0.774 / 424 |
+| syn m11ir_02 | 0.658 / 299 | 0.580 / 520 | 0.668 / 343 |
+| syn m11ir_03 | 0.578 / 314 | 0.490 / 461 | 0.780 / 298 |
+| syn m11ir_04 | 0.623 / 279 | 0.529 / 447 | 0.603 / 310 |
+| syn m11ir_05 | 0.774 / 287 | 0.660 / 426 | 0.773 / 279 |
+| real cell | 0.937 / 279 | 0.799 / 370 | 0.969 / 243 |
+| real grass | 0.391 / 48 | 0.391 / 48 | 1.000 / 5 |
+| real gravel | 0.442 / 26 | 0.442 / 26 | — (0 coherent) |
+| real moon | 0.798 / 116 | 0.560 / 233 | 1.000 / 100 |
+| real page | 0.514 / 60 | 0.417 / 89 | 1.000 / 20 |
+| real retina | 0.503 / 437 | 0.419 / 857 | 0.637 / 589 |
+
+Two things the table shows and the old test could not:
+
+* the residuals are **signed and centred on zero** — this is a frame test, not a
+  coverage measurement; the anchors that survive are the ones both images can read;
+* the **ladder is not rotation-equivariant**. The multiscale provider judges 1.5–2×
+  more anchors (window 7 is used for 3238 of 4605 samples, 15 for 827, 23 for 336,
+  31 for 204), but the window a node picks can *change* when the image is rotated,
+  and a 23×23 estimate at a pixel is not a 7×7 estimate at that pixel: self-consistency
+  drops from 0.626 to 0.531 despite the extra coverage. That is a property of the
+  deployed rule, measured, not an artefact of the test. `keypoint` pays the opposite
+  price — it reads fewer anchors (on fine texture, none: gravel has zero coherent
+  anchors at the largest sigma) and is much more accurate on the ones it reads,
+  0.913 on photographs against 0.598 for the field.
+
+**The provider choice is the deployed matcher's, on FIT.** Eight FIT pairs
+(`gallery()[:8]`, irregular, second view), each matched under the shipped field
+provider and under keypoint, with everything else at the M12 setting
+(`PLACEMENT_MATCHER_ENABLED`, `E_NORMALISED`, weight on E). Correspondence accuracy
+is scored on the paired *near-tie* bank (top similarity ≥ 0.99 and margin ≤ 0.05 —
+the nodes the matcher can plausibly confuse) and on the unambiguous bank, against
+`track_optimal` truth:
+
+| metric | shipped field | keypoint |
+|---|---|---|
+| near-tie accuracy | 0.727 (n=44) | 0.750 (n=44) |
+| unambiguous accuracy | 0.274 (n=234) | 0.248 (n=234) |
+| judged pairs / pair | 64.0 | 77.3 |
+| judged share | 0.105 | 0.127 |
+
+Paired difference on the near-tie bank, clustered by pair, 4000-draw bootstrap:
+**+0.0625, 95% CI [0.000, 0.1875], n = 8**. The pre-declared rule was to adopt only
+if that interval excludes zero in keypoint's favour, so
+
+> **keypoint is NOT adopted.** It stays dark, `PLACEMENT_FRAME_KEYPOINT = False`
+> (listed in `_FRONTEND_SWITCHES`).
+
+The interval's half-width (0.125) puts this design's MDE at roughly 0.18 absolute
+near-tie accuracy at 8 FIT pairs; the observed +0.06 is inside that, so the honest
+reading is *underpowered for the effect it saw*, not *no effect*. The frame test
+says keypoint is the better frame reader on real photographs (0.913 vs 0.598 within
+3°); the deployed matcher says the gain does not yet reach significance on FIT.
+The rule is the matcher's, so the switch stays off and the registration note for
+Step 5 stands unchanged.
+
+Artifact: `Topology/results/placement/m12_frames2.json` (24 rows, calibration, three
+aggregates, per-structure table, decision).
