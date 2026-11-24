@@ -246,7 +246,47 @@ def _grid() -> List[Tuple[float, float]]:
     return out
 
 
-def fit(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+def surface(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """The (T, w) log-likelihood on a coarse lattice, recorded with the result.
+
+    MEASURED, and the reason the two-parameter fit cannot be used: the surface
+    increases monotonically as T falls and as w rises (see the report's table).
+    T is a pure SHARPENING knob on `S_shipped/T`, so as T -> 0 the objective becomes
+    "the shipped ranking, infinitely sharp", the softmax log-likelihood grows
+    without bound, and the argmax runs to the corner of any grid it is given.  The
+    fit reported `w = 1.55, T = 0.015` -- both OUTSIDE the declared bounds -- with a
+    held-out ranking IDENTICAL to w = 0 and a train top-1 BELOW the shipped
+    w = 0.375.  That is a degenerate optimum, not a tuning result.
+    """
+    Ts = (0.02, 0.05, 0.1, 0.2, 0.4, 0.6, 1.0, 1.5, 2.0)
+    Ws = (0.0, 0.2, 0.375, 0.6, 1.0, 1.5, 2.0, 3.0)
+    return {"T": list(Ts), "w": list(Ws),
+            "loglik": [[float(loglik(rows, T, w)) for w in Ws] for T in Ts]}
+
+
+def fit(rows: List[Dict[str, Any]], model: str = "2d") -> Dict[str, Any]:
+    """Maximum likelihood on FIT.
+
+    `model="2d"` is the originally registered fit and is kept so the degeneracy is
+    reproducible; `model="1d"` fixes the temperature at the SHIPPED 1.0 (where the
+    deployed score already lives) and fits `w` alone, which is the identifiable
+    direction: `w` multiplies the evidence, whose scale is not tied to the shipped
+    score's, and the likelihood is curved in it over a bounded range.
+    """
+    if model == "1d":
+        best = (-1e18, 1.0, 0.0)
+        for w in (0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.375, 0.45, 0.5,
+                  0.6, 0.7, 0.8, 0.9, 1.0, 1.25, 1.5):
+            v = loglik(rows, 1.0, w)
+            if v > best[0]:
+                best = (v, 1.0, w)
+        _, T0, w0 = best
+        for dw in (-0.1, -0.05, -0.02, -0.01, 0.01, 0.02, 0.05, 0.1):
+            w = max(0.0, w0 + dw)
+            v = loglik(rows, 1.0, w)
+            if v > best[0] + 1e-12:
+                best = (v, 1.0, w)
+        return {"loglik": best[0], "T": best[1], "w": best[2], "model": "1d"}
     best = (-1e18, 1.0, 0.0)
     for (T, w) in _grid():
         v = loglik(rows, T, w)
@@ -260,7 +300,7 @@ def fit(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             v = loglik(rows, T, w)
             if v > best[0] + 1e-12:
                 best = (v, T, w)
-    return {"loglik": best[0], "T": best[1], "w": best[2]}
+    return {"loglik": best[0], "T": best[1], "w": best[2], "model": "2d"}
 
 
 def main() -> int:
@@ -270,6 +310,9 @@ def main() -> int:
     ap.add_argument("--start", action="store_true")
     ap.add_argument("--report", action="store_true")
     ap.add_argument("--workers", type=int, default=2)
+    ap.add_argument("--model", choices=("1d", "2d"), default="1d",
+                    help="1d fixes T at the shipped 1.0 and fits w (the identifiable "
+                         "direction); 2d reproduces the degenerate joint fit")
     args = ap.parse_args()
     import guard
     guard.activate()
@@ -296,15 +339,39 @@ def main() -> int:
               % (len(qs), len(held), len(jobs), len(todo)), flush=True)
         prewarm()
         t0 = time.time()
-        with open(PROGRESS, "a") as fh, ProcessPoolExecutor(max_workers=args.workers) as ex:
-            for r in ex.map(_pair_job, todo, chunksize=2):
-                done.append(r)
-                fh.write(json.dumps(r) + "\n")
-                fh.flush()
-                if len(done) % 40 == 0:
-                    el = time.time() - t0
-                    rate = el / max(1, len(todo) - len([1 for j in todo if False]))
-                    print("  %d/%d  %.0fs" % (len(done), len(jobs), el), flush=True)
+        # [M12 / step 4] The pool is RECYCLED and RESTARTED instead of dying with a
+        # worker.  Two OOM kills were observed here: a long-lived worker accumulates
+        # the module-level caches (the relational cache, the side cache, the graph
+        # objects) and the kernel eventually kills it, and `ex.map` then raises
+        # BrokenProcessPool and abandons the rest of the sweep.  `max_tasks_per_child`
+        # bounds the growth, and the loop below re-reads the checkpoint and resumes,
+        # so a kill costs one job instead of the run.
+        from concurrent.futures.process import BrokenProcessPool
+        while True:
+            with open(PROGRESS, "a") as fh:
+                try:
+                    ex = ProcessPoolExecutor(max_workers=args.workers,
+                                             max_tasks_per_child=25)
+                except TypeError:                      # Python < 3.11
+                    ex = ProcessPoolExecutor(max_workers=args.workers)
+                try:
+                    for r in ex.map(_pair_job, todo, chunksize=2):
+                        done.append(r)
+                        fh.write(json.dumps(r) + "\n")
+                        fh.flush()
+                        seen.add((r["q"], r["cand"]))
+                        if len(done) % 40 == 0:
+                            print("  %d/%d  %.0fs" % (len(done), len(jobs),
+                                                      time.time() - t0), flush=True)
+                except BrokenProcessPool as exc:
+                    print("  pool died (%r): resuming from the checkpoint" % (exc,),
+                          flush=True)
+                finally:
+                    ex.shutdown(wait=False, cancel_futures=True)
+            todo = [j for j in jobs if (j[0], j[1]) not in seen]
+            if not todo:
+                break
+            print("  %d to go" % len(todo), flush=True)
         print("pairs done in %.0fs" % (time.time() - t0), flush=True)
 
     if not os.path.exists(PROGRESS):
@@ -324,7 +391,10 @@ def main() -> int:
     test = [r for r in rows if r["_held"]]
     res = {"queries": len({r["q"] for r in rows}), "pairs": len(rows),
            "held_queries": len(held), "train_pairs": len(train),
-           "test_pairs": len(test), "fit": fit(train) if train else {}}
+           "test_pairs": len(test),
+           "model": args.model,
+           "surface": surface(train) if train else {},
+           "fit": fit(train, args.model) if train else {}}
     f = res["fit"]
     res["held_out"] = {
         "w0_deployed_T1": top1(test, 1.0, 0.0),
@@ -347,8 +417,19 @@ def main() -> int:
         g["fit_present"] = False
     else:
         g["w_in_bounds"] = bool(W_GRID[0] < f["w"] < W_GRID[1])
-        g["T_in_bounds"] = bool(T_GRID[0] < f["T"] < T_GRID[1])
-        g["not_at_grid_edge"] = bool(g["w_in_bounds"] and g["T_in_bounds"])
+        if args.model == "1d":
+            # T is not fitted; the gate is the one the degeneracy left standing:
+            # w must sit strictly inside its bounds, and the surface must show a
+            # CURVE at the optimum (both grid ends worse by a declared margin),
+            # so a corner cannot pass as an optimum.
+            g["T_in_bounds"] = True
+            g["not_at_grid_edge"] = bool(g["w_in_bounds"])
+            ll_lo = loglik(train, 1.0, 0.05)
+            ll_hi = loglik(train, 1.0, 1.25)
+            g["curved"] = bool(f["loglik"] - max(ll_lo, ll_hi) > 0.5)
+        else:
+            g["T_in_bounds"] = bool(T_GRID[0] < f["T"] < T_GRID[1])
+            g["not_at_grid_edge"] = bool(g["w_in_bounds"] and g["T_in_bounds"])
         ll0 = loglik(train, 1.0, 0.0)
         g["loglik_finite"] = bool(np.isfinite(f["loglik"]))
         g["loglik_beats_w0"] = bool(f["loglik"] > ll0)
@@ -359,7 +440,11 @@ def main() -> int:
     g["passed"] = bool(all(bool(v) for k, v in g.items() if k != "passed"))
     g["declared"] = {
         "w_bounds": W_GRID, "T_bounds": T_GRID,
-        "rules": ["w and T strictly inside their search bounds",
+        "model": args.model,
+        "rules": (["w strictly inside its bounds", "the profile likelihood is curved "
+                   "(both ends worse by > 0.5 nats)"]
+                  if args.model == "1d" else
+                  ["w and T strictly inside their search bounds"]) + [
                   "the fit's log-likelihood is finite and beats w=0",
                   "held-out top-1 is not below the shipped score's own"],
         "on_failure": "the confirmation read is NOT run; this result says so",

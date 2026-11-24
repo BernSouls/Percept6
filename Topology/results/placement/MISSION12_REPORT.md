@@ -797,3 +797,67 @@ invented.**
 
 The read refuses to start unless `m12_fit_w.json` carries `gates.passed`. The fit is
 resumable from `m12_fit_w_progress.jsonl` at any point with `--start`.
+
+## Step 4 (continued) — the refit finished, its gates REFUSED it, and the read was not spent
+
+The sweep completed: **1 008 of 1 008 pairs, 252 queries (63 held out)**. Three pool
+deaths (two OOM kills of a long-lived worker, one hung pool) cost only restarts; the
+executor now recycles workers (`max_tasks_per_child=25`) and resumes from the
+checkpoint instead of abandoning the run.
+
+**The two-parameter fit is degenerate, and the surface says so.** `--model 2d`
+(the fit as registered) returned **w = 1.55, T = 0.015** — both outside the declared
+bounds (0, 1.5) and (0.02, 0.6) — with the held-out ranking *identical* to w = 0 and
+a FIT top-1 *below* the shipped w = 0.375. The recorded lattice (in
+`m12_fit_w.json`, `surface`) shows why: the log-likelihood rises monotonically as T
+falls and w rises, because `T` is a pure sharpening knob on `S_shipped/T`, so as
+T → 0 the objective becomes "the shipped ranking, infinitely sharp" and the argmax
+runs to whatever corner the grid has.
+
+**The identifiable direction is w, at the shipped temperature.** `--model 1d` fixes
+T = 1.0 and fits w. It returns **w = 1.60** with a curved profile likelihood
+(both ends worse by > 0.5 nats) — and its gates refuse it:
+
+| gate | value | pass |
+|---|---|---|
+| w strictly inside (0, 1.5) | 1.60 | **no** |
+| likelihood finite | −247.05 | yes |
+| likelihood beats w = 0 (−254.23) | +7.2 nats | yes |
+| profile curved | yes | yes |
+| held-out top-1 not below the shipped score | **0.730 vs 0.794** | **no** |
+
+> **Gates: FAILED. The confirmation read was NOT run, by the declared rule.**
+
+**Why no w can pass, measured (`placement_m12_fit_sweep.py`).** The likelihood and the
+held-out ranking disagree in sign over the whole range:
+
+| w | FIT log-lik | FIT top-1 | HELD-OUT top-1 | HELD-OUT MRR |
+|---|---|---|---|---|
+| 0.000 | −254.23 | 0.783 | 0.7937 | 0.8743 |
+| 0.300 | −252.85 | 0.804 | 0.7937 | 0.8743 |
+| **0.375 (deployed)** | −252.51 | 0.794 | **0.7937** | 0.8743 |
+| 0.450 | −252.17 | 0.788 | 0.7778 | 0.8664 |
+| 0.600 | −251.49 | 0.788 | 0.7619 | 0.8585 |
+| 1.000 | −249.70 | 0.783 | 0.7619 | 0.8585 |
+| 1.600 (the 1-D fit) | −247.05 | 0.788 | **0.7302** | 0.8426 |
+| 2.000 | −245.31 | 0.778 | 0.7143 | 0.8373 |
+
+The log-likelihood is monotone in w with no interior maximum; the held-out ranking is
+**flat from 0 to 0.375 and falls after it**. The deployed 0.375 sits at the right-hand
+edge of the plateau — nothing larger helps, and the criterion the fit maximises would
+push straight into the region that hurts. This is a property of the objective, not of
+the optimiser, so "fixing the fit" would mean changing the criterion (e.g. fitting to
+held-out top-1), which is exactly what pre-registration forbids. The honest fix is the
+one already in the code: **the gate refuses, and the read is not spent.**
+
+Two consequences worth stating plainly, because they agree with Steps 2 and 5:
+
+* on this hard FIT set the placement evidence adds **no measurable ranking gain at any
+  admissible w**: held-out top-1 is 0.7937 at w = 0, at w = 0.375 and at every w in
+  between, and falls once w exceeds ~0.45;
+* the deployed weight is therefore neither too small nor too large — it is at the top
+  of a plateau, which is a different statement from "it helps".
+
+Artifact: `m12_fit_w.json` (surface + both fits + gates), `m12_fit_w_sweep.json`,
+`m12_fit_w_progress.jsonl` (1 008 rows). `placement_score_params_m12.json` was **not**
+written: the gate refused, so nothing is installed.
