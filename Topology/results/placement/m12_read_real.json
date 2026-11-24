@@ -1,0 +1,140 @@
+{
+ "frame_chain": {
+  "mean_evidence": -0.05092642637481123,
+  "mean_judged": 206.39285714285714,
+  "mean_share": 0.2576504317358437
+ },
+ "mde": {
+  "formula": "2.8 * 0.5 * sqrt(2.0) / sqrt(n_bank)",
+  "n_bank": 541,
+  "planning_mde": 0.08512250604346742
+ },
+ "near_tie": {
+  "acc_N": 0.44731977818853974,
+  "acc_P": 0.4491682070240296,
+  "bank_nodes": 541,
+  "paired": {
+   "clusters": 14,
+   "hi": 0.006678329226427414,
+   "lo": -0.01178058783321941,
+   "mean": -0.00215491938402155,
+   "n": 55
+  }
+ },
+ "no_harm": {
+  "lo": -0.006130667319957427,
+  "ok": true,
+  "rule": "photo-clustered lower end of P - N on the unambiguous bank >= -0.02"
+ },
+ "per_photo": {
+  "astronaut": {
+   "N": 7,
+   "P": 7,
+   "near_tie_nodes": 20
+  },
+  "brick": {
+   "N": 0,
+   "P": 0,
+   "near_tie_nodes": 7
+  },
+  "camera": {
+   "N": 26,
+   "P": 25,
+   "near_tie_nodes": 38
+  },
+  "chelsea": {
+   "N": 52,
+   "P": 54,
+   "near_tie_nodes": 112
+  },
+  "china": {
+   "N": 21,
+   "P": 21,
+   "near_tie_nodes": 32
+  },
+  "clock_motion": {
+   "N": 20,
+   "P": 20,
+   "near_tie_nodes": 30
+  },
+  "coffee": {
+   "N": 12,
+   "P": 12,
+   "near_tie_nodes": 30
+  },
+  "coins": {
+   "N": 1,
+   "P": 1,
+   "near_tie_nodes": 23
+  },
+  "flower": {
+   "N": 13,
+   "P": 13,
+   "near_tie_nodes": 36
+  },
+  "hubble": {
+   "N": 16,
+   "P": 15,
+   "near_tie_nodes": 39
+  },
+  "ihc": {
+   "N": 26,
+   "P": 25,
+   "near_tie_nodes": 63
+  },
+  "motorcycle_left": {
+   "N": 28,
+   "P": 29,
+   "near_tie_nodes": 56
+  },
+  "motorcycle_right": {
+   "N": 15,
+   "P": 15,
+   "near_tie_nodes": 40
+  },
+  "rocket": {
+   "N": 5,
+   "P": 6,
+   "near_tie_nodes": 15
+  }
+ },
+ "queries": 56,
+ "registered": {
+  "near_tie": {
+   "margin_max": 0.05,
+   "top_sim": 0.99
+  },
+  "no_harm": {
+   "bank": "unambiguous nodes",
+   "rule": "the lower end of the photo-clustered interval for P - N must not fall below -0.02"
+  },
+  "primary": {
+   "bank": "near-tie nodes (frozen rule) that the transform maps into the image",
+   "contrast": "P - N on correspondence accuracy (the mapped node is the transformed true counterpart)",
+   "interval": "paired bootstrap over PHOTOS, 4000 draws, 2.5/97.5"
+  }
+ },
+ "unambiguous": {
+  "acc_N": 0.3497137404580153,
+  "acc_P": 0.3497137404580153,
+  "bank_nodes": 2096,
+  "paired": {
+   "clusters": 14,
+   "hi": 0.0038495484679283527,
+   "lo": -0.006130667319957427,
+   "mean": -0.0009641257670077535,
+   "n": 54
+  }
+ },
+ "verdict": {
+  "detected": false,
+  "interval": [
+   -0.01178058783321941,
+   0.006678329226427414
+  ],
+  "mean": -0.00215491938402155,
+  "possibly_inflated": false,
+  "primary": "P - N on near-tie correspondence accuracy"
+ },
+ "w": 0.375
+}

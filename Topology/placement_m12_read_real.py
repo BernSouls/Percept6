@@ -51,13 +51,27 @@ import numpy as np
 ROOT = "/home/user/Percept6"
 sys.path[:0] = [ROOT, os.path.join(ROOT, "Topology")]
 OUT = os.path.join(ROOT, "Topology", "results", "placement")
-REG = os.path.join(OUT, "m12_prereg_real.json")
 PARAMS = os.path.join(ROOT, "matching", "placement_score_params.json")
 CACHE_DIR = os.path.join(ROOT, ".cache", "placement_graphs")
-PROGRESS = os.path.join(OUT, "m12_read_real_progress.jsonl")
-RESULT = os.path.join(OUT, "m12_read_real.json")
+TAG = os.environ.get("M12_REAL_TAG", "")
+PROGRESS = os.path.join(OUT, "m12_read_real%s_progress.jsonl" % TAG)
+RESULT = os.path.join(OUT, "m12_read_real%s.json" % TAG)
+REG = os.environ.get("M12_REAL_REG", os.path.join(OUT, "m12_prereg_real.json"))
 
-TRUTH_TOL = 2.0          # px, declared before the run
+#: [STEP 5, SECOND READ] The first read paired anchors by nearest neighbour
+#: within 2 px.  The truth check (`placement_m12_truthcheck.py`) then measured
+#: what that tolerance bought: under the exact SHIFT the back-projection distance
+#: is 0.00 px and the arm maps 0.73-0.83 correctly, while under 5/15 degrees of
+#: rotation and 1.15x scale the nearest reference anchor sits a median 0.9-1.2 px
+#: away and is often NOT the counterpart at all -- the truth was being assigned at
+#: the scale of its own noise, and both arms scored ~0.  The corrected rule,
+#: declared before any graph of the second read existed, accepts a pair only when
+#: (i) the back-projected anchor has a reference anchor within TRUTH_TOL px,
+#: (ii) the SECOND nearest is at least TRUTH_SEP x further away, so the assignment
+#: is unambiguous at the graph's own node spacing, and (iii) the pair is MUTUAL
+#: (the forward image of the reference anchor picks the query node back).
+TRUTH_TOL = 1.0          # px
+TRUTH_SEP = 2.0          # second nearest must be >= 2x the nearest
 BORDER = 8               # px, same border the payload discards
 NBOOT = 4000
 SEED = 20261118
@@ -125,9 +139,36 @@ def _anchors(g: Any) -> np.ndarray:
                        for n in sorted(sub.nodes) if n in sub.anchor_of_node], dtype=float)
 
 
+def _forward(spec: Dict[str, Any], pts: np.ndarray, shape: Tuple[int, int]) -> np.ndarray:
+    """Original-image pixels -> query-image pixels (the inverse of `_inverse`)."""
+    h, w = shape
+    c = np.asarray([(w - 1) / 2.0, (h - 1) / 2.0])
+    p = np.asarray(pts, dtype=float)
+    if "rot_deg" in spec:
+        th = np.deg2rad(-float(spec["rot_deg"]))
+        ct, st = float(np.cos(th)), float(np.sin(th))
+        d = p - c
+        p = np.stack([ct * d[:, 0] - st * d[:, 1], st * d[:, 0] + ct * d[:, 1]],
+                     axis=1) + c
+    if "scale" in spec:
+        s = float(spec["scale"])
+        y0 = int(round((s * h) / 2.0 - h / 2.0))
+        x0 = int(round((s * w) / 2.0 - w / 2.0))
+        p = np.stack([p[:, 0] * s - x0, p[:, 1] * s - y0], axis=1)
+    if "shift" in spec:
+        p = np.stack([p[:, 0] + float(spec["shift"][0]),
+                      p[:, 1] + float(spec["shift"][1])], axis=1)
+    return p
+
+
 def _truth(gq: Any, gr: Any, spec: Dict[str, Any],
            shape: Tuple[int, int]) -> Dict[int, int]:
-    """query node -> the reference node the exact transform says it is."""
+    """query node -> the reference node the exact transform says it is.
+
+    Nearest within TRUTH_TOL px, SEPARATED from the runner-up by TRUTH_SEP,
+    INJECTIVE, and MUTUAL (the forward image of the reference anchor must pick
+    the query anchor back).  A pair the anchors cannot resolve is not truth.
+    """
     subq, subr = gq.subgraph, gr.subgraph
     qn = [int(n) for n in sorted(subq.nodes) if n in subq.anchor_of_node]
     rn = [int(n) for n in sorted(subr.nodes) if n in subr.anchor_of_node]
@@ -135,21 +176,29 @@ def _truth(gq: Any, gr: Any, spec: Dict[str, Any],
         return {}
     qa = np.asarray([subq.anchor_of_node[n] for n in qn], dtype=float)
     ra = np.asarray([subr.anchor_of_node[n] for n in rn], dtype=float)
-    back = _inverse(spec, qa, shape)
     h, w = shape
+    back = _inverse(spec, qa, (h, w))
+    fwd = _forward(spec, ra, (h, w))
     cand: List[Tuple[float, int, int]] = []
     for i, (x, y) in enumerate(back):
         if not (BORDER <= x < w - BORDER and BORDER <= y < h - BORDER):
             continue
         d = np.hypot(ra[:, 0] - x, ra[:, 1] - y)
-        j = int(np.argmin(d))
-        if float(d[j]) <= TRUTH_TOL:
-            cand.append((float(d[j]), int(qn[i]), int(rn[j])))
+        order = np.argsort(d)
+        j = int(order[0])
+        d1 = float(d[j])
+        d2 = float(d[order[1]]) if d.size > 1 else float("inf")
+        if d1 > TRUTH_TOL or d2 < TRUTH_SEP * max(d1, 1e-9):
+            continue
+        # MUTUAL: the reference anchor's forward image must pick this query anchor
+        dd = np.hypot(qa[:, 0] - fwd[j, 0], qa[:, 1] - fwd[j, 1])
+        if int(np.argmin(dd)) != i or float(dd.min()) > TRUTH_TOL:
+            continue
+        cand.append((d1, int(qn[i]), int(rn[j])))
     cand.sort()
     used_r: Dict[int, int] = {}
     for _d, u, v in cand:
-        used_r.setdefault(v, 0)
-        used_r[v] += 1
+        used_r[v] = used_r.get(v, 0) + 1
     return {u: v for _d, u, v in cand if used_r[v] == 1}
 
 

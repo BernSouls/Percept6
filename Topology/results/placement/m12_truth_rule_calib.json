@@ -1,0 +1,82 @@
+{
+ "chelsea|rot05": {
+  "tight": 38,
+  "mapped": 38,
+  "hit": 7
+ },
+ "chelsea|rot15": {
+  "tight": 63,
+  "mapped": 62,
+  "hit": 9
+ },
+ "chelsea|scale115": {
+  "tight": 27,
+  "mapped": 27,
+  "hit": 6
+ },
+ "chelsea|trans8": {
+  "tight": 131,
+  "mapped": 127,
+  "hit": 104
+ },
+ "coins|rot05": {
+  "tight": 12,
+  "mapped": 12,
+  "hit": 1
+ },
+ "coins|rot15": {
+  "tight": 18,
+  "mapped": 14,
+  "hit": 0
+ },
+ "coins|scale115": {
+  "tight": 11,
+  "mapped": 7,
+  "hit": 0
+ },
+ "coins|trans8": {
+  "tight": 25,
+  "mapped": 25,
+  "hit": 14
+ },
+ "hubble|rot05": {
+  "tight": 20,
+  "mapped": 19,
+  "hit": 5
+ },
+ "hubble|rot15": {
+  "tight": 25,
+  "mapped": 24,
+  "hit": 3
+ },
+ "hubble|scale115": {
+  "tight": 16,
+  "mapped": 15,
+  "hit": 4
+ },
+ "hubble|trans8": {
+  "tight": 76,
+  "mapped": 72,
+  "hit": 58
+ },
+ "ihc|rot05": {
+  "tight": 16,
+  "mapped": 15,
+  "hit": 1
+ },
+ "ihc|rot15": {
+  "tight": 36,
+  "mapped": 36,
+  "hit": 5
+ },
+ "ihc|scale115": {
+  "tight": 18,
+  "mapped": 18,
+  "hit": 3
+ },
+ "ihc|trans8": {
+  "tight": 100,
+  "mapped": 100,
+  "hit": 72
+ }
+}

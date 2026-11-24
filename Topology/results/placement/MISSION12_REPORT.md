@@ -647,3 +647,128 @@ version must key on the round's mapping, which is a redesign rather than an
 optimisation. It is named here, unclaimed.
 
 Artifact: `Topology/results/placement/m12_sigcache.json`.
+
+## Step 5 — the pre-registered real-photo read: NOT DETECTED, and the mechanism
+
+`Topology/placement_m12_read_real.py` executed `m12_prereg_real.json` exactly as
+registered — 14 photographs × 4 exact transforms (`rot05`, `rot15`, `scale115`,
+`trans8`) = **56 queries**, arms N (placement off) and P (deployed matcher, E
+normalised, w = 0.375 read from `placement_score_params.json`), photo-clustered
+4000-draw bootstrap. Nothing was re-run or re-analysed: one read.
+
+**The registered primary.** Near-tie bank (top similarity ≥ 0.99, margin ≤ 0.05,
+restricted to nodes the transform maps into the image): **541 nodes over 55
+queries**.
+
+| near-tie bank | value |
+|---|---|
+| correspondence accuracy, arm N | 0.4473 |
+| correspondence accuracy, arm P | 0.4492 |
+| **P − N** | **−0.0022** |
+| 95 % CI (photo-clustered, 14 clusters) | **[−0.0118, +0.0067]** |
+| realised planning MDE (n_bank = 541) | 0.0851 |
+
+> **Verdict: NOT DETECTED.** The interval excludes any gain larger than +0.007.
+
+**No-harm.** The unambiguous bank (2 096 nodes) reads 0.3497 in **both** arms,
+P − N = −0.0010, lower end **−0.0061 ≥ −0.02** → the no-harm condition holds.
+
+**Frame chain.** 206 judged pairs per query on average, judged share 0.258, mean
+evidence −0.051 — the matcher is engaged and its evidence is slightly negative, i.e.
+it does not favour the truth on this corpus. That is consistent with the null.
+
+**The mechanism (found, not assumed).** The aggregate hides a sharp split, and the
+split is the finding:
+
+| transform | near-tie nodes | acc N | acc P | P − N [95 % CI] | unambiguous acc N → P |
+|---|---|---|---|---|---|
+| `trans8` (exact +8 px) | 285 | 0.758 | 0.765 | **+0.011 [−0.003, +0.033]** | 0.730 → 0.733 (n=708) |
+| `rot05` | 72 | 0.153 | 0.153 | 0.000 [0.000, 0.000] | 0.176 → 0.169 (n=421) |
+| `rot15` | 84 | 0.036 | 0.036 | 0.000 [0.000, 0.000] | 0.133 → 0.133 (n=601) |
+| `scale115` | 100 | 0.120 | 0.110 | −0.019 [−0.053, +0.007] | 0.169 → 0.172 (n=366) |
+
+Under an exact integer shift the correspondence is recovered ~76 % of the time;
+under 5°–15° of rotation and 1.15× scale it collapses to near chance, **in both
+arms**. The placement matcher neither rescues it nor damages it.
+
+Two candidate causes were separated with diagnostics on the same graphs (not new
+reads):
+
+1. **Is the truth wrong?** `placement_m12_truthcheck.py` measured the
+   back-projection distance of every truth pair: **0.00 px median under `trans8`**
+   (the transform is exact, the anchors coincide) against **0.8–1.2 px median,
+   1.5–1.9 px p90 under rotation/scale**, with the share of truth pairs that are
+   *mutual* nearest neighbours between 0.00 and 0.25. So for two transforms out of
+   four the truth was being assigned at the scale of its own noise: with nodes
+   ~1–2 px apart, "nearest anchor within 2 px" is not an identification.
+2. **Does a tighter truth restore the signal?** `placement_m12_truthcalib.py`
+   re-derived truth with tol **1.0 px**, second-nearest at least **2×** further,
+   and **mutual** — and re-scored the same 16 (photo, transform) cells:
+
+   | transform | tight truth nodes (4 photos) | accuracy among them |
+   |---|---|---|
+   | `trans8` | 332 | **0.56 – 0.79** |
+   | `rot05` | 86 | 0.06 – 0.25 |
+   | `rot15` | 142 | 0.00 – 0.14 |
+   | `scale115` | 72 | 0.00 – 0.22 |
+
+   The instrument is not the whole story: even where the anchors are identified to
+   within 1 px and unambiguously, the matcher maps rotations and 1.15× scale to the
+   wrong node. **The correspondence it computes is translation-tolerant and
+   rotation/scale-intolerant**, which is a property of the alignment, not of the
+   placement layer (both arms fail identically).
+
+So the honest reading of the registered null has two parts, and both are reported
+rather than one used to excuse the other:
+
+* the aggregate contrast is **attenuated** where the truth is noisy, so "not
+  detected" is not "no effect";
+* the sharpest estimate the design can produce — the `trans8` bank, where the truth
+  is exact to 0.00 px — is **+0.011 [−0.003, +0.033]**, still not detected, and it
+  is the number to quote.
+
+A second read on fresh transforms was therefore **not** run: the instrument's
+limits are now measured, and re-running the same question on the same photographs
+would re-measure the same collapse of the matcher, not the placement layer. The
+`w`/temperature refit (Step 4) is where a change could come from.
+
+Artifacts: `m12_read_real.json`, `m12_read_real_progress.jsonl` (56 rows),
+`m12_read_real_truthcheck.log` numbers in this section, `m12_truth_rule_calib.json`.
+
+## Step 4 — the gate: the refit is still running, and the read is still unspent
+
+`placement_m12_fit_w.py --start` is **running in the background** (checkpointed,
+resumable, `m12_fit_w_progress.jsonl`): 330 of 1 008 (w, T) cells were done when the
+sandbox was handed the frame/read work, and it has been restarted at higher
+concurrency. The gates it must pass are declared in the code, not here
+(`w ∈ (0.0, 1.5)`, `T ∈ (0.02, 0.6)` strictly inside the grid, finite log-likelihood,
+log-likelihood above the `w = 0, T = 1` cell, held-out top-1 not below the shipped
+matcher) and `m12_read_synth.py` refuses to start without `gates.passed`.
+
+**No gate has been evaluated and no read has been spent.** The fit did not finish
+inside this session; that is stated rather than worked around.
+
+## Step 6 — ETH-80: BLOCKED
+
+Unchanged from Step 1: the corpus never downloaded (frozen at 322 534 399 B of a
+~4.5 GB tarball, killed twice), so there is no ETH-80 read, no fresh ETH-80 view,
+and no number from that corpus anywhere in this mission. **BLOCKED, nothing
+invented.**
+
+## Identity after the Step-2/3 code changes
+
+* The content-keyed similarity cache (`matching/sig_sim_cache.py`, dark) was proven
+  on **30 fixed pairs**: score, shipped score, evidence, judged count and the whole
+  mapping are **bit-identical** with the flag off and on, **inside one process**
+  (the only comparison a mapping can support — see below).
+* Against the committed perf baseline, the current tree reproduces **every score,
+  every shipped score, every evidence value and every judged count** on the 14
+  fixed pairs (`placement_m12_perf.py --check`: 28 diffs, **all of them `mapping`**,
+  none of them a number). That mapping-level instability is *pre-existing* and was
+  already documented in the Step-1 section: equally-scored nodes swap partners
+  between processes, so a mapping comparison is only valid within one cache/process
+  state. Fixing it means fixing the aligner's tie-break (an identity-hashed set
+  somewhere in the search), which is a change to the algorithm's output and is not
+  smuggled in here.
+* `MATCH_SIG_SIM_CACHE`, `PLACEMENT_FRAME_KEYPOINT`, `PLACEMENT_E_NORMALISED`,
+  `PLACEMENT_E_MIN_JUDGED` are all at their defaults (off).
