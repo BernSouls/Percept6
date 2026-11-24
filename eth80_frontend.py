@@ -162,7 +162,31 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       "PLACEMENT_SCORE_SHRINK",
                       "PLACEMENT_SCORE_WEIGHT",
                       # the frame provider under the payloads (M11 step 5)
-                      "PLACEMENT_FRAME_MULTISCALE")
+                      "PLACEMENT_FRAME_MULTISCALE",
+                      # [MISSION 14 / AUDIT] THE PAYLOAD BUILDER'S OWN SWITCHES.
+                      # `matching/placement_edges.build_edges` reads all six
+                      # through `_param(name, default)`; they were declared
+                      # nowhere, so they could not be set by a run config AND
+                      # did not key the cache -- a graph built with one value
+                      # would have been served to a run with another, which is
+                      # the same defect Mission 8 fixed for FE_PLACE_LAYER.
+                      # `PLACEMENT_COLLAPSE_PLACES` changes WHICH NODES are
+                      # endpoints, so this is a graph-level switch, not a
+                      # matcher switch.
+                      "PLACEMENT_COLLAPSE_PLACES",
+                      "PLACEMENT_PLACE_GRID_PX",
+                      "PLACEMENT_ENDPOINT_LENSES",
+                      "PLACEMENT_EXCLUDE_LENSES",
+                      "PLACEMENT_RIDGE_ACROSS_ONLY",
+                      "PLACEMENT_RIDGE_ACROSS_MIN",
+                      # the five numeric settings of the two soft-gate switches
+                      # that are ALREADY in this tuple: turning a gate on/off
+                      # keyed the cache, moving its threshold did not.
+                      "FE_SOFT_GATE_PERCENTILE",
+                      "FE_SOFT_GATE_BAND",
+                      "FE_SOFT_GATE_NOISE_FLOOR",
+                      "FE_SOFT_GATE_CENTRE_SHIFT",
+                      "FE_SOFT_GATE_EDGE_WEIGHT")
 
 _log = logging.getLogger("eth80_frontend")
 

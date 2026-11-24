@@ -2681,6 +2681,35 @@ PLACEMENT_MAX_NEIGHBOUR_CREDIT: float = 1.0
 #: Support is a bounded function of residual/tolerance.  Gaussian with this
 #: width, truncated at 3 sigma; support is exactly 0 beyond it.
 PLACEMENT_SUPPORT_SIGMA: float = 1.0
+
+# ---------------------------------------------------------------------------
+# [MISSION 14 / AUDIT] THE PAYLOAD BUILDER'S OWN SWITCHES.  Until now these six
+# were read by `matching/placement_edges.build_edges` through `_param(name,
+# default)` and were declared NOWHERE: `getattr(P, name, default)` always fell
+# through to the hard-coded default, so no run config or `PERCEPT_SET` override
+# could move them, and -- because they were absent from
+# `eth80_frontend._FRONTEND_SWITCHES` -- a graph cached under one value was
+# served under another.  That is the identical hole Mission 8 found for
+# `FE_PLACE_LAYER` ("a step-5 run with the flags OFF was served the flags-ON
+# graphs"), still open on the payload path: `PLACEMENT_COLLAPSE_PLACES` changes
+# which nodes are endpoints, so two runs must never share a cached graph across
+# it.
+#
+# The declared defaults are EXACTLY the fallbacks `build_edges` already used, so
+# the default graph is byte-identical; the only change is that the values now
+# exist as parameters and key the cache.
+#: One representative per SITE on the payload's endpoints (Mission 5 stage 2).
+PLACEMENT_COLLAPSE_PLACES: bool = False
+#: The site grid of that collapse, in pixels.
+PLACEMENT_PLACE_GRID_PX: float = 1.0
+#: Endpoint whitelist (Mission 7 step 2).  Empty = no restriction.
+PLACEMENT_ENDPOINT_LENSES: Tuple[str, ...] = ()
+#: Endpoint blacklist (stage 2a (i)).  Empty = no restriction.
+PLACEMENT_EXCLUDE_LENSES: Tuple[str, ...] = ()
+#: A placement edge must CROSS the ridge, not run along it (stage 2a (ii)).
+PLACEMENT_RIDGE_ACROSS_ONLY: bool = False
+#: The across-ness that counts as "crossing" (cosine of the frame difference).
+PLACEMENT_RIDGE_ACROSS_MIN: float = 0.5
 # [P4b] core/schema.py edge_measured_axes (the n of the edge-mass
 # facilitation f(n) = 1 + log2(n + 1) in mcs_score / mcs_similarity): a slot
 # the unit table declares a categorical LOOKUP KEY is not a measured axis.
