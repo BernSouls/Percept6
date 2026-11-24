@@ -96,3 +96,90 @@ as the tree's rule requires for a switch that can change a payload.
 
 Artifact: `Topology/results/placement/m13_frames.json` (2 328 equivariance rows,
 96 coverage rows, both decisions).
+
+## STEP 2 — decomposing the rotation collapse: detection, not appearance
+
+6 irregular synthetic scenes + 6 real photographs, poses 5°, 15°, 1.15×, plus the
+**exact-shift control** (an integer shift resamples nothing, so it validates the
+instrument). Every number below is on all nodes/anchors inside the image, not on a
+bank.
+
+| pose | detection ≤1 px | detection ≤2 px | truth survives | appearance-only acc (raw) | appearance-only acc (frame-canonicalised) |
+|---|---|---|---|---|---|
+| **shift +8 px (control)** | **0.469** | 0.507 | 0.111 | 0.782 | 0.751 |
+| rot 5° | **0.129** | 0.260 | 0.027 | 0.331 | 0.320 |
+| rot 15° | **0.170** | 0.296 | 0.045 | 0.295 | 0.392 |
+| scale 1.15× | **0.103** | 0.240 | 0.020 | 0.176 | 0.149 |
+
+* **a. APPEARANCE is not the cause.** For the truth pairs that do survive, the
+  signature similarity of the true pair (1.0 at zero pose by construction) reads
+  0.33 / 0.30 / 0.18, and an *appearance-only* correspondence (is the true
+  counterpart the argmax over the whole same-class reference set?) reaches
+  0.331 / 0.295 / 0.176 — far above the correspondence the whole pipeline achieves.
+  The orientation-slot hypothesis was tested directly: every circular slot whose
+  name carries "theta" (`CIRCULAR_CYCLE_LENGTHS`: ORIENTATION slot 0,
+  CONTOUR_PEAK slot 0/4, CONTOUR slot 1, CORNER slot 1, …) was rotated into the
+  node's own frame, with the matching population axis rolled by the same bins.
+  Canonicalising them moves appearance-only accuracy by **−0.011 (5°), +0.097
+  (15°), −0.027 (1.15×)** — mixed, small, and nowhere near enough to explain a
+  collapse from 0.78 to 0.18. **The orientation slots are not the dominant term.**
+* **b. DETECTION is.** Only 13 % (5°), 17 % (15°), 10 % (1.15×) of nodes are
+  re-detected within 1 px of their transformed anchor, against 47 % under the exact
+  shift — and the shift control's own median nearest-node distance is **0.00 px**
+  with a median residual vector of (0.00, 0.00), so the instrument's transform is
+  exact and the loss is real.
+* **c. TRUTH is a consequence of (b), not an independent term.** Only 2.7 / 4.5 /
+  2.0 % of nodes survive the tight truth rule (1 px nearest, runner-up 2× further,
+  mutual) because most nodes have no neighbour to pair with at all.
+
+**The mechanism inside (b) is positional quantisation, not detector noise.** The
+shipped front end writes node anchors on an image-aligned lattice: 39 % of synthetic
+anchors sit exactly on multiples of 8 px and 84 % on integers (real photographs:
+54 % / 84 %). A rotation or a scale moves every physical point *off* that lattice, so
+the nearest re-detected node is a lattice step away — median 3.6 px, and the
+detection curve (0.05 at 0.5 px → 0.13 at 1 px → 0.26 at 2 px → 0.38 at 3 px) has
+exactly the shape a constant lattice offset produces. It is not sub-pixel jitter:
+the residual vector is unbiased ((+0.10, −0.05) px) and the distances are ~half a
+lattice step.
+
+## STEP 3 — the fix: sub-pixel anchors, and what it buys
+
+The lever the tree already has is sub-pixel anchoring (`FE_SUBPIXEL_PEAK_POS`,
+`FE_SUBPIXEL_GABOR_ANCHOR`, both dark). Turning them on takes the anchored share of
+nodes off the lattice (on-lattice 0.39 → 0.01 synthetic, 0.54 → 0.005 real;
+non-integer share 0.14 → 0.45, 0.16 → 0.64), which is precisely the dominant term.
+
+Measured on the same 12 images × 3 poses, **arm A = the shipped aligner with
+placement OFF**, scored on a criterion that does not depend on the flags: for every
+reference node inside the image, is the mapped partner's anchor within T px of the
+transformed anchor? (scene-clustered bootstrap over the 12 images, 4000 draws)
+
+| pose | detection ≤1 px off → on | arm A ≤1.5 px off → on | gain [95 % CI] |
+|---|---|---|---|
+| 5° | 0.129 → 0.177 | 0.047 → **0.064** | **+0.017 [+0.008, +0.027]** |
+| 15° | 0.170 → 0.343 | 0.045 → **0.093** | **+0.048 [+0.040, +0.060]** |
+| 1.15× | 0.103 → 0.177 | 0.039 → **0.073** | **+0.034 [+0.023, +0.044]** |
+| real photos only, 5°/15°/1.15× | 0.090→0.128 / 0.149→0.365 / 0.089→0.160 | 0.042→0.058 / 0.036→0.087 / 0.030→0.056 | — |
+
+> **The floor is left, and the size of the move is stated, not celebrated.** Arm A's
+> geometric correspondence under 5°, 15° and 1.15× roughly doubles (+36 %, +107 %,
+> +87 %), every interval excludes zero, and the exact-shift control is untouched at
+> 0.78 appearance-only / 0.47 detection. It is still 0.06–0.09, not 0.76: the
+> rotation regime remains a different regime, and Step 5 registers it as such
+> rather than pooling it with the working one.
+
+**What remains, named and unclaimed.** Arm A reaches only **27–37 % of its own
+detection ceiling** (0.064/0.177 at 5°, 0.093/0.343 at 15°) — i.e. when a counterpart
+does exist, the aligner finds it less than half the time. Two further candidates were
+tested and eliminated in the same pass: the vector-address seed (`addrs_a/addrs_b`
+emptied) changes arm A's accuracy by **0.000 on all 18 real-photo cells**, so the
+seed is not it; and the appearance term is not it either (Step 2a). That residue is
+the next piece of work, and it is a matcher change, not a flag.
+
+**Adopted (dark):** the M13 read arms run with `FE_SUBPIXEL_PEAK_POS = True` and
+`FE_SUBPIXEL_GABOR_ANCHOR = True`; both remain **off by default**, so the shipped
+tree is unchanged (Step 1's harness: 112/112 numbers and 28/28 mappings identical to
+the pre-step baseline).
+
+Artifacts: `m13_decompose.json` (48 cells), `m13_repeat.json` (72 cells),
+`m13_repeat_boot.json`.
