@@ -772,3 +772,28 @@ invented.**
   smuggled in here.
 * `MATCH_SIG_SIM_CACHE`, `PLACEMENT_FRAME_KEYPOINT`, `PLACEMENT_E_NORMALISED`,
   `PLACEMENT_E_MIN_JUDGED` are all at their defaults (off).
+
+---
+
+## Where this brief stands
+
+| Step | State |
+|---|---|
+| 1 | **done** — 20 packaged photographs at 256×256, 6 reserved for validation, manifest with hashes and licence pointers; ETH-80 **BLOCKED**, killed, nothing claimed from it |
+| 2 | **done** — frame test rewritten (anchor-rotating, signed residual, sign calibrated 24/24 to −1), three real providers, per-structure table; keypoint wins the frame test on photographs (0.913 vs 0.598 within 3°) but **is not adopted**, because the deployed matcher's FIT interval for near-tie accuracy is [+0.000, +0.188] and does not exclude zero (MDE ≈ 0.18 at 8 pairs). Stays DARK |
+| 3 | **done, bar not met and said so** — redundancy measured (1.00× inside a pair, 1.78× across a 576-pair run), content-keyed cache landed DARK and **bit-identical on 30 pairs at 0.97×**; the 3× bar is unreachable from the similarity lever (≤1.28× even if the similarity were free), and the profile shows the cost is the aligner's swap evaluation |
+| 4 | **RUNNING** — 352/1 008 cells checkpointed; gates declared in code; **no gate evaluated, no read spent** |
+| 5 | **done** — pre-registered real-photo read executed once: **NOT DETECTED**, P − N = −0.0022 [−0.0118, +0.0067]; mechanism measured (translation-transitive, rotation/scale-intolerant in both arms), instrument limits quantified |
+| 6 | **BLOCKED** — no corpus, no ETH-80 read, nothing invented |
+
+### To continue when the refit finishes
+
+```
+.venv/bin/python Topology/placement_m12_fit_w.py --report     # evaluates and prints gates
+#   gates.passed false -> fix the fit, re-report, do NOT start the read
+.venv/bin/python Topology/placement_m12_read_synth.py --start --workers 1
+.venv/bin/python Topology/placement_m12_read_synth.py --report
+```
+
+The read refuses to start unless `m12_fit_w.json` carries `gates.passed`. The fit is
+resumable from `m12_fit_w_progress.jsonl` at any point with `--start`.
