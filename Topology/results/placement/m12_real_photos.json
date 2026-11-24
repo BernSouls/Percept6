@@ -1,0 +1,334 @@
+{
+ "count": 20,
+ "note": "ETH-80 never arrived (download stalled, killed); these are the real photographs the mission's real-image steps run on.",
+ "photos": [
+  {
+   "kind": "portrait",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.astronaut) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.astronaut",
+   "name": "astronaut",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/astronaut.png",
+   "reserved_for": "read",
+   "sha256": "34d53ece1d3956380771b1697bd920e78fc31d947a789aa736804ea0b8187817",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "animal",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.chelsea) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.chelsea",
+   "name": "chelsea",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/chelsea.png",
+   "reserved_for": "read",
+   "sha256": "81f005468de54bb47e3e8ad98cc6a85509a285996bb380087adb861fddc50fd2",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "object",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.coffee) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.coffee",
+   "name": "coffee",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/coffee.png",
+   "reserved_for": "read",
+   "sha256": "5f77cb4402641070683755207b697ce5e41efbe152471f65fac7454acb4c025f",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "object",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.camera) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.camera",
+   "name": "camera",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/camera.png",
+   "reserved_for": "read",
+   "sha256": "c8e3489b3cd029c37e85dca00c9306f5040bd463caba7803b265c6666cf2b437",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "object",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.clock) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.clock",
+   "name": "clock_motion",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/clock_motion.png",
+   "reserved_for": "read",
+   "sha256": "3558318fd0be69aa96e7a484a0a05685e267b9ff626f293d51cdfebbdfb108f3",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "object",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.rocket) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.rocket",
+   "name": "rocket",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/rocket.png",
+   "reserved_for": "read",
+   "sha256": "fddde2e3e6314500b15a4e5a3361e95020c9b5495f01cbff9ad5eb628d154c3e",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "object",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.coins) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.coins",
+   "name": "coins",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/coins.png",
+   "reserved_for": "read",
+   "sha256": "15bb304584eaf8fa4118fea67d9a4a077897b2f8852b7d43e6c5c0915b0be6f6",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "object",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.stereo_motorcycle) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.stereo_motorcycle",
+   "name": "motorcycle_left",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/motorcycle_left.png",
+   "reserved_for": "read",
+   "sha256": "5037bc23235529444aeb41fa297cabb73c0564b05e399fc55d8ea5775db393d9",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "object",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.stereo_motorcycle) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.stereo_motorcycle",
+   "name": "motorcycle_right",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/motorcycle_right.png",
+   "reserved_for": "read",
+   "sha256": "b40858093766035deb6bf3f48ba02bed38bfbc0ad9a8a5bc663b7f4abda94570",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "text",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.page) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.page",
+   "name": "page",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/page.png",
+   "reserved_for": "frame_validation",
+   "sha256": "1c8fcb2aa8548fec77cb2409ca6d93444b576d5bc9d3859ae7b11e696690e896",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "texture",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.brick) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.brick",
+   "name": "brick",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/brick.png",
+   "reserved_for": "read",
+   "sha256": "5dd25dfb0d960b85ab5d3857effcfe4dc4ef2a997d322dd7eb254d14cd754458",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "texture",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.grass) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.grass",
+   "name": "grass",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/grass.png",
+   "reserved_for": "frame_validation",
+   "sha256": "742c18e0e851bf88228edc46cb3f1730b712999e093c3c751ea0fcdae157f38b",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "texture",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.gravel) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.gravel",
+   "name": "gravel",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/gravel.png",
+   "reserved_for": "frame_validation",
+   "sha256": "0cbed4431196a29fefe077093efa9eb7f21445bc98b91a9a36af734de83e92cb",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "scene",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.moon) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.moon",
+   "name": "moon",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/moon.png",
+   "reserved_for": "frame_validation",
+   "sha256": "12b5315d16ba650630070f98365fb49e45be66f00d03e2f4b40dfa8b2c6bca0d",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "scene",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.hubble_deep_field) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.hubble_deep_field",
+   "name": "hubble",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/hubble.png",
+   "reserved_for": "read",
+   "sha256": "7a7fbe9f6ea3312eb99ea85675f83742e0e24bc9e969a83f904092716373ae0e",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "microscopy",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.immunohistochemistry) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.immunohistochemistry",
+   "name": "ihc",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/ihc.png",
+   "reserved_for": "read",
+   "sha256": "3bcec2df393f7896630263ea6ec1adf075c2308f2397d8c2f6e86009b7d47a82",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "microscopy",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.retina) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.retina",
+   "name": "retina",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/retina.png",
+   "reserved_for": "frame_validation",
+   "sha256": "5edd2628553a4295affb13d3965b0b88c739ad11663671b3e30b35a840a04050",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "microscopy",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (data.cell) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "data.cell",
+   "name": "cell",
+   "package": "skimage",
+   "path": ".cache/m12_real_photos/cell.png",
+   "reserved_for": "frame_validation",
+   "sha256": "4fe36a5e05cf50b8a124d5aa2d1ff3f3fc9a9daf5f1de706d481fbcb7cb96971",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "scene",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (datasets.load_sample_images) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "datasets.load_sample_images",
+   "name": "china",
+   "package": "sklearn",
+   "path": ".cache/m12_real_photos/china.png",
+   "reserved_for": "read",
+   "sha256": "069527fca88fbe4b353e13fac944e27bc72e826b3ff733146a50a9ab133ca4d7",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  },
+  {
+   "kind": "plant",
+   "licence": "package-bundled sample image; the licence is stated by that package's own data documentation (datasets.load_sample_images) and is not re-asserted here. Used locally for measurement; the pixels are NOT committed to the repository.",
+   "loader": "datasets.load_sample_images",
+   "name": "flower",
+   "package": "sklearn",
+   "path": ".cache/m12_real_photos/flower.png",
+   "reserved_for": "read",
+   "sha256": "7b6f677e2404d8b8d6e0275ec014fe54ba2a17130fe50cbc5bd46fb23810b7fa",
+   "shape": [
+    256,
+    256,
+    3
+   ]
+  }
+ ],
+ "read_set": [
+  "astronaut",
+  "chelsea",
+  "coffee",
+  "camera",
+  "clock_motion",
+  "rocket",
+  "coins",
+  "motorcycle_left",
+  "motorcycle_right",
+  "brick",
+  "hubble",
+  "ihc",
+  "china",
+  "flower"
+ ],
+ "resolution": [
+  256,
+  256
+ ],
+ "validation_set": [
+  "gravel",
+  "grass",
+  "page",
+  "moon",
+  "cell",
+  "retina"
+ ]
+}

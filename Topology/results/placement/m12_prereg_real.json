@@ -1,0 +1,114 @@
+{
+ "arms": {
+  "N": "shipped: the aligner on node similarity alone (placement off)",
+  "P": "deployed placement matcher (placement on), E on the STEP-2 scale"
+ },
+ "freshness": {
+  "graphs_in_cache_at_registration": 0,
+  "rule": "any nonzero count refuses the read"
+ },
+ "frozen": {
+  "e_reading": "PLACEMENT_E_NORMALISED (mean over judged slots, refused below the minimum)",
+  "edge_beta": 0.5,
+  "frame_provider": "the shipped field provider. If the Step-2 FIT decision adopts the keypoint provider, this field is AMENDED, with a dated note, before the first read graph exists -- the read photos are untouched by the validation",
+  "near_tie_rule": {
+   "margin_max": 0.05,
+   "top_sim": 0.99
+  },
+  "target_k": 16,
+  "w": 0.375,
+  "w_source": "matching/placement_score_params.json (fitted before M12)"
+ },
+ "gallery": {
+  "correspondence": "the exact transform, applied to the node anchors",
+  "rule": "the photo's own original image; one candidate per query"
+ },
+ "mde": {
+  "declared_before_the_bank_exists": true,
+  "design_effect": 2.0,
+  "formula": "MDE = 2.8 * 0.5 * sqrt(2.0) / sqrt(n_bank)",
+  "note": "the realized bank size is reported with the read and the realized MDE replaces this planning number, never the verdict",
+  "planning_sd": 0.5
+ },
+ "mission": "12 step 5 -- real-photo correspondence under exact known transforms",
+ "no_harm": {
+  "bank": "unambiguous nodes",
+  "rule": "the lower end of the photo-clustered interval for P - N must not fall below -0.02"
+ },
+ "one_read": true,
+ "photos": {
+  "manifest": "Topology/results/placement/m12_real_photos.json",
+  "n": 14,
+  "names": [
+   "astronaut",
+   "chelsea",
+   "coffee",
+   "camera",
+   "clock_motion",
+   "rocket",
+   "coins",
+   "motorcycle_left",
+   "motorcycle_right",
+   "brick",
+   "hubble",
+   "ihc",
+   "china",
+   "flower"
+  ],
+  "note": "the six validation photos are NEVER used in this read; they are what the frame validation is allowed to build",
+  "source": "package-bundled sample images (scikit-image, scikit-learn)",
+  "validation_photos_reserved": [
+   "gravel",
+   "grass",
+   "page",
+   "moon",
+   "cell",
+   "retina"
+  ]
+ },
+ "primary": {
+  "bank": "near-tie nodes (frozen rule) that the transform maps into the image",
+  "contrast": "P - N on correspondence accuracy (the mapped node is the transformed true counterpart)",
+  "interval": "paired bootstrap over PHOTOS, 4000 draws, 2.5/97.5"
+ },
+ "queries": {
+  "n": 56,
+  "rule": "one query per (photo, transform)"
+ },
+ "secondary": [
+  "judged-pair share per arm",
+  "the frame chain per photo",
+  "per-structure-class table",
+  "correspondence accuracy overall"
+ ],
+ "transforms": [
+  {
+   "label": "rot05",
+   "spec": {
+    "rot_deg": 5.0
+   }
+  },
+  {
+   "label": "rot15",
+   "spec": {
+    "rot_deg": 15.0
+   }
+  },
+  {
+   "label": "scale115",
+   "spec": {
+    "scale": 1.15
+   }
+  },
+  {
+   "label": "trans8",
+   "spec": {
+    "shift": [
+     8.0,
+     0.0
+    ]
+   }
+  }
+ ],
+ "verdict_rule": "DETECTED iff the photo-clustered interval excludes zero in the pre-registered direction (P > N); a detected effect below the realized MDE is labelled possibly inflated"
+}

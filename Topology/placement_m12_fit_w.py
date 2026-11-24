@@ -335,6 +335,36 @@ def main() -> int:
         "w0": top1(train, 1.0, 0.0), "w0375": top1(train, 1.0, 0.375),
         "fit": top1(train, f.get("T", 1.0), f.get("w", 0.0)) if f else {},
     }
+    # [MISSION 12 / step 4] THE SANITY GATES, DECLARED BEFORE THE FIT IS READ.
+    # A queued CONFIRMATION read must never be spent on a fit that is degenerate,
+    # at the edge of its own search, or worse than the score it replaces.  The gates
+    # are stated here, in the code that would have to pass them, and their verdict is
+    # written into the result: the read refuses to run unless `gates.passed` is true.
+    T_GRID = (0.02, 0.6)
+    W_GRID = (0.0, 1.5)
+    g = {}
+    if not f:
+        g["fit_present"] = False
+    else:
+        g["w_in_bounds"] = bool(W_GRID[0] < f["w"] < W_GRID[1])
+        g["T_in_bounds"] = bool(T_GRID[0] < f["T"] < T_GRID[1])
+        g["not_at_grid_edge"] = bool(g["w_in_bounds"] and g["T_in_bounds"])
+        ll0 = loglik(train, 1.0, 0.0)
+        g["loglik_finite"] = bool(np.isfinite(f["loglik"]))
+        g["loglik_beats_w0"] = bool(f["loglik"] > ll0)
+        ho = res["held_out"]
+        g["heldout_not_below_shipped"] = bool(
+            ho["fit_T_w"].get("top1", 0.0) >= ho["w0_deployed_T1"].get("top1", 1.0) - 1e-12)
+            # the shipped arm is w=0 at T=1; the fit must not lose to it
+    g["passed"] = bool(all(bool(v) for k, v in g.items() if k != "passed"))
+    g["declared"] = {
+        "w_bounds": W_GRID, "T_bounds": T_GRID,
+        "rules": ["w and T strictly inside their search bounds",
+                  "the fit's log-likelihood is finite and beats w=0",
+                  "held-out top-1 is not below the shipped score's own"],
+        "on_failure": "the confirmation read is NOT run; this result says so",
+    }
+    res["gates"] = g
     res["coverage"] = {
         "judged_mean": float(np.mean([r["judged"] for r in rows])) if rows else 0.0,
         "share_mean": float(np.mean([r["share"] for r in rows])) if rows else 0.0,
@@ -343,7 +373,7 @@ def main() -> int:
     }
     with open(RESULT, "w") as fh:
         json.dump(res, fh, indent=1, sort_keys=True, default=float)
-    if f:
+    if f and g.get("passed"):
         with open(PARAMS, "w") as fh:
             json.dump({"T": f["T"], "w": f["w"], "E": "PLACEMENT_E_NORMALISED reading",
                        "fitted_on": "M12 hard synthetic FIT (twins, OOP, stratified)",

@@ -30,6 +30,28 @@ IMAGES = os.path.join(ROOT, ".cache", "m12_read_images.npz")
 NBOOT, SEED = 4000, 20261118
 
 
+FIT_RESULT = os.path.join(OUT, "m12_fit_w.json")
+
+
+def _gate_check() -> Dict[str, Any]:
+    """[MISSION 12 / step 4] The read runs ONLY on a sane fit.
+
+    The fit writes `gates.passed`; this refuses the read if the file is missing,
+    if the gates failed, or if the gates are absent (no fit, no read).
+    """
+    if not os.path.exists(FIT_RESULT):
+        raise SystemExit("REFUSING: no fit result at %s -- the read needs a gated fit"
+                         % FIT_RESULT)
+    fit = json.load(open(FIT_RESULT))
+    g = fit.get("gates") or {}
+    if not g.get("passed"):
+        raise SystemExit("REFUSING: the fit's sanity gates did not pass: %s"
+                         % json.dumps({k: v for k, v in g.items() if k != "declared"},
+                                      sort_keys=True))
+    return {"gates": {k: v for k, v in g.items() if k != "declared"},
+            "T": (fit.get("fit") or {}).get("T"), "w": (fit.get("fit") or {}).get("w")}
+
+
 def _setup() -> Tuple[Dict[str, Any], List[Any], List[str], Dict[str, List[str]]]:
     """(registration, fresh specs, query keys, shortlists) -- truth free."""
     from Topology import placement_m12_prereg_synth as PR
@@ -191,6 +213,8 @@ def main() -> int:
     import guard
     guard.activate()
     reg, specs, qkeys, views = _setup()
+    if args.start:
+        _gate_check()
     _REFS_CACHE[:] = [s.name for s in specs]
     w = float(json.load(open(os.path.join(ROOT, "matching",
                                          "placement_score_params.json")))["w"])
