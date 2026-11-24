@@ -71,6 +71,32 @@ VARIANTS: Tuple[str, ...] = ("field_nearest", "field_subpixel", "multiscale",
                              "keypoint", "keypoint+field", "keypoint+multiscale")
 
 
+#: [M13 / step 1, SECOND DECLARATION -- written before these candidates were
+#: measured]  The first run showed the DEPLOYED keypoint provider (the SMALLEST
+#: keypoint sigma whose coherence clears the bar) scoring 0.563 pooled, while M12
+#: reported 0.803 for what it called "the keypoint provider".  It is not the same
+#: configuration: the M12 harness sampled the tensor at the LARGEST sigma
+#: (`max(KEYPOINT_SIGMAS)` = 4.0) and never at the smallest.  So the two
+#: candidates below are the configuration M12 actually measured, and the same
+#: E/C rule is applied to them, on their own terms, BEFORE they are run:
+#:
+#:   eligible  <=> coverage no worse than the shipped 7x7 field (both numbers)
+#:   adopted   <=> highest pooled E among eligible, and the paired E gain over the
+#:                 shipped field excludes 0 at 95 %
+#:
+#: They are reported beside the first decision, not folded into it: the first
+#: decision's candidate set was declared and closed before any number existed.
+EXTRA_RULE = {
+    "why": ("M12 measured the keypoint estimator at the LARGEST sigma; the deployed "
+            "provider takes the SMALLEST sigma that clears the bar; these candidates "
+            "are the measured configuration"),
+    "eligibility": "C(candidate) >= C(shipped field) on BOTH C numbers (1e-12)",
+    "adoption": ("highest pooled E among eligible candidates, and only if the paired "
+                 "E gain over the shipped field excludes 0 in favour at 95 %"),
+}
+EXTRA_VARIANTS: Tuple[str, ...] = ("keypoint_s4", "keypoint_s4+field")
+
+
 # ---------------------------------------------------------------------------
 # a stand-in "subgraph" whose anchors ARE the points to sample, so the harness
 # calls the module's own provider code rather than a copy of it
@@ -95,8 +121,9 @@ def frames_of(image_u8: np.ndarray, pts: np.ndarray, variant: str
         ang, coh = PE.field_angles(image_u8)
         return PE.node_frames(P, ang, coh, subpixel=True)
     if variant == "multiscale":
-        return PE.node_frames_multiscale(P, PE.field_multiscale(image_u8),
-                                         subpixel=False)[0]
+        # `node_frames_multiscale` has no subpixel argument: it reads the
+        # `PLACEMENT_FRAME_SUBPIXEL` parameter, which is off in this run.
+        return PE.node_frames_multiscale(P, PE.field_multiscale(image_u8))[0]
     if variant == "keypoint":
         return PE.node_frames_keypoint(P, image_u8)[0]
     if variant == "keypoint+field":
@@ -104,6 +131,31 @@ def frames_of(image_u8: np.ndarray, pts: np.ndarray, variant: str
     if variant == "keypoint+multiscale":
         return PE.node_frames_keypoint_then_field(P, image_u8,
                                                   fallback="multiscale")[0]
+    if variant in ("keypoint_s4", "keypoint_s4+field"):
+        # the M12 configuration: the tensor at the LARGEST keypoint sigma,
+        # bilinear at the anchor (exactly what m12_frames2.py sampled)
+        img = np.asarray(image_u8, dtype=np.float64)
+        if img.ndim == 3:
+            img = img.mean(axis=2)
+        gy, gx = np.gradient(img)
+        ang, coh = PE._tensor_at_sigma(gx, gy, float(max(PE.KEYPOINT_SIGMAS)))
+        out: Dict[int, float] = {}
+        for i in range(len(P.pts)):
+            x, y = float(P.pts[i][0]), float(P.pts[i][1])
+            c = PE._bilinear(coh, x, y)
+            if c is None or c < PE.FRAME_COHERENCE_MIN:
+                continue
+            a = PE._bilinear(ang, x, y)
+            if a is None or not np.isfinite(a):
+                continue
+            out[i] = float(a)
+        if variant == "keypoint_s4+field":
+            f_ang, f_coh = PE.field_angles(image_u8)
+            fall = PE.node_frames(P, f_ang, f_coh, subpixel=False)
+            for i in range(len(P.pts)):
+                if i not in out and i in fall:
+                    out[i] = float(fall[i])
+        return out
     raise SystemExit("unknown variant %r" % (variant,))
 
 
@@ -157,7 +209,7 @@ def _images() -> List[Tuple[str, np.ndarray, np.ndarray]]:
     return out
 
 
-def equivariance() -> Dict[str, Any]:
+def equivariance(variants: Tuple[str, ...] = VARIANTS) -> Dict[str, Any]:
     import guard
     guard.activate()
     rows: List[Dict[str, Any]] = []
@@ -174,7 +226,7 @@ def equivariance() -> Dict[str, Any]:
             inside = np.asarray([(BORDER <= x < w - BORDER and BORDER <= y < h - BORDER)
                                  for x, y in moved], dtype=bool)
             a0, a1 = base_pts[inside], moved[inside]
-            for v in VARIANTS:
+            for v in variants:
                 f0 = frames_of(img, a0, v)
                 f1 = frames_of(rot, a1, v)
                 res = []
@@ -192,7 +244,7 @@ def equivariance() -> Dict[str, Any]:
                              "mad_deg": float(np.median(np.abs(arr - np.median(arr)))) if arr.size else float("nan"),
                              "share_within_3deg": float(np.mean(np.abs(arr) <= 3.0)) if arr.size else float("nan")})
     agg: Dict[str, Any] = {}
-    for v in VARIANTS:
+    for v in variants:
         sub = [r for r in rows if r["variant"] == v and r["n_framed_both"] > 0]
         if not sub:
             continue
@@ -220,6 +272,15 @@ def _fit_pairs() -> List[Tuple[str, Any, Any]]:
 
 def _set_variant(v: str) -> None:
     import parameters as P
+    if v in ("keypoint_s4", "keypoint_s4+field"):
+        # `PLACEMENT_FRAME_KEYPOINT` selects the deployed smallest-sigma rule;
+        # the largest-sigma configuration is reached through the M12 provider
+        # switch, which is what the M13 code keeps for reproducibility.
+        P.PLACEMENT_FRAME_KEYPOINT = True
+        P.PLACEMENT_FRAME_MULTISCALE = False
+        P.PLACEMENT_FRAME_SUBPIXEL = False
+        P.PLACEMENT_FRAME_FALLBACK = ("field" if v.endswith("+field") else "none")
+        return
     P.PLACEMENT_FRAME_KEYPOINT = v.startswith("keypoint")
     P.PLACEMENT_FRAME_MULTISCALE = (v == "multiscale")
     P.PLACEMENT_FRAME_SUBPIXEL = (v == "field_subpixel")
@@ -252,10 +313,10 @@ def _coverage_job(job: Tuple[str, Any, Any, str]) -> Dict[str, Any]:
             "mapped": int(len(res.mapping)), "sec": time.time() - t0}
 
 
-def coverage(workers: int) -> Dict[str, Any]:
+def coverage(workers: int, variants: Tuple[str, ...] = VARIANTS) -> Dict[str, Any]:
     from concurrent.futures import ProcessPoolExecutor
     pairs = _fit_pairs()
-    jobs = [(t, s, v, var) for var in VARIANTS for (t, s, v) in pairs]
+    jobs = [(t, s, v, var) for var in variants for (t, s, v) in pairs]
     rows: List[Dict[str, Any]] = []
     with ProcessPoolExecutor(max_workers=workers) as ex:
         for r in ex.map(_coverage_job, jobs):
@@ -263,7 +324,7 @@ def coverage(workers: int) -> Dict[str, Any]:
             print("  %-22s %-22s judged %4d  share %.3f"
                   % (r["variant"], r["pair"], r["judged"], r["share"]), flush=True)
     agg = {}
-    for v in VARIANTS:
+    for v in variants:
         sub = [r for r in rows if r["variant"] == v]
         if not sub:
             continue
@@ -349,6 +410,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--equivariance", action="store_true")
     ap.add_argument("--coverage", action="store_true")
+    ap.add_argument("--extra", action="store_true",
+                    help="measure the two candidates declared in EXTRA_RULE")
     ap.add_argument("--workers", type=int, default=2)
     args = ap.parse_args()
     import guard
@@ -372,6 +435,27 @@ def main() -> int:
         for v, a in res["coverage"]["aggregate"].items():
             print("  %-22s share_judged %.4f  judged %.1f  mapped %.1f"
                   % (v, a["share_judged"], a["judged_mean"], a["mapped_mean"]), flush=True)
+    if args.extra:
+        t0 = time.time()
+        res["extra_equivariance"] = equivariance(EXTRA_VARIANTS)
+        res["extra_coverage"] = coverage(args.workers, EXTRA_VARIANTS)
+        eq = {"rows": res["equivariance"]["rows"] + res["extra_equivariance"]["rows"],
+              "aggregate": dict(res["equivariance"]["aggregate"],
+                                **res["extra_equivariance"]["aggregate"])}
+        cov = {"aggregate": dict(res["coverage"]["aggregate"],
+                                 **res["extra_coverage"]["aggregate"])}
+        dec = decide(eq, cov)
+        dec["rule"] = {"first": RULE, "extra": EXTRA_RULE}
+        res["decision_all"] = dec
+        print("EXTRA %.0fs" % (time.time() - t0), flush=True)
+        for v in EXTRA_VARIANTS:
+            a = res["extra_equivariance"]["aggregate"].get(v)
+            c = res["extra_coverage"]["aggregate"].get(v)
+            print("  %-18s E %.3f  C %.4f judged %.1f"
+                  % (v, a["share_within_3deg"] if a else float("nan"),
+                     c["share_judged"] if c else float("nan"),
+                     c["judged_mean"] if c else float("nan")), flush=True)
+        print("DECISION_ALL", dec.get("adopted"), "-", dec.get("reason"), flush=True)
     if "equivariance" in res and "coverage" in res:
         res["decision"] = decide(res["equivariance"], res["coverage"])
         print("DECISION", json.dumps(res["decision"].get("adopted")), "-",
