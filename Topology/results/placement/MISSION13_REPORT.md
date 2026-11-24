@@ -183,3 +183,113 @@ the pre-step baseline).
 
 Artifacts: `m13_decompose.json` (48 cells), `m13_repeat.json` (72 cells),
 `m13_repeat_boot.json`.
+
+## STEP 4 — refitting w by pairwise margin: unidentifiable, keep the shipped weight
+
+The softmax's `T` is a pure sharpening knob and its optimum lives at a corner; that is
+already established and is not re-derived here. This step removes `T` (fixed at the
+deployed 1.0) and fits **w alone** to a Bradley–Terry **pairwise margin** likelihood
+over Mission 12's own bank (`m12_fit_w_progress.jsonl`, 252 queries × 4 candidates =
+756 ordered (truth, rival) pairs):
+
+    m(t, c) = ( B(t) - B(c) ) + w · ( E(t) - E(c) )
+    ll(w)   = Σ_pairs log σ( m(t, c) )
+
+`B` is the deployed shipped score, `E` the placement evidence on the STEP-2 scale.
+A pairwise margin sees only differences, so it cannot be inflated by the score's level
+— which is exactly what the softmax was exploiting.
+
+**Strata cut before fitting** (the FIT view grid, no view chosen by looking at w):
+S1 in-plane easy (5/10/15°), S2 in-plane hard (25/30/35°), S3 out-of-plane
+(y10/20/30, x10/20), S4 scale (s09/s115). Each fitted alone, plus the pool.
+
+| fit | pairs | ŵ | interior maximum | profile-w interval (Δ2ll ≤ 3.841) | P(ΔE > 0) | corr(ΔB, ΔE) |
+|---|---|---|---|---|---|---|
+| pooled, FIT (¾) | 567 | **3.00 (bound)** | **no** | [2.75, 3.00] | 0.735 | 0.811 |
+| pooled, all | 756 | 3.00 (bound) | no | [2.81, 3.00] | 0.745 | 0.785 |
+| S1 in-plane easy | 126 | 3.00 (bound) | no | [2.37, 3.00] | — | 0.863 |
+| S2 in-plane hard | 126 | 3.00 (bound) | no | [1.44, 3.00] | — | 0.786 |
+| S3 out-of-plane | 210 | 3.00 (bound) | no | [2.34, 3.00] | — | 0.742 |
+| S4 scale | 42 | 3.00 (bound) | no | [0.97, 3.00] | — | 0.409 |
+
+**There is no interior maximum, and the reason is measurable, not mysterious:** `E`
+and `B` agree in sign on 73–84 % of pairs (corr 0.81), so raising w raises almost every
+margin monotonically — the bank is (nearly) separable in the `E` direction and the
+likelihood has no finite maximiser. Every stratum repeats the pattern.
+
+**Held-out margin, and why it does not license adoption:**
+
+| w | held-out mean margin | held-out top-1 |
+|---|---|---|
+| 0 | 0.0332 | **0.7937** |
+| **0.375 (shipped)** | **0.0419** | **0.7937** |
+| 1.0 | 0.0557 | 0.7619 |
+| 2.0 | 0.0758 | 0.7143 |
+| 3.0 (ŵ) | **0.0949** | 0.6984 |
+
+The margin improves by +0.062 from w = 0 to ŵ — and the ranking **falls** by 9.5
+points. A margin that grows while the order degrades is scale inflation, not a better
+weight: the objective is unbounded in exactly the direction that hurts.
+
+**The decisive subset.** Only the 119/756 pairs where `ΔE` opposes `ΔB` can identify w.
+On them the profile is flat across the whole grid (ll = −81.213 at w = 0 vs −81.319 at
+w = 0.375, interval [0, 3.00]) and the accuracy is *maximal at w = 0.25* (0.815) and
+falls monotonically to 0.639 at w = 3 — i.e. the informative pairs reject the direction
+the pooled profile runs in.
+
+> **Verdict: w is not identifiable by a pairwise margin on this bank. The shipped
+> weight w = 0.375 is KEPT** — it sits at the top of the flat held-out region
+> (0 ≤ w ≤ 0.375, all at 0.7937) and within a hair of the informative subset's own
+> optimum. Adopting ŵ = 3.00 would be adopting a boundary artefact.
+
+Artifact: `m13_margin.json`.
+
+## STEP 5 — the real-photo read, re-registered by regime, taken once
+
+Registration signed at `m13_prereg_read.json` **before the read** (regimes, arms,
+contrast, per-stratum MDE, verdict rule, the BROKEN declaration for the secondary
+strata, and the one-look rule). 6 validation photographs (the package-bundled set —
+ETH-80 is still absent, Step 6), 4 transforms = 24 cells, all graphs built with the
+Step-3 sub-pixel anchors ON. Arms A = placement OFF, B = placement ON/evidence OFF,
+C = placement ON/evidence ON at the shipped w = 0.375. Contrast **C − A**, photo-
+clustered bootstrap (4000 draws). **Nothing is pooled**: every stratum is read and
+verdicted alone.
+
+| stratum | role | near-tie bank | acc A | acc B | acc C | C − A [95 % CI] | MDE | verdict |
+|---|---|---|---|---|---|---|---|---|
+| **trans8 (exact shift)** | **PRIMARY** | 98 | 0.653 | 0.663 | 0.653 | **0.000 [0.000, 0.000]** | 0.200 | **NULL_SUPPORTED** |
+| rot05 | SECONDARY | 9 | 0.556 | 0.556 | 0.556 | 0.000 [0.000, 0.000] | 0.660 | BROKEN (as declared) |
+| rot15 | SECONDARY | 28 | 0.143 | 0.071 | 0.071 | −0.044 [−0.100, 0.000] | 0.374 | BROKEN (as declared) |
+| scale115 | SECONDARY | 8 | 0.125 | 0.125 | 0.125 | 0.000 [0.000, 0.000] | 0.700 | BROKEN (as declared) |
+
+Unambiguous bank (reported alongside, not instead of the registered one):
+trans8 A 0.741 / B 0.724 / C 0.724 (n = 297); rot05 0.272 (n = 81); rot15 0.255
+(n = 161); scale115 0.211 (n = 71).
+
+**Plain verdict.** In the regime where correspondence works (exact shift), the
+placement evidence + weight channel changes **not one mapping** — C − A is exactly
+0.000 in all six photographs, and on the unambiguous bank placement ON is mildly
+**harmful** (0.741 → 0.724, from 2 of 6 photos: moon 46→44, gravel 66→64). In the
+rotation and scale regimes the read confirms the Step-3 state instead of repairing it:
+the strata are declared BROKEN and stay BROKEN, and the intervals there carry no
+information either way (banks of 8–28 nodes; the near-tie bank is small *because* the
+sub-pixel anchors leave few appearance-ambiguous nodes, which is a coverage number,
+not evidence about the mechanism).
+**No claim is made about rotation or scale from this read, and none is made from a
+pooled interval.**
+
+Honest power note: the registered near-tie banks are thin (8–98 nodes → MDE 0.20 on
+the PRIMARY, 0.37–0.70 on the SECONDARY), so the PRIMARY null is a null at MDE 0.20,
+not a null at 0.05; the secondary verdicts rest on the *declared* BROKEN state, not on
+these intervals. That is stated rather than papered over.
+
+Artifacts: `m13_prereg_read.json`, `m13_read_real.json`, `m13_read_real_progress.jsonl`.
+
+## STEP 6 — ETH-80: still blocked, no numbers invented
+
+`data/ETH-80-master` is a symlink to `.cache/ETH-80-raw` and contains **25 directories
+and 0 files** (11 + 11 + 3 + 0 subdirectories, `4/` absent): the tree was created but
+the tarball never finished (it stalls at 322 534 399 B) and pooch is unreachable from
+this sandbox. There is therefore **no ETH-80 result in this mission**, and none is
+invented. The real-image set stays the package-bundled photographs with their
+licence manifest (`m12_real_photos.json`), which is what Steps 2 and 5 used.

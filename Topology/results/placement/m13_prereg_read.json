@@ -1,0 +1,82 @@
+{
+ "mission": "M13 step 5",
+ "signed": "before the read; this file is written at --start and refuses to be overwritten",
+ "photos": {
+  "set": "validation",
+  "names": [
+   "cell",
+   "grass",
+   "gravel",
+   "moon",
+   "page",
+   "retina"
+  ],
+  "n": 6
+ },
+ "front_end": {
+  "FE_SUBPIXEL_PEAK_POS": true,
+  "FE_SUBPIXEL_GABOR_ANCHOR": true,
+  "why": "Mission 13 step 3 (sub-pixel anchors; dark, defaults off)"
+ },
+ "strata": [
+  {
+   "name": "trans8",
+   "role": "PRIMARY",
+   "spec": {
+    "shift": [
+     8.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "name": "rot05",
+   "role": "SECONDARY",
+   "spec": {
+    "rot_deg": 5.0
+   }
+  },
+  {
+   "name": "rot15",
+   "role": "SECONDARY",
+   "spec": {
+    "rot_deg": 15.0
+   }
+  },
+  {
+   "name": "scale115",
+   "role": "SECONDARY",
+   "spec": {
+    "scale": 1.15
+   }
+  }
+ ],
+ "arms": {
+  "A": "placement OFF (shipped aligner)",
+  "B": "placement ON, evidence OFF",
+  "C": "placement ON, evidence ON, w = shipped 0.375"
+ },
+ "contrast": "C - A on near-tie correspondence accuracy",
+ "cluster": "photo",
+ "bootstrap": {
+  "draws": 4000,
+  "ci": [
+   2.5,
+   97.5
+  ],
+  "seed": 20261119
+ },
+ "mde": {
+  "formula": "2.8 * 0.5 * sqrt(2) / sqrt(n_bank)",
+  "per": "stratum"
+ },
+ "verdict_rule": {
+  "DETECTED": "lo > 0 and mean >= stratum MDE",
+  "POSSIBLY_INFLATED": "lo > 0 and mean < stratum MDE",
+  "NULL_SUPPORTED": "lo <= 0 and hi < stratum MDE",
+  "UNDERPOWERED": "lo <= 0 and hi >= stratum MDE"
+ },
+ "pooling": "FORBIDDEN.  Each stratum is read, verdicted and reported alone.",
+ "broken_declaration": "rot05, rot15, scale115 are declared BROKEN in advance: Step 2 measured detection 0.09-0.17 there and Step 3 only doubled a 0.04 floor.  A SECONDARY stratum leaves BROKEN only if its own contrast is DETECTED.",
+ "one_look": "a completed m13_read_real.json refuses a second --start"
+}

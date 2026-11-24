@@ -1,0 +1,178 @@
+{
+ "arms": [
+  "A",
+  "B",
+  "C"
+ ],
+ "cells": 24,
+ "pooled": "NOT COMPUTED BY DESIGN",
+ "registered": {
+  "DETECTED": "lo > 0 and mean >= stratum MDE",
+  "NULL_SUPPORTED": "lo <= 0 and hi < stratum MDE",
+  "POSSIBLY_INFLATED": "lo > 0 and mean < stratum MDE",
+  "UNDERPOWERED": "lo <= 0 and hi >= stratum MDE"
+ },
+ "strata": {
+  "rot05": {
+   "cells": 6,
+   "mde": 0.6599663291074443,
+   "near_tie": {
+    "C_minus_A": {
+     "clusters": 4,
+     "hi": 0.0,
+     "lo": 0.0,
+     "mean": 0.0,
+     "n": 4
+    },
+    "acc_A": 0.5555555555555556,
+    "acc_B": 0.5555555555555556,
+    "acc_C": 0.5555555555555556,
+    "bank_nodes": 9
+   },
+   "photos": 6,
+   "primary_verdict": {
+    "hi": 0.0,
+    "lo": 0.0,
+    "mde": 0.6599663291074443,
+    "mean": 0.0,
+    "regime": "BROKEN (as declared, not repaired)",
+    "verdict": "NULL_SUPPORTED"
+   },
+   "role": "SECONDARY",
+   "unambiguous": {
+    "C_minus_A": {
+     "clusters": 6,
+     "hi": 0.023809523809523808,
+     "lo": -0.04999999999999999,
+     "mean": -0.008730158730158727,
+     "n": 6
+    },
+    "acc_A": 0.2716049382716049,
+    "acc_B": 0.2716049382716049,
+    "acc_C": 0.2716049382716049,
+    "bank_nodes": 81
+   }
+  },
+  "rot15": {
+   "cells": 6,
+   "mde": 0.3741657386773941,
+   "near_tie": {
+    "C_minus_A": {
+     "clusters": 6,
+     "hi": 0.0,
+     "lo": -0.09999999999999999,
+     "mean": -0.044444444444444446,
+     "n": 6
+    },
+    "acc_A": 0.14285714285714285,
+    "acc_B": 0.07142857142857142,
+    "acc_C": 0.07142857142857142,
+    "bank_nodes": 28
+   },
+   "photos": 6,
+   "primary_verdict": {
+    "hi": 0.0,
+    "lo": -0.09999999999999999,
+    "mde": 0.3741657386773941,
+    "mean": -0.044444444444444446,
+    "regime": "BROKEN (as declared, not repaired)",
+    "verdict": "NULL_SUPPORTED"
+   },
+   "role": "SECONDARY",
+   "unambiguous": {
+    "C_minus_A": {
+     "clusters": 6,
+     "hi": 0.0,
+     "lo": -0.026315789473684223,
+     "mean": -0.008771929824561408,
+     "n": 6
+    },
+    "acc_A": 0.2546583850931677,
+    "acc_B": 0.2422360248447205,
+    "acc_C": 0.2422360248447205,
+    "bank_nodes": 161
+   }
+  },
+  "scale115": {
+   "cells": 6,
+   "mde": 0.7,
+   "near_tie": {
+    "C_minus_A": {
+     "clusters": 4,
+     "hi": 0.0,
+     "lo": 0.0,
+     "mean": 0.0,
+     "n": 4
+    },
+    "acc_A": 0.125,
+    "acc_B": 0.125,
+    "acc_C": 0.125,
+    "bank_nodes": 8
+   },
+   "photos": 6,
+   "primary_verdict": {
+    "hi": 0.0,
+    "lo": 0.0,
+    "mde": 0.7,
+    "mean": 0.0,
+    "regime": "BROKEN (as declared, not repaired)",
+    "verdict": "NULL_SUPPORTED"
+   },
+   "role": "SECONDARY",
+   "unambiguous": {
+    "C_minus_A": {
+     "clusters": 6,
+     "hi": 0.0,
+     "lo": 0.0,
+     "mean": 0.0,
+     "n": 6
+    },
+    "acc_A": 0.2112676056338028,
+    "acc_B": 0.2112676056338028,
+    "acc_C": 0.2112676056338028,
+    "bank_nodes": 71
+   }
+  },
+  "trans8": {
+   "cells": 6,
+   "mde": 0.2,
+   "near_tie": {
+    "C_minus_A": {
+     "clusters": 6,
+     "hi": 0.0,
+     "lo": 0.0,
+     "mean": 0.0,
+     "n": 6
+    },
+    "acc_A": 0.6530612244897959,
+    "acc_B": 0.6632653061224489,
+    "acc_C": 0.6530612244897959,
+    "bank_nodes": 98
+   },
+   "photos": 6,
+   "primary_verdict": {
+    "hi": 0.0,
+    "lo": 0.0,
+    "mde": 0.2,
+    "mean": 0.0,
+    "regime": "PRIMARY",
+    "verdict": "NULL_SUPPORTED"
+   },
+   "role": "PRIMARY",
+   "unambiguous": {
+    "C_minus_A": {
+     "clusters": 6,
+     "hi": -0.0017543859649122677,
+     "lo": -0.023726755159503676,
+     "mean": -0.011821993254741777,
+     "n": 6
+    },
+    "acc_A": 0.7407407407407407,
+    "acc_B": 0.7239057239057239,
+    "acc_C": 0.7239057239057239,
+    "bank_nodes": 297
+   }
+  }
+ },
+ "w": 0.375
+}
