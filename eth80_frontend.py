@@ -141,6 +141,11 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       # [MISSION 10 / step 4b] changes the SHAPE of the placement
                       # term, so a matcher-result cache must never survive it.
                       "PLACEMENT_PAIR_NORMALISED",
+                      # [MISSION 12 / step 2] the evidence's normalisation and its
+                      # minimum judged count change the SHAPE of the term, so a
+                      # graph or matcher cache must never survive a change of them.
+                      "PLACEMENT_E_NORMALISED",
+                      "PLACEMENT_E_MIN_JUDGED",
                       # [MISSION 11 / step 1] the pair score itself.  A cached
                       # match result must never survive a change of the score's
                       # shape or of its one fitted weight.

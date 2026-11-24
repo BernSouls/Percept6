@@ -128,6 +128,14 @@ def placement_evidence(mapping, side_a, side_b, fit, pfit, a_e, a_g):
     """
     from matching import placement_llr as L
 
+    # [MISSION 12 / step 2] THE FIT-CHOSEN READING OF E.  With
+    # PLACEMENT_E_NORMALISED the pair contributes the MEAN over the slots it
+    # actually judged (`plus_score(normalise=True)`) instead of the sum over the
+    # cap, and a pair that judged fewer than PLACEMENT_E_MIN_JUDGED slots is
+    # REFUSED (0.5 exactly, i.e. 0 to E) rather than read on one measurement.
+    # Both flags are dark, so this function is bit-identical with them off.
+    _norm = bool(getattr(P, "PLACEMENT_E_NORMALISED", False))
+    _min_j = int(getattr(P, "PLACEMENT_E_MIN_JUDGED", 0) or 0)
     judged = 0
     total = 0.0
     mapped = 0
@@ -139,7 +147,8 @@ def placement_evidence(mapping, side_a, side_b, fit, pfit, a_e, a_g):
             continue
         judged += 1
         term = L.plus_score(u, v, mapping, side_a.incident, side_a.index,
-                            side_b.index, fit, pfit, a_e, a_g)
+                            side_b.index, fit, pfit, a_e, a_g,
+                            normalise=_norm, min_judged=_min_j)
         total += float(term) - 0.5
     k = float(getattr(P, "PLACEMENT_SCORE_SHRINK", 8.0))
     evidence = total / (judged + k) if judged else 0.0
@@ -315,8 +324,14 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None,
         from matching import placement_matcher as _PM
         _img_a, _img_b = placement_images[0], placement_images[1]
         if _img_a is not None and _img_b is not None:
-            _side_a = _PM.build_side(_as_image_graph(a, sigs_a), _img_a)
-            _side_b = _PM.build_side(_as_image_graph(b, sigs_b), _img_b)
+            # [MISSION 12 / step 1b] ONE SIDE PER IMAGE.  The forward and the
+            # reverse directional call both build both sides, so the same image's
+            # payload was built up to four times per pair.  `build_side_cached` is
+            # the same pure function keyed on (graph object, pixels, switches):
+            # it returns the identical Side, so every value downstream is
+            # unchanged, and the repeat builds disappear.
+            _side_a = _PM.build_side_cached(_as_image_graph(a, sigs_a), _img_a)
+            _side_b = _PM.build_side_cached(_as_image_graph(b, sigs_b), _img_b)
 
     @lru_cache(maxsize=None)
     def edge_sim(x,y,u,v,et):

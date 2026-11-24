@@ -34,7 +34,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Dict, Optional, Sequence, Tuple
+from typing import Any, Dict, Optional, Sequence, Tuple
 
 DEFAULT_SIGMA_BINS = 1.0
 
@@ -203,6 +203,54 @@ def mixture_bins(center_bins_list: Sequence[float], axis: PopAxis,
     return tuple(a / total for a in acc)
 
 
+#: [MISSION 12 / step 1c] THE CENTRED FORM OF A VECTOR IS A PROPERTY OF THE VECTOR.
+#: ``centered_cosine`` recomputed the mean, the centred vector and the sum of
+#: squares of BOTH sides on every call -- and a population vector is compared
+#: against every candidate of a match, so the same vector was re-centred millions
+#: of times.  The centred vector and its sum of squares are cached here, keyed on
+#: the identity of the vector object and VALIDATED against a digest of its
+#: contents, so a mutated vector can never be read through a stale entry and an
+#: id can never be recycled while the entry holds a reference to it.
+#:
+#: The cached values are the SAME floats in the SAME accumulation order the
+#: function computed before (mean, then the per-element difference, then the sums
+#: in element order), so every call returns the bit-identical result.
+_CENTERED_CACHE: Dict[Any, Tuple[Any, Any, Tuple[float, ...], float]] = {}
+_CENTERED_CACHE_MAX = 200000
+
+
+def _vec_digest(vec: Any) -> Any:
+    """A cheap, exact fingerprint of a vector's contents (validates the cache)."""
+    try:
+        return (len(vec), tuple(vec))
+    except TypeError:
+        return None
+
+
+def _centered_form(vec: Sequence[float]) -> Tuple[Tuple[float, ...], float]:
+    """(centred vector, sum of its squares), cached and bit-identical."""
+    key = id(vec)
+    dig = _vec_digest(vec)
+    if dig is not None:
+        ent = _CENTERED_CACHE.get(key)
+        if ent is not None and ent[0] is vec and ent[1] == dig:
+            return ent[2], ent[3]
+    n = len(vec)
+    if n == 0:
+        return (), 0.0
+    m = sum(vec) / n
+    out = []
+    ss = 0.0
+    for x in vec:
+        d = x - m
+        out.append(d)
+        ss += d * d
+    c = tuple(out)
+    if dig is not None and len(_CENTERED_CACHE) < _CENTERED_CACHE_MAX:
+        _CENTERED_CACHE[key] = (vec, dig, c, ss)
+    return c, ss
+
+
 def centered_cosine(a: Sequence[float], b: Sequence[float]) -> float:
     """Pearson correlation of two activity vectors (chance correction = the
     uniform null). Returns 0.0 when either vector has ~no variance (uniform),
@@ -210,19 +258,15 @@ def centered_cosine(a: Sequence[float], b: Sequence[float]) -> float:
     n = len(a)
     if n == 0 or len(b) != n:
         return 0.0
-    ma = sum(a) / n
-    mb = sum(b) / n
-    num = 0.0
-    va = 0.0
-    vb = 0.0
-    for x, y in zip(a, b):
-        dx = x - ma
-        dy = y - mb
-        num += dx * dy
-        va += dx * dx
-        vb += dy * dy
-    if va <= 1e-18 or vb <= 1e-18:
+    ca, va = _centered_form(a)
+    if va <= 1e-18:
         return 0.0
+    cb, vb = _centered_form(b)
+    if vb <= 1e-18:
+        return 0.0
+    num = 0.0
+    for dx, dy in zip(ca, cb):
+        num += dx * dy
     return max(-1.0, min(1.0, num / math.sqrt(va * vb)))
 
 

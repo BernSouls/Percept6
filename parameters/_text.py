@@ -1262,6 +1262,25 @@ PLACEMENT_SPACING_RADIUS: bool = os.environ.get(
 PLACEMENT_PAIR_NORMALISED: bool = os.environ.get(
     "PLACEMENT_PAIR_NORMALISED", "0") != "0"
 
+#: [MISSION 12 / step 2] THE EVIDENCE ON ONE SCALE.  ``PLACEMENT_PAIR_NORMALISED``
+#: removes the padding but leaves the denominator to the caller; the mission's E
+#: divides by ``n_judged + 8``, which is the sum's shape again on another axis.
+#: This flag is the FIT-chosen reading: the term is the MEAN over the slots the
+#: pair actually judged (``plus_score(normalise=True)``), a pair that judged no
+#: slot contributes 0.5 exactly (so E contributes 0, never evidence), and a pair
+#: that judged fewer than ``PLACEMENT_E_MIN_JUDGED`` slots is REFUSED to 0.5
+#: rather than read on one or two measurements.
+#:
+#: Chosen on FIT by ``Topology/placement_m12_e_coverage.py``: over 12 243
+#: candidates of 6 FIT pairs the deployed sum correlates 0.135 with the judged
+#: count through the blended score the matcher ranks by, the mean reading 0.049,
+#: and the mean's magnitude does not grow with the slot count -- which is what
+#: makes one frozen weight (PLACEMENT_SCORE_WEIGHT) meaningful at every place.
+#: Dark: off, every caller keeps the arithmetic it had.
+PLACEMENT_E_NORMALISED: bool = os.environ.get(
+    "PLACEMENT_E_NORMALISED", "0") != "0"
+PLACEMENT_E_MIN_JUDGED: int = int(os.environ.get("PLACEMENT_E_MIN_JUDGED", "0"))
+
 #: [MISSION 11 / step 1] THE PAIR SCORE ITSELF.  Until now placement only moved
 #: the MAPPING: `JointMCS.score` is computed after alignment from raw node
 #: similarity and knows nothing about the placement evidence that produced the

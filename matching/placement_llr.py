@@ -372,7 +372,8 @@ def plus_score(u: int, v: int, mapping: Mapping[int, int],
                fit: "LLRFit", pfit: "PresenceFit",
                a_e: float, a_g: float, slot_cap: int = SLOT_CAP,
                tol: Optional[float] = None,
-               normalise: bool = False) -> float:
+               normalise: bool = False,
+               min_judged: int = 0) -> float:
     """``plus_map`` of ``plus_terms`` -- the deployable arm.
 
     ``tol`` is the per-pair tolerance of the spacing-aware rule (Mission 10 step
@@ -390,6 +391,13 @@ def plus_score(u: int, v: int, mapping: Mapping[int, int],
         return plus_map(e_sum, g_sum, a_e, a_g, slot_cap=slot_cap)
     n = len(slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx,
                                 tol=tol)[:slot_cap])
+    # [MISSION 12 / step 2] A MINIMUM JUDGED COUNT.  One or two measurements are
+    # not evidence, and reading them on the mean scale gives a pair with a single
+    # slot the same weight as a pair with eight.  Below `min_judged` the pair is
+    # REFUSED: it contributes exactly 0.5, i.e. 0 to E.  Default 0 keeps every
+    # existing caller bit-identical.
+    if int(min_judged) > 0 and n < int(min_judged):
+        return 0.5
     raw = 0.5 + (float(a_e) * e_sum + float(a_g) * g_sum) / (
         2.0 * LLR_CLIP * max(1, n))
     return float(min(1.0, max(0.0, raw)))

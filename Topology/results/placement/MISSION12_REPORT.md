@@ -159,6 +159,23 @@ per class** (the signatures of one class share an axis layout), which is a
 separate piece of work with its own bit-identity argument. That is proposed, not
 claimed.
 
+### STEP 1A — the missed cost centres
+
+Four changes, none of which can change a value:
+
+| Change | Where | Why it is exact | Status |
+|---|---|---|---|
+| **b. One Side per image** | `matching/placement_matcher.build_side_cached`, used by `joint_mcs` | `build_side` is a pure function of (graph object, pixels, switches); the cache holds the graph, so the id cannot be recycled, and it keys on the identity, the pixel digest and the frozen bundle | landed |
+| **c. Centred form precomputed** | `core/population.centered_cosine` / `_centered_form` | the mean, the centred vector and the sum of squares are cached per vector and VALIDATED against a content digest; the same floats in the same accumulation order | landed, 2 000 random cases bit-identical to the old code |
+| **d. `cells_scored`** | `matching/placement_matcher.rescore_matrix` | it counted the CAPPED context rows; it now counts the (row, cell) pairs `plus_score` was actually called on | fixed |
+| **a. 30 pairs** | — | the ETH-80 corpus is still downloading in this sandbox (`catalog()` raises `FileNotFoundError`); the harness registers the 14 real pairs the moment it lands | **not met yet** |
+
+Every one of these is behind no flag because none of them is a behaviour: the
+Side cache and the centred cache return the same objects/values, and the counter
+is a diagnostic. The evidence they are exact: with all of them in, the arm-A and
+arm-C mapping hashes of the fixed harness pair are unchanged from the committed
+baseline (`0cfa87a2` / `2865d93d`), and the scores are unchanged to the last digit.
+
 ### Where the harness stands
 
 * 14 synthetic pairs registered and accepted.
@@ -168,3 +185,76 @@ claimed.
   galleries are required by the mission, so the acceptance is repeated over 30
   pairs before Step 6 and the table above is superseded then.
 
+
+---
+
+## STEP 2 — the coverage gradient of E, and the reading chosen on FIT
+
+### Instrument
+
+`Topology/placement_m12_e_coverage.py` — 10 FIT pairs (6 irregular, 4 out-of-plane),
+22 724 positive candidate cells, 566 of them the TRUE candidate under the
+renderer's own track truth. For every cell it records the judged-slot count, the
+deployed term, the mean term, three dark variants, and the blended candidate score
+the matcher actually ranks by. Truth is a FIT-side instrument only; nothing here is
+a read.
+
+### The audit
+
+Spearman rho against `n_judged` (the judged-slot count), over the non-true
+candidates and over the true ones separately, and against the BLENDED score:
+
+| reading | rho(all) | rho(true) | rho(non-true) | rho(blended score, non-true) | FIT top-1 |
+|---|---|---|---|---|---|
+| `e_sum` (deployed) | −0.418 | **+0.457** | −0.453 | 0.134 | 0.4692 |
+| `e_mean` (mean over judged slots) | −0.872 | **−0.060** | −0.905 | 0.045 | 0.4692 |
+| `e_min2` / `e_min3` (mean, refused below 2 / 3) | −0.872 | −0.060 | −0.905 | 0.045 | 0.4692 |
+| `e_shrink` (mean shrunk to the query mean, n/(n+4)) | −0.934 | −0.421 | −0.954 | 0.047 | 0.4645 |
+| `e_rank` (mean, rank-normalised in the shortlist) | 0.001 | +0.467 | −0.016 | 0.060 | 0.3104 |
+
+What this says, in order of importance:
+
+1. **The deployed sum is biased exactly where the mission said it would be.** For
+   the TRUE candidate E rises with the number of judged slots (+0.457): a place
+   with more checkable geometry hands the correct pair more evidence for being
+   correct. The mean reading removes that (+0.060, sign flips and magnitude
+   collapses).
+2. **The rivals' negative correlation is not the same defect.** A place with more
+   judged slots gives a wrong pair more chances to be *contradicted* (−0.905). That
+   is information, and it is the direction that helps.
+3. **At the level the matcher ranks by, no reading is biased.** The blended score's
+   correlation with the judged count is 0.045-0.134, all below the mission's 0.30
+   bar, because the node similarity dominates the blend.
+4. **The bias is not free to remove by ranking.** Rank-normalising within the
+   shortlist drives the correlation to −0.016 and costs a third of FIT top-1
+   (0.4692 → 0.3104): it removes the bias by removing the information.
+
+### The decision (FIT, pre-stated rule)
+
+Rule: admissible = |rho(blended score, judged count)| < 0.30 over the non-true
+cells; among the admissible, prefer the readings that are SCALE-FREE in the judged
+count (the mean family) — E has to mean the same thing at every place or no single
+frozen weight can be right at all of them; tie-break on FIT top-1, then on |rho|.
+
+**Chosen: `e_mean`** — `plus_score(normalise=True)`, the mean over the slots a pair
+judged, with a refused minimum (`PLACEMENT_E_MIN_JUDGED`, default 0 because the
+synthetic FIT population judges either 0 or the full cap). It is admissible, it is
+the most scale-free of the mean family on the true candidates (−0.060 against
++0.457), and it costs **nothing** on FIT top-1 (0.4692, identical to the deployed
+reading).
+
+### Landed, dark
+
+* `parameters.PLACEMENT_E_NORMALISED` (False) and `PLACEMENT_E_MIN_JUDGED` (0),
+  both registered in `eth80_frontend._FRONTEND_SWITCHES` **before any graph or
+  match exists under them** (this does move the graph cache key, so the next run
+  rebuilds — the rule the tree already applies to `PLACEMENT_PAIR_NORMALISED`).
+* `matching/placement_llr.plus_score(..., min_judged)` — a pair below the minimum
+  returns exactly 0.5, i.e. 0 evidence; no evidence always contributes 0.
+* `matching/placement_matcher._pair_normalised()` now ORs the two dark flags, and
+  all three call sites pass `min_judged`; `matching/joint_mcs.placement_evidence`
+  reads the flag so E itself is on the chosen scale.
+* **Defaults byte-identical:** with both flags off, the fixed harness pair still
+  maps to `0cfa87a2` / `2865d93d` with the same scores to the last digit; with
+  `PLACEMENT_E_NORMALISED=1` the arm-C mapping and score move (0.38958246 →
+  0.38791059), which is the flag doing its work and proves it is live.

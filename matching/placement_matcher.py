@@ -114,6 +114,63 @@ class Side:
         return bool(self.payload) and bool(self.incident)
 
 
+#: [MISSION 12 / step 1b] ONE SIDE PER IMAGE, NOT ONE PER PAIR-DIRECTION.
+#: ``joint_mcs`` runs the alignment FORWARD and REVERSE, and each directional call
+#: builds both sides -- so a gallery/query pair built the same image's payload up
+#: to four times, and every build re-reads the edge payloads and the place
+#: geometry off the same pixels.  ``build_side`` is a pure function of
+#: ``(graph, image_u8, object_of, intra_only)`` plus the frozen parameter bundle,
+#: so the result can be kept.
+#:
+#: The key is the IDENTITY of the graph object (held in the entry, so the id
+#: cannot be recycled), a content hash of the pixels, and the switches that can
+#: change the answer.  Anything else is a miss: a different graph object, a
+#: different image, different switches or a different frozen bundle all rebuild.
+#: A Side is a mutable dataclass, so the CACHE hands out the same object to every
+#: caller -- callers must treat it as read-only, which every caller in the tree
+#: does (the payload, its index and the incidence are built once and read).
+_SIDE_CACHE: Dict[Tuple[Any, ...], Tuple[Any, "Side"]] = {}
+_SIDE_CACHE_MAX = 4096
+
+
+def _image_digest(image_u8: Any) -> Any:
+    """A content hash of the pixels (the graph cache's own key, when possible)."""
+    try:
+        from Topology.placement_cache import key_for
+        return key_for(image_u8)
+    except Exception:
+        try:
+            import hashlib
+            return hashlib.sha1(np.ascontiguousarray(image_u8).tobytes()).hexdigest()
+        except Exception:
+            return None
+
+
+def _switch_digest() -> Any:
+    """The frozen bundle (the only switch set that changes a payload)."""
+    try:
+        b = frozen()
+        return tuple(sorted((str(k), repr(v)) for k, v in b.items()))
+    except Exception:
+        return None
+
+
+def build_side_cached(graph: Any, image_u8: Any, *,
+                      object_of: Optional[Dict[int, int]] = None,
+                      intra_only: bool = False) -> Side:
+    """``build_side`` memoised per (graph object, pixels, switches)."""
+    key = (id(graph), _image_digest(image_u8), id(object_of), bool(intra_only),
+           _switch_digest())
+    ent = _SIDE_CACHE.get(key)
+    if ent is not None and ent[0] is graph:
+        return ent[1]
+    side = build_side(graph, image_u8, object_of=object_of, intra_only=intra_only)
+    if len(_SIDE_CACHE) >= _SIDE_CACHE_MAX:
+        _SIDE_CACHE.clear()
+    _SIDE_CACHE[key] = (graph, side)
+    return side
+
+
 def build_side(graph: Any, image_u8: Any, *,
                object_of: Optional[Dict[int, int]] = None,
                intra_only: bool = False) -> Side:
@@ -181,16 +238,29 @@ def enun_rows(matrix, nodes_b, rows):
 
 
 def _pair_normalised() -> bool:
-    """Is the placement term the mean over judged pairs (DARK, M10 step 4b)?
+    """Is the placement term the mean over judged pairs?
 
-    Off by default: reading the flag is the only cost, and every caller then uses
-    the same sum-over-the-cap arithmetic it used before the flag existed.
+    Two dark flags ask for the same shape: ``PLACEMENT_PAIR_NORMALISED`` (M10 step
+    4b) and ``PLACEMENT_E_NORMALISED`` (M12 step 2, the FIT-chosen reading of E,
+    which also carries the minimum-judged refusal).  With both off this returns
+    False and every caller uses the sum-over-the-cap arithmetic it had before
+    either flag existed.
     """
     try:
         import parameters as P
-        return bool(getattr(P, "PLACEMENT_PAIR_NORMALISED", False))
+        return bool(getattr(P, "PLACEMENT_PAIR_NORMALISED", False)
+                    or getattr(P, "PLACEMENT_E_NORMALISED", False))
     except Exception:
         return False
+
+
+def _min_judged() -> int:
+    """The minimum judged-slot count a pair needs to be read (DARK, M12 step 2)."""
+    try:
+        import parameters as P
+        return int(getattr(P, "PLACEMENT_E_MIN_JUDGED", 0) or 0)
+    except Exception:
+        return 0
 
 
 def _spacing_tol_fn(side_a: "Side", side_b: "Side"):
@@ -258,7 +328,7 @@ def context_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
         term = L.plus_score(u, int(v), m, side_a.incident, side_a.index,
                             side_b.index, fit, pfit, float(a_e), float(a_g),
                             tol=(None if tol_of is None else tol_of(u, v)),
-                            normalise=norm)
+                            normalise=norm, min_judged=_min_judged())
         return (1.0 - beta) * sim.get((int(u), int(v)), 0.0) + beta * term
 
     return Ctx.iterate_context(sorted(cands), cands, base, score, iters=it,
@@ -296,20 +366,28 @@ def rescore_matrix(matrix: Sequence[Sequence[float]],
     # fell from 0.4226 to 0.2234 and it re-parted 708 nodes per match.
     tol_of = _spacing_tol_fn(side_a, side_b)
     norm = _pair_normalised()
+    scored = 0
     for i, row_all in enun_rows(matrix, nodes_b, rows):
         u = int(nodes_a[i])
         for (j, vid, s) in row_all:
+            scored += 1
             term = L.plus_score(u, int(vid), ctx, side_a.incident, side_a.index,
                                 side_b.index, fit, pfit, a_e, a_g,
                                 tol=(None if tol_of is None else tol_of(u, vid)),
-                                normalise=norm)
+                                normalise=norm, min_judged=_min_judged())
             new = (1.0 - beta) * float(s) + beta * float(term)
             if abs(new - out[i][j]) > 1e-12:
                 changed += 1
             out[i][j] = new
     if stats is not None:
         stats["cells_changed"] = changed
-        stats["cells_scored"] = sum(1 for r in rows for _x in r)
+        # [MISSION 12 / step 1d] THE COUNTER COUNTS WHAT WAS SCORED.  It used to
+        # sum the CAPPED context rows, i.e. the candidates the context chose
+        # between, while the loop above re-scores every positive cell of every
+        # row -- two different populations, so the reported number was neither
+        # the context population nor the scored one.  It is now the number of
+        # (row, cell) pairs `plus_score` was actually called on.
+        stats["cells_scored"] = int(scored)
         stats["rows"] = len(rows)
         stats["context_agreement_with_n"] = _agree(
             ctx, {int(nodes_a[i]): int(r[0][1]) for i, r in enumerate(rows) if r})
@@ -345,7 +423,7 @@ def argmax_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
         for (_j, vid, s) in row:
             term = L.plus_score(u, int(vid), ctx, side_a.incident, side_a.index,
                                 side_b.index, fit, pfit, a_e, a_g,
-                                normalise=norm)
+                                normalise=norm, min_judged=_min_judged())
             val = (1.0 - beta) * float(s) + beta * float(term)
             if val > best_val:
                 best_val, best_vid = val, int(vid)
