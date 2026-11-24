@@ -1298,6 +1298,13 @@ PLACEMENT_FRAME_KEYPOINT: bool = os.environ.get(
 #: Only read when PLACEMENT_FRAME_KEYPOINT is on.
 PLACEMENT_FRAME_FALLBACK: str = os.environ.get("PLACEMENT_FRAME_FALLBACK", "field")
 
+#: [MISSION 13 / step 1] WHICH KEYPOINT SIGMA WINS: "smallest" (the deployed rule:
+#: the smallest sigma whose coherence clears the bar) or "largest" (the
+#: configuration M12's frame test actually measured).  They differ by ~0.24 of
+#: rotation equivariance at node level, so the choice must key the cache.
+PLACEMENT_FRAME_KEYPOINT_SIGMA: str = os.environ.get(
+    "PLACEMENT_FRAME_KEYPOINT_SIGMA", "smallest")
+
 #: [MISSION 13 / step 1c] SUB-PIXEL FRAME SAMPLING for the field providers.
 #: `frame_at` rounds a sub-pixel anchor to the nearest pixel, so an anchor at
 #: x = 10.6 is read at 11 -- and under rotation the anchor slides across that

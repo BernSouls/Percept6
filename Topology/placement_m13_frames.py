@@ -280,10 +280,12 @@ def _set_variant(v: str) -> None:
         P.PLACEMENT_FRAME_MULTISCALE = False
         P.PLACEMENT_FRAME_SUBPIXEL = False
         P.PLACEMENT_FRAME_FALLBACK = ("field" if v.endswith("+field") else "none")
+        P.PLACEMENT_FRAME_KEYPOINT_SIGMA = "largest"
         return
     P.PLACEMENT_FRAME_KEYPOINT = v.startswith("keypoint")
     P.PLACEMENT_FRAME_MULTISCALE = (v == "multiscale")
     P.PLACEMENT_FRAME_SUBPIXEL = (v == "field_subpixel")
+    P.PLACEMENT_FRAME_KEYPOINT_SIGMA = "smallest"
     P.PLACEMENT_FRAME_FALLBACK = ("none" if v == "keypoint" else
                                   "multiscale" if v.endswith("multiscale") else "field")
 

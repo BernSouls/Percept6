@@ -224,7 +224,8 @@ def _bilinear(field: np.ndarray, x: float, y: float) -> Optional[float]:
 
 def node_frames_keypoint(subgraph: Any, image_u8: np.ndarray,
                          coherence_min: float = FRAME_COHERENCE_MIN,
-                         sigmas: Sequence[float] = KEYPOINT_SIGMAS
+                         sigmas: Sequence[float] = KEYPOINT_SIGMAS,
+                         sigma_rule: Optional[str] = None
                          ) -> Tuple[Dict[int, float], Dict[int, int]]:
     """node -> axial frame from the KEYPOINT estimator, and the sigma it came from.
 
@@ -232,12 +233,21 @@ def node_frames_keypoint(subgraph: Any, image_u8: np.ndarray,
     clears the bar wins.  No frame is invented: a node incoherent at every sigma
     gets none, exactly as every other provider behaves.
     """
+    # [MISSION 13 / step 1] WHICH SIGMA WINS.  The deployed rule is the SMALLEST
+    # sigma whose coherence clears the bar.  M12's frame test measured the LARGEST
+    # sigma -- `max(KEYPOINT_SIGMAS)` -- and reported it as "the keypoint provider";
+    # the two configurations differ by ~0.24 in equivariance (M13, node level), so
+    # the rule is now explicit and configurable, and the harness can name either.
+    if sigma_rule is None:
+        sigma_rule = str(_param("PLACEMENT_FRAME_KEYPOINT_SIGMA", "smallest"))
+    order = sorted((float(s) for s in sigmas),
+                   reverse=(str(sigma_rule).lower() == "largest"))
     img = np.asarray(image_u8, dtype=np.float64)
     if img.ndim == 3:
         img = img.mean(axis=2)
     gy, gx = np.gradient(img)
     fields = [(float(sig),) + _tensor_at_sigma(gx, gy, float(sig))
-              for sig in sigmas]
+              for sig in order]
     theta: Dict[int, float] = {}
     sig_of: Dict[int, int] = {}
     for n in sorted(subgraph.nodes):
@@ -261,6 +271,7 @@ def node_frames_keypoint(subgraph: Any, image_u8: np.ndarray,
 def node_frames_keypoint_then_field(subgraph: Any, image_u8: np.ndarray,
                                     coherence_min: float = FRAME_COHERENCE_MIN,
                                     fallback: Optional[str] = None,
+                                    sigma_rule: Optional[str] = None,
                                     ) -> Tuple[Dict[int, float], Dict[int, int]]:
     """Keypoint frame where it exists, a FIELD fallback where it does not.
 
@@ -279,7 +290,8 @@ def node_frames_keypoint_then_field(subgraph: Any, image_u8: np.ndarray,
     """
     if fallback is None:
         fallback = str(_param("PLACEMENT_FRAME_FALLBACK", "field"))
-    theta, src = node_frames_keypoint(subgraph, image_u8, coherence_min)
+    theta, src = node_frames_keypoint(subgraph, image_u8, coherence_min,
+                                      sigma_rule=sigma_rule)
     theta = dict(theta)
     src = dict(src)
     miss = [n for n in sorted(subgraph.nodes) if int(n) not in theta]
@@ -508,7 +520,9 @@ def build_edges(subgraph: Any, image_u8: np.ndarray,
     # keypoint estimator gave, so a node that had a frame keeps the same value when
     # the multiscale flag is also on.
     if bool(_param("PLACEMENT_FRAME_KEYPOINT", False)):
-        frames, _wins = node_frames_keypoint_then_field(subgraph, image_u8)
+        frames, _wins = node_frames_keypoint_then_field(
+            subgraph, image_u8,
+            sigma_rule=_param("PLACEMENT_FRAME_KEYPOINT_SIGMA", "smallest"))
     elif bool(_param("PLACEMENT_FRAME_MULTISCALE", False)):
         frames, _wins = node_frames_multiscale(subgraph, field_multiscale(image_u8))
     else:
