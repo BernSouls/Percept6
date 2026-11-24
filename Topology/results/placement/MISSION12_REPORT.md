@@ -258,3 +258,123 @@ reading).
   maps to `0cfa87a2` / `2865d93d` with the same scores to the last digit; with
   `PLACEMENT_E_NORMALISED=1` the arm-C mapping and score move (0.38958246 →
   0.38791059), which is the flag doing its work and proves it is live.
+
+---
+
+## STEP 3 — real-image frames (partial: the corpus is not in this sandbox)
+
+### What was built
+
+`matching/placement_edges.node_frames_keypoint` — the frame read by the KEYPOINT
+layer's own estimator: the structure tensor of the Gaussian-smoothed gradient at
+the keypoint layer's sigma ladder (1.0, 1.6, 2.5, 4.0) and sampled BILINEARLY at
+the node's sub-pixel anchor, with the multiscale field as the fallback
+(`node_frames_keypoint_then_field`). It can only ADD frames — a node the keypoint
+estimator gives a frame keeps that frame. Dark behind `PLACEMENT_FRAME_KEYPOINT`,
+registered in `_FRONTEND_SWITCHES` before any graph exists under it.
+
+The frame-free relations the mission also asks for (angle at u between two
+neighbours, distance ratio) are NOT in this commit; the frame coverage below is the
+link they would work around, and the measured numbers say how much there is to work
+around.
+
+### Measured (6 synthetic pairs, same graphs and same images for every provider)
+
+| provider | frame share of nodes | median paired residual at a known 5° rotation | share of nodes within 5° |
+|---|---|---|---|
+| field (7×7, shipped) | 0.373 | 6.22° | 0.267 |
+| multiscale | 0.500 | 6.75° | 0.279 |
+| **keypoint (M12)** | **0.540** | 8.17° | 0.303 |
+
+Two things, and only one of them is good news:
+
+1. **Coverage rises**: 0.373 → 0.540 of nodes carry a frame (+16.7 points over the
+   shipped provider, +4.0 over the multiscale one). This is the link that caps the
+   judged-pair share, and it is the one the mission asked to raise.
+2. **Stability at 5° does not**: against a ground-truth rotation of 5°, the median
+   per-node residual is 6.2-8.2° — that is, the frame error is as large as the
+   rotation being validated, and only 27-30 % of nodes land within 5°. The
+   keypoint provider is the WORST of the three on this measure (8.17°). So the
+   extra frames it finds are frames, but not yet frames that survive a small
+   rotation. Naming that plainly is the honest result of running the validation.
+
+### The floor, stated
+
+The real-photograph half cannot run here: `data/ETH-80-master` is still
+downloading, `catalog()` raises `FileNotFoundError`, and the harness records
+`real: {"skipped": "FileNotFoundError: ..."}` rather than pretending. **The real
+judged-pair share is therefore not raised, not measured, and not claimed in this
+session.** What is stated instead is the floor: on synthetic scenes the judged
+share is measured by the same instrument (Step 2: 26 % of candidate cells, 8 judged
+slots when a place has any), and the frame share is 0.54 with the keypoint
+provider, so a real-image target of ≥60 % judged pairs remains unverified.
+
+---
+
+## STEP 4 — the w / temperature refit (RUNNING; resumable checkpoint)
+
+`Topology/placement_m12_fit_w.py` fits `(T, w)` in
+
+    S' = S_shipped/T + w*E
+
+by maximum likelihood over FIT shortlists, with E on the STEP-2 scale
+(`PLACEMENT_E_NORMALISED`).
+
+* **The set**: 8 FIT scenes (the FIT halves of the M9 irregular and out-of-plane
+  families) × 18 stratified views = 252 queries, a quarter (63) held out before the
+  fit. Each shortlist is the true reference + two same-family twins + one
+  other-family rival — hard BY CONSTRUCTION, and no query was selected by looking at
+  an error the shipped score made.
+* **Arms**: A (placement off) is run only on the held-out quarter, where the shipped
+  top-1 is reported; B and E on every pair.
+* **Status: RUNNING.** The first attempt was killed by the OOM killer at 1 GB RSS
+  per worker in a 3.9 GB sandbox (a real constraint of this environment, recorded
+  here because it explains the pacing); it is resumable from
+  `m12_fit_w_progress.jsonl`. **No fitted number is reported until the checkpoint is
+  complete and the held-out quarter has been scored.**
+
+---
+
+## STEP 5 — the shortlist (running)
+
+`Topology/placement_m12_synth_shortlist.py` — recall at K = 8/16/32/48 for the
+node-similarity shortlist score, for the structural prefilter alone (place count,
+edge-type histogram, degree distribution as normalised histograms) and for the
+blends, over 51 FIT queries against the whole 28-scene M9 gallery (chance 1/28).
+Status: RUNNING (the run is serialised behind the OOM-safe pipeline). The number to
+beat is recall ≥ 0.95 at the smallest K; if no K reaches it, the ceiling is reported
+and retrieval is reported conditional on the shortlist.
+
+---
+
+## STEP 6a — the fresh synthetic read: REGISTERED, not yet run
+
+`Topology/results/placement/m12_prereg_synth.json`, written with **0 graphs in the
+cache** for these scenes:
+
+* fresh seeds 38200+ (8 irregular) and 40200+ (4 out-of-plane), names `m12ir_*`,
+  `m12oop_*` — nothing in the tree has ever drawn from them;
+* **192 queries** = 12 scenes × 16 stratified views (5-35° in plane, y 10-30°,
+  x 10-15°, scale 0.9/1.1, two shifts);
+* shortlist K = 8 of 12 by the node-similarity score, recall reported with the read;
+* arms A / B / C, primary **C − A** on top-1, paired per query, clustered by scene,
+  4000-draw bootstrap;
+* prediction **B ≤ A**, with the reason written down before the read: B moves the
+  mapping and nothing else, so it pays for a moved correspondence without being paid
+  for the evidence that moved it;
+* **MDE = 2.8·0.48/√192 = 0.097 ≤ the 0.10 planning effect ⇒ POWERED**. (The first
+  registration of this read used 6 views — 72 queries, MDE 0.158 — and its own
+  arithmetic declared it UNDERPOWERED IN ADVANCE; it was replaced before any graph
+  existed. Both registrations report 0 graphs at registration.)
+* verdict per the Step-0 rule; one read.
+
+`Topology/placement_m12_read_synth.py` executes it and refuses to run without the
+registration. **The read has not been run**: the two long jobs ahead of it own the
+sandbox, and it must not be started until they finish. It is registered, powered,
+and queued — not reported.
+
+## STEP 6b — ETH-80: BLOCKED, and says so
+
+`catalog()` cannot complete without the corpus. There is no ETH-80 query set, no
+fresh views, no 200-query read, and none is fabricated. The M11 partial (25
+complete queries) remains what it was: not a result, not used for any choice.

@@ -1,6 +1,6 @@
 {
- "judged_mean": 0.0,
- "judged_share": 0.0,
+ "judged_mean": 63.0,
+ "judged_share": 0.10365028511873879,
  "mapped_mean": 606.0,
  "note": "the frame providers are compared with the SAME graphs and the same images; the rotation validation rotates the image 5 degrees about its own centre and compares each node's frame with itself. Nothing is fitted.",
  "real": {
