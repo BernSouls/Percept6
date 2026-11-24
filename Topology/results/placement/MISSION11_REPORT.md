@@ -220,13 +220,14 @@ by construction (chance 1/8), all-class K = 16 recall **0.665** over the 64 refe
 **The read is running and is not finished.** Cost, measured on this machine: 17.1 s
 for arm A and 20.0 s for arm C per pair, 1600 pairs for the same-class gallery — about
 8.2 h on two cores, and roughly as much again for the all-class gallery. At the time
-of writing 96 of 1600 pairs are checkpointed, which is 12 complete queries over 3
-instances: A 0.417, B 0.167, C 0.167, C − A = −0.250 with an MDE of **0.404**. **That
-is not the read.** Twelve queries over three instances cannot resolve anything, the
-direction is the opposite of the synthetic one, and calling it either way would be
-exactly the sort of rounding this mission's rules exist to prevent. It is recorded so
-the resume point is exact, and the job is checkpointed per pair and restarts where it
-stopped.
+of writing 200 of 1600 pairs are checkpointed, which is 25 complete queries over 7
+instances: **A 0.360, B 0.280, C 0.360**, C − A = **0.000** (MDE 0.342), C − B = +0.071
+(MDE 0.129). **That is not the read.** Twenty-five queries cannot resolve a 0.34 MDE,
+and the only thing the partial says is that on real images the *mapping* alone (B) does
+not help recognition, while the evidence term (C) gives back what B lost — the opposite
+of the synthetic picture at the same N, which is exactly why the read has to finish
+before anything is claimed. It is recorded so the resume point is exact, and the job is
+checkpointed per pair and restarts where it stopped.
 
 What the real-image side *does* have, measured and complete in this mission:
 
