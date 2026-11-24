@@ -378,3 +378,30 @@ and queued — not reported.
 `catalog()` cannot complete without the corpus. There is no ETH-80 query set, no
 fresh views, no 200-query read, and none is fabricated. The M11 partial (25
 complete queries) remains what it was: not a result, not used for any choice.
+
+---
+
+## Defaults, re-verified after every flag
+
+With `PLACEMENT_E_NORMALISED=0`, `PLACEMENT_E_MIN_JUDGED=0` and
+`PLACEMENT_FRAME_KEYPOINT=0` (all three are their defaults), the fixed harness pair
+still maps to `0cfa87a2` (arm A) / `2865d93d` (arm C) with scores
+`0.4182298669434846` / `0.3895824615188941` — byte-identical to the baseline
+committed with Step 1, after the side cache, the centred-form cache, the counter
+fix, the flag registrations and the keypoint frame source. The graph cache is
+rebuilt because the two new switch names enter `_FRONTEND_SWITCHES`; that is the
+tree's own rule for a flag that can change what a payload reads.
+
+## What is finished, what is running, what is blocked
+
+| Step | State |
+|---|---|
+| 0 | **done** — the rule, the three old verdicts side by side, the stale M11 job stated |
+| 1 | **done, gate not met** — 1.3× with bit-identical output over 14 pairs (the 30-pair set needs the corpus); profile and the reason in the Step-1 section |
+| 1a(b,c,d) | **done** — Side cache, centred-form cache, counter fix; all value-preserving, verified |
+| 2 | **done** — audit + FIT-chosen reading, dark, cache-keyed, defaults identical |
+| 3 | **partial by necessity** — keypoint frames landed dark (+16.7 points of frame coverage) but WORSE at the known 5° rotation, and the real-photo half cannot run without the corpus. Frame-free relations not landed |
+| 4 | **running** — checkpointed, resumable; no number claimed |
+| 5 | **running** — recall-vs-K table not yet written |
+| 6a | **registered and powered (MDE 0.097), not run** |
+| 6b | **blocked on the corpus** — no ETH-80 read exists and none is invented |
