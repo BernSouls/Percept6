@@ -130,9 +130,34 @@ all lack frames has nothing to point at), and the judged-slot definition after t
 The flag is dark and **uncredited** — it changes the payload geometry, so believing it
 needs a fresh read, which this mission did not spend.
 
-### The pear inversion
+### The pear inversion, traced
 
-(to be filled by `m11_pear.json`)
+Mission 10's pear inversion (.50 → .00 on eight queries) was measured with the
+**bespoke** score — the mean over mapped pairs of `0.5·sim + 0.5·term`, whose term is
+centred at 0.5 and therefore carries a ≥ 0.25 floor per pair. That score ranks
+coverage. This mission's arm C is a different quantity, so the inversion had to be
+re-measured rather than inherited: four pear queries and four apple queries, 8-way
+same-class gallery, arms A and B and C on the same pairs (`m11_pear.json`).
+
+| class | A | B | C | judged / mapped | share judged | E(truth) | E(wrong) |
+|---|---|---|---|---|---|---|---|
+| pear | 0.750 | 0.750 | 0.750 | 221 / 878 | **0.254** | −0.0556 | −0.0583 |
+| apple | 0.250 | 0.250 | 0.250 | 328 / 813 | **0.410** | −0.0613 | −0.0596 |
+
+Two findings, both of them about the code rather than about pears being hard:
+
+1. **The inversion does not reproduce under the deployed score.** With arms A and C
+   built on `JointMCS.score`, pear is the *better* class here (.750 vs apple .250).
+   The old inversion was a property of the coverage-floored bespoke score, which is
+   exactly why this mission stopped using it.
+2. **Pear is the *under-covered* class**: 25.4 % of its mapped pairs are judged
+   against 41.0 % for apple, because pear surfaces are smooth, fewer anchors clear the
+   frame coherence bar, and fewer payload edges exist to judge. That is the same link
+   Step 5 measures, and the multiscale frame provider is the fix aimed at it — dark,
+   and worth +2.3 points of judged share in aggregate.
+
+The honest limit: four queries per class. This says what the mechanism is; it does not
+say pear is fixed.
 
 ---
 
@@ -176,3 +201,78 @@ Compute: 256 pairs × two arms, 12.6 s + 14.5 s per pair, ~1.5 h on two cores.
 Coverage note, and it matters for what follows: on these synthetic pairs the estimator
 could judge only **130 of 869 mapped pairs (15.0 %)** — the same limitation Step 5
 measures on real images.
+
+---
+
+## 4. Step 4 — ETH-80, fresh queries: registered, shortlisted, **not finished**
+
+Registered in `m11_prereg_eth.json` with **0 graphs built**: 200 queries over 64
+instances at views Mission 10 never queried (`-022-270`, `-035-045`, `-045-180`,
+`-090-045`; overlap with Mission 10's query set: **0**), the frozen w = 0.375, two
+galleries (same-class K = 8 and all-class K = 16), arms A/B/C, primary contrast C − A
+clustered by instance.
+
+**The shortlist is measured** (56 min, 12 800 pairs): same-class K = 8 recall **1.000**
+by construction (chance 1/8), all-class K = 16 recall **0.665** over the 64 references
+(chance 1/16 given the truth is shortlisted). The all-class gallery is therefore a
+*harder* task than it looks and its recall goes in the table, not in a footnote.
+
+**The read is running and is not finished.** Cost, measured on this machine: 17.1 s
+for arm A and 20.0 s for arm C per pair, 1600 pairs for the same-class gallery — about
+8.2 h on two cores, and roughly as much again for the all-class gallery. At the time
+of writing 96 of 1600 pairs are checkpointed, which is 12 complete queries over 3
+instances: A 0.417, B 0.167, C 0.167, C − A = −0.250 with an MDE of **0.404**. **That
+is not the read.** Twelve queries over three instances cannot resolve anything, the
+direction is the opposite of the synthetic one, and calling it either way would be
+exactly the sort of rounding this mission's rules exist to prevent. It is recorded so
+the resume point is exact, and the job is checkpointed per pair and restarts where it
+stopped.
+
+What the real-image side *does* have, measured and complete in this mission:
+
+* the **coverage chain** (§2): 42.6 % of mapped pairs judged, 31.7 % of nodes carrying
+  a payload edge, 40.6 % of anchors carrying a frame, and the frame provider named as
+  the limiting link;
+* the **fix** for that link, dark and measured (+2.3 points of judged pairs);
+* the **pear mechanism** (§2), traced to coverage rather than to a wrong sign;
+* a **fresh shortlist** whose recall is now known for both galleries.
+
+## 5. The plain verdict
+
+**Synthetic scenes: placement helps, and the honest size of the help is "just under
+what this read could resolve".** On 32 fresh queries over a fresh 24-scene gallery,
+the shipped matcher A scores 0.594 top-1, mapping-only B 0.688, and the full
+placement-aware score C 0.750. The pre-registered primary contrast C − A is +0.156
+with a CI of [+0.062, +0.281] and an MDE of 0.168: the CI excludes zero, the ordering
+and the direction are the predicted ones, and the point estimate is 7 % **below** the
+pre-registered MDE, so this mission does not call it a gain. The paired score margin —
+a better-powered quantity than a 32-query top-1 count — rises +0.0159 ± 0.0019 from A
+to C, eight standard errors from zero, so the effect is real in the score even where
+the top-1 count is underpowered.
+
+**Real images: unresolved.** The pre-registered read exists, is registered, has its
+shortlist measured, and needs ~8 h of matcher per gallery; it is running and it is not
+finished. The mission's DONE item 3 is therefore **not met**, and no real-image claim
+is made — neither a gain nor a null. What is established on real images is narrower and
+prior: the estimator can judge only 42.6 % of the pairs the aligner maps, that limit is
+the frame provider and not the tolerance, and the multiscale provider recovers a third
+of the gap (+9.8 points of frames, +2.3 points of judged pairs) without being credited
+yet.
+
+**Where it does not help:** pear is under-covered (25.4 % of mapped pairs judged
+against 41.0 % for apple) and its Mission-10 inversion was a property of the bespoke
+coverage-floored score, not of this one; the in-plane synthetic step is where the
+top-1 count is weakest (.8125 vs .75 is one query); and the all-class ETH-80 gallery
+shortlists the truth only 66.5 % of the time, so any read there is bounded by recall
+before it starts.
+
+## 6. What is running, and what it costs
+
+| job | state | cost |
+|---|---|---|
+| ETH-80 same-class read (200 queries × 8 × 2 arms) | **running**, 96/1600 pairs checkpointed | ~8.2 h total |
+| ETH-80 all-class read (K = 16) | not started | ~7 h more |
+| `m11_eth80_agg.py` | rerun any time; counts complete queries only | seconds |
+
+Every row is a `(query, reference)` checkpoint, so both stages resume rather than
+recompute.

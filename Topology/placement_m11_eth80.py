@@ -40,6 +40,7 @@ import time
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
+from PIL import Image
 
 ROOT = "/home/user/Percept6"
 sys.path[:0] = [ROOT, os.path.join(ROOT, "Topology")]
@@ -87,7 +88,22 @@ def catalog() -> Tuple[List[dict], List[dict]]:
                     queries.append(e)
     refs.sort(key=lambda e: (e["cls"], e["key"]))
     queries.sort(key=lambda e: (e["cls"], e["key"], e["view"]))
+    # [M11] The public mirror this sandbox fetched carries ONE truncated file
+    # (tomato4-068-000.png; 3279 of 3280 images load).  Validating here and dropping
+    # the unreadable ones is deterministic and keeps a partial read from dying
+    # half-way through 12,800 pairs.
+    refs = [e for e in refs if _readable(e["path"])]
+    queries = [e for e in queries if _readable(e["path"])]
     return refs, queries[:N_QUERIES]
+
+
+def _readable(path: str) -> bool:
+    try:
+        with Image.open(path) as im:
+            im.load()
+        return True
+    except Exception:
+        return False
 
 
 def _qkey(e: dict) -> str:
@@ -112,8 +128,14 @@ def _sim_job(args: Tuple[str, str]) -> Tuple[str, str, float]:
     guard.activate()
     from Topology.placement_cache import get_or_build
     from Topology.placement_census import similarity_rows
-    q = get_or_build(_load_u8(qpath), "eth|" + qpath)
-    r = get_or_build(_load_u8(rpath), "eth|" + rpath)
+    try:
+        q = get_or_build(_load_u8(qpath), "eth|" + qpath)
+        r = get_or_build(_load_u8(rpath), "eth|" + rpath)
+    except Exception:
+        # One image in the public mirror is truncated.  A pair that cannot be read
+        # scores -1 and is reported, so a partial mirror cannot silently kill a
+        # 12,800-pair shortlist half-way through.
+        return qpath, rpath, -1.0
     qn = _sub(sorted(int(n) for n in q.subgraph.nodes), SUBSAMPLE_Q)
     rn = _sub(sorted(int(n) for n in r.subgraph.nodes), SUBSAMPLE_R)
     rows = similarity_rows(q, r, qn, rn)
@@ -243,14 +265,15 @@ def main() -> int:
     import guard
     guard.activate()
     t_all = time.time()
+    if args.stage == "build":
+        stage_build(args.workers)
+        return 0
     if args.stage in ("shortlist", "all"):
         short = stage_shortlist(args.workers)
     else:
         with open(SHORTLIST) as fh:
             short = json.load(fh)
-    if args.stage in ("build", "all"):
-        stage_build(args.workers)
-    if args.stage == "shortlist" or args.stage == "build":
+    if args.stage == "shortlist":
         return 0
 
     refs, queries = catalog()
