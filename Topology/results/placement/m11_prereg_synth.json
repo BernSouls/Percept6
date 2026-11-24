@@ -1,0 +1,157 @@
+{
+ "arms": {
+  "A": "joint_mcs, PLACEMENT_MATCHER_ENABLED=0, JointMCS.score",
+  "B": "joint_mcs, placement matcher on, JointMCS.score_shipped",
+  "C": "joint_mcs, placement matcher on, score_shipped + w * E"
+ },
+ "graphs_built_at_registration": 0,
+ "interval": "paired bootstrap over QUERY SCENES (32 queries from 16 scenes, so the unit is the scene), 4000 draws, 2.5/97.5 percentile",
+ "mde": {
+  "formula": "MDE = 2.8 * SE of the paired per-scene difference",
+  "planned": "with 16 scene clusters and a planning discordance of 0.25 on top-1, SE ~ sqrt(0.25/16) = 0.125, so MDE ~ 0.35; the read reports the OBSERVED SE and its own MDE as well, and no effect below the observed MDE will be called a gain"
+ },
+ "mission": "11 step 3 -- synthetic retrieval, one read",
+ "no_check_data": "no CHECK scene, no confirmation scene, no real image",
+ "one_read": true,
+ "primary_contrast": "C - A, paired per query, scene-clustered over query scenes",
+ "scenes": {
+  "gallery": [
+   "m11ir_00",
+   "m11ir_01",
+   "m11ir_02",
+   "m11ir_03",
+   "m11ir_04",
+   "m11ir_05",
+   "m11ir_06",
+   "m11ir_07",
+   "m11ir_08",
+   "m11ir_09",
+   "m11ir_10",
+   "m11ir_11",
+   "m11ir_12",
+   "m11ir_13",
+   "m11ir_14",
+   "m11ir_15",
+   "m11oop_sphere_00",
+   "m11oop_box_00",
+   "m11oop_cylinder_00",
+   "m11oop_irregular_00",
+   "m11oop_sphere_01",
+   "m11oop_box_01",
+   "m11oop_cylinder_01",
+   "m11oop_irregular_01"
+  ],
+  "gallery_seeds": {
+   "m11ir_00": "fresh seed 52000",
+   "m11ir_01": "fresh seed 52001",
+   "m11ir_02": "fresh seed 52002",
+   "m11ir_03": "fresh seed 52003",
+   "m11ir_04": "fresh seed 52004",
+   "m11ir_05": "fresh seed 52005",
+   "m11ir_06": "fresh seed 52006",
+   "m11ir_07": "fresh seed 52007",
+   "m11ir_08": "fresh seed 52008",
+   "m11ir_09": "fresh seed 52009",
+   "m11ir_10": "fresh seed 52010",
+   "m11ir_11": "fresh seed 52011",
+   "m11ir_12": "fresh seed 52012",
+   "m11ir_13": "fresh seed 52013",
+   "m11ir_14": "fresh seed 52014",
+   "m11ir_15": "fresh seed 52015",
+   "m11oop_box_00": "fresh seed 56173 shape BOX",
+   "m11oop_box_01": "fresh seed 56174 shape BOX",
+   "m11oop_cylinder_00": "fresh seed 56346 shape CYLINDER",
+   "m11oop_cylinder_01": "fresh seed 56347 shape CYLINDER",
+   "m11oop_irregular_00": "fresh seed 56519 shape IRREGULAR",
+   "m11oop_irregular_01": "fresh seed 56520 shape IRREGULAR",
+   "m11oop_sphere_00": "fresh seed 56000 shape SPHERE",
+   "m11oop_sphere_01": "fresh seed 56001 shape SPHERE"
+  },
+  "gallery_size": 24,
+  "pose_steps": [
+   [
+    "q_inplane15",
+    {
+     "rot_deg": 15.0
+    }
+   ],
+   [
+    "q_y25",
+    {
+     "rot_y_deg": 25.0
+    }
+   ]
+  ],
+  "queries": [
+   "m11ir_00|q_inplane15",
+   "m11ir_00|q_y25",
+   "m11ir_01|q_inplane15",
+   "m11ir_01|q_y25",
+   "m11ir_02|q_inplane15",
+   "m11ir_02|q_y25",
+   "m11ir_03|q_inplane15",
+   "m11ir_03|q_y25",
+   "m11ir_04|q_inplane15",
+   "m11ir_04|q_y25",
+   "m11ir_05|q_inplane15",
+   "m11ir_05|q_y25",
+   "m11ir_06|q_inplane15",
+   "m11ir_06|q_y25",
+   "m11ir_07|q_inplane15",
+   "m11ir_07|q_y25",
+   "m11ir_08|q_inplane15",
+   "m11ir_08|q_y25",
+   "m11ir_09|q_inplane15",
+   "m11ir_09|q_y25",
+   "m11ir_10|q_inplane15",
+   "m11ir_10|q_y25",
+   "m11ir_11|q_inplane15",
+   "m11ir_11|q_y25",
+   "m11ir_12|q_inplane15",
+   "m11ir_12|q_y25",
+   "m11ir_13|q_inplane15",
+   "m11ir_13|q_y25",
+   "m11ir_14|q_inplane15",
+   "m11ir_14|q_y25",
+   "m11ir_15|q_inplane15",
+   "m11ir_15|q_y25"
+  ],
+  "query_scenes": [
+   "m11ir_00",
+   "m11ir_01",
+   "m11ir_02",
+   "m11ir_03",
+   "m11ir_04",
+   "m11ir_05",
+   "m11ir_06",
+   "m11ir_07",
+   "m11ir_08",
+   "m11ir_09",
+   "m11ir_10",
+   "m11ir_11",
+   "m11ir_12",
+   "m11ir_13",
+   "m11ir_14",
+   "m11ir_15"
+  ],
+  "why_these_poses": "15 deg in plane and 25 deg out of plane, so the SHIPPED arm is not at ceiling and a null can say something; 25 deg is inside the range Mission 10 confirmed at 20 deg"
+ },
+ "secondary": [
+  "B - A",
+  "C - B",
+  "MRR for each arm",
+  "mean per-query score margin between truth and best wrong candidate, normalised by the arm's own score scale"
+ ],
+ "shortlist": {
+  "K": 8,
+  "fallback_rule": "if recall@8 over the 32 queries is below 0.95 the shortlist is K=16; decided by that rule alone, before any arm is scored",
+  "one_shortlist_for_all_arms": true,
+  "score": "sum over query nodes of the best raw node similarity (the shipped front end's own quantity, no aligner)"
+ },
+ "weight": {
+  "frozen_before_this_read": true,
+  "shrink": 8.0,
+  "source": "matching/placement_score_params.json, fitted on FIT by ML",
+  "w": 0.375
+ }
+}
