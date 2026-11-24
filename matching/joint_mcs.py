@@ -98,6 +98,55 @@ def edge_pair_credit(a, b, x, y, u, v, et, edge_weight_fn=None):
     return _pair_edge_sim_typed(x, y, et, p, u, v, et, q, False)
 
 
+#: [MISSION 11] counters for the placement-aware pair score.  They are per process
+#: (a read aggregates them) and they exist so a dark run can prove it was not
+#: vacuous: a score that is "placement aware" but judged nothing must be visible.
+PLACEMENT_SCORE_STATS = {"pairs_scored": 0, "pairs_no_sides": 0,
+                         "mapped_nodes": 0, "judged_nodes": 0,
+                         "nonzero_evidence": 0, "strict_failures": 0}
+
+
+def _reset_placement_score_stats():
+    for k in PLACEMENT_SCORE_STATS:
+        PLACEMENT_SCORE_STATS[k] = 0
+
+
+def placement_evidence(mapping, side_a, side_b, fit, pfit, a_e, a_g):
+    """(E, n_judged, share_judged) -- the coverage-neutral placement evidence.
+
+    Written down before the fit (see parameters/_text.py::PLACEMENT_SCORE_EVIDENCE):
+
+        E = sum over JUDGED mapped pairs of (plus_score(pair) - 0.5) / (n_judged + k)
+
+    A judged pair is one with at least one slot the frozen estimator can check.
+    Each pair is centred at the estimator's own 0.5, so "no evidence" is 0 and a
+    negative E is evidence against.  The denominator is the number judged plus the
+    shrinkage k, so E is a mean quality and not a count of correspondences.
+
+    Truth-free: it reads the mapping the matcher produced and the two payload
+    sides; no ground truth, no absolute position.
+    """
+    from matching import placement_llr as L
+
+    judged = 0
+    total = 0.0
+    mapped = 0
+    for u, v in sorted(mapping.items()):
+        mapped += 1
+        slots = L.slots_for_candidate(u, v, mapping, side_a.incident,
+                                      side_a.index, side_b.index)
+        if not slots:
+            continue
+        judged += 1
+        term = L.plus_score(u, v, mapping, side_a.incident, side_a.index,
+                            side_b.index, fit, pfit, a_e, a_g)
+        total += float(term) - 0.5
+    k = float(getattr(P, "PLACEMENT_SCORE_SHRINK", 8.0))
+    evidence = total / (judged + k) if judged else 0.0
+    share = (judged / mapped) if mapped else 0.0
+    return evidence, judged, share
+
+
 @dataclass(frozen=True)
 class JointMCS:
     score: float
@@ -120,6 +169,15 @@ class JointMCS:
     node_term: float = 0.0
     edge_term: float = 0.0
     denominator: float = 0.0
+    #: [MISSION 11] the placement-aware pair score.  `score_shipped` is the number
+    #: the mission's baseline arms report (and, with the flag off, equals `score`
+    #: exactly); `score` is `score_shipped + w * placement_evidence` once the dark
+    #: flag is on.  The three diagnostics are exposed so a read can say how much of
+    #: the score was placement and how many pairs it could actually judge.
+    score_shipped: float = 0.0
+    placement_evidence: float = 0.0
+    placement_judged: int = 0
+    placement_share_judged: float = 0.0
     @property
     def mean_graded_edge_similarity(self):
         return self.graded_edge_similarity_sum / self.graded_edges if self.graded_edges else None
@@ -507,7 +565,44 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None,
         # measured with the weight they declare.
         w=float(P.MATCH_EDGE_WEIGHT)
         score=2.0*(nodes+w*edge_credit_total)/denom if denom else 0.0
-    return JointMCS(score,dict(al.mapping),len(credits),len(graded),math.fsum(graded),presence,al.budget_exhausted,presence_credit,nodes,edge_credit_total,node_term,edge_term,float(denom))
+    # [MISSION 11 / step 1] THE PAIR SCORE ITSELF.  Placement has so far only
+    # moved the MAPPING; the number a retrieval arm ranks by is this one, and it
+    # knows nothing about the evidence that produced the correspondence.  With
+    # the dark flag on, one term is ADDED to the shipped score:
+    #     score' = score + w * E
+    # with E the coverage-neutral, shrinkage-damped mean centred placement credit
+    # (see placement_evidence above and parameters/_text.py for the definition
+    # written down before the fit).  Flag off: `score` is byte-for-byte the
+    # shipped number and nothing below runs.
+    score_shipped = float(score)
+    ev = 0.0
+    judged = 0
+    share = 0.0
+    if bool(getattr(P, "PLACEMENT_SCORE_EVIDENCE", False)):
+        if _side_a is not None and _side_b is not None:
+            from matching import placement_matcher as _PM
+            _fit, _pfit = _PM.fit_objects()
+            _b = _PM.frozen()
+            ev, judged, share = placement_evidence(
+                dict(al.mapping), _side_a, _side_b, _fit, _pfit,
+                float(_b["_a_exist"]), float(_b["_a_geom"]))
+            w_score = float(getattr(P, "PLACEMENT_SCORE_WEIGHT", 0.0))
+            score = score_shipped + w_score * ev
+            PLACEMENT_SCORE_STATS["pairs_scored"] += 1
+            PLACEMENT_SCORE_STATS["mapped_nodes"] += len(al.mapping)
+            PLACEMENT_SCORE_STATS["judged_nodes"] += judged
+            if abs(ev) > 0.0:
+                PLACEMENT_SCORE_STATS["nonzero_evidence"] += 1
+        else:
+            # Flag on with no sides: in TEST MODE that is a wiring error and it
+            # raises; in production it is counted and the shipped score stands.
+            PLACEMENT_SCORE_STATS["pairs_no_sides"] += 1
+            if bool(getattr(P, "PLACEMENT_MATCHER_STRICT", False)):
+                PLACEMENT_SCORE_STATS["strict_failures"] += 1
+                raise RuntimeError(
+                    "PLACEMENT_SCORE_EVIDENCE needs placement_images for both "
+                    "sides; got none (strict mode)")
+    return JointMCS(float(score),dict(al.mapping),len(credits),len(graded),math.fsum(graded),presence,al.budget_exhausted,presence_credit,nodes,edge_credit_total,node_term,edge_term,float(denom),score_shipped,float(ev),int(judged),float(share))
 
 
 def joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None, address_k=None, placement_images=None):
@@ -537,4 +632,6 @@ def joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None, address_k=None, 
                     forward.budget_exhausted or reverse.budget_exhausted,
                     reverse.presence_only_credit, reverse.node_credit,
                     reverse.edge_credit, reverse.node_term, reverse.edge_term,
-                    reverse.denominator)
+                    reverse.denominator, reverse.score_shipped,
+                    reverse.placement_evidence, reverse.placement_judged,
+                    reverse.placement_share_judged)

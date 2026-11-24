@@ -1,0 +1,18 @@
+{
+ "centred_at": 0.5,
+ "fitted_on": "mission-8/9 FIT scenes only (6 irregular at in-plane 12 deg, 8 out-of-plane at y 20 deg), 14 candidates each",
+ "loglik": -36.04920624042517,
+ "loglik_at_ml": -34.691448902793134,
+ "loglik_at_w0": -36.245762702388625,
+ "ml_at_boundary": true,
+ "objective": "ML log softmax over FIT shortlists; boundary-degenerate, tie-break = FIT top-1 (see Topology/placement_m11_fit_w.py)",
+ "pairs": 196,
+ "queries": 14,
+ "shrink": 8.0,
+ "top1_chosen": 0.9285714285714286,
+ "top1_w0": 0.7857142857142857,
+ "w": 0.375,
+ "w_max": 3.0,
+ "w_ml": 3.0,
+ "w_top1": 0.375
+}

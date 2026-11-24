@@ -140,7 +140,13 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       "PLACEMENT_SPACING_RADIUS",
                       # [MISSION 10 / step 4b] changes the SHAPE of the placement
                       # term, so a matcher-result cache must never survive it.
-                      "PLACEMENT_PAIR_NORMALISED")
+                      "PLACEMENT_PAIR_NORMALISED",
+                      # [MISSION 11 / step 1] the pair score itself.  A cached
+                      # match result must never survive a change of the score's
+                      # shape or of its one fitted weight.
+                      "PLACEMENT_SCORE_EVIDENCE",
+                      "PLACEMENT_SCORE_SHRINK",
+                      "PLACEMENT_SCORE_WEIGHT")
 
 _log = logging.getLogger("eth80_frontend")
 

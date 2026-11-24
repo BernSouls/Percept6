@@ -1262,6 +1262,45 @@ PLACEMENT_SPACING_RADIUS: bool = os.environ.get(
 PLACEMENT_PAIR_NORMALISED: bool = os.environ.get(
     "PLACEMENT_PAIR_NORMALISED", "0") != "0"
 
+#: [MISSION 11 / step 1] THE PAIR SCORE ITSELF.  Until now placement only moved
+#: the MAPPING: `JointMCS.score` is computed after alignment from raw node
+#: similarity and knows nothing about the placement evidence that produced the
+#: correspondence.  So a retrieval arm scored on `JointMCS.score` cannot see the
+#: gain the matcher measured (+0.0221 out of plane), and every Mission-10
+#: retrieval number had to use a bespoke score instead.
+#:
+#: With PLACEMENT_SCORE_EVIDENCE the directional score gains one term:
+#:
+#:     S' = S_shipped + w * E,
+#:     E  = ( sum over JUDGED mapped pairs of (plus_score(pair) - 0.5) ) / (n_judged + k)
+#:
+#:   * JUDGED pair: the pair has at least one slot the frozen estimator could
+#:     actually check (`slots_for_candidate(...)[:SLOT_CAP]` non-empty).  A pair
+#:     with nothing to check contributes nothing and is not counted.
+#:   * `plus_score - 0.5` is the deployed estimator's own [0,1] map, whose centre
+#:     is 0.5, so NO EVIDENCE IS ZERO and a negative E is real evidence against.
+#:   * dividing by `n_judged + k` (not by the node count, not by the number of
+#:     mapped pairs) makes E COVERAGE-NEUTRAL and shrinks it by how many pairs were
+#:     judged: Mission 10 measured that a sum over correspondences is a coverage
+#:     statistic (mapped pairs ran 606-921 across candidates with flat per-pair
+#:     quality), and that is the failure this denominator exists to prevent.
+#:   * k = PLACEMENT_SCORE_SHRINK: one judged pair can move E by at most
+#:     1/(1+k) of its own value, so a thin correspondence cannot dominate.
+#:   * w: ONE weight, fitted on FIT by maximum likelihood over retrieval
+#:     shortlists (softmax over the candidates of a query, truth = the same
+#:     scene / the same object), never on CHECK and never on a read.
+#:
+#: DARK.  Off, `score` is bit-for-bit the shipped number and `score_shipped`
+#: carries the same value.
+PLACEMENT_SCORE_EVIDENCE: bool = os.environ.get(
+    "PLACEMENT_SCORE_EVIDENCE", "0") != "0"
+PLACEMENT_SCORE_SHRINK: float = float(os.environ.get(
+    "PLACEMENT_SCORE_SHRINK", "8.0"))
+#: The fitted weight lives in matching/placement_score_params.json (provenance and
+#: the FIT likelihood next to it); the environment can override it for a read.
+PLACEMENT_SCORE_WEIGHT: float = float(os.environ.get(
+    "PLACEMENT_SCORE_WEIGHT", "0.0"))
+
 # Lenses minted per PLACE.  Attribute lenses are deliberately NOT here: an
 # attribute describes what a place is like, so folding its detections is right.
 PLACE_LAYER_LENSES: Tuple[str, ...] = ("Orientation", "Texture", "Color",
