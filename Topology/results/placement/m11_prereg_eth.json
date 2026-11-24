@@ -1,0 +1,74 @@
+{
+ "arms": {
+  "A": "placement off, JointMCS.score",
+  "B": "placement on, JointMCS.score_shipped (mapping only)",
+  "C": "placement on, score_shipped + w*E"
+ },
+ "compute": {
+  "G1": "200 queries x 8 candidates x 2 arms ~ 6 h on two cores",
+  "G2": "the extra candidates of a 16-way all-class shortlist ~ 7 h more",
+  "measured": "~14 s per match, ~11 s per build (Mission 10 + this session)",
+  "staging": "G1 pairs first for all 200 queries, then the extra G2 pairs; one row per (query, reference) so nothing is recomputed"
+ },
+ "corpus": "data/ETH-80-master (8 classes x 10 instances x 41 views)",
+ "freshness": {
+  "m10_query_views": [
+   "-000-000",
+   "-022-000",
+   "-022-090",
+   "-022-180"
+  ],
+  "m11_query_views": [
+   "-022-270",
+   "-035-045",
+   "-045-180",
+   "-090-045"
+  ],
+  "note": "a (instance, view) pair is what Mission 10 scored; these views had none",
+  "overlap_with_mission10_queries": 0
+ },
+ "gallery": {
+  "G1": {
+   "K": 8,
+   "chance": 0.125,
+   "recall": "1.0 BY CONSTRUCTION (K equals the gallery)",
+   "rule": "the eight instances of the query's own class"
+  },
+  "G2": {
+   "K": 16,
+   "chance": "1/16 given the truth is shortlisted; recall measured",
+   "rule": "top 16 of all 64 references by node-similarity sum on a fixed 60 x 120 node subsample"
+  },
+  "instances": "ranks 0-7 of each class (the same eight the Mission-10 gallery used, so the two missions ask the same question)",
+  "reference_view": [
+   "-090-000"
+  ],
+  "references": 64
+ },
+ "graphs_built_at_registration": 0,
+ "interval": "paired bootstrap over instances, 4000 draws, 2.5/97.5",
+ "mde": {
+  "formula": "MDE = 2.8 * SE of the paired per-instance difference",
+  "planned": "200 queries over 64 instances; at a planning discordance of 0.20 on top-1, SE ~ sqrt(0.20/64) = 0.056, MDE ~ 0.16"
+ },
+ "mission": "11 step 4 -- ETH-80 view-to-view retrieval, fresh queries",
+ "one_read": true,
+ "primary_contrast": "C - A, paired per query, clustered by INSTANCE",
+ "queries": {
+  "n": 200,
+  "order": "deterministic: class, instance, view",
+  "target": 200
+ },
+ "secondary": [
+  "B - A",
+  "C - A on the all-class gallery",
+  "per-class C - A",
+  "coverage: share of mapped pairs judged, per arm and class"
+ ],
+ "weight": {
+  "fit": "FIT only; ML degenerate at the bound, declared tie-break = FIT top-1, ties to the smaller weight",
+  "frozen_before_this_read": true,
+  "w": 0.375,
+  "w_ml": 3.0
+ }
+}

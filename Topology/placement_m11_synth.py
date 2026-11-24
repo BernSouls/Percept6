@@ -154,8 +154,16 @@ def _read_job(args: Tuple[str, str]) -> Dict[str, Any]:
 
 
 def rank_of(cands: List[Dict[str, Any]], arm: str, truth: str) -> int:
+    """1-based rank of the truth among the shortlist, and a MISS counts as a miss.
+
+    The registered shortlist gate is recall@K >= 0.95, not 1.0, so a query whose
+    truth fell outside the shortlist exists.  Scoring it as "not found" (rank 99)
+    is the only honest reading; the number of such queries is reported with the
+    result instead of being hidden inside the mean.
+    """
     order = sorted(cands, key=lambda d: (-d[arm], d["cand"]))
-    return [d["cand"] for d in order].index(truth) + 1
+    names = [d["cand"] for d in order]
+    return (names.index(truth) + 1) if truth in names else 99
 
 
 def main() -> int:
@@ -227,7 +235,10 @@ def main() -> int:
     for d in done:
         by_q.setdefault(d["q"], []).append(d)
     res: Dict[str, Any] = {"K": K, "queries": len(by_q), "pairs": len(done),
-                           "seconds": time.time() - t_all, "arms": {}}
+                           "seconds": time.time() - t_all, "arms": {},
+                           "truth_not_shortlisted": int(sum(
+                               1 for qk, c in by_q.items()
+                               if c[0]["truth"] not in [d["cand"] for d in c]))}
     for arm in ("A", "B", "C"):
         t1 = []
         rr = []
@@ -237,9 +248,12 @@ def main() -> int:
             r = rank_of(cands, arm, truth)
             t1.append(1.0 if r == 1 else 0.0)
             rr.append(1.0 / r)
-            ts = [d[arm] for d in cands if d["cand"] == truth][0]
-            ws = max([d[arm] for d in cands if d["cand"] != truth] or [ts])
-            margin.append(ts - ws)
+            hit = [d[arm] for d in cands if d["cand"] == truth]
+            if not hit:            # truth outside the shortlist: no margin to take
+                margin.append(0.0)
+                continue
+            ws = max([d[arm] for d in cands if d["cand"] != truth] or hit)
+            margin.append(hit[0] - ws)
         res["arms"][arm] = {"top1": float(np.mean(t1)), "mrr": float(np.mean(rr)),
                             "margin_mean": float(np.mean(margin)),
                             "n": len(t1)}
@@ -260,10 +274,13 @@ def main() -> int:
             per_scene.setdefault(scene, []).append(
                 (1.0 if rank_of(cands, x, truth) == 1 else 0.0)
                 - (1.0 if rank_of(cands, y, truth) == 1 else 0.0))
-            mx = [d[x] for d in cands if d["cand"] == truth][0] - max(
-                [d[x] for d in cands if d["cand"] != truth] or [0.0])
-            my = [d[y] for d in cands if d["cand"] == truth][0] - max(
-                [d[y] for d in cands if d["cand"] != truth] or [0.0])
+            hx = [d[x] for d in cands if d["cand"] == truth]
+            hy = [d[y] for d in cands if d["cand"] == truth]
+            if not hx or not hy:
+                per_scene_m.setdefault(scene, []).append(0.0)
+                continue
+            mx = hx[0] - max([d[x] for d in cands if d["cand"] != truth] or [0.0])
+            my = hy[0] - max([d[y] for d in cands if d["cand"] != truth] or [0.0])
             per_scene_m.setdefault(scene, []).append(mx - my)
         d = np.array([np.mean(v) for v in per_scene.values()])
         dm = np.array([np.mean(v) for v in per_scene_m.values()])

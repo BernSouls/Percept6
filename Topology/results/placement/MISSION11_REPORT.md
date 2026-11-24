@@ -136,6 +136,43 @@ needs a fresh read, which this mission did not spend.
 
 ---
 
-## 3. Step 3 — the synthetic retrieval read
+## 3. Step 3 — the synthetic retrieval read (fresh, pre-registered, one read)
 
-(to be filled)
+Registered in `m11_prereg_synth.json` before any of these graphs existed: 24 fresh
+scenes (seeds 52000+/56000+), 32 queries at 15° in plane and 25° out of plane — poses
+chosen so the shipped arm is **not** at ceiling (at 5–12° it already scores .75+, and
+a null there would say nothing) — one shortlist for every arm, K = 8 with a declared
+K = 16 fallback below recall 0.95.
+
+**Shortlist first, as the rule requires**: node-similarity recall@8 = **0.969**
+(in-plane 0.9375, out-of-plane 1.000) over 32 queries, so K stayed 8, and one query
+has its truth outside the shortlist — scored as a miss, not dropped.
+
+| arm | top-1 | MRR | margin | top-1 in plane | top-1 out of plane |
+|---|---|---|---|---|---|
+| **A** shipped (placement off, `JointMCS.score`) | 0.594 | 0.712 | +0.0017 | 0.750 | 0.438 |
+| **B** mapping-only (placement on, score unchanged) | 0.688 | 0.792 | +0.0068 | 0.750 | 0.625 |
+| **C** full (placement on, `score + w·E`, w = 0.375) | **0.750** | **0.839** | **+0.0176** | **0.8125** | **0.6875** |
+
+Scene-clustered paired contrasts (16 scenes, 4000 draws):
+
+| contrast | Δ top-1 | SE | **MDE** | CI | Δ margin (SE) |
+|---|---|---|---|---|---|
+| **C − A (primary)** | **+0.156** | 0.060 | 0.168 | **[+0.062, +0.281]** | **+0.0159** (0.0019) |
+| B − A | +0.094 | 0.050 | 0.141 | [+0.000, +0.188] | +0.0051 (0.0012) |
+| C − B | +0.062 | 0.043 | 0.120 | [+0.000, +0.156] | +0.0108 (0.0011) |
+
+Read by the letter of the pre-registration: **the primary contrast does not clear its
+own MDE.** +0.156 against MDE 0.168 — 7 % short. The CI excludes zero, the direction
+is the one predicted, and the ordering A < B < C is the one predicted, but this read
+does not have the resolution to call +0.156 a gain, and it is not called one. What it
+does have is the margin: the paired truth-minus-best-wrong score gap rises
++0.0159 ± 0.0019 from A to C, eight standard errors from zero, and the same for C − B
+at +0.0108 ± 0.0011. The effect is real in the score; the top-1 count over 32 queries
+is what is underpowered (in-plane is where: .8125 vs .75 is one query).
+
+Compute: 256 pairs × two arms, 12.6 s + 14.5 s per pair, ~1.5 h on two cores.
+
+Coverage note, and it matters for what follows: on these synthetic pairs the estimator
+could judge only **130 of 869 mapped pairs (15.0 %)** — the same limitation Step 5
+measures on real images.
