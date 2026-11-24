@@ -574,3 +574,76 @@ Step 5 stands unchanged.
 
 Artifact: `Topology/results/placement/m12_frames2.json` (24 rows, calibration, three
 aggregates, per-structure table, decision).
+
+## Step 3 — the speed work: what the redundancy is, and where the cost is not
+
+**(a) How much of the similarity work is a repeat.**
+`Topology/placement_m12_sigcache.py --measure` counted, over a retrieval-shaped run
+of **576 graph pairs** (24 gallery references × 24 queries, the same family the read
+uses), the questions the matcher asks and the answers a content-keyed cache can
+hold:
+
+| quantity | value |
+|---|---|
+| same-lens node pairs asked | 25 569 904 |
+| distinct (lens, content(a), content(b)) triples, summed over pairs | 25 569 904 |
+| distinct triples shared over the whole run | 14 400 439 |
+| reuse **within one graph pair** (median / min / max) | **1.00× / 1.00× / 1.00×** |
+| reuse **across the run** | **1.78×** |
+
+The exact-Python-set count and the uint64-folded count agree on the first pair
+(51 650 = 51 650), so the vectorised counting is not losing keys. The measured fact
+is unfriendly to the idea: **inside a graph pair there is no redundancy at all** —
+every same-lens node pair has a distinct signature-content pair — and across a whole
+retrieval run the content repeats only 1.78×. That is the ceiling for this lever.
+
+**(b) The content-keyed cache, and what it actually bought.**
+`matching/sig_sim_cache.py` keys on the WHOLE signature (lens, kind, class,
+relation, the entire quantized tuple, the entire graded population — which
+`TypedSignature.__hash__` deliberately excludes — plus the two tolerance flags), and
+stores the shipped `_sig_similarity` call's own float. `joint_mcs.node_sim` uses it
+only when the new dark flag `MATCH_SIG_SIM_CACHE` is on; with it off the shipped
+branch runs unchanged.
+
+The first implementation hashed hex strings of every graded value on every call: it
+was **1.5× slower** than no cache (6.35 s → 9.88 s per pair), because the similarity
+it was caching is cheaper than formatting 700 floats. The shipped version memoises
+one content hash per signature object and looks up a three-int key.
+
+Acceptance, on **30 fixed synthetic pairs** (`pairs30()`: every irregular scene's
+second view against the other five scenes' references; the corpus pairs the older
+harness would add do not exist because ETH-80 is blocked, and the read says so):
+
+* score, `score_shipped`, placement evidence, judged count and the **whole mapping**
+  are **bit-identical with the flag off and on** — 30/30 pairs, 0 diffs;
+* 2 837 810 similarity calls, 389 872 hits (**13.7 %** — one worker, so this is the
+  *within-worker* reuse over 30 pairs, lower than the retrieval-run 1.78×);
+* **speed 0.97×** (152.5 s → 156.8 s over the 30 pairs). The cache is
+  **value-preserving and not faster**, so it stays DARK.
+
+**(c) Why vectorising the similarity would not reach the bar, said before running it.**
+The profile of one pair (cProfile, 24.6 s under the profiler) puts the cost here:
+
+| item | tottime | share |
+|---|---|---|
+| `_relational_agreement` | 5.85 s | 24 % |
+| `node_sim` (cumulative, incl. `_sig_similarity` 4.49 s) | 5.38 s | **22 %** |
+| `_swap_delta` / `_quality` (the aligner's swap evaluation) | 13.7 s / 13.0 s cumulative | 55 % |
+| `enum.__hash__` inside the undirected/class memos | 1.64 s | 7 % |
+
+Even an **infinitely fast** similarity removes at most 22 % of a pair's time, i.e. at
+most **1.28×**, and 1.78× reuse can only be applied to that 22 %. So the conditional
+branch — vectorise per-class similarity, accepting 1e-12 score drift — was **not
+run**: its maximum possible payoff (≤1.28×) cannot meet the 3× bar, and buying it
+would mean giving up the bit-identity that the acceptance criterion demands, for a
+fraction of a second per pair. The arithmetic was checked before the run, and it is
+the reason there is no relaxation to report.
+
+**Where the time actually is** is the aligner's swap evaluation, which calls
+`_relational_agreement` 225 199 times per pair. That is the next target, not the
+similarity: a candidate-level memo is not available (the mapping changes between
+rounds, so the same (u, v, candidate) is only valid within a round) and a safe
+version must key on the round's mapping, which is a redesign rather than an
+optimisation. It is named here, unclaimed.
+
+Artifact: `Topology/results/placement/m12_sigcache.json`.

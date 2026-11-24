@@ -291,11 +291,28 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None,
     # a deflated matrix and maps fewer nodes -- so the score is not the baseline
     # cell.  The flag value is unchanged; only the placement moves to score
     # time, where the baseline instrument reads it.
-    @lru_cache(maxsize=None)
-    def node_sim(u,v):
-        x,y=sigs_a.get(u),sigs_b.get(v)
-        if x is None or y is None or x[0]!=y[0]: return 0.0
-        return _sig_similarity(x[1],y[1])
+    # [MISSION 12 / step 3] The CONTENT-keyed similarity cache.  `node_sim` is
+    # memoised on the node ids of this one directional call; the same signature
+    # CONTENT recurs across pairs and across a retrieval run, and the similarity
+    # is a pure function of that content (plus the two tolerance flags, which
+    # are part of the cache's namespace).  The cached value IS the shipped
+    # `_sig_similarity` call, so with the flag off this branch does not exist
+    # and with it on the returned floats are the same floats.
+    if bool(getattr(P, "MATCH_SIG_SIM_CACHE", False)):
+        from matching import sig_sim_cache as _SC
+
+        @lru_cache(maxsize=None)
+        def node_sim(u, v):
+            x, y = sigs_a.get(u), sigs_b.get(v)
+            if x is None or y is None or x[0] != y[0]:
+                return 0.0
+            return _SC.sim(x[1], y[1], x[0])
+    else:
+        @lru_cache(maxsize=None)
+        def node_sim(u,v):
+            x,y=sigs_a.get(u),sigs_b.get(v)
+            if x is None or y is None or x[0]!=y[0]: return 0.0
+            return _sig_similarity(x[1],y[1])
 
     unmatched_cost = float(P.MATCH_UNMATCHED_COST)
     if bool(getattr(P, "MATCH_UNMATCHED_COST_DERIVED", False)):

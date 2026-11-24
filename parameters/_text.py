@@ -2320,6 +2320,14 @@ MATCH_UNMATCHED_COST = 0.0
 # candidate matrix.  A pair must beat the average candidate to be admitted;
 # no labels and no matrix tuning enter the value.  DARK by default.
 MATCH_UNMATCHED_COST_DERIVED: bool = False
+# [MISSION 12 / step 3] Content-keyed signature similarity cache, shared across
+# pairs inside one process: `matching/sig_sim_cache.py` keys on the WHOLE
+# signature content (class, relation, quantized bins, graded population) plus the
+# lens and the two tolerance flags, and returns the shipped `_sig_similarity`
+# call's own value.  DARK: off means the shipped per-pair call, bit for bit.
+# Not in `_FRONTEND_SWITCHES`: it changes no graph.
+MATCH_SIG_SIM_CACHE: bool = False
+
 # [PHASE 3 / F1] Isolated frame nodes stay in the graph as context but earn
 # no correspondence credit and are not paired.  DARK by default; the
 # historical behaviour pairs every node with a positive signature similarity.
