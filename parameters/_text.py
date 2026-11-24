@@ -1290,6 +1290,24 @@ PLACEMENT_E_MIN_JUDGED: int = int(os.environ.get("PLACEMENT_E_MIN_JUDGED", "0"))
 PLACEMENT_FRAME_KEYPOINT: bool = os.environ.get(
     "PLACEMENT_FRAME_KEYPOINT", "0") != "0"
 
+#: [MISSION 13 / step 1a] WHAT THE KEYPOINT PROVIDER FALLS BACK TO.  M12 fell
+#: back to the multiscale ladder, which is the WORST of the three frame sources
+#: under rotation (share within 3 deg: 0.531 vs 0.626 for the single 7x7 field),
+#: because the window a node picks can change when the image is rotated.  The
+#: default is now the single 7x7 field; "multiscale" reproduces M12 exactly.
+#: Only read when PLACEMENT_FRAME_KEYPOINT is on.
+PLACEMENT_FRAME_FALLBACK: str = os.environ.get("PLACEMENT_FRAME_FALLBACK", "field")
+
+#: [MISSION 13 / step 1c] SUB-PIXEL FRAME SAMPLING for the field providers.
+#: `frame_at` rounds a sub-pixel anchor to the nearest pixel, so an anchor at
+#: x = 10.6 is read at 11 -- and under rotation the anchor slides across that
+#: rounding boundary, switching pixel and losing the frame.  On, the fields are
+#: sampled bilinearly at the anchor (the axial angle on its DOUBLED angle, so the
+#: pi-periodic wrap cannot tear).  Dark: off, the rounding is the shipped read.
+#: It changes which nodes carry a frame, so it keys the graph cache.
+PLACEMENT_FRAME_SUBPIXEL: bool = os.environ.get(
+    "PLACEMENT_FRAME_SUBPIXEL", "0") != "0"
+
 #: [MISSION 11 / step 1] THE PAIR SCORE ITSELF.  Until now placement only moved
 #: the MAPPING: `JointMCS.score` is computed after alignment from raw node
 #: similarity and knows nothing about the placement evidence that produced the

@@ -122,9 +122,59 @@ def field_angles(image_u8: np.ndarray, window: int = FIELD_WINDOW
     return ang.astype(np.float64), np.maximum(coh, 0.0).astype(np.float64)
 
 
-def frame_at(ang: np.ndarray, coh: np.ndarray, x: float, y: float
-             ) -> Optional[Tuple[float, float]]:
+def _bilinear_axial(ang: np.ndarray, x: float, y: float) -> Optional[float]:
+    """Interpolate an AXIAL angle field at a sub-pixel position.
+
+    An axial angle lives on a circle with period pi, so interpolating the number
+    itself would tear at the wrap (a 179-degree and a 1-degree neighbour would
+    average to 90).  The interpolation is therefore done on the DOUBLED angle as
+    a unit vector -- cos(2a), sin(2a) -- and the result is halved back:
+    exact equivariance under a rotation of the image, and no wrap artefact.
+    """
     h, w = ang.shape
+    if not (0.0 <= x <= w - 1 and 0.0 <= y <= h - 1):
+        return None
+    x0, y0 = int(np.floor(x)), int(np.floor(y))
+    x1, y1 = min(x0 + 1, w - 1), min(y0 + 1, h - 1)
+    fx, fy = float(x - x0), float(y - y0)
+    ws = ((1 - fx) * (1 - fy), fx * (1 - fy), (1 - fx) * fy, fx * fy)
+    cc = ss = 0.0
+    for wt, xx, yy in zip(ws, (x0, x1, x0, x1), (y0, y0, y1, y1)):
+        if wt == 0.0:
+            continue
+        a = float(ang[yy, xx])
+        if not np.isfinite(a):
+            return None
+        cc += wt * np.cos(2.0 * a)
+        ss += wt * np.sin(2.0 * a)
+    if cc == 0.0 and ss == 0.0:
+        return None
+    return float(0.5 * np.arctan2(ss, cc))
+
+
+def frame_at(ang: np.ndarray, coh: np.ndarray, x: float, y: float,
+             subpixel: Optional[bool] = None) -> Optional[Tuple[float, float]]:
+    """(angle, coherence) at (x, y), or None below the coherence bar.
+
+    `subpixel` (default: the dark `PLACEMENT_FRAME_SUBPIXEL` parameter) samples the
+    fields BILINEARLY at the anchor instead of rounding it to a pixel.  The old
+    rounding is the shipped behaviour and stays the default: an anchor at x = 10.6
+    was read at pixel 11, and under rotation the anchor moves by a fraction of a
+    pixel, so the rounded provider can switch pixel and lose the frame.
+    """
+    if subpixel is None:
+        subpixel = bool(_param("PLACEMENT_FRAME_SUBPIXEL", False))
+    h, w = ang.shape
+    if subpixel:
+        if not (0.0 <= float(x) <= w - 1 and 0.0 <= float(y) <= h - 1):
+            return None
+        c = _bilinear(coh, float(x), float(y))
+        if c is None or c < FRAME_COHERENCE_MIN:
+            return None
+        a = _bilinear_axial(ang, float(x), float(y))
+        if a is None or not np.isfinite(a):
+            return None
+        return float(a), float(c)
     xi, yi = int(round(float(x))), int(round(float(y)))
     if not (0 <= xi < w and 0 <= yi < h):
         return None
@@ -210,38 +260,69 @@ def node_frames_keypoint(subgraph: Any, image_u8: np.ndarray,
 
 def node_frames_keypoint_then_field(subgraph: Any, image_u8: np.ndarray,
                                     coherence_min: float = FRAME_COHERENCE_MIN,
+                                    fallback: Optional[str] = None,
                                     ) -> Tuple[Dict[int, float], Dict[int, int]]:
-    """The keypoint frame where it exists, the multiscale field where it does not.
+    """Keypoint frame where it exists, a FIELD fallback where it does not.
 
-    This is the whole of the M12 step-3 frame change: a provider that ADDS frames
-    (it never moves one the keypoint estimator already gave) and a fallback that is
-    the provider the tree already ships.
+    [MISSION 13 / step 1a] THE FALLBACK USED TO BE THE MULTISCALE LADDER, and the
+    ladder is measurably the WORST of the three frame sources under rotation
+    (share within 3 deg: 0.531, against 0.626 for the single 7x7 field) because
+    the window a node picks can CHANGE when the image is rotated -- a 23x23
+    estimate at a pixel is not a 7x7 estimate at that pixel.  Adding it to the
+    keypoint's misses therefore imported the deficiency it was meant to repair.
+    The fallback is now the single 7x7 field by default (parameter
+    `PLACEMENT_FRAME_FALLBACK`), and "multiscale" is kept only so the M12
+    configuration stays reproducible.
+
+    The composition can only ADD frames: a node the keypoint estimator gave a
+    frame keeps exactly that frame.
     """
+    if fallback is None:
+        fallback = str(_param("PLACEMENT_FRAME_FALLBACK", "field"))
     theta, src = node_frames_keypoint(subgraph, image_u8, coherence_min)
     theta = dict(theta)
     src = dict(src)
     miss = [n for n in sorted(subgraph.nodes) if int(n) not in theta]
+    if miss and str(fallback).lower() == "none":
+        return theta, src        # keypoint only: no fallback at all
     if miss:
-        f_theta, wins = node_frames_multiscale(subgraph, field_multiscale(image_u8),
-                                               coherence_min)
-        for n in miss:
-            if int(n) in f_theta:
-                theta[int(n)] = float(f_theta[int(n)])
-                src[int(n)] = -int(wins[int(n)])   # negative: the field provider
+        if str(fallback).lower() == "multiscale":
+            f_theta, wins = node_frames_multiscale(
+                subgraph, field_multiscale(image_u8), coherence_min)
+            for n in miss:
+                if int(n) in f_theta:
+                    theta[int(n)] = float(f_theta[int(n)])
+                    src[int(n)] = -int(wins[int(n)])   # negative: the field provider
+        else:
+            ang, coh = field_angles(image_u8)
+            f_theta = node_frames(subgraph, ang, coh, coherence_min=coherence_min)
+            for n in miss:
+                if int(n) in f_theta:
+                    theta[int(n)] = float(f_theta[int(n)])
+                    src[int(n)] = -FIELD_WINDOW
     return theta, src
 
 
-def node_frames(subgraph: Any, ang: np.ndarray, coh: np.ndarray
-                ) -> Dict[int, float]:
-    """node -> axial frame angle, for every node whose anchor carries one."""
+def node_frames(subgraph: Any, ang: np.ndarray, coh: np.ndarray,
+                coherence_min: Optional[float] = None,
+                subpixel: Optional[bool] = None) -> Dict[int, float]:
+    """node -> axial frame angle, for every node whose anchor carries one.
+
+    `coherence_min` defaults to the module bar; the keypoint-then-field
+    composition passes its own so the fallback uses the SAME bar as the primary
+    estimator (otherwise the composition would silently change the bar).
+    """
     out: Dict[int, float] = {}
     for n in sorted(subgraph.nodes):
         a = subgraph.anchor_of_node.get(n)
         if a is None:
             continue
-        f = frame_at(ang, coh, float(a[0]), float(a[1]))
-        if f is not None:
-            out[int(n)] = f[0]
+        f = frame_at(ang, coh, float(a[0]), float(a[1]), subpixel=subpixel)
+        if f is None:
+            continue
+        if coherence_min is not None and f[1] < float(coherence_min):
+            continue
+        out[int(n)] = f[0]
     return out
 
 

@@ -150,6 +150,10 @@ _FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
                       # carry payload edges, so the graph the payload builder reads
                       # is not the same graph under a different source.
                       "PLACEMENT_FRAME_KEYPOINT",
+                      # [MISSION 13 / step 1] the fallback source and the sub-pixel
+                      # sampling move the frame of a node, hence its payload edges.
+                      "PLACEMENT_FRAME_FALLBACK",
+                      "PLACEMENT_FRAME_SUBPIXEL",
                       # [MISSION 11 / step 1] the pair score itself.  A cached
                       # match result must never survive a change of the score's
                       # shape or of its one fitted weight.
