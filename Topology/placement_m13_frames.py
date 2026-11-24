@@ -366,7 +366,7 @@ def decide(eq: Dict[str, Any], cov: Dict[str, Any]) -> Dict[str, Any]:
     # paired per-cell E differences against the shipped field
     rows = eq["rows"]
     cells = sorted({(r["tag"], r["delta"]) for r in rows})
-    for v in VARIANTS:
+    for v in sorted(set(agg_e) & set(agg_c)):
         if v not in agg_e or v not in agg_c:
             continue
         diffs, clusters = [], []
@@ -412,6 +412,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--equivariance", action="store_true")
     ap.add_argument("--coverage", action="store_true")
+    ap.add_argument("--redecide", action="store_true",
+                    help="recompute the union decision from the stored rows")
     ap.add_argument("--extra", action="store_true",
                     help="measure the two candidates declared in EXTRA_RULE")
     ap.add_argument("--workers", type=int, default=2)
@@ -437,6 +439,16 @@ def main() -> int:
         for v, a in res["coverage"]["aggregate"].items():
             print("  %-22s share_judged %.4f  judged %.1f  mapped %.1f"
                   % (v, a["share_judged"], a["judged_mean"], a["mapped_mean"]), flush=True)
+    if args.redecide and "extra_equivariance" in res:
+        eq = {"rows": res["equivariance"]["rows"] + res["extra_equivariance"]["rows"],
+              "aggregate": dict(res["equivariance"]["aggregate"],
+                                **res["extra_equivariance"]["aggregate"])}
+        cov = {"aggregate": dict(res["coverage"]["aggregate"],
+                                 **res["extra_coverage"]["aggregate"])}
+        dec = decide(eq, cov)
+        dec["rule"] = {"first": RULE, "extra": EXTRA_RULE}
+        res["decision_all"] = dec
+        print("DECISION_ALL", dec.get("adopted"), "-", dec.get("reason"), flush=True)
     if args.extra:
         t0 = time.time()
         res["extra_equivariance"] = equivariance(EXTRA_VARIANTS)

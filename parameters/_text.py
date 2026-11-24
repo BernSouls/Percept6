@@ -1296,14 +1296,25 @@ PLACEMENT_FRAME_KEYPOINT: bool = os.environ.get(
 #: because the window a node picks can change when the image is rotated.  The
 #: default is now the single 7x7 field; "multiscale" reproduces M12 exactly.
 #: Only read when PLACEMENT_FRAME_KEYPOINT is on.
-PLACEMENT_FRAME_FALLBACK: str = os.environ.get("PLACEMENT_FRAME_FALLBACK", "field")
+#: [MISSION 13 / step 1] ADOPTED: "none".  Measured (m13_frames.json, 8 FIT pairs,
+#: node-level equivariance): keypoint-alone at the largest sigma reaches E = 0.811
+#: with judged share 0.1231; adding the 7x7 field fallback LOWERS E to 0.735 and
+#: the judged share to 0.1221 -- the fallback adds frames that are worse than the
+#: ones it supplements and does not even buy coverage.  "field" and "multiscale"
+#: are kept for reproduction.
+PLACEMENT_FRAME_FALLBACK: str = os.environ.get("PLACEMENT_FRAME_FALLBACK", "none")
 
 #: [MISSION 13 / step 1] WHICH KEYPOINT SIGMA WINS: "smallest" (the deployed rule:
 #: the smallest sigma whose coherence clears the bar) or "largest" (the
 #: configuration M12's frame test actually measured).  They differ by ~0.24 of
 #: rotation equivariance at node level, so the choice must key the cache.
+#: [MISSION 13 / step 1] ADOPTED: "largest".  Measured at node level over 24
+#: image x delta cells: largest 0.811, smallest 0.563, shipped 7x7 field 0.673; the
+#: paired scene-clustered gain over the field is +0.138 [+0.100, +0.183], and the
+#: judged share is no worse (0.1231 vs 0.1029).  "smallest" is kept because it is
+#: what the tree shipped before this step.
 PLACEMENT_FRAME_KEYPOINT_SIGMA: str = os.environ.get(
-    "PLACEMENT_FRAME_KEYPOINT_SIGMA", "smallest")
+    "PLACEMENT_FRAME_KEYPOINT_SIGMA", "largest")
 
 #: [MISSION 13 / step 1c] SUB-PIXEL FRAME SAMPLING for the field providers.
 #: `frame_at` rounds a sub-pixel anchor to the nearest pixel, so an anchor at
