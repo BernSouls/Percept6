@@ -4291,7 +4291,22 @@ MATCH_ALIGN_BUDGET_CELL_FACTOR: float = float(os.environ.get(
 #: raises).  Ridge places enter only ACROSS the ridge (that is what
 #: PLACEMENT_RIDGE_ACROSS_ONLY is for).
 PLACEMENT_M15_PLACES: bool = os.environ.get("PLACEMENT_M15_PLACES", "0") != "0"
-PLACEMENT_M15_PLACE_LENSES: Tuple[str, ...] = ()
+#: Item 1's measured answer (Topology/results/placement/m15_atlas.json, 90 cells:
+#: 6 synthetic + 3 real photographs x 5 exact transforms x 2 configurations).
+#: THE PLACE-LENS BAR, stated before the measurement: a lens is a place when, under
+#: the M15 configuration, >= 50% of its nodes are re-detected within 2 px of the
+#: exact transformed anchor (definition (i)) AND >= 50% of those carry the SAME
+#: quantised signature (definition (ii)).  Both were reported per lens; identity
+#: is required because the matcher pairs (lens, signature) classes, so a lens that
+#: re-detects but re-signs is an attribute, not a place.
+#:
+#: Measured: Blob (n=11,977, i@2 0.938, ii@2 0.592), BoundaryArc (n=7,998,
+#: 0.933 / 0.548, ridge: along 0.09 px, across 0.27 px), CornerPoint (n=1,291,
+#: 0.891 / 0.543).  Everything else fails, including ALL FIVE tiling lenses of the
+#: frozen eight-lens whitelist -- Orientation 0.403/0.056, Texture 0.281/0.086,
+#: Color 0.205/0.116, Contour 0.092/0.016, Boundary 0.266/0.089 -- and under the
+#: DEFAULT configuration no lens at all clears the bar (best i@2 = 0.088).
+PLACEMENT_M15_PLACE_LENSES: Tuple[str, ...] = ("Blob", "BoundaryArc", "CornerPoint")
 #: [M15 / item 4] THE TRUTH RULE.  A true pair counts only when both nodes are
 #: place lenses of the SAME lens within tolerance (across-ridge only for ridge
 #: lenses), instead of "any two nodes within 1 px".  Off, the M12/M13 rule stands,

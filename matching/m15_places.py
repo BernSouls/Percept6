@@ -118,6 +118,12 @@ def _forward(spec: Dict[str, Any], p: np.ndarray, shape: Tuple[int, int]) -> np.
     return F(spec, p, shape)
 
 
+def _inverse(spec: Dict[str, Any], p: np.ndarray, shape: Tuple[int, int]) -> np.ndarray:
+    """QUERY anchors -> the REFERENCE frame (the direction the truth rule needs)."""
+    from Topology.placement_m12_read_real import _inverse as F
+    return F(spec, p, shape)
+
+
 def _frame_vectors(angles: np.ndarray, pos: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """tangent (along-ridge) and normal (across-ridge) unit vectors at each anchor."""
     h, w = angles.shape[:2]
@@ -139,7 +145,7 @@ def lens_truth(graph_q: Any, graph_r: Any, spec: Dict[str, Any],
     if not qids or not rids:
         return {}
     keep = set(place_lenses(lenses))
-    fwd_q = _forward(spec, qpos, shape)                  # query anchor -> reference frame
+    fwd_q = _inverse(spec, qpos, shape)                  # query anchor -> reference frame
     tang = nrm = None
     if angles is not None:
         tang, nrm = _frame_vectors(angles, qpos)

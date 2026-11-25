@@ -117,8 +117,11 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
     cap = int(b["cand_cap"])
     triples = PM.top_candidates(matrix, nodes_b, cap)
     ctx = PM.context_mapping(triples, nodes_a, side_q, side_r)
-    truth = PL.both_truths(g1, g0, spec, shape,
-                           angles=None if mode != "places" else None)
+    bt = PL.both_truths(g1, g0, spec, shape,
+                        angles=None if mode != "places" else None)
+    truth = {"new": bt["new_pairs"], "old": bt["old_pairs"]}
+    truth_counts = {"new": bt["new"], "old": bt["old"],
+                    "new_confirmed_by_old": bt["new_confirmed_by_old"]}
     tol_of = PM._spacing_tol_fn(side_q, side_r)
     keep = set(PL.place_lenses())
 
@@ -129,6 +132,8 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
 
     cells: List[Dict[str, Any]] = []
     judged = {"off": [], "on": []}
+    judged_true = {"off": [], "on": []}
+    judged_wrong = {"off": [], "on": []}
     gained = 0
     res_true: List[float] = []
     res_wrong: List[float] = []
@@ -158,6 +163,10 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
                 if mapping_name == "ctx_matcher":
                     judged["off"].append(j_off / float(L.SLOT_CAP))
                     judged["on"].append(j_on / float(L.SLOT_CAP))
+                    bucket = (judged_true if (vt is not None and v == vt)
+                              else judged_wrong)
+                    bucket["off"].append(j_off / float(L.SLOT_CAP))
+                    bucket["on"].append(j_on / float(L.SLOT_CAP))
                     if j_on > j_off:
                         gained += 1
                 _e, g = L.plus_terms(u, v, mapping, side_q.incident, side_q.index,
@@ -165,7 +174,7 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
                                      slot_cap=int(L.SLOT_CAP),
                                      tol=(None if tol_of is None else tol_of(u, v)))
                 scores.append((v, float(g)))
-                if vt is not None:
+                if vt is not None and mapping_name == "ctx_matcher":
                     if v == vt:
                         res_true.extend([r for (n, o, r) in sn if r is not None])
                     else:
@@ -196,9 +205,19 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
     if mode == "places":
         endpoint_rows.append(PL.endpoint_report(g1, tuple(keep)))
     cells.append({"tag": tag, "pose": pose, "mode": mode,
-                  "new_rule_pairs": len(truth["new"]), "old_rule_pairs": len(truth["old"]),
+                  "new_rule_pairs": truth_counts["new"],
+                  "old_rule_pairs": truth_counts["old"],
+                  "new_confirmed_by_old": truth_counts["new_confirmed_by_old"],
                   "judged_off": float(np.mean(judged["off"])) if judged["off"] else None,
                   "judged_on": float(np.mean(judged["on"])) if judged["on"] else None,
+                  "judged_off_true": (float(np.mean(judged_true["off"]))
+                                      if judged_true["off"] else None),
+                  "judged_on_true": (float(np.mean(judged_true["on"]))
+                                     if judged_true["on"] else None),
+                  "judged_off_wrong": (float(np.mean(judged_wrong["off"]))
+                                       if judged_wrong["off"] else None),
+                  "judged_on_wrong": (float(np.mean(judged_wrong["on"]))
+                                      if judged_wrong["on"] else None),
                   "cells_gaining_a_checkable_slot": gained,
                   "candidates": len(judged["off"]),
                   "auc": {k: _auc(v) for k, v in auc.items()},
@@ -217,13 +236,15 @@ def main() -> int:
     ap.add_argument("--workers", type=int, default=1)
     ap.add_argument("--cells", type=int, default=2)
     ap.add_argument("--report", action="store_true")
+    ap.add_argument("--from-cache", action="store_true",
+                    help="aggregate the cells already on disk, no compute")
     args = ap.parse_args()
     import guard
     guard.activate()
     from matching import m15_manifest as MF
     from matching import placement_llr as L
     res: Dict[str, Any] = {"cells": [], "modes": ["frozen", "places"]}
-    if args.report:
+    if args.report or args.from_cache:
         res = json.load(open(RESULT)) if os.path.exists(RESULT) else res
     else:
         imgs = _images(args.cells)
@@ -252,6 +273,14 @@ def main() -> int:
             "cells": len(cs),
             "judged_off": float(np.mean([c["judged_off"] for c in cs])),
             "judged_on": float(np.mean([c["judged_on"] for c in cs])),
+            "judged_off_true": float(np.mean([c["judged_off_true"] for c in cs
+                                              if c.get("judged_off_true") is not None])),
+            "judged_on_true": float(np.mean([c["judged_on_true"] for c in cs
+                                             if c.get("judged_on_true") is not None])),
+            "judged_off_wrong": float(np.mean([c["judged_off_wrong"] for c in cs
+                                               if c.get("judged_off_wrong") is not None])),
+            "judged_on_wrong": float(np.mean([c["judged_on_wrong"] for c in cs
+                                              if c.get("judged_on_wrong") is not None])),
             "judged_off_spread": [float(np.min([c["judged_off"] for c in cs])),
                                  float(np.max([c["judged_off"] for c in cs]))],
             "judged_on_spread": [float(np.min([c["judged_on"] for c in cs])),
@@ -369,6 +398,12 @@ def main() -> int:
     # ------------------------------- item 7: the weight profile --------------
     def _profile(mode: str, split: Optional[str] = None,
                  grid=(0.0, 0.125, 0.25, 0.375, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0)):
+        """ITEM 7: the weight profile, read offline from the recorded bank.
+
+        Score = (1-beta)*appearance + beta*(0.5 + w*E), beta the frozen 0.5, E the
+        item-2-fixed blended evidence.  Reported: top-1 and true-vs-impostor AUC per
+        w.  An interior optimum is a maximum that is not at an end of the grid.
+        """
         qs = []
         for c in res["cells"]:
             if c.get("mode") != mode or "bank" not in c:
@@ -378,25 +413,35 @@ def main() -> int:
             qs.extend(c["bank"])
         if not qs:
             return None
-        beta = 0.5
+        try:
+            from matching.placement_matcher import frozen as _fz
+            beta = float(_fz()["beta"])
+        except Exception:
+            beta = 0.5
         prof = []
         for w in grid:
-            top1 = 0
-            auc_pairs = []
+            hits = 0
+            pairs: List[Tuple[float, List[float]]] = []
+            used = 0
             for q in qs:
-                scored = [((1 - beta) * s + beta * (0.5 + w * e), int(t))
-                          for s, e, t in zip(q["sim"], q["E"], q["true"])]
-                best = max(scored, key=lambda z: (z[0], -z[1] if z[1] else 1))[0]
-                trues = [sc for sc, t in zip(scored, q["true"]) if t == 1]
-                imps = [sc for sc, t in zip(scored, q["true"]) if t == 0]
+                sc = [(1 - beta) * s + beta * (0.5 + w * e)
+                      for s, e in zip(q["sim"], q["E"])]
+                trues = [x for x, t in zip(sc, q["true"]) if t == 1]
+                imps = [x for x, t in zip(sc, q["true"]) if t == 0]
                 if not trues or not imps:
                     continue
-                top1 += 1 if scored[[i for i, t in enumerate(q["true"]) if t == 1][0]][0] >= max(
-                    sc for sc, t in zip(scored, q["true"]) if t == 0) else 0
-                auc_pairs.append((max(trues), imps))
-            prof.append({"w": float(w), "top1": top1 / float(len(qs)),
-                         "auc": _auc(auc_pairs), "queries": len(qs)})
-        return prof
+                used += 1
+                hits += 1 if max(trues) >= max(imps) else 0
+                pairs.append((max(trues), imps))
+            prof.append({"w": float(w), "top1": hits / float(used or 1),
+                         "auc": _auc(pairs), "queries": used})
+        best = max(prof, key=lambda r: (r["auc"] or 0.0))
+        interior = (best["w"] not in (grid[0], grid[-1]))
+        return {"profile": prof, "best_w": best["w"], "best_auc": best["auc"],
+                "interior_optimum": bool(interior),
+                "weight_source": ("refit on the item-5/10 cells of this file; the "
+                                  "shipped w_top1 lives in "
+                                  "matching/placement_score_params.json")}
 
     if "bank" in json.dumps(res["cells"][:1], default=float):
         for mode in ("frozen", "places"):
@@ -404,20 +449,15 @@ def main() -> int:
                 pr = _profile(mode, split)
                 if pr:
                     key = "item7_%s%s" % (mode, "" if not split else "_" + split)
-                    res.setdefault("item7", {})[key] = {
-                        "profile": pr,
-                        "best_w": max(pr, key=lambda r: r["auc"])["w"],
-                        "weight_source": "refit on item-5/10 cells; frozen w_top1 in "
-                                         "matching/placement_score_params.json is the "
-                                         "shipped value",
-                    }
+                    res.setdefault("item7", {})[key] = pr
 
+    MF.write_result(RESULT, res)
     if args.report:
         print(json.dumps({k: v for k, v in res.items()
-                          if k in ("aggregate", "item5a", "item5b", "item5d")},
-                         indent=1, default=float)[:4000])
+                          if k in ("aggregate", "item5a", "item5b", "item5d",
+                                   "item7")},
+                         indent=1, default=float)[:6000])
         return 0
-    MF.write_result(RESULT, res)
     print("wrote", RESULT)
     return 0
 

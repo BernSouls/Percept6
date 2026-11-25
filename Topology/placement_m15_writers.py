@@ -73,9 +73,16 @@ def _job(args: Tuple[str, str, Dict[str, Any]]) -> Dict[str, Any]:
     for n in sorted(sub.nodes):
         if n not in sub.anchor_of_node:
             continue
-        lens = str(g.sigs.get(n, ("?",))[0])
+        sig = g.sigs.get(n)
+        if sig is None:
+            continue
+        # IDENTITY ACROSS CONFIGURATIONS IS THE NODE KEY (lens, quantised signature),
+        # never the node id: ids are minted per graph in mint order, so id 5 in one
+        # front end is not id 5 in another.
+        key = "%s|%s" % (sig[0], repr(getattr(sig[1], "quantized", None)))
         x, y = sub.anchor_of_node[n]
-        rows.append({"n": int(n), "lens": lens, "x": float(x), "y": float(y)})
+        rows.append({"key": key, "lens": str(sig[0]),
+                     "x": float(x), "y": float(y)})
     return {"tag": tag, "label": label, "nodes": rows}
 
 
@@ -93,12 +100,12 @@ def main() -> int:
     got: Dict[str, Dict[int, Dict[str, Any]]] = {}
     with ProcessPoolExecutor(max_workers=1) as ex:
         for r in ex.map(_job, jobs):
-            got[r["label"]] = {n["n"]: n for n in r["nodes"]}
+            got[r["label"]] = {n["key"]: n for n in r["nodes"]}
             print("  %-12s %d nodes" % (r["label"], len(r["nodes"])), flush=True)
     base = got["defaults"]
     per_lens: Dict[str, Dict[str, Any]] = {}
     for lens in sorted({v["lens"] for v in base.values()}):
-        ids = [n for n, v in base.items() if v["lens"] == lens]
+        ids = [k for k, v in base.items() if v["lens"] == lens]
         row: Dict[str, Any] = {"nodes": len(ids), "tiling": lens in TILING,
                                "writers": {}}
         for lab in ("place_layer", "subpixel", "both"):

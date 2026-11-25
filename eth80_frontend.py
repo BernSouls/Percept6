@@ -94,7 +94,20 @@ _FRONTEND_SOURCE_FILES = ("orchestration/binder.py",
 
 #: Parameters the FRONT END's output depends on that a diagnostic may set at
 #: run time (`eth80_benchmark.run_config`).  They are part of the cache key.
-_FRONTEND_SWITCHES = ("FIELD_BORDER_DISCARD_PER_CHANNEL",
+_FRONTEND_SWITCHES = (
+                      # [MISSION 15] the placement PAYLOAD switches read on the
+                      # build path but declared nowhere: the endpoint list, the
+                      # slot admission order and its judged counting, the empty-bin
+                      # rule and its min count.  Mission 14's audit found six such
+                      # reads; `tests/test_m14_switch_digest.py` refuses to let a
+                      # cached graph be served across them.
+                      "PLACEMENT_M15_PLACES",
+                      "PLACEMENT_M15_PLACE_LENSES",
+                      "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST",
+                      "PLACEMENT_SLOT_COUNT_JUDGED",
+                      "PLACEMENT_LLR_EMPTY_BIN_NEUTRAL",
+                      "PLACEMENT_LLR_MIN_BIN_COUNT",
+                      "FIELD_BORDER_DISCARD_PER_CHANNEL",
                       "BINDER_COMPLETE_POSITION_MAP",
                       "GRAPH_STAGE6_RELATIONS",
                       "ATTACHMENT_EVERY_NAMED_HOST",

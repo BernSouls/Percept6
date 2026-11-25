@@ -179,9 +179,16 @@ def build_side(graph: Any, image_u8: Any, *,
     from matching.placement_scorer import incident_index, payload_index
 
     lens = PE.lens_map_of(graph)
+    # [M15 / item 3] THE ENDPOINT LIST IS A SWITCH.  With PLACEMENT_M15_PLACES on the
+    # list is the atlas place-lens list and `build_edges` selects it; passing an
+    # explicit list here would silently override the flag (an explicit argument wins
+    # by design), so the frozen list is passed only when the flag is off.
+    import parameters as _P
+    _ends = (None if bool(getattr(_P, "PLACEMENT_M15_PLACES", False))
+             else tuple(frozen()["endpoint_lenses"]))
     pay = PE.build_edges(graph.subgraph, image_u8, object_of=object_of,
                          intra_only=intra_only, lens_map=lens,
-                         endpoint_lenses=tuple(frozen()["endpoint_lenses"]))
+                         endpoint_lenses=_ends)
     sub = graph.subgraph
     pos = {int(n): (float(sub.anchor_of_node[n][0]),
                     float(sub.anchor_of_node[n][1]))
