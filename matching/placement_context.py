@@ -283,3 +283,195 @@ def assignment_context(pop: Sequence[int],
             stats.update({"moved": 0, "kept": len(base), "refused": 0})
         return base
     return iterate_context(pop, cands, base, score_fn, iters=iters, stats=stats)
+
+
+# ---------------------------------------------------------------------------
+# [M18 / O2] THE GLOBAL TRANSFORM HYPOTHESIS, in the one component that carries the
+# mission: ROTATION.
+#
+# `Side.index` holds a PlacementVector per edge, and its `source_theta` is the SOURCE
+# node's continuous orientation (matching/placement.py:85-104).  So every node has a
+# measured angle without touching a signature, and every candidate pair (u, v) implies a
+# rotation shift  wrap(theta_v - theta_u).  Under a rotated image, the TRUE pairs all
+# share one shift and the impostors spread over the circle -- that is a Hough vote, it is
+# truth-free, and it uses absolute position for nothing.
+#
+# The M17 assignment is still solved on a PER-PAIR score; this restricts it to the pairs
+# that agree with the consensus first, which is the difference between "each pair looks
+# plausible" and "the whole configuration is consistent".
+# ---------------------------------------------------------------------------
+
+#: Half-width of the consensus window, in radians (10 degrees).  A 5 degree rotation
+#: splits its true pairs between two bins, so the window cannot be tighter than the
+#: transform uncertainty and cannot be so wide that impostors qualify.
+CONSENSUS_TOL = 0.175
+#: How many shift modes may be admitted (1 = strictest).  Two admits the second cluster,
+#: which is what a 5 degree rotation needs.
+CONSENSUS_MODES = 1
+#: Share of the winning weight a mode must reach to be admitted as a second mode.
+CONSENSUS_MODE_SHARE = 0.5
+
+
+def node_theta(side: Any, u: int):
+    """``(theta, axial)`` for node ``u``, or ``(None, False)``.
+
+    The orientation comes from any OUTGOING payload vector: its `source_theta` is the
+    source's own orientation, so it does not depend on which neighbour it points at.
+    ``axial`` says whether that frame is a half-turn ambiguous axis, which changes how a
+    shift may be compared.
+    """
+    for (other, is_source, name) in side.incident.get(int(u), ()):
+        if not is_source:
+            continue
+        pv = side.index.get((int(u), int(other), name))
+        if pv is None:
+            continue
+        th = float(getattr(pv, "source_theta", float("nan")))
+        if math.isfinite(th):
+            return th, bool(getattr(pv, "axial", False))
+    return None, False
+
+
+def _shift(a: float, b: float, axial: bool) -> float:
+    d = (float(b) - float(a) + math.pi) % (2.0 * math.pi) - math.pi
+    if axial:
+        # an axis is a half-turn ambiguous frame: fold the shift into [0, pi)
+        d = d % math.pi
+        if d > math.pi / 2.0:
+            d -= math.pi
+    return d
+
+
+def consensus_shifts(pop: Sequence[int],
+                     cands: Mapping[int, Sequence[Tuple[int, float]]],
+                     side_a: Any, side_b: Any,
+                     n_modes: int = CONSENSUS_MODES,
+                     tol: float = CONSENSUS_TOL,
+                     stats: Optional[Dict[str, Any]] = None) -> List[float]:
+    """The modal rotation shift(s) implied by the candidate rows.
+
+    Votes are weighted by the appearance similarity, so a pair the descriptor likes
+    counts for more than a marginal one.  Returns up to ``n_modes`` shifts, strongest
+    first, and nothing at all when no node has a measured orientation.
+    """
+    th_a = {int(u): node_theta(side_a, int(u)) for u in pop}
+    votes: List[Tuple[float, float]] = []
+    seen_b: Dict[int, Any] = {}
+    for u in pop:
+        ta, axial_a = th_a.get(int(u), (None, False))
+        if ta is None:
+            continue
+        for (v, s) in cands.get(int(u), ()):
+            v = int(v)
+            if v not in seen_b:
+                seen_b[v] = node_theta(side_b, v)
+            tb, axial_b = seen_b[v]
+            if tb is None:
+                continue
+            votes.append((_shift(ta, tb, bool(axial_a or axial_b)), float(s)))
+    if not votes:
+        if stats is not None:
+            stats["consensus"] = {"votes": 0, "modes": []}
+        return []
+    # weighted circular density on a fixed grid, then local maxima
+    grid = np.linspace(-math.pi / 2.0, math.pi / 2.0, 73)
+    dens = np.zeros_like(grid)
+    for (d, w) in votes:
+        dens += w * np.exp(-0.5 * ((grid - d) / (tol / 2.0)) ** 2)
+    order = np.argsort(-dens)
+    modes: List[float] = []
+    total = float(dens.sum()) or 1.0
+    best = float(dens[order[0]])
+    for k in order:
+        cand = float(grid[k])
+        if any(abs(cand - m) < 2.0 * tol for m in modes):
+            continue
+        if modes and float(dens[k]) < CONSENSUS_MODE_SHARE * best:
+            break
+        if len(modes) >= int(n_modes):
+            break
+        modes.append(cand)
+    if stats is not None:
+        stats["consensus"] = {"votes": len(votes), "modes": modes,
+                              "best_weight_share": best / total}
+    return modes
+
+
+def consensus_mapping(pop: Sequence[int],
+                      cands: Mapping[int, Sequence[Tuple[int, float]]],
+                      side_a: Any, side_b: Any,
+                      lam: float = ASSIGN_LAMBDA,
+                      tol: float = CONSENSUS_TOL,
+                      n_modes: int = CONSENSUS_MODES,
+                      soft: bool = False,
+                      bonus: float = 0.0,
+                      stats: Optional[Dict[str, Any]] = None
+                      ) -> Dict[int, int]:
+    """Bijection over the pairs that agree with the rotation consensus.
+
+    Nodes with no consensus-consistent candidate fall back to their full row (they are
+    the ones the vote could not speak for) -- and that fallback is COUNTED, never silent.
+
+    ``soft`` replaces the hard restriction with a bounded NUDGE: every consistent pair
+    gets ``+bonus`` added to its similarity and every row keeps its full candidate list.
+    That matters because the hard version is only as good as the mode, and on a real
+    photograph at 15 deg the mode is wrong (`m18_shift_cap6.json`: mode 0.04 against a
+    true shift of 0.26, and 90 % of the true rows lose their truth partner).  A wrong
+    mode can still hurt a soft version, but it cannot starve a row of its truth.
+    """
+    modes = consensus_shifts(pop, cands, side_a, side_b, n_modes=n_modes, tol=tol,
+                             stats=stats)
+    if not modes:
+        if stats is not None:
+            stats["consensus_fallback"] = "no measured orientation"
+        return {}
+    th_a = {int(u): node_theta(side_a, int(u)) for u in pop}
+    th_b: Dict[int, Any] = {}
+
+    def _tb(v: int):
+        if v not in th_b:
+            th_b[v] = node_theta(side_b, v)
+        return th_b[v]
+
+    kept: Dict[int, List[Tuple[int, float]]] = {}
+    n_fell_back = 0
+    n_no_orient = 0
+    for u in pop:
+        u = int(u)
+        ta, axial_a = th_a.get(u, (None, False))
+        row = list(cands.get(u, ()))
+        if not row:
+            kept[u] = row
+            continue
+        if ta is None:
+            # this row cannot vote and cannot be checked against the vote: it falls back
+            # to the full row, and it is COUNTED -- a silent fallback is the M17 defect
+            kept[u] = row
+            n_no_orient += 1
+            continue
+        good: List[Tuple[int, float]] = []
+        for (v, s) in row:
+            tb, axial_b = _tb(int(v))
+            if tb is None:
+                continue
+            d = _shift(ta, tb, bool(axial_a or axial_b))
+            if any(abs(d - m) <= tol for m in modes):
+                good.append((int(v), float(s)))
+        if soft:
+            agree = {int(v) for (v, _s) in good}
+            kept[u] = [(int(v), float(s) + (float(bonus) if int(v) in agree else 0.0))
+                       for (v, s) in row]
+            if not agree:
+                n_fell_back += 1
+            continue
+        if good:
+            kept[u] = good
+        else:
+            kept[u] = row
+            n_fell_back += 1
+    out = assignment_mapping(sorted(kept), kept, side_a, side_b, lam=lam)
+    if stats is not None:
+        stats["consensus"] = dict(stats.get("consensus") or {}, mapped=len(out),
+                                  rows_without_consensus=n_fell_back,
+                                  rows_without_orientation=n_no_orient)
+    return out

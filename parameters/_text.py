@@ -4392,6 +4392,45 @@ PLACEMENT_CONTEXT_ASSIGN_LAMBDA: float = float(
 PLACEMENT_CONTEXT_ASSIGN_ITERS: int = int(
     os.environ.get("PLACEMENT_CONTEXT_ASSIGN_ITERS", "0"))
 
+#: [M18 / O2] THE ROTATION CONSENSUS.  Every candidate pair implies a rotation shift from
+#: the two nodes' own measured orientations; the true pairs share one shift and the
+#: impostors spread.  On, the bijection is solved over the pairs that agree with the
+#: modal shift first.  Off, `context_mapping` is byte-for-byte what M17 shipped.
+PLACEMENT_CONTEXT_CONSENSUS: bool = os.environ.get(
+    "PLACEMENT_CONTEXT_CONSENSUS", "0") != "0"
+PLACEMENT_CONTEXT_CONSENSUS_TOL: float = float(
+    os.environ.get("PLACEMENT_CONTEXT_CONSENSUS_TOL", "0.175"))
+PLACEMENT_CONTEXT_CONSENSUS_MODES: int = int(
+    os.environ.get("PLACEMENT_CONTEXT_CONSENSUS_MODES", "1"))
+PLACEMENT_CONTEXT_CONSENSUS_LAMBDA: float = float(
+    os.environ.get("PLACEMENT_CONTEXT_CONSENSUS_LAMBDA", "0.5"))
+#: [M18 / O2] SOFT consensus: the shift nudge is added to each consistent pair's
+#: similarity and NO row loses a candidate (see `consensus_mapping`).  The hard filter is
+#: fragile because it is only as right as the mode; this bounds the damage a wrong mode
+#: can do.  OFF (hard) by default, and the whole consensus is off by default anyway.
+PLACEMENT_CONTEXT_CONSENSUS_SOFT: bool = os.environ.get(
+    "PLACEMENT_CONTEXT_CONSENSUS_SOFT", "0") != "0"
+PLACEMENT_CONTEXT_CONSENSUS_BONUS: float = float(
+    os.environ.get("PLACEMENT_CONTEXT_CONSENSUS_BONUS", "0.15"))
+
+#: [M18 / O1] THE M18 TABLE.  Pose-balanced mixture (equal weight over 0/5/15 deg and the
+#: 1.15x scale), a 0.05-tol front to 1.0, a strictly decreasing exponential tail to 6.0,
+#: PAVA + a count-scaled minimum.  0 rises, no thin bin paying positive credit, and
+#: LLR(5.0) < LLR(1.5) strictly.  OFF: the deployed table stays what it was.
+PLACEMENT_LLR_TABLE_M18: bool = os.environ.get(
+    "PLACEMENT_LLR_TABLE_M18", "0") != "0"
+
+#: [M18 / O3] THE CANDIDATE CAP.  At 15 deg the true partner's median rank in the
+#: similarity row is 11 and 69.6 % of truth pairs are OUTSIDE the deployed cap of 6, so
+#: no context and no geometry term can reach them: the loss is in candidate generation,
+#: not in the blend.  0 keeps the frozen `cand_cap`.
+PLACEMENT_CAND_CAP: int = int(os.environ.get("PLACEMENT_CAND_CAP", "0"))
+
+#: [M18 / O1] WHICH TABLE FILE.  Empty keeps the selector (`PLACEMENT_LLR_TABLE_M17`).
+#: A path makes an arbitrary candidate bundle readable, which is how the mission's table
+#: variants are A/B'd without editing a tracked file.
+PLACEMENT_LLR_TABLE_PATH: str = os.environ.get("PLACEMENT_LLR_TABLE_PATH", "")
+
 #: [M17 / O5] THE SIGNATURE PAYLOAD IS PART OF WHAT AN ARM NEEDS.  The population vector
 #: rides in the signature payload and not in the graph cache key, so a graph built with
 #: `KP_GRADED_POPULATION` off cannot serve the population arm.  Off, such a read is

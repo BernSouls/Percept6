@@ -67,6 +67,17 @@ def arm(name: str) -> Dict[str, Any]:
         return dict(ARMS[name])
     # ctx-it2-m0-r1-rt02-mut0  style slugs
     import re
+    m = re.match(r"^(cons|soft)-l([0-9.]+)-m(\d+)(?:-t([0-9.]+))?(?:-b([0-9.]+))?$", name)
+    if m:
+        return {"table": "m16", "consensus": True, "lam": float(m.group(2)),
+                "modes": int(m.group(3)),
+                "ctol": float(m.group(4)) if m.group(4) else 0.175,
+                "soft": m.group(1) == "soft",
+                "bonus": float(m.group(5)) if m.group(5) else 0.15}
+    m = re.match(r"^m18-l([0-9.]+)-it(\d+)$", name)
+    if m:
+        return {"table": "m18", "assign": True, "lam": float(m.group(1)),
+                "assign_iters": int(m.group(2))}
     m = re.match(r"^asg-l([0-9.]+)-it(\d+)$", name)
     if m:
         return {"table": "m17", "assign": True, "lam": float(m.group(1)),
@@ -103,6 +114,8 @@ def _auc(pairs: List[Tuple[float, List[float]]]) -> Optional[float]:
 def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
     tag, pose, spec, arm_name = args[:4]
     table_override = args[4] if len(args) > 4 else None
+    cap_override = args[5] if len(args) > 5 else 0
+    table_path_override = args[6] if len(args) > 6 else ""
     import guard
     guard.activate()
     import parameters as P
@@ -117,11 +130,22 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
     cfg = arm(arm_name)
     if table_override:
         cfg["table"] = table_override
+
     for k, v in M16.items():
         setattr(P, k, v)
+    P.PLACEMENT_LLR_TABLE_PATH = str(table_path_override or "")
     P.KP_GRADED_POPULATION = True           # the payload is in these cached graphs
     P.PLACEMENT_LLR_TABLE_M17 = (cfg.get("table") == "m17")
+    P.PLACEMENT_LLR_TABLE_M18 = (cfg.get("table") == "m18")
+    P.PLACEMENT_CAND_CAP = int(cap_override or 0)
     P.PLACEMENT_CONTEXT_M17 = False         # levers are passed explicitly below
+    P.PLACEMENT_CONTEXT_CONSENSUS = bool(cfg.get("consensus", False))
+    if cfg.get("consensus"):
+        P.PLACEMENT_CONTEXT_CONSENSUS_LAMBDA = float(cfg.get("lam", 0.5))
+        P.PLACEMENT_CONTEXT_CONSENSUS_MODES = int(cfg.get("modes", 1))
+        P.PLACEMENT_CONTEXT_CONSENSUS_TOL = float(cfg.get("ctol", 0.175))
+        P.PLACEMENT_CONTEXT_CONSENSUS_SOFT = bool(cfg.get("soft", False))
+        P.PLACEMENT_CONTEXT_CONSENSUS_BONUS = float(cfg.get("bonus", 0.15))
     P.PLACEMENT_CONTEXT_ASSIGN = bool(cfg.get("assign", False))
     if cfg.get("assign"):
         P.PLACEMENT_CONTEXT_ASSIGN_LAMBDA = float(cfg.get("lam", 0.5))
@@ -153,7 +177,7 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
         for (v, s) in rows_sim.get(u, ()):
             if s > 0.0:
                 matrix[i][idx_b[v]] = float(s)
-    triples = PM.top_candidates(matrix, nodes_b, int(b["cand_cap"]))
+    triples = PM.top_candidates(matrix, nodes_b, PM.cand_cap())
     levers = {k: cfg[k] for k in ("iters", "margin", "max_rivals", "rival_tol",
                                   "mutual") if k in cfg}
     ctx = PM.context_mapping(triples, nodes_a, side_q, side_r, **levers)
@@ -244,6 +268,10 @@ def main() -> int:
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--table", default="", choices=("", "m16", "m17"),
                     help="force the LLR table for every arm")
+    ap.add_argument("--table-path", default="",
+                    help="read a specific candidate bundle (M18 table variants)")
+    ap.add_argument("--cap", type=int, default=0,
+                    help="override the candidate cap (M18 / O3)")
     ap.add_argument("--result", default="")
     args = ap.parse_args()
     import guard
@@ -253,8 +281,8 @@ def main() -> int:
     tags = IMAGE_SETS.get(args.images, tuple(args.images.split(",")))
     poses = [p for p in POSES if p[0] in args.poses.split(",")]
     arms = [a for a in args.arms.split(",") if a]
-    jobs = [(t, pose, spec, a, args.table) for a in arms for pose, spec in poses
-            for t in tags]
+    jobs = [(t, pose, spec, a, args.table, args.cap, args.table_path)
+            for a in arms for pose, spec in poses for t in tags]
     rows: List[Dict[str, Any]] = []
     with ProcessPoolExecutor(max_workers=args.workers) as ex:
         for r in ex.map(_job, jobs):

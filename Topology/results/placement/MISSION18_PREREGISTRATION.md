@@ -127,3 +127,73 @@ If G1–G5 cannot be met simultaneously, the mission reports the **floor** — t
 gate-passing number with its CI — the mechanism that blocks it, and every route measured
 with its number. Silence, a revert, and a pooled-only headline are the three things this
 mission may not do.
+
+---
+
+## ADDENDUM: O5, the fresh read -- REGISTERED BEFORE THE READ (2026-11-18, this session)
+
+Everything below was written after the FIT measurements and **before** the fresh read was
+run, so the read cannot be shaped by its own outcome.  It registers the frozen design, the
+sample, the statistic and the MDE; the numbers come later, in the report.
+
+### The frozen design (what is being read)
+
+| switch | value | what it is |
+|---|---|---|
+| `PLACEMENT_CAND_CAP` | 24 | candidate generation, truth-free; **not** 6, the deployed cap |
+| `PLACEMENT_LLR_TABLE_M18` | on | the pose-balanced table (`matching/placement_frozen_params_m18.json`) |
+| `PLACEMENT_CONTEXT_ASSIGN` | on, lambda 0.5, iters 0 | the M17 shipped bijection start, no damped sweeps |
+| `PLACEMENT_CONTEXT_CONSENSUS` | **off** | measured and rejected at FIT: on a real photograph its mode is wrong (0.04 against a true 0.26) |
+| everything else | as M16/M17 shipped | `M16` flag set, `KP_GRADED_POPULATION` |
+
+Defaults are untouched: with every switch at its default the pipeline still reads the
+deployed table with cap 6, and `placement_m12_perf.py --check` must report 0 diffs.
+
+### The sample
+
+`fresh20` -- the 20 images `Topology/placement_m17_fresh.tags()` builds: 16 synthetic
+scenes at seeds `81000 + i` and the four photographs `page`, `gravel`, `moon`, `retina`.
+None of them entered the M18 table fit, whose bank is the four DEV images.
+
+STATED LIMITATION: this set was read once before, under M17's design (report O6).  It is
+held out from the M18 *design* but it is not virgin to the programme, and the reuse can
+only help through image selection, which was fixed before either read.
+
+### The statistic
+
+Pose `rot15` only (the mission's primary pose).  Per image `i`:
+
+    d_i = top1_full(i) - top1_appearance_only(i)
+
+paired, image-clustered, n = 20.  Report the mean, the sd, the 95 % CI (t, 19 df), the
+median, the full per-image vector, and the count of ties.
+
+ACCEPTANCE: mean > 0 **and** the 95 % CI excludes 0 **and** every `d_i >= 0` (a tie is
+not a win: ties fail, so the count of ties is reported and no claim is made on a tie).
+
+### The MDE, stated before the read
+
+Planning sd of the paired difference = **0.0436** (M17's O6 read, the same 20 images and
+the same pairing).  Two-sided alpha 0.05, power 0.80, n = 20:
+
+    MDE = (1.959964 + 0.841621) * 0.0436 / sqrt(20) = 0.0273
+
+Planning effect, for comparison, is the FIT measurement (+0.403, 0.462 - 0.059).  The MDE
+is an order of magnitude below it, so the read is not vacuous *if* the effect survives the
+image change.  If the observed sd differs from the planning sd, the MDE is recomputed from
+the observed sd and both are reported.
+
+### Non-vacuity counters, checked before any verdict
+
+* queries per image > 0 (report n per image; a cell with 0 queries is a failed read, not a
+  zero);
+* context rows counted > 0 (the context accuracy is not measured on nothing);
+* the appearance-only baseline > 0 in at least half the images (if appearance alone never
+  scores, the difference is a comparison against a constant zero and the read is vacuous);
+* no `float("inf")` / NaN may stand in for a rate -- a rate with no denominator is `None`
+  and is reported as such.
+
+### Splitting the report (never pool regimes)
+
+Pooled over all 20, then the 16 synthetic and the 4 photographs **separately**, then per
+image.  The grass-type photograph (`gravel`) is also shown on its own wherever it differs.

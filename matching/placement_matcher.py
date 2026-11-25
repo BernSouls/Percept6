@@ -37,6 +37,9 @@ FROZEN_PATH = os.path.join(_HERE, "placement_frozen_params.json")
 #: [M17 / O1] the refitted table; read only when `PLACEMENT_LLR_TABLE_M17` is on, so the
 #: deployed default stays byte-identical.
 FROZEN_PATH_M17 = os.path.join(_HERE, "placement_frozen_params_m17.json")
+#: [M18 / O1] the pose-balanced, fine-fronted, exp-tailed table.  Read only when
+#: `PLACEMENT_LLR_TABLE_M18` is on; the deployed default stays byte-identical.
+FROZEN_PATH_M18 = os.path.join(_HERE, "placement_frozen_params_m18.json")
 
 #: Counters for the loud-but-survivable production path.  A test or a harness can
 #: read them; production logs them.
@@ -52,9 +55,21 @@ _PFIT = None
 def active_path() -> str:
     """Which table this process reads.  Flag OFF (the default) is the deployed one."""
     import parameters as P
+    p = str(getattr(P, "PLACEMENT_LLR_TABLE_PATH", "") or "")
+    if p:
+        return p
+    if bool(getattr(P, "PLACEMENT_LLR_TABLE_M18", False)):
+        return FROZEN_PATH_M18
     if bool(getattr(P, "PLACEMENT_LLR_TABLE_M17", False)):
         return FROZEN_PATH_M17
     return FROZEN_PATH
+
+
+def cand_cap() -> int:
+    """The candidate cap: the frozen one unless `PLACEMENT_CAND_CAP` overrides it."""
+    import parameters as P
+    cap = int(getattr(P, "PLACEMENT_CAND_CAP", 0) or 0)
+    return cap if cap > 0 else int(frozen()["cand_cap"])
 
 
 def reset_cache() -> None:
@@ -366,7 +381,28 @@ def context_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
     # does not run at all.  Two mechanisms: a bijection (two places cannot claim the
     # same reference place) and a rotation-invariant configuration term, so the start
     # is not computed from the mapping it is supposed to fix.
-    if bool(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN", False)) and cands:
+    if bool(getattr(_P, "PLACEMENT_CONTEXT_CONSENSUS", False)) and cands:
+        # [M18 / O2] the rotation-consensus start.  It SUPERSEDES the plain assignment
+        # (it restricts that bijection to the shift-consistent pairs), so it is checked
+        # first and the assignment flag becomes a fallback for when it has no votes.
+        from matching import placement_context as _Ctx3
+        _cs: Dict[str, Any] = {}
+        _con = _Ctx3.consensus_mapping(
+            sorted(cands), cands, side_a, side_b,
+            lam=float(getattr(_P, "PLACEMENT_CONTEXT_CONSENSUS_LAMBDA", 0.5)),
+            tol=float(getattr(_P, "PLACEMENT_CONTEXT_CONSENSUS_TOL", 0.175)),
+            n_modes=int(getattr(_P, "PLACEMENT_CONTEXT_CONSENSUS_MODES", 1)),
+            soft=bool(getattr(_P, "PLACEMENT_CONTEXT_CONSENSUS_SOFT", False)),
+            bonus=float(getattr(_P, "PLACEMENT_CONTEXT_CONSENSUS_BONUS", 0.15)),
+            stats=_cs)
+        if _con:
+            for _u, _v in _con.items():
+                base[_u] = _v
+        if stats is not None:
+            stats.update({"consensus": _cs.get("consensus"),
+                          "consensus_fallback": _cs.get("consensus_fallback")})
+    if (bool(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN", False)) and cands
+            and not bool(getattr(_P, "PLACEMENT_CONTEXT_CONSENSUS", False))):
         from matching import placement_context as _Ctx2
         _asg = _Ctx2.assignment_mapping(
             sorted(cands), cands, side_a, side_b,
