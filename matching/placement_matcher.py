@@ -43,7 +43,8 @@ FROZEN_PATH_M18 = os.path.join(_HERE, "placement_frozen_params_m18.json")
 
 #: Counters for the loud-but-survivable production path.  A test or a harness can
 #: read them; production logs them.
-FAILURES: Dict[str, int] = {"rescored": 0, "raised": 0, "fell_back": 0, "skipped": 0}
+FAILURES: Dict[str, int] = {"rescored": 0, "raised": 0, "fell_back": 0, "skipped": 0,
+                            "desc_capped": 0}
 
 _BUNDLE: Optional[Dict[str, Any]] = None
 #: set while a FIT-only candidate bundle is installed; production leaves it None
@@ -63,6 +64,131 @@ def active_path() -> str:
     if bool(getattr(P, "PLACEMENT_LLR_TABLE_M17", False)):
         return FROZEN_PATH_M17
     return FROZEN_PATH
+
+
+def apply_node_descriptor(matrix: Sequence[Sequence[float]],
+                          nodes_a: Sequence[int], nodes_b: Sequence[int],
+                          side_a: Any, side_b: Any,
+                          k: Optional[int] = None, w: Optional[float] = None,
+                          max_cells: Optional[int] = None) -> List[List[float]]:
+    """[M19 / O1] Re-rank the head of every row with the CONFIGURATION descriptor.
+
+    The signature similarity is gated by five quantised slots, so places that share a key
+    are separated only by the graded population term -- measured rank-1 share at 15 deg:
+    0.059.  The configuration descriptor (sorted log neighbour distances, sorted
+    source-frame directions) is a per-node geometry: it needs no mapping, it is
+    rotation-invariant by construction, and it is already what the bijection start scores.
+
+    `rank_score = (1-w)*sim + w*config`.
+
+    WHICH CELLS.  Blending only the top ``k`` would be wrong: a blended head value can fall
+    below an UNBLENDED cell further down and the row's argmax would then be a cell that was
+    never re-ranked.  So every cell whose raw similarity is at least ``(1-w) * s_k`` (the
+    k-th best, attenuated) is blended, which is a superset of the head and exactly the band
+    that can be affected.  The band is truncated at ``max_cells`` in descending similarity
+    and every truncation is counted in ``FAILURES["desc_capped"]``.
+
+    Flag OFF (the default) returns the matrix object it was given, untouched.
+    """
+    import parameters as P
+    if not bool(getattr(P, "PLACEMENT_NODE_DESC", False)):
+        return matrix
+    from matching import placement_context as Ctx
+    kk = int(getattr(P, "PLACEMENT_NODE_DESC_K", 24) if k is None else k)
+    ww = float(getattr(P, "PLACEMENT_NODE_DESC_W", 0.5) if w is None else w)
+    mc = int(getattr(P, "PLACEMENT_NODE_DESC_MAXCELLS", 96) if max_cells is None else max_cells)
+    ww = min(max(ww, 0.0), 1.0)
+    desc_q = {int(u): Ctx.config_descriptor(side_a, int(u)) for u in nodes_a}
+    desc_r = {int(v): Ctx.config_descriptor(side_b, int(v)) for v in nodes_b}
+    out: List[List[float]] = [list(r) for r in matrix]
+    for i, u in enumerate(nodes_a):
+        row = out[i]
+        live = [(j, float(row[j])) for j in range(len(row)) if float(row[j]) > 0.0]
+        if not live:
+            continue
+        live.sort(key=lambda t: (-t[1], int(nodes_b[t[0]])))
+        s_k = live[min(kk, len(live)) - 1][1]
+        thr = (1.0 - ww) * s_k
+        # mc <= 0 means THE WHOLE ROW.  A band of only the head is NOT scale-consistent:
+        # a head cell whose configuration is poor is attenuated to (1-w)*s, which a
+        # low-similarity TAIL cell -- never blended, so never attenuated -- can outscore.
+        # Blending every positive cell keeps one score scale; truncation is opt-in, bounded
+        # and counted.
+        band = [(j, s) for (j, s) in live if s >= thr] if mc > 0 else list(live)
+        if mc > 0 and len(band) > mc:
+            FAILURES["desc_capped"] = FAILURES.get("desc_capped", 0) + 1
+            band = band[:mc]
+        dq = desc_q.get(int(u))
+        for (j, s) in band:
+            c = Ctx.config_similarity(dq, desc_r.get(int(nodes_b[j])))
+            row[j] = (1.0 - ww) * s + ww * c
+    return out
+
+
+def adaptive_cap(base: int, row_size: int, k: Optional[float] = None,
+                 cap_max: Optional[int] = None) -> int:
+    """[M19 / O2] `clamp(round(k * row_size), base, cap_max)` -- monotone in the row size."""
+    import parameters as P
+    kk = float(getattr(P, "PLACEMENT_CAP_ADAPTIVE_K", 0.125) if k is None else k)
+    cm = int(getattr(P, "PLACEMENT_CAP_ADAPTIVE_MAX", 64) if cap_max is None else cap_max)
+    want = int(round(kk * max(int(row_size), 1)))
+    return int(min(max(want, int(base)), max(int(base), cm)))
+
+
+def top_candidates_dedup(matrix: Sequence[Sequence[float]],
+                         nodes_b: Sequence[int], base: int,
+                         keys_b: Optional[Sequence[Any]] = None
+                         ) -> List[List[Tuple[int, int, float]]]:
+    """`top_candidates`, with each row's cap spent on DISTINCT signature keys first.
+
+    A row of 315 candidates whose 586-place population shares 136 distinct quantised keys
+    is mostly copies: the same five slots five times over.  Spending the cap on the best
+    candidate of each distinct key first, then filling the remainder in similarity order,
+    buys diversity for free in compute -- and it can LOSE the truth, so the recall is
+    measured, not assumed (`m19_dedup.json` reports the truth denominator before and after).
+
+    `keys_b` is one key per node id in `nodes_b` (any hashable); a node with no key is
+    treated as its own distinct key.  Flag OFF (the default) is exactly `top_candidates`.
+    """
+    import parameters as P
+    if not bool(getattr(P, "PLACEMENT_CAP_DEDUP", False)) or keys_b is None:
+        return top_candidates(matrix, nodes_b, base)
+    key_of = {int(v): k for v, k in zip(nodes_b, keys_b)}
+    out: List[List[Tuple[int, int, float]]] = []
+    for i in range(len(matrix)):
+        row = [(j, int(nodes_b[j]), float(matrix[i][j]))
+               for j in range(len(nodes_b)) if float(matrix[i][j]) > 0.0]
+        row.sort(key=lambda t: (-t[2], t[1]))
+        seen: set = set()
+        head: List[Tuple[int, int, float]] = []
+        for t in row:
+            k = key_of.get(t[1], ("__node__", t[1]))
+            if k in seen:
+                continue
+            seen.add(k)
+            head.append(t)
+            if len(head) >= int(base):
+                break
+        chosen = {t[1] for t in head}
+        rest = [t for t in row if t[1] not in chosen]
+        out.append(head + rest[: max(0, int(base) - len(head))])
+    return out
+
+
+def top_candidates_adaptive(matrix: Sequence[Sequence[float]],
+                            nodes_b: Sequence[int], base: int) -> List[List[Tuple[int, int, float]]]:
+    """`top_candidates`, with each row's cap from `adaptive_cap` when the flag is on."""
+    import parameters as P
+    if not bool(getattr(P, "PLACEMENT_CAP_ADAPTIVE", False)):
+        return top_candidates(matrix, nodes_b, base)
+    out: List[List[Tuple[int, int, float]]] = []
+    for i in range(len(matrix)):
+        row = [(j, int(nodes_b[j]), float(matrix[i][j]))
+               for j in range(len(nodes_b)) if float(matrix[i][j]) > 0.0]
+        row.sort(key=lambda t: (-t[2], t[1]))
+        cap = adaptive_cap(int(base), len(row))
+        out.append(row[:cap])
+    return out
 
 
 def cand_cap() -> int:

@@ -50,6 +50,10 @@ IMAGE_SETS: Dict[str, Tuple[str, ...]] = {
 #: the composition was fixed before any of these graphs existed.
 from Topology.placement_m17_fresh import tags as _fresh_tags  # noqa: E402
 IMAGE_SETS["fresh20"] = _fresh_tags()
+#: [M19 / O5] the registered M19 read set: 16 scenes at seeds 91000+i and four photographs
+#: no read has touched.  Fixed in MISSION19_PREREGISTRATION.md before any graph existed.
+from Topology.placement_m19_fresh import tags as _m19_tags  # noqa: E402
+IMAGE_SETS["fresh19"] = _m19_tags()
 M16 = dict(FE_KEYPOINTS=True, FE_PLACE_LAYER=True, FE_SUBPIXEL_PEAK_POS=True,
            FE_SUBPIXEL_GABOR_ANCHOR=True, PLACEMENT_FRAME_KEYPOINT=True,
            PLACEMENT_FRAME_KEYPOINT_SIGMA="largest", PLACEMENT_FRAME_FALLBACK="none",
@@ -112,10 +116,15 @@ def _auc(pairs: List[Tuple[float, List[float]]]) -> Optional[float]:
 
 
 def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
+    import time as _t_total
+    _t_cell = _t_total.time()
     tag, pose, spec, arm_name = args[:4]
     table_override = args[4] if len(args) > 4 else None
     cap_override = args[5] if len(args) > 5 else 0
     table_path_override = args[6] if len(args) > 6 else ""
+    desc_override = args[7] if len(args) > 7 else None
+    adapt_override = args[8] if len(args) > 8 else None
+    dedup_override = bool(args[9]) if len(args) > 9 else False
     import guard
     guard.activate()
     import parameters as P
@@ -177,7 +186,29 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
         for (v, s) in rows_sim.get(u, ()):
             if s > 0.0:
                 matrix[i][idx_b[v]] = float(s)
-    triples = PM.top_candidates(matrix, nodes_b, PM.cand_cap())
+    if desc_override:
+        _dk, _dw = desc_override
+        P.PLACEMENT_NODE_DESC = True
+        P.PLACEMENT_NODE_DESC_K = int(_dk)
+        P.PLACEMENT_NODE_DESC_W = float(_dw)
+        matrix = PM.apply_node_descriptor(matrix, nodes_a, nodes_b, side_q, side_r)
+    else:
+        P.PLACEMENT_NODE_DESC = False
+    if adapt_override:
+        _ak, _am = adapt_override
+        P.PLACEMENT_CAP_ADAPTIVE = True
+        P.PLACEMENT_CAP_ADAPTIVE_K = float(_ak)
+        P.PLACEMENT_CAP_ADAPTIVE_MAX = int(_am)
+    else:
+        P.PLACEMENT_CAP_ADAPTIVE = False
+    if dedup_override:
+        P.PLACEMENT_CAP_DEDUP = True
+        _keys = [tuple(CEN._sig_key(g0.sigs[v][1])) if g0.sigs.get(v) is not None
+                 else ("__node__", int(v)) for v in nodes_b]
+        triples = PM.top_candidates_dedup(matrix, nodes_b, PM.cand_cap(), _keys)
+    else:
+        P.PLACEMENT_CAP_DEDUP = False
+        triples = PM.top_candidates_adaptive(matrix, nodes_b, PM.cand_cap())
     levers = {k: cfg[k] for k in ("iters", "margin", "max_rivals", "rival_tol",
                                   "mutual") if k in cfg}
     ctx = PM.context_mapping(triples, nodes_a, side_q, side_r, **levers)
@@ -189,6 +220,9 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
                                   slot_cap=int(L.SLOT_CAP),
                                   tol=(None if tol_of is None else tol_of(u, v)))) - 0.5
 
+    import time as _time
+    L.judged_reset()
+    _t_score = _time.time()
     app_pairs: List[Tuple[float, List[float]]] = []
     geo_m: List[Tuple[float, List[float]]] = []
     geo_t: List[Tuple[float, List[float]]] = []
@@ -249,7 +283,12 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
                            "et_true": float(et[vt]), "et_best_imp": float(best_et),
                            "ctx_ok": int(ctx.get(u, -1) == vt),
                            "n_imp": len(imps)})
-    return {"tag": tag, "pose": pose, "arm": arm_name, "config": cfg,
+    _sec_score = _time.time() - _t_score
+    return {"tag": tag, "pose": pose, "arm": arm_name,
+            "sec": {"score": _sec_score, "total": _t_total.time() - _t_cell},
+            "judged": {"pairs": int(L.JUDGED[0]), "slots": int(L.JUDGED[1])},
+            "config": dict(cfg, desc=desc_override, adapt=adapt_override,
+                           dedup=bool(dedup_override)),
             "table": os.path.basename(PM.active_path()),
             "counts": counts, "fails": fails,
             "auc_appearance": _auc(app_pairs), "auc_geo_matcher": _auc(geo_m),
@@ -272,6 +311,12 @@ def main() -> int:
                     help="read a specific candidate bundle (M18 table variants)")
     ap.add_argument("--cap", type=int, default=0,
                     help="override the candidate cap (M18 / O3)")
+    ap.add_argument("--desc", default="",
+                    help="M19/O1 node descriptor as K,W (e.g. 24,0.5); empty = off")
+    ap.add_argument("--adapt", default="",
+                    help="M19/O2 adaptive cap as k,cap_max (e.g. 0.125,64); empty = off")
+    ap.add_argument("--dedup", type=int, default=0,
+                    help="M19/O2 spend the cap on distinct signature keys (0/1)")
     ap.add_argument("--result", default="")
     args = ap.parse_args()
     import guard
@@ -281,8 +326,10 @@ def main() -> int:
     tags = IMAGE_SETS.get(args.images, tuple(args.images.split(",")))
     poses = [p for p in POSES if p[0] in args.poses.split(",")]
     arms = [a for a in args.arms.split(",") if a]
-    jobs = [(t, pose, spec, a, args.table, args.cap, args.table_path)
-            for a in arms for pose, spec in poses for t in tags]
+    desc = tuple(float(x) for x in args.desc.split(",")) if args.desc else None
+    adapt = tuple(float(x) for x in args.adapt.split(",")) if args.adapt else None
+    jobs = [(t, pose, spec, a, args.table, args.cap, args.table_path, desc, adapt,
+             bool(args.dedup)) for a in arms for pose, spec in poses for t in tags]
     rows: List[Dict[str, Any]] = []
     with ProcessPoolExecutor(max_workers=args.workers) as ex:
         for r in ex.map(_job, jobs):

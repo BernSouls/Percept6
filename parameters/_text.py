@@ -4420,6 +4420,35 @@ PLACEMENT_CONTEXT_CONSENSUS_BONUS: float = float(
 PLACEMENT_LLR_TABLE_M18: bool = os.environ.get(
     "PLACEMENT_LLR_TABLE_M18", "0") != "0"
 
+#: [M19 / O1] THE NODE DESCRIPTOR.  The keypoint signature is gated by five quantised
+#: slots, so many places share a key and the similarity cannot order them (measured: 43-51 %
+#: of places share their full quantised key at 0 deg, and the true partner's rank-1 share is
+#: 0.059 at 15 deg).  The rotation-invariant CONFIGURATION descriptor -- already computed for
+#: the bijection start -- is a per-node geometry and needs no mapping.  On, it re-ranks the
+#: head of every similarity row: `(1-w)*sig + w*config`.  OFF: the matrix is untouched.
+PLACEMENT_NODE_DESC: bool = os.environ.get("PLACEMENT_NODE_DESC", "0") != "0"
+PLACEMENT_NODE_DESC_K: int = int(os.environ.get("PLACEMENT_NODE_DESC_K", "24"))
+PLACEMENT_NODE_DESC_W: float = float(os.environ.get("PLACEMENT_NODE_DESC_W", "0.5"))
+#: 0 = blend EVERY positive cell of the row, which keeps one score scale: a head cell
+#: whose configuration is poor is attenuated to (1-w)*s, and a tail cell that was never
+#: blended would otherwise outscore it from a different scale.  A positive value truncates
+#: the blend and every truncation is COUNTED (`FAILURES["desc_capped"]`) -- never silent.
+PLACEMENT_NODE_DESC_MAXCELLS: int = int(
+    os.environ.get("PLACEMENT_NODE_DESC_MAXCELLS", "0"))
+
+#: [M19 / O2] THE ADAPTIVE CAP.  A dense row (grass: median 586 places) is unreachable at a
+#: fixed cap of 24.  On, each row's cap is `clamp(round(k * row_size), base, cap_max)`.
+PLACEMENT_CAP_ADAPTIVE: bool = os.environ.get("PLACEMENT_CAP_ADAPTIVE", "0") != "0"
+PLACEMENT_CAP_ADAPTIVE_K: float = float(os.environ.get("PLACEMENT_CAP_ADAPTIVE_K", "0.125"))
+PLACEMENT_CAP_ADAPTIVE_MAX: int = int(os.environ.get("PLACEMENT_CAP_ADAPTIVE_MAX", "64"))
+
+#: [M19 / O2] THE DEDUPLICATED CAP.  A dense row spends most of its cap on copies: at
+#: 15 deg 31-49 % of places share their full quantised key and a row of 315 has 136 distinct
+#: keys.  On, each row keeps the BEST candidate of each distinct key before it fills the
+#: rest in similarity order, so a fixed cap buys diversity instead of duplicates.  OFF: the
+#: rows are exactly `top_candidates`.
+PLACEMENT_CAP_DEDUP: bool = os.environ.get("PLACEMENT_CAP_DEDUP", "0") != "0"
+
 #: [M18 / O3] THE CANDIDATE CAP.  At 15 deg the true partner's median rank in the
 #: similarity row is 11 and 69.6 % of truth pairs are OUTSIDE the deployed cap of 6, so
 #: no context and no geometry term can reach them: the loss is in candidate generation,

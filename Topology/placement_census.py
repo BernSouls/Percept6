@@ -56,6 +56,12 @@ def lens_of(g: Any, n: int) -> str:
     return str(s[0]) if s is not None else "?"
 
 
+def _sig_key(sig: Any) -> Tuple[Any, ...]:
+    """[M19 / O2] the quantised identity of a signature: what a place shares with a copy."""
+    return (str(getattr(sig, "class_", "?")), str(getattr(sig, "relation", "")),
+            tuple(float(x) for x in (getattr(sig, "quantized", ()) or ())))
+
+
 def similarity_rows(g_q: Any, g_r: Any, nodes_q: List[int],
                     nodes_r: List[int]) -> Dict[int, List[Tuple[int, float]]]:
     """q node -> [(ref node, similarity)] sorted best first, deterministic."""

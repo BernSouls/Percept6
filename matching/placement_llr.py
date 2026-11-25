@@ -480,6 +480,16 @@ def presence_score(u: int, v: int, mapping: Mapping[int, int],
 PLUS_SLOTS = SLOT_CAP
 
 
+#: [M19 / O4] ``[pairs_scored, slots_judged]`` since the last reset.  Read by the
+#: evaluation harness so the cap's cost can be reported where it is paid.
+JUDGED: List[int] = [0, 0]
+
+
+def judged_reset() -> None:
+    JUDGED[0] = 0
+    JUDGED[1] = 0
+
+
 def plus_terms(u: int, v: int, mapping: Mapping[int, int],
                q_inc: Mapping[int, List[Tuple[int, bool, str]]],
                q_idx: Mapping[Tuple[int, int, str], Any],
@@ -502,6 +512,12 @@ def plus_terms(u: int, v: int, mapping: Mapping[int, int],
     """
     slots = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx,
                                 tol=tol)[:slot_cap]
+    # [M19 / O4] the cost the cap is actually paid in: pairs scored and slots judged.
+    # Two integer adds per pair, which is nothing next to the slot work, and they make
+    # "the cap is free" a claim about this pipeline rather than about the perf pairs.
+    global JUDGED
+    JUDGED[0] += 1
+    JUDGED[1] += len(slots)
     e_sum = 0.0
     g_sum = 0.0
     for (name, _other, res) in slots:
