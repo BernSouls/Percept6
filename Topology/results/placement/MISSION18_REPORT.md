@@ -320,8 +320,10 @@ Non-vacuity, checked before the verdict: 0 cells with zero queries; appearance-o
 ## 8. QUALITY CHECKS
 
 - **Defaults byte-identical**: `Topology/placement_m12_perf.py --check --workers 2` →
-  `identical: True (0 diffs)`, 14 pairs, wall 188.7 s, run **after** all matcher, table and
-  parameter changes (`/tmp/m18_check.log`; exit 0).
+  `identical: True (0 diffs)`, 14 pairs, exit 0 — run twice **after** every matcher, table
+  and parameter change: once cold (`wall 188.7 s`, per-pair A 5.14 s / C 5.82 s) and once
+  again as the last act of the mission (`wall 77.9 s` on a warm graph cache, per-pair A
+  5.19 s / C 5.84 s, `/tmp/m18_check_final.log`).  Both 0 diffs.
 - **No silent fallback, and no new fallback counter**: at defaults `active_path()` is the
   deployed file, `cand_cap()` is the frozen cap, and the consensus block does not run.
   `test_no_new_path_counts_a_fallback_at_defaults` asserts `PM.FAILURES` is unchanged
