@@ -10,10 +10,13 @@ Files added: `matching/m15_places.py` (items 3, 4), `matching/m15_manifest.py`
 (items 2, 3, 4, 5, 7, 10), `Topology/placement_m15_writers.py` (item 8),
 `Topology/placement_m15_budget.py` (item 9), `tests/test_m15_slot_admission.py`,
 `tests/test_m15_degree0_neutral.py`, `tests/test_m15_manifest.py`.
-Results: `m15_atlas.json`, `m15_geometry.json`, `m15_item5b.json`,
-`m15_position_writers.json`, `m15_budget.json`, `m15_budget.json` — each written through
+Results: `m15_atlas.json` (the per-lens × per-pose aggregate with the per-image
+min/max spread — the per-cell rows were dropped when the file was rewritten for its
+manifest, and the aggregate is what the tables below use), `m15_geometry.json`,
+`m15_item5b.json`, `m15_position_writers.json`, `m15_budget.json` — each written through
 `m15_manifest.write_result`, so each carries the effective flag vector, the frame
-provider, the weight source, the endpoint list and a 12-hex code digest.
+provider, the weight source, the endpoint list and a 12-hex code digest — and
+`tests/test_m15_manifest.py` now fails if a file in that directory lacks one.
 
 ---
 
@@ -113,7 +116,8 @@ last. Off: the checkable edge is **discarded** (0 judged). On: it is admitted
 (1 judged), and a node with ≤ 8 slots keeps every slot. `TARGET_K = 16`, `SLOT_CAP = 8`,
 so real nodes routinely have more slots than the cap.
 
-**Measured (12 cells: 4 images × 3 poses, 578,828 candidate cells, 1.16M slot reads):**
+**Measured (12 cells: 4 images × 3 poses; 1,157,656 candidate-slot reads = 578,828
+candidate cells read under both arms):**
 
 | | frozen endpoint list | | place endpoint list | |
 |---|---|---|---|---|
@@ -124,7 +128,7 @@ so real nodes routinely have more slots than the cap.
 | candidate cells that gain a checkable slot | — | **8,649** | — | **4,748** |
 
 Spread across the 12 frozen cells: all-candidate share 0.0006–0.0130 (shipped) →
-0.0009–0.0193 (on). The fix moves the **true** candidate's judged share by +0.12 to
+0.0009–0.0193 (on); on the place list 0.0003–0.0109 → 0.0004–0.0140. The fix moves the **true** candidate's judged share by +0.12 to
 +0.14 while moving the wrong candidates by +0.003: it does not "give every pair more
 slots", it stops the estimator from throwing away the evidence that decides the case.
 Defaults: the flag is off, and `--check` reports 0 diffs over 14 pairs.
