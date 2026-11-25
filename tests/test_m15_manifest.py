@@ -46,6 +46,20 @@ class ManifestTests(unittest.TestCase):
     def test_digest_is_stable_within_a_run(self):
         self.assertEqual(M.code_digest(), M.code_digest())
 
+    def test_every_m15_result_file_on_disk_carries_a_manifest(self):
+        """Item 9 on the files themselves, not only on the API.
+
+        A result file that reaches `Topology/results/placement/` without a manifest is
+        a number nobody can attribute; this fails if one does.
+        """
+        import glob
+        paths = sorted(glob.glob(os.path.join(
+            ROOT, "Topology", "results", "placement", "m15_*.json")))
+        self.assertTrue(paths, "no M15 result file found to check")
+        for path in paths:
+            payload = json.load(open(path))
+            M.check(payload, path)
+
 
 if __name__ == "__main__":
     unittest.main()

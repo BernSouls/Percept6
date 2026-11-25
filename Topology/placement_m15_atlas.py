@@ -271,11 +271,11 @@ def main() -> int:
         return {"place_lenses": place, "ridge_places_across_only": ridge_across,
                 "attribute_lenses": attr}
 
-    res = {"cells": len(cells), "aggregate": agg,
+    from matching import m15_manifest as MF
+    res = {"n_cells": len(cells), "cell_rows": cells, "aggregate": agg,
            "lists": {"defaults": _lists(False), "m15": _lists(True)},
            "bar": "place = (i) at 2 px AND (ii) same quantised signature, on >= 20 nodes"}
-    with open(RESULT, "w") as fh:
-        json.dump(res, fh, indent=1, default=float)
+    MF.write_result(RESULT, res)      # item 9: a result carries its own vector
     for cfg in ("m15=0", "m15=1"):
         print("\n== %s : per lens over ALL poses (6 synthetic + 3 real)" % cfg)
         print("%-28s %5s %6s %6s %6s %6s  %8s %8s %s"
