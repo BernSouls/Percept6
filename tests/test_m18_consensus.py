@@ -226,3 +226,34 @@ class TableTests(unittest.TestCase):
         fit, _p = PM.fit_objects()
         fit.of(0.4)
         self.assertEqual(PM.FAILURES, before)
+
+
+class TableSanityTests(unittest.TestCase):
+    """A table's `mu_wrong` is what an UNFORMABLE slot pays.  The first M18 bundle
+    computed it as the mean of log(llr_raw) and wrote -11.8 nats; every slot whose
+    residual could not be formed then paid -11.8, the score gridlocked, and top-1 at
+    15 deg fell from 0.434 to 0.175 -- on BOTH candidate tables, which is what gave it
+    away.  The deployed bundle reads -0.535 and M17 reads -2.26, so the guard is a band,
+    not a point: wide enough not to be tuned, narrow enough to catch a nonsense value.
+    """
+
+    def test_mu_wrong_is_a_score_and_not_a_log_of_one(self):
+        import json
+        from matching import placement_matcher as PM
+        for path in (PM.FROZEN_PATH, PM.FROZEN_PATH_M17, PM.FROZEN_PATH_M18):
+            b = json.load(open(path))
+            mu = float(b["fit"]["mu_wrong"])
+            self.assertGreater(mu, -4.0, "%s: mu_wrong %r is not a per-slot score"
+                               % (os.path.basename(path), mu))
+            self.assertLessEqual(mu, 0.5, "%s: mu_wrong %r pays a wrong slot a bonus"
+                                 % (os.path.basename(path), mu))
+
+    def test_mu_wrong_equals_the_wrong_pair_expectation(self):
+        import json
+        import numpy as np
+        from matching import placement_matcher as PM
+        b = json.load(open(PM.FROZEN_PATH_M18))
+        llr = np.asarray(b["fit"]["llr"], dtype=float)
+        hw = np.asarray(b["fit"]["bin_counts_wrong"], dtype=float)
+        self.assertAlmostEqual(float(b["fit"]["mu_wrong"]),
+                               float(np.sum(llr * hw / hw.sum())), places=9)

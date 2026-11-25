@@ -1,0 +1,31 @@
+{
+ "median_cap24": 8.822988510131836,
+ "median_cap6": 9.069478750228882,
+ "ratio": 0.9728220058853079,
+ "repeats": 2,
+ "rows": [
+  {
+   "judged_cap24": 64,
+   "judged_cap6": 64,
+   "q": "m11ir_00|q_inplane15",
+   "r": "m11ir_01|ref",
+   "sec": {
+    "cap24": 9.49325680732727,
+    "cap6": 9.567765235900879
+   },
+   "tag": "syn"
+  },
+  {
+   "judged_cap24": 61,
+   "judged_cap6": 61,
+   "q": "m11ir_01|q_y25",
+   "r": "m11ir_02|ref",
+   "sec": {
+    "cap24": 8.152720212936401,
+    "cap6": 8.571192264556885
+   },
+   "tag": "syn"
+  }
+ ],
+ "units": "seconds per placement call (best of 2), same cached graphs"
+}
