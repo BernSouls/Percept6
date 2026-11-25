@@ -207,6 +207,56 @@ def llr_monotonicity(llr: "np.ndarray", edges: "np.ndarray") -> Dict[str, Any]:
     return {"rises": rises, "n_rises": len(rises), "n_bins": int(len(llr))}
 
 
+def isotonic_nonincreasing(values: Sequence[float], weights: Sequence[float]
+                           ) -> Tuple[np.ndarray, Dict[str, Any]]:
+    """[M16 / bar 6] Pool-adjacent-violators, monotone DECREASING in |residual|.
+
+    The LLR must be non-increasing in the residual: a closer placement is never worse
+    evidence than a farther one.  Mission 15's 0.05 px refit rose 8 times in the
+    sparse tail, so the table could not be shipped.  PAVA projects the sequence onto
+    the nearest non-increasing one under a weighted least-squares loss, weights being
+    the bins' sample counts, so sparse bins are pulled to their neighbours instead of
+    inventing a rise.
+
+    Returns the projected array and a report: how many rises survived (always 0), how
+    many BLOCKS the projection produced (the "smoothing constant" regions -- every bin
+    inside a block shares one value) and the share of bins that are pooled with a
+    neighbour, i.e. whose value was changed.
+    """
+    v = [float(x) for x in values]
+    w = [max(float(x), 1e-12) for x in weights]
+    n = len(v)
+    if n != len(w):
+        raise ValueError("isotonic: %d values against %d weights" % (n, len(w)))
+    # blocks as [value_sum, weight_sum, count]
+    blocks: List[List[float]] = []
+    for i in range(n):
+        blocks.append([v[i] * w[i], w[i], 1.0])
+        while len(blocks) > 1:
+            a, b = blocks[-2], blocks[-1]
+            if a[0] / a[1] >= b[0] / b[1] - 1e-15:
+                break
+            blocks[-2] = [a[0] + b[0], a[1] + b[1], a[2] + b[2]]
+            blocks.pop()
+    out = np.empty(n, dtype=float)
+    i = 0
+    changed = 0
+    for blk in blocks:
+        val = blk[0] / blk[1]
+        cnt = int(blk[2])
+        out[i:i + cnt] = val
+        i += cnt
+    for i in range(n):
+        if abs(out[i] - v[i]) > 1e-12:
+            changed += 1
+    rises = int(sum(1 for i in range(n - 1) if out[i + 1] > out[i] + 1e-12))
+    return out, {"n_bins": n, "blocks": len(blocks), "changed_bins": changed,
+                 "changed_share": changed / float(n) if n else 0.0,
+                 "rises_after": rises,
+                 "smoothing_constant_share": (sum(1 for b in blocks if int(b[2]) > 1)
+                                              / float(len(blocks)) if blocks else 0.0)}
+
+
 def fit_llr(res_true: Sequence[float], res_wrong: Sequence[float],
             res_max: float = RES_MAX, n_bins: int = N_BINS) -> LLRFit:
     """Bin the two residual populations and take the log ratio.
@@ -237,6 +287,12 @@ def fit_llr(res_true: Sequence[float], res_wrong: Sequence[float],
     if bool(getattr(_P, "PLACEMENT_LLR_EMPTY_BIN_NEUTRAL", False)):
         llr = _neutralise_empty_bins(llr, ht, hw, edges)
     llr = np.clip(llr, -LLR_CLIP, LLR_CLIP)
+    # [M16 / bar 6] SHIPPABLE: monotone by construction.  Off, the table is whatever
+    # the bins say (the shipped behaviour); on, it is projected onto the
+    # non-increasing family with the bins' counts as weights.
+    iso_report: Dict[str, Any] = {}
+    if bool(getattr(_P, "PLACEMENT_LLR_MONOTONE", False)):
+        llr, iso_report = isotonic_nonincreasing(llr, ht + hw + 1.0)
     # The padding value is the mean LLR the WRONG population would receive.
     centres = 0.5 * (edges[:-1] + edges[1:])
     idx = np.digitize(np.clip(w, 0.0, res_max - 1e-9), edges) - 1
@@ -244,7 +300,8 @@ def fit_llr(res_true: Sequence[float], res_wrong: Sequence[float],
     mu_wrong = float(np.mean(llr[idx])) if len(idx) else 0.0
     return LLRFit(edges=edges, llr=llr, mu_wrong=mu_wrong,
                   n_true=int(t.size), n_wrong=int(w.size),
-                  extra={"centres": centres.tolist()})
+                  extra={"centres": centres.tolist(), "isotonic": iso_report,
+                         "n_bins": int(n_bins), "res_max": float(res_max)})
 
 
 def score_candidate(u: int, v: int, mapping: Mapping[int, int],
@@ -609,7 +666,21 @@ def to_jsonbundle(fit: "LLRFit", pfit: "PresenceFit", a_e: float,
                           "n_bins": int(N_BINS)}}
 
 
+#: [M16 / bar 5] Every support/resolution mismatch this module SAW while the strict
+#: guard was off.  A tolerant guard that records is not a silent one: the harnesses
+#: assert this is empty (`assert_guard_clean`), and tests flip the guard on to prove
+#: the refusal path exists.
+GUARD_RECORD: Dict[str, Any] = {}
+
+
+def assert_guard_clean() -> None:
+    if GUARD_RECORD:
+        raise AssertionError("freeze guard mismatches were tolerated: %r"
+                             % (GUARD_RECORD,))
+
+
 def from_jsonbundle(b: Mapping[str, Any]) -> Tuple["LLRFit", "PresenceFit", float, float]:
+    import parameters as _P
     c = b.get("constants") or {}
     for name, mine in (("slot_cap", SLOT_CAP), ("llr_clip", LLR_CLIP),
                        ("fixed_tol", FIXED_TOL)):
@@ -618,5 +689,25 @@ def from_jsonbundle(b: Mapping[str, Any]) -> Tuple["LLRFit", "PresenceFit", floa
                 "frozen %s %r does not match the live constant %r: a deployed "
                 "score must not be read with different caps" %
                 (name, c[name], mine))
+    # [M16 / bar 5] THE SUPPORT AND THE RESOLUTION.  A table fitted over [0, 1.8] with
+    # 36 bins cannot be read as if it were the shipped [0, 6] with 24: the edges are
+    # the index, so every residual would land in the wrong bin and nothing would say
+    # so.  Strict (flag on) => REFUSE; tolerant (default) => record, never silently.
+    strict = bool(getattr(_P, "PLACEMENT_FREEZE_GUARD_SUPPORT", False))
+    for name, mine in (("res_max", RES_MAX), ("n_bins", N_BINS)):
+        if name not in c:
+            GUARD_RECORD[name] = "absent from the bundle"
+            if strict:
+                raise ValueError("frozen bundle has no %r: its support/resolution "
+                                 "cannot be checked against the live %r"
+                                 % (name, mine))
+            continue
+        if abs(float(c[name]) - float(mine)) > 1e-12:
+            GUARD_RECORD[name] = {"bundle": c[name], "live": mine}
+            if strict:
+                raise ValueError(
+                    "frozen %s %r does not match the live %r: a table fitted with a "
+                    "different support or bin count would be indexed wrongly"
+                    % (name, c[name], mine))
     return (_fit_from_dict(b["fit"]), _pres_from_dict(b["presence"]),
             float(b["plus"]["a_exist"]), float(b["plus"]["a_geom"]))

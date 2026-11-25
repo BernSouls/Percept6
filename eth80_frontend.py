@@ -101,6 +101,20 @@ _FRONTEND_SWITCHES = (
                       # rule and its min count.  Mission 14's audit found six such
                       # reads; `tests/test_m14_switch_digest.py` refuses to let a
                       # cached graph be served across them.
+                      # [MISSION 16] the keypoint class constitution: it changes
+                      # the SIGNATURE every keypoint node carries, so the graph
+                      # (and every edge weight derived from it) differs and the
+                      # cache key must move with it.  Declared BEFORE any graph or
+                      # match is built under it.
+                      "KP_GRADED_SIMILARITY",
+                      "KP_GRADED_VARIANT",
+                      "KP_GRADED_POPULATION",
+                      "KP_GRADED_POP_VARIANT",
+                      # M16: read while a graph is built (the frozen bundle is loaded
+                      # and the LLR table may be projected), so a cached graph must
+                      # not be served across a change of either.
+                      "PLACEMENT_LLR_MONOTONE",
+                      "PLACEMENT_FREEZE_GUARD_SUPPORT",
                       "PLACEMENT_M15_PLACES",
                       "PLACEMENT_M15_PLACE_LENSES",
                       "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST",

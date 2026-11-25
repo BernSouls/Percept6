@@ -267,8 +267,18 @@ def signature_of(p: Keypoint) -> Any:
     bin: orientation to pi/12, coherence to quarters, scale to its sigma index,
     kind to its own slot.  This is what `identity` reads, so it must be stable
     under small pose change and MUST NOT carry position.
+
+    [M16] The bins are an INDEX, not a verdict.  This class name is not a key in
+    the registries (`core/registries.py:1540`), so with the flag off the graded
+    kernel is never reached and a keypoint pair scores 1.0 on bin equality and
+    0.0 on one bin of difference -- a 15 deg rotation is one bin.  Under
+    `KP_GRADED_SIMILARITY` the class gets a constitution
+    (`core/keypoint_classes.py`) and the same tuple is compared by the kernel
+    every other class uses; `KP_GRADED_VARIANT` selects the theta tuning width.
     """
     from core.types import TypedSignature
+    from core import keypoint_classes as _KPC
+    _KPC.maybe_register()
     th = float(p.theta) % np.pi
     return TypedSignature(
         kind="CANONICAL",
@@ -278,6 +288,7 @@ def signature_of(p: Keypoint) -> Any:
                    float(round(float(p.scale), 3)),
                    float(KIND_INDEX.get(p.kind, 3)),
                    float(p.dim)),
+        population=_KPC.population_of(p),
     )
 
 

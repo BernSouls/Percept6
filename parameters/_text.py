@@ -4314,3 +4314,46 @@ PLACEMENT_M15_PLACE_LENSES: Tuple[str, ...] = ("Blob", "BoundaryArc", "CornerPoi
 #: count so a shrinking denominator is never read as progress.
 PLACEMENT_M15_TRUTH_RULE: bool = os.environ.get(
     "PLACEMENT_M15_TRUTH_RULE", "0") != "0"
+
+# =========================================================================
+# MISSION 16 -- a place must stay recognisable across a rotation.
+# =========================================================================
+#: [M16 / the verified mechanism] `lenses/keypoints.py::signature_of` writes
+#: class_ = the DISPLAY lens name ("CornerPoint"/"Blob"/"BoundaryArc"), which is not a
+#: key in core/registries (every other lens writes UPPER_SNAKE: CORNER, BOUNDARY,
+#: COLOR ...).  So `get_similarity_ranges` is None and `core/types.py:494-496`
+#: returns 0.0 unless the quantised tuples are EQUAL, in which case line 492-493
+#: returns 1.0.  THETA_BINS = 12 over pi, so a 15 deg rotation is exactly one bin:
+#: the identity of a place is a bit.  ON, the three keypoint classes get a
+#: constitution (core/keypoint_classes.py) and the same tuple is compared by the
+#: graded kernel every other class uses.
+KP_GRADED_SIMILARITY: bool = os.environ.get(
+    "KP_GRADED_SIMILARITY", "0") != "0"
+#: [M16] The theta tuning width for the BINS-ONLY reading, in UNITS OF SIGMA_theta
+#: BINS (sigma = span/3): "narrow" = span 3 bins -> sigma 1 bin = 15 deg; "wide" =
+#: span 12 -> sigma 4 bins = 60 deg.  Measured on FIT by
+#: Topology/placement_m16_similarity.py (mean AUC over 0/5/15 deg/1.15x, synthetic
+#: images): narrow 0.942, wide 0.946 -> "wide".
+KP_GRADED_VARIANT: str = os.environ.get("KP_GRADED_VARIANT", "wide")
+#: [M16] The POPULATION arm's tuning (core/keypoint_classes.POPULATION_SPECS).
+#: Measured on FIT, same cells: theta-sigma 1 bin with weights (8,1,1) 0.942;
+#: (4,1,2) 0.956; theta-sigma 2 bins (8,1,1) 0.952; **theta-sigma 2 bins (4,1,2)
+#: 0.959** -> "theta2-balanced".  This is the arm the mission ships.
+KP_GRADED_POP_VARIANT: str = os.environ.get(
+    "KP_GRADED_POP_VARIANT", "theta2-balanced")
+#: [M16] THE POPULATION ARM.  ON, a keypoint carries the graded activity vector of
+#: its theta / coherence / scale (core/keypoint_classes.population_of) and the
+#: similarity is the chance-corrected overlap of those vectors -- sub-bin
+#: resolution, not just a graded per-bin penalty.  Requires KP_GRADED_SIMILARITY
+#: (the axes must be registered) and is refused otherwise, loudly.
+KP_GRADED_POPULATION: bool = os.environ.get(
+    "KP_GRADED_POPULATION", "0") != "0"
+#: [M16] QUALITY BAR 6: the LLR table must be shippable.  ON, `fit_llr` applies a
+#: monotone (pool-adjacent-violators) constraint after the empty-bin rule, so the
+#: table is non-increasing in |residual| by construction and no bin can hand an
+#: empty region positive credit.
+PLACEMENT_LLR_MONOTONE: bool = os.environ.get("PLACEMENT_LLR_MONOTONE", "0") != "0"
+#: [M16 / bar 5] THE FREEZE GUARD covers the table's SUPPORT and RESOLUTION too:
+#: a refit with a different `res_max`/`n_bins` is REFUSED rather than loaded.
+PLACEMENT_FREEZE_GUARD_SUPPORT: bool = os.environ.get(
+    "PLACEMENT_FREEZE_GUARD_SUPPORT", "0") != "0"

@@ -1,0 +1,872 @@
+{
+ "arms": [
+  "before",
+  "graded",
+  "after"
+ ],
+ "cells": [
+  {
+   "after": {
+    "admissible": 338,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.998560194927456,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.9924687119282313,
+     "ctx_truth": 0.9982833093365822
+    },
+    "queries": 338,
+    "truth": 338
+   },
+   "before": {
+    "admissible": 338,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.9196951934349356,
+     "ctx_truth": 0.9979484173505275
+    },
+    "queries": 276,
+    "truth": 338
+   },
+   "graded": {
+    "admissible": 338,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9848694479920533,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.9538278700156094,
+     "ctx_truth": 0.998350361856109
+    },
+    "queries": 338,
+    "truth": 338
+   },
+   "graph_key_digest": 6927721657959670294,
+   "nodes_a": 1175,
+   "nodes_b": 1163,
+   "pose": "rot00",
+   "tag": "syn|m11ir_00",
+   "truth_pairs": 338
+  },
+  {
+   "after": {
+    "admissible": 155,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9676851453386017,
+    "appearance_top1": 0.3548387096774194,
+    "geometry_auc": {
+     "ctx_matcher": 0.8267673408708579,
+     "ctx_truth": 0.8858612730331364
+    },
+    "queries": 155,
+    "truth": 155
+   },
+   "before": {
+    "admissible": 65,
+    "admissible_share": 0.41935483870967744,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.8023255813953488,
+     "ctx_truth": 0.9186046511627907
+    },
+    "queries": 43,
+    "truth": 155
+   },
+   "graded": {
+    "admissible": 155,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9625364485291403,
+    "appearance_top1": 0.5612903225806452,
+    "geometry_auc": {
+     "ctx_matcher": 0.8201564979884103,
+     "ctx_truth": 0.8869634222861994
+    },
+    "queries": 155,
+    "truth": 155
+   },
+   "graph_key_digest": 6029919339263226520,
+   "nodes_a": 1141,
+   "nodes_b": 1163,
+   "pose": "rot05",
+   "tag": "syn|m11ir_00",
+   "truth_pairs": 155
+  },
+  {
+   "after": {
+    "admissible": 156,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9317304723680149,
+    "appearance_top1": 0.17307692307692307,
+    "geometry_auc": {
+     "ctx_matcher": 0.6484447360296388,
+     "ctx_truth": 0.8883528866934239
+    },
+    "queries": 156,
+    "truth": 156
+   },
+   "before": {
+    "admissible": 9,
+    "admissible_share": 0.057692307692307696,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.275,
+     "ctx_truth": 0.875
+    },
+    "queries": 6,
+    "truth": 156
+   },
+   "graded": {
+    "admissible": 156,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9422138905066977,
+    "appearance_top1": 0.4166666666666667,
+    "geometry_auc": {
+     "ctx_matcher": 0.6862805765870704,
+     "ctx_truth": 0.8917443214909726
+    },
+    "queries": 156,
+    "truth": 156
+   },
+   "graph_key_digest": -4760532036326329615,
+   "nodes_a": 1324,
+   "nodes_b": 1163,
+   "pose": "rot15",
+   "tag": "syn|m11ir_00",
+   "truth_pairs": 156
+  },
+  {
+   "after": {
+    "admissible": 140,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9838251742235223,
+    "appearance_top1": 0.5285714285714286,
+    "geometry_auc": {
+     "ctx_matcher": 0.9454314720812182,
+     "ctx_truth": 0.8778714617568614
+    },
+    "queries": 140,
+    "truth": 140
+   },
+   "before": {
+    "admissible": 85,
+    "admissible_share": 0.6071428571428571,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.7964601769911505,
+     "ctx_truth": 0.9085545722713865
+    },
+    "queries": 65,
+    "truth": 140
+   },
+   "graded": {
+    "admissible": 140,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9703943377148635,
+    "appearance_top1": 0.6928571428571428,
+    "geometry_auc": {
+     "ctx_matcher": 0.8737917087967644,
+     "ctx_truth": 0.8753690596562184
+    },
+    "queries": 140,
+    "truth": 140
+   },
+   "graph_key_digest": -4417685624000972631,
+   "nodes_a": 1154,
+   "nodes_b": 1163,
+   "pose": "scale115",
+   "tag": "syn|m11ir_00",
+   "truth_pairs": 140
+  },
+  {
+   "after": {
+    "admissible": 314,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9983592523897845,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.9976577733390403,
+     "ctx_truth": 0.9983354734389118
+    },
+    "queries": 314,
+    "truth": 314
+   },
+   "before": {
+    "admissible": 314,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.8674132947976878,
+     "ctx_truth": 1.0
+    },
+    "queries": 239,
+    "truth": 314
+   },
+   "graded": {
+    "admissible": 314,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9839962997224792,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.9270929694727105,
+     "ctx_truth": 0.9983811285846439
+    },
+    "queries": 314,
+    "truth": 314
+   },
+   "graph_key_digest": -1145694541088411060,
+   "nodes_a": 1091,
+   "nodes_b": 1089,
+   "pose": "rot00",
+   "tag": "syn|m11ir_01",
+   "truth_pairs": 314
+  },
+  {
+   "after": {
+    "admissible": 167,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9629014648348649,
+    "appearance_top1": 0.40718562874251496,
+    "geometry_auc": {
+     "ctx_matcher": 0.822377399690656,
+     "ctx_truth": 0.9362660358475116
+    },
+    "queries": 167,
+    "truth": 167
+   },
+   "before": {
+    "admissible": 82,
+    "admissible_share": 0.49101796407185627,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.788235294117647,
+     "ctx_truth": 0.9411764705882353
+    },
+    "queries": 57,
+    "truth": 167
+   },
+   "graded": {
+    "admissible": 167,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9519458842133005,
+    "appearance_top1": 0.6347305389221557,
+    "geometry_auc": {
+     "ctx_matcher": 0.8426601071773697,
+     "ctx_truth": 0.9368356320829306
+    },
+    "queries": 167,
+    "truth": 167
+   },
+   "graph_key_digest": -1102221235233830073,
+   "nodes_a": 1075,
+   "nodes_b": 1089,
+   "pose": "rot05",
+   "tag": "syn|m11ir_01",
+   "truth_pairs": 167
+  },
+  {
+   "after": {
+    "admissible": 170,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.91352316228655,
+    "appearance_top1": 0.12352941176470589,
+    "geometry_auc": {
+     "ctx_matcher": 0.5737881199191363,
+     "ctx_truth": 0.8790270549270937
+    },
+    "queries": 170,
+    "truth": 170
+   },
+   "before": {
+    "admissible": 6,
+    "admissible_share": 0.03529411764705882,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.2,
+     "ctx_truth": 1.0
+    },
+    "queries": 4,
+    "truth": 170
+   },
+   "graded": {
+    "admissible": 170,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.929421521874352,
+    "appearance_top1": 0.3058823529411765,
+    "geometry_auc": {
+     "ctx_matcher": 0.6714907733775658,
+     "ctx_truth": 0.8798258345428157
+    },
+    "queries": 170,
+    "truth": 170
+   },
+   "graph_key_digest": 3842814569467847774,
+   "nodes_a": 1267,
+   "nodes_b": 1089,
+   "pose": "rot15",
+   "tag": "syn|m11ir_01",
+   "truth_pairs": 170
+  },
+  {
+   "after": {
+    "admissible": 135,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9644602519548219,
+    "appearance_top1": 0.562962962962963,
+    "geometry_auc": {
+     "ctx_matcher": 0.876873370981755,
+     "ctx_truth": 0.9389932667245873
+    },
+    "queries": 135,
+    "truth": 135
+   },
+   "before": {
+    "admissible": 95,
+    "admissible_share": 0.7037037037037037,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.8202099737532809,
+     "ctx_truth": 0.9829396325459318
+    },
+    "queries": 67,
+    "truth": 135
+   },
+   "graded": {
+    "admissible": 135,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9568721125577488,
+    "appearance_top1": 0.7703703703703704,
+    "geometry_auc": {
+     "ctx_matcher": 0.8709313313733725,
+     "ctx_truth": 0.9383662326753465
+    },
+    "queries": 135,
+    "truth": 135
+   },
+   "graph_key_digest": -509115993447723112,
+   "nodes_a": 1105,
+   "nodes_b": 1089,
+   "pose": "scale115",
+   "tag": "syn|m11ir_01",
+   "truth_pairs": 135
+  },
+  {
+   "after": {
+    "admissible": 331,
+    "admissible_share": 1.0,
+    "appearance_auc": 1.0,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.9868909964921398,
+     "ctx_truth": 0.9868909964921398
+    },
+    "queries": 331,
+    "truth": 331
+   },
+   "before": {
+    "admissible": 331,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.9915848527349228,
+     "ctx_truth": 0.9971949509116409
+    },
+    "queries": 250,
+    "truth": 331
+   },
+   "graded": {
+    "admissible": 331,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9908970201465669,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.9842453336056992,
+     "ctx_truth": 0.9856114189413477
+    },
+    "queries": 331,
+    "truth": 331
+   },
+   "graph_key_digest": 2528108124123406910,
+   "nodes_a": 890,
+   "nodes_b": 896,
+   "pose": "rot00",
+   "tag": "real|cell",
+   "truth_pairs": 331
+  },
+  {
+   "after": {
+    "admissible": 196,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9769927136233164,
+    "appearance_top1": 0.3163265306122449,
+    "geometry_auc": {
+     "ctx_matcher": 0.866504747184809,
+     "ctx_truth": 0.9508059174210642
+    },
+    "queries": 196,
+    "truth": 196
+   },
+   "before": {
+    "admissible": 115,
+    "admissible_share": 0.5867346938775511,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.8571428571428571,
+     "ctx_truth": 0.9588744588744589
+    },
+    "queries": 87,
+    "truth": 196
+   },
+   "graded": {
+    "admissible": 196,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9643628043515801,
+    "appearance_top1": 0.6275510204081632,
+    "geometry_auc": {
+     "ctx_matcher": 0.9016145743394923,
+     "ctx_truth": 0.9484113279226386
+    },
+    "queries": 196,
+    "truth": 196
+   },
+   "graph_key_digest": 1347598278005331676,
+   "nodes_a": 904,
+   "nodes_b": 896,
+   "pose": "rot05",
+   "tag": "real|cell",
+   "truth_pairs": 196
+  },
+  {
+   "after": {
+    "admissible": 184,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9323770491803278,
+    "appearance_top1": 0.05434782608695652,
+    "geometry_auc": {
+     "ctx_matcher": 0.4587781166603126,
+     "ctx_truth": 0.9528926801372474
+    },
+    "queries": 184,
+    "truth": 184
+   },
+   "before": {
+    "admissible": 7,
+    "admissible_share": 0.03804347826086957,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.38235294117647056,
+     "ctx_truth": 1.0
+    },
+    "queries": 7,
+    "truth": 184
+   },
+   "graded": {
+    "admissible": 184,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9462128252788105,
+    "appearance_top1": 0.24456521739130435,
+    "geometry_auc": {
+     "ctx_matcher": 0.6155204460966542,
+     "ctx_truth": 0.9494888475836432
+    },
+    "queries": 184,
+    "truth": 184
+   },
+   "graph_key_digest": -9191329890990339709,
+   "nodes_a": 871,
+   "nodes_b": 896,
+   "pose": "rot15",
+   "tag": "real|cell",
+   "truth_pairs": 184
+  },
+  {
+   "after": {
+    "admissible": 141,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9820105187664355,
+    "appearance_top1": 0.6524822695035462,
+    "geometry_auc": {
+     "ctx_matcher": 0.9841322017690652,
+     "ctx_truth": 0.945732727707387
+    },
+    "queries": 141,
+    "truth": 141
+   },
+   "before": {
+    "admissible": 102,
+    "admissible_share": 0.723404255319149,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.8695652173913043,
+     "ctx_truth": 0.9652173913043478
+    },
+    "queries": 78,
+    "truth": 141
+   },
+   "graded": {
+    "admissible": 141,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9685682392338876,
+    "appearance_top1": 0.75177304964539,
+    "geometry_auc": {
+     "ctx_matcher": 0.8676047235767581,
+     "ctx_truth": 0.9461253745373363
+    },
+    "queries": 141,
+    "truth": 141
+   },
+   "graph_key_digest": 7669344944694009664,
+   "nodes_a": 919,
+   "nodes_b": 896,
+   "pose": "scale115",
+   "tag": "real|cell",
+   "truth_pairs": 141
+  },
+  {
+   "after": {
+    "admissible": 1045,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9996331343938397,
+    "appearance_top1": 0.9856459330143541,
+    "geometry_auc": {
+     "ctx_matcher": 0.906564625078479,
+     "ctx_truth": 0.9058942443703148
+    },
+    "queries": 1045,
+    "truth": 1045
+   },
+   "before": {
+    "admissible": 1038,
+    "admissible_share": 0.9933014354066986,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.805668449197861,
+     "ctx_truth": 0.9016042780748663
+    },
+    "queries": 948,
+    "truth": 1045
+   },
+   "graded": {
+    "admissible": 1045,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9955923400346253,
+    "appearance_top1": 0.9933014354066986,
+    "geometry_auc": {
+     "ctx_matcher": 0.8280853619757623,
+     "ctx_truth": 0.9061504080839486
+    },
+    "queries": 1045,
+    "truth": 1045
+   },
+   "graph_key_digest": 6503179870214933029,
+   "nodes_a": 2653,
+   "nodes_b": 2669,
+   "pose": "rot00",
+   "tag": "real|grass",
+   "truth_pairs": 1045
+  },
+  {
+   "after": {
+    "admissible": 712,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9832382127615815,
+    "appearance_top1": 0.25702247191011235,
+    "geometry_auc": {
+     "ctx_matcher": 0.744741307224563,
+     "ctx_truth": 0.8195794128232814
+    },
+    "queries": 712,
+    "truth": 712
+   },
+   "before": {
+    "admissible": 386,
+    "admissible_share": 0.5421348314606742,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.674357476635514,
+     "ctx_truth": 0.7961448598130841
+    },
+    "queries": 353,
+    "truth": 712
+   },
+   "graded": {
+    "admissible": 712,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9802049424024671,
+    "appearance_top1": 0.5646067415730337,
+    "geometry_auc": {
+     "ctx_matcher": 0.7103519345313083,
+     "ctx_truth": 0.8207522449432088
+    },
+    "queries": 712,
+    "truth": 712
+   },
+   "graph_key_digest": 7310342638055093062,
+   "nodes_a": 2607,
+   "nodes_b": 2669,
+   "pose": "rot05",
+   "tag": "real|grass",
+   "truth_pairs": 712
+  },
+  {
+   "after": {
+    "admissible": 656,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9584819109759727,
+    "appearance_top1": 0.01676829268292683,
+    "geometry_auc": {
+     "ctx_matcher": 0.5116663845879998,
+     "ctx_truth": 0.8315158713020946
+    },
+    "queries": 656,
+    "truth": 656
+   },
+   "before": {
+    "admissible": 51,
+    "admissible_share": 0.07774390243902439,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.47924528301886793,
+     "ctx_truth": 0.7339622641509433
+    },
+    "queries": 48,
+    "truth": 656
+   },
+   "graded": {
+    "admissible": 656,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9664699986146311,
+    "appearance_top1": 0.12347560975609756,
+    "geometry_auc": {
+     "ctx_matcher": 0.5500321894532683,
+     "ctx_truth": 0.8321055162128904
+    },
+    "queries": 656,
+    "truth": 656
+   },
+   "graph_key_digest": -4207579403643938059,
+   "nodes_a": 2534,
+   "nodes_b": 2669,
+   "pose": "rot15",
+   "tag": "real|grass",
+   "truth_pairs": 656
+  },
+  {
+   "after": {
+    "admissible": 481,
+    "admissible_share": 0.9979253112033195,
+    "appearance_auc": 0.9766216314668955,
+    "appearance_top1": 0.2806652806652807,
+    "geometry_auc": {
+     "ctx_matcher": 0.7242295580937888,
+     "ctx_truth": 0.7804655436199234
+    },
+    "queries": 481,
+    "truth": 482
+   },
+   "before": {
+    "admissible": 246,
+    "admissible_share": 0.5103734439834025,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.6543103448275862,
+     "ctx_truth": 0.771551724137931
+    },
+    "queries": 232,
+    "truth": 482
+   },
+   "graded": {
+    "admissible": 482,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9718232649928736,
+    "appearance_top1": 0.5269709543568465,
+    "geometry_auc": {
+     "ctx_matcher": 0.6726047128831155,
+     "ctx_truth": 0.7812286160395299
+    },
+    "queries": 482,
+    "truth": 482
+   },
+   "graph_key_digest": 3900012450454672135,
+   "nodes_a": 2630,
+   "nodes_b": 2669,
+   "pose": "scale115",
+   "tag": "real|grass",
+   "truth_pairs": 482
+  },
+  {
+   "after": {
+    "admissible": 155,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9625364485291403,
+    "appearance_top1": 0.5612903225806452,
+    "geometry_auc": {
+     "ctx_matcher": 0.8201564979884103,
+     "ctx_truth": 0.8869634222861994
+    },
+    "queries": 155,
+    "truth": 155
+   },
+   "before": {
+    "admissible": 65,
+    "admissible_share": 0.41935483870967744,
+    "appearance_auc": 0.5,
+    "appearance_top1": 1.0,
+    "geometry_auc": {
+     "ctx_matcher": 0.8023255813953488,
+     "ctx_truth": 0.9186046511627907
+    },
+    "queries": 43,
+    "truth": 155
+   },
+   "graded": {
+    "admissible": 155,
+    "admissible_share": 1.0,
+    "appearance_auc": 0.9625364485291403,
+    "appearance_top1": 0.5612903225806452,
+    "geometry_auc": {
+     "ctx_matcher": 0.8201564979884103,
+     "ctx_truth": 0.8869634222861994
+    },
+    "queries": 155,
+    "truth": 155
+   },
+   "graph_key_digest": 6029919339263226520,
+   "nodes_a": 1141,
+   "nodes_b": 1163,
+   "pose": "rot05",
+   "tag": "syn|m11ir_00",
+   "truth_pairs": 155
+  }
+ ],
+ "flags": {
+  "FE_KEYPOINTS": true,
+  "FE_PLACE_LAYER": true,
+  "FE_SUBPIXEL_GABOR_ANCHOR": true,
+  "FE_SUBPIXEL_PEAK_POS": true,
+  "KP_GRADED_POPULATION": true,
+  "KP_GRADED_SIMILARITY": true,
+  "PLACEMENT_FRAME_FALLBACK": "none",
+  "PLACEMENT_FRAME_KEYPOINT": true,
+  "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
+  "PLACEMENT_M15_PLACES": true
+ },
+ "images": [
+  "syn|m11ir_00",
+  "syn|m11ir_01",
+  "real|cell",
+  "real|grass"
+ ],
+ "manifest": {
+  "code": "1794893fa7ac",
+  "endpoints": {
+   "flag_on": false,
+   "lenses": [
+    "Blob",
+    "BoundaryArc",
+    "CornerPoint"
+   ],
+   "source": "PLACEMENT_M15_PLACE_LENSES"
+  },
+  "flags": {
+   "ATTACHMENT_EVERY_NAMED_HOST": true,
+   "BINDER_COMPLETE_POSITION_MAP": true,
+   "FE_KEYPOINTS": false,
+   "FE_L3_SPINE": false,
+   "FE_L4_JUNCTIONS": false,
+   "FE_L6_ADDRESS": false,
+   "FE_PLACE_LAYER": false,
+   "FE_SOFT_CHANNEL_GATE": true,
+   "FE_SOFT_GATE_BAND": 0.1,
+   "FE_SOFT_GATE_CENTRE_SHIFT": 0.0,
+   "FE_SOFT_GATE_EDGE_WEIGHT": true,
+   "FE_SOFT_GATE_NOISE_FLOOR": 0.05,
+   "FE_SOFT_GATE_PERCENTILE": 0.95,
+   "FE_SOFT_L3_L4_GATE": true,
+   "FE_SUBPIXEL_GABOR_ANCHOR": false,
+   "FE_SUBPIXEL_PEAK_POS": false,
+   "FE_VECTOR_ADDRESS": false,
+   "FIELD_BORDER_DISCARD_PER_CHANNEL": false,
+   "GRAPH_STAGE6_RELATIONS": false,
+   "KP_GRADED_POPULATION": false,
+   "KP_GRADED_POP_VARIANT": "theta2-balanced",
+   "KP_GRADED_SIMILARITY": false,
+   "KP_GRADED_VARIANT": "wide",
+   "PLACEMENT_COLLAPSE_PLACES": false,
+   "PLACEMENT_ENDPOINT_LENSES": [],
+   "PLACEMENT_EXCLUDE_LENSES": [],
+   "PLACEMENT_E_MIN_JUDGED": 0,
+   "PLACEMENT_E_NORMALISED": false,
+   "PLACEMENT_FRAME_FALLBACK": "none",
+   "PLACEMENT_FRAME_KEYPOINT": false,
+   "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
+   "PLACEMENT_FRAME_MULTISCALE": false,
+   "PLACEMENT_FRAME_SUBPIXEL": false,
+   "PLACEMENT_FREEZE_GUARD_SUPPORT": false,
+   "PLACEMENT_GATE_ENABLED": false,
+   "PLACEMENT_LLR_EMPTY_BIN_NEUTRAL": false,
+   "PLACEMENT_LLR_MIN_BIN_COUNT": 0,
+   "PLACEMENT_LLR_MONOTONE": false,
+   "PLACEMENT_M15_PLACES": false,
+   "PLACEMENT_M15_PLACE_LENSES": [
+    "Blob",
+    "BoundaryArc",
+    "CornerPoint"
+   ],
+   "PLACEMENT_M15_TRUTH_RULE": false,
+   "PLACEMENT_MATCHER_ENABLED": false,
+   "PLACEMENT_MATCHER_PRESENCE": false,
+   "PLACEMENT_MATCHER_STRICT": false,
+   "PLACEMENT_MAX_NEIGHBOUR_CREDIT": 1.0,
+   "PLACEMENT_PAIR_NORMALISED": false,
+   "PLACEMENT_PAYLOAD_ENABLED": false,
+   "PLACEMENT_PLACE_GRID_PX": 1.0,
+   "PLACEMENT_RIDGE_ACROSS_MIN": 0.5,
+   "PLACEMENT_RIDGE_ACROSS_ONLY": false,
+   "PLACEMENT_SCORER_ENABLED": false,
+   "PLACEMENT_SCORE_EVIDENCE": false,
+   "PLACEMENT_SCORE_SHRINK": 8.0,
+   "PLACEMENT_SCORE_WEIGHT": 0.0,
+   "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST": false,
+   "PLACEMENT_SLOT_COUNT_JUDGED": false,
+   "PLACEMENT_SPACING_RADIUS": false,
+   "PLACEMENT_SPACING_TOL": false,
+   "PLACEMENT_SUPPORT_SIGMA": 1.0,
+   "PLACEMENT_TOLERANCE": null,
+   "PLACEMENT_WEIGHT": 0.25
+  },
+  "frame": {
+   "fallback": "none",
+   "keypoint": false,
+   "keypoint_sigma": "largest"
+  },
+  "weight": {
+   "field": "w_top1",
+   "file": "matching/placement_score_params.json",
+   "ml_at_boundary": true,
+   "value": 0.375,
+   "w_ml": 3.0
+  }
+ },
+ "poses": [
+  "rot00",
+  "rot05",
+  "rot15",
+  "scale115"
+ ]
+}

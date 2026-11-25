@@ -121,9 +121,16 @@ def _namespace() -> tuple:
     global _NAMESPACE
     if not _NAMESPACE:
         import parameters as P
+        # [M16] the keypoint class CONSTITUTION changes what a comparison returns
+        # without changing either signature, so it must be in the namespace: the
+        # content key alone would serve an unregistered reading to a registered run.
         _NAMESPACE = (bool(getattr(P, "MATCH_NEIGHBOR_BIN_CREDIT", False)),
                       bool(getattr(P, "MATCH_POPULATION_EMD", False)),
-                      bool(getattr(P, "POPULATION_CODING_ENABLED", False)))
+                      bool(getattr(P, "POPULATION_CODING_ENABLED", False)),
+                      bool(getattr(P, "KP_GRADED_SIMILARITY", False)),
+                      str(getattr(P, "KP_GRADED_VARIANT", "")),
+                      bool(getattr(P, "KP_GRADED_POPULATION", False)),
+                      str(getattr(P, "KP_GRADED_POP_VARIANT", "")))
     return _NAMESPACE
 
 
