@@ -219,6 +219,7 @@ def _job(args: Tuple[str, str, Dict[str, Any]]) -> Dict[str, Any]:
             return {"n": 0}
         return {"n": len(v), "median": float(st.median(v)),
                 "rank1": sum(1 for x in v if x == 1) / len(v),
+                "outside6": sum(1 for x in v if x > 6) / len(v),
                 "outside24": sum(1 for x in v if x > 24) / len(v)}
 
     return {"tag": tag, "pose": pose, "queries": n_truth,

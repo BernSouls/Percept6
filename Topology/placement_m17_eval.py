@@ -98,12 +98,17 @@ def _image(tag: str) -> np.ndarray:
     from Topology import placement_m11_families as F
     from Topology import placement_m12_realphotos as RP
     from Topology import placement_m17_fresh as FR
+    from Topology import placement_m19_fresh as FR19
     if tag.startswith("syn|"):
         name = tag.split("|", 1)[1]
         if name.startswith("m17ir_"):
             return [s for s in FR.fresh_gallery() if s.name == name][0].scene.render().image_u8
+        if name.startswith("m19ir_"):
+            return [s for s in FR19.fresh_gallery() if s.name == name][0].scene.render().image_u8
         return [s for s in F.gallery() if s.name == name][0].scene.render().image_u8
-    return RP.images("validation")[tag.split("|", 1)[1]]
+    # [M19 / O5] the M19 read uses photographs OUTSIDE the frame-validation set, so the
+    # lookup has to see every cached photo, not only that set.
+    return RP.images("all")[tag.split("|", 1)[1]]
 
 
 def _auc(pairs: List[Tuple[float, List[float]]]) -> Optional[float]:
