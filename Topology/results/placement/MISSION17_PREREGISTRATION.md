@@ -109,3 +109,21 @@ one impostor; and images contributing a non-tied top-1 decision.
 All numbers carry the image count and the per-image spread. Units: any residual,
 tolerance or bin width is in **tolunits** (`payload_residual` is tolerance-normalised and
 dimensionless; no "px" claim is made anywhere in this mission).
+
+---
+
+## CORRECTION, recorded before the fresh read was scored
+
+The primary contrast above is written as "full placement (`w = 0.375`, the shipped blend)
+vs appearance-only (`w = 0`)". **The deployed blend has no separate `w`**: `context_mapping`
+computes `(1 - beta) * sim + beta * plus_score` (`matching/placement_matcher.py:339`), and
+`plus_score` already carries the fitted geometry weight through `a_exist`/`a_geom`. The
+`w = 0.375` in Mission 16's bank was a *hypothetical knob that was never wired*; M16's
+"+0.42 at w = 0.375" was therefore a profile value, not the deployed reading.
+
+What is measured here is the deployed blend against appearance-only. **The contrast is
+unaffected**, because the appearance-only arm is `score = sim` under both readings (at
+`w = 0` the geometry term drops out; at `beta` the appearance term is the only term left
+when `plus_score` is replaced by its neutral 0.5). The arm is renamed in the report, and no
+number was chosen after this correction: it was written before the first fresh graph
+existed.

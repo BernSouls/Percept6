@@ -45,6 +45,11 @@ IMAGE_SETS: Dict[str, Tuple[str, ...]] = {
     "dev": ("syn|m11ir_00", "syn|m11ir_01", "real|cell", "real|grass"),
     "fresh": ("syn|m17ir_00",),
 }
+#: the PRE-REGISTERED fresh set: 16 new-seed synthetic scenes + the four photographs
+#: M15/M16 never touched.  Built by `placement_m17_fresh`, whose docstring records that
+#: the composition was fixed before any of these graphs existed.
+from Topology.placement_m17_fresh import tags as _fresh_tags  # noqa: E402
+IMAGE_SETS["fresh20"] = _fresh_tags()
 M16 = dict(FE_KEYPOINTS=True, FE_PLACE_LAYER=True, FE_SUBPIXEL_PEAK_POS=True,
            FE_SUBPIXEL_GABOR_ANCHOR=True, PLACEMENT_FRAME_KEYPOINT=True,
            PLACEMENT_FRAME_KEYPOINT_SIGMA="largest", PLACEMENT_FRAME_FALLBACK="none",
@@ -216,7 +221,10 @@ def _job(args: Tuple[str, str, Dict[str, Any], str]) -> Dict[str, Any]:
                 fails["BLEND"] += 1
         query_rows.append({"u": int(u), "vt": int(vt), "top1": int(ok),
                            "sim_true": float(sim[vt]), "sim_best_imp": float(best_app),
-                           "e_true": float(em[vt]), "e_best_imp": float(best_em)})
+                           "e_true": float(em[vt]), "e_best_imp": float(best_em),
+                           "et_true": float(et[vt]), "et_best_imp": float(best_et),
+                           "ctx_ok": int(ctx.get(u, -1) == vt),
+                           "n_imp": len(imps)})
     return {"tag": tag, "pose": pose, "arm": arm_name, "config": cfg,
             "table": os.path.basename(PM.active_path()),
             "counts": counts, "fails": fails,

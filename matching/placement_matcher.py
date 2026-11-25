@@ -349,29 +349,6 @@ def context_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
             rival_tol = float(getattr(_P, "PLACEMENT_CONTEXT_M17_RIVAL_TOL", 0.02))
     beta = float(b["beta"])
 
-    # [M17 / O2] the assignment start, when the flag is on.  It replaces the
-    # per-node argmax that the damped iteration starts from; everything after it is
-    # the same code path.
-    if bool(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN", False)):
-        from matching import placement_context as _Ctx2
-        cands0: Dict[int, List[Tuple[int, float]]] = {}
-        for i, row in enumerate(rows):
-            u0 = int(nodes_a[i])
-            if row:
-                cands0[u0] = [(int(vid), float(sim_v)) for (_j, vid, sim_v) in row]
-        if cands0:
-            _ss: Dict[str, Any] = {}
-            asg = _Ctx2.assignment_context(
-                sorted(cands0), cands0, side_a, side_b,
-                lambda u, v, m: 0.0,        # score_fn unused when iters == 0
-                iters=int(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN_ITERS", 0)),
-                lam=float(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN_LAMBDA", 0.5)),
-                stats=_ss)
-            if stats is not None:
-                stats.update({"assign": True, "assign_moved": _ss.get("moved")})
-            if int(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN_ITERS", 0)) <= 0:
-                return asg
-
     cands: Dict[int, List[Tuple[int, float]]] = {}
     sim: Dict[Tuple[int, int], float] = {}
     base: Dict[int, int] = {}
@@ -383,6 +360,21 @@ def context_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
         for (_j, vid, sim_v) in row:
             sim[(u, int(vid))] = float(sim_v)
         base[u] = int(row[0][1])
+
+    # [M17 / O2] THE ASSIGNMENT START.  It replaces the per-node argmax the damped
+    # iteration starts from -- nothing else changes, and with the flag off this block
+    # does not run at all.  Two mechanisms: a bijection (two places cannot claim the
+    # same reference place) and a rotation-invariant configuration term, so the start
+    # is not computed from the mapping it is supposed to fix.
+    if bool(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN", False)) and cands:
+        from matching import placement_context as _Ctx2
+        _asg = _Ctx2.assignment_mapping(
+            sorted(cands), cands, side_a, side_b,
+            lam=float(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN_LAMBDA", 0.5)))
+        for _u, _v in _asg.items():
+            base[_u] = _v
+        if stats is not None:
+            stats.update({"assign": True, "assign_n": len(_asg)})
 
     tol_of = _spacing_tol_fn(side_a, side_b)
     norm = _pair_normalised()
@@ -432,6 +424,21 @@ def rescore_matrix(matrix: Sequence[Sequence[float]],
     # a slightly worse raw similarity suddenly outranks it.  Measured with the
     # literal "top six only" reading: the deployed matcher's ambiguous accuracy
     # fell from 0.4226 to 0.2234 and it re-parted 708 nodes per match.
+    # [M17 / O2] THE ASSIGNMENT START.  It replaces the per-node argmax the damped
+    # iteration starts from -- nothing else changes, and with the flag off this block
+    # does not run at all.  Two mechanisms: a bijection (two places cannot claim the
+    # same reference place) and a rotation-invariant configuration term, so the start
+    # is not computed from the mapping it is supposed to fix.
+    if bool(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN", False)) and cands:
+        from matching import placement_context as _Ctx2
+        _asg = _Ctx2.assignment_mapping(
+            sorted(cands), cands, side_a, side_b,
+            lam=float(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN_LAMBDA", 0.5)))
+        for _u, _v in _asg.items():
+            base[_u] = _v
+        if stats is not None:
+            stats.update({"assign": True, "assign_n": len(_asg)})
+
     tol_of = _spacing_tol_fn(side_a, side_b)
     norm = _pair_normalised()
     scored = 0
