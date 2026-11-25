@@ -1,0 +1,44 @@
+{
+ "aggregate": "S3",
+ "definition": "num / (den + 8), where num = sum over mapped query places whose pair the frozen estimator can judge of (plus_score - 0.5), and den = the number of query places that carry a graded incident relation (a property of the graph, not of the mapping)",
+ "lambda": 1.0,
+ "lambda_grid": [
+  0.0,
+  0.25,
+  0.5,
+  0.75,
+  1.0,
+  1.5,
+  2.0,
+  3.0,
+  4.0
+ ],
+ "lambda_mean_rank1_on_grid": [
+  0.491,
+  0.491,
+  0.512,
+  0.512,
+  0.533,
+  0.533,
+  0.512,
+  0.512,
+  0.467
+ ],
+ "lambda_boundary": false,
+ "fitted_on": {
+  "split": "FIT",
+  "tag": "m20_fit_t3g2",
+  "objects": 40,
+  "gallery": "2 objects per class, 16 items, reference view -000-000, query view -022-000",
+  "shortlist": 8,
+  "queries": 16,
+  "objective": "mean rank-1 over T1, T2, T3"
+ },
+ "evidence_weight_w": {
+  "value": 0.375,
+  "source": "matching/placement_score_params.json (Mission 11, unchanged this mission)"
+ },
+ "note": "The lambda grid is FLAT over 0.5-1.5 and the mean rank-1 moves by one query between neighbouring grid points (0.512 to 0.533 is 1/48 query-tasks). The optimum is interior, so the registered rule (a boundary optimum is not a fit) does not fire and lambda = 1.0 is carried forward unchanged; but the reader should treat the value as ONE QUERY wide, which is why Mission 21 is registered with its MDE stated rather than with a claim.",
+ "date": "2026-11-18",
+ "mission": "M20 item 7"
+}
