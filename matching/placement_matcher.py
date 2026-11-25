@@ -89,6 +89,12 @@ def apply_node_descriptor(matrix: Sequence[Sequence[float]],
     and every truncation is counted in ``FAILURES["desc_capped"]``.
 
     Flag OFF (the default) returns the matrix object it was given, untouched.
+
+    WHERE IT RUNS.  `rescore_matrix` calls it first, so the deployed path
+    (`alignment.global_consistency_alignment` -> `rescore_matrix`, i.e. any caller with
+    `PLACEMENT_MATCHER_ENABLED` and both sides) applies the same blend the evaluation
+    harness applies.  Mission 19 shipped it harness-side only; that is what Mission 20
+    item 1 ported.
     """
     import parameters as P
     if not bool(getattr(P, "PLACEMENT_NODE_DESC", False)):
@@ -571,8 +577,27 @@ def rescore_matrix(matrix: Sequence[Sequence[float]],
     a_e = float(b["_a_exist"])
     a_g = float(b["_a_geom"]) if use_geometry else 0.0
     beta = float(b["beta"])
-    cap = int(b["cand_cap"])
+    # [M20 / item 1] `cand_cap()` honours PLACEMENT_CAND_CAP, whose value is the frozen cap
+    # at defaults.  Reading `b["cand_cap"]` directly made the deployed scorer ignore the
+    # flag, and the M19 record was measured at cap 24 -- see parameters/_text.py.
+    cap = cand_cap()
 
+    # [M20 / item 1] THE M19 DESIGN, IN THE DEPLOYED PATH.  The descriptor re-ranks the
+    # row BEFORE the candidate cap and the context see it, which is where the harness
+    # applies it too; with the bundle off (or `PLACEMENT_NODE_DESC` off) this is the same
+    # line it always was, and `apply_node_descriptor` returns the matrix untouched.
+    matrix = apply_node_descriptor(matrix, nodes_a, nodes_b, side_a, side_b)
+    if stats is not None:
+        # [M20 / item 1] WHAT THE MATCHER ACTUALLY USED, at call time.  The values come from
+        # `m15_manifest.effective_flags()` -- the module-level switches AS DERIVED -- so this
+        # cannot report the process default while the bundle has moved the switch, which is
+        # what the M19 result files did (a row could carry `desc: (24, 0.25)` next to a
+        # manifest saying "descriptor off").  The table and the cap are resolver outputs, so
+        # they are added beside the flags; neither is a switch this function reads.
+        from matching.m15_manifest import effective_flags
+        stats["effective"] = effective_flags()
+        stats["effective"]["llr_table"] = os.path.basename(active_path())
+        stats["effective"]["cand_cap_resolved"] = int(cap)
     rows = top_candidates(matrix, nodes_b, cap)
     ctx = context_mapping(rows, nodes_a, side_a, side_b,
                           use_geometry=use_geometry, stats=stats)

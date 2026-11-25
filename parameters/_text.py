@@ -4420,6 +4420,15 @@ PLACEMENT_CONTEXT_CONSENSUS_BONUS: float = float(
 PLACEMENT_LLR_TABLE_M18: bool = os.environ.get(
     "PLACEMENT_LLR_TABLE_M18", "0") != "0"
 
+#: [M20 / item 1] THE M19 DESIGN AS ONE BUNDLE.  On, the deployed matcher path applies
+#: the whole Mission-19 design: the configuration-descriptor blend (K 24, w 0.25 by
+#: default -- the M19 *individual* flag still defaults to 0.5, which was never the design),
+#: the M18 LLR table and the M18 assignment start.  OFF: every derived switch keeps its own
+#: default, so the deployed path is byte-identical to what it was before this mission.
+PLACEMENT_M19: bool = os.environ.get("PLACEMENT_M19", "0") != "0"
+PLACEMENT_M19_W: float = float(os.environ.get("PLACEMENT_M19_W", "0.25"))
+PLACEMENT_M19_K: int = int(os.environ.get("PLACEMENT_M19_K", "24"))
+
 #: [M19 / O1] THE NODE DESCRIPTOR.  The keypoint signature is gated by five quantised
 #: slots, so many places share a key and the similarity cannot order them (measured: 43-51 %
 #: of places share their full quantised key at 0 deg, and the true partner's rank-1 share is
@@ -4454,6 +4463,32 @@ PLACEMENT_CAP_DEDUP: bool = os.environ.get("PLACEMENT_CAP_DEDUP", "0") != "0"
 #: no context and no geometry term can reach them: the loss is in candidate generation,
 #: not in the blend.  0 keeps the frozen `cand_cap`.
 PLACEMENT_CAND_CAP: int = int(os.environ.get("PLACEMENT_CAND_CAP", "0"))
+
+#: [M20 / item 3] THE STAGE-1 PREFILTER, when it exists.  OFF: nothing changes, and no code
+#: path reads this flag -- the M20 harness computes the cheap image score and reports its
+#: recall, and the deployed wiring is a later mission's decision.  Kept here so the switch
+#: a read is run under appears in the manifest instead of in a notebook.
+PLACEMENT_PREFILTER: bool = os.environ.get("PLACEMENT_PREFILTER", "0") != "0"
+
+# --- the bundle's DERIVED switches -------------------------------------------------------
+# Written as derived values, not as a second source of truth: `m15_manifest.effective_flags`
+# reads these module attributes, so with the bundle on the manifest cannot say "descriptor
+# off" while the matcher is blending one.  With the bundle off nothing below runs.
+#
+# THE CAP IS PART OF THE DESIGN, NOT A HARNESS KNOB.  Mission 19's record was measured at
+# `PLACEMENT_CAND_CAP = 24` ("plain cap 24 + descriptor"); re-running this port at the
+# frozen cap of 6 reproduced the M19 cap-6 row exactly (0.509 against 0.569), which is how
+# the cap, not the descriptor, was identified as the whole difference.  So the bundle sets
+# it, and `placement_matcher.rescore_matrix` reads `cand_cap()` -- identical to the frozen
+# value while this flag is 0, which is what keeps the defaults byte-identical.
+if PLACEMENT_M19:
+    PLACEMENT_NODE_DESC = True
+    PLACEMENT_NODE_DESC_K = PLACEMENT_M19_K
+    PLACEMENT_NODE_DESC_W = PLACEMENT_M19_W
+    PLACEMENT_NODE_DESC_MAXCELLS = 0
+    PLACEMENT_LLR_TABLE_M18 = True
+    PLACEMENT_CONTEXT_ASSIGN = True
+    PLACEMENT_CAND_CAP = int(os.environ.get("PLACEMENT_M19_CAP", "24"))
 
 #: [M18 / O1] WHICH TABLE FILE.  Empty keeps the selector (`PLACEMENT_LLR_TABLE_M17`).
 #: A path makes an arbitrary candidate bundle readable, which is how the mission's table
