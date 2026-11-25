@@ -1,0 +1,774 @@
+{
+ "classes": [
+  "apple",
+  "car",
+  "cow",
+  "cup",
+  "dog",
+  "horse",
+  "pear",
+  "tomato"
+ ],
+ "counts": {
+  "classes": {
+   "DEV": [
+    "apple",
+    "car",
+    "cow",
+    "cup",
+    "dog",
+    "horse",
+    "pear",
+    "tomato"
+   ],
+   "FIT": [
+    "apple",
+    "car",
+    "cow",
+    "cup",
+    "dog",
+    "horse",
+    "pear",
+    "tomato"
+   ],
+   "FRESH": [
+    "apple",
+    "car",
+    "cow",
+    "cup",
+    "dog",
+    "horse",
+    "pear",
+    "tomato"
+   ]
+  },
+  "per_class": {
+   "apple": {
+    "objects": {
+     "DEV": [
+      "10",
+      "5",
+      "2"
+     ],
+     "FIT": [
+      "9",
+      "1",
+      "6",
+      "7",
+      "3"
+     ],
+     "FRESH": [
+      "8",
+      "4"
+     ]
+    },
+    "views": {
+     "DEV": 123,
+     "FIT": 205,
+     "FRESH": 82
+    }
+   },
+   "car": {
+    "objects": {
+     "DEV": [
+      "10",
+      "9",
+      "3"
+     ],
+     "FIT": [
+      "7",
+      "1",
+      "8",
+      "5",
+      "6"
+     ],
+     "FRESH": [
+      "2",
+      "4"
+     ]
+    },
+    "views": {
+     "DEV": 123,
+     "FIT": 205,
+     "FRESH": 82
+    }
+   },
+   "cow": {
+    "objects": {
+     "DEV": [
+      "4",
+      "9",
+      "10"
+     ],
+     "FIT": [
+      "8",
+      "6",
+      "7",
+      "2",
+      "3"
+     ],
+     "FRESH": [
+      "5",
+      "1"
+     ]
+    },
+    "views": {
+     "DEV": 123,
+     "FIT": 205,
+     "FRESH": 82
+    }
+   },
+   "cup": {
+    "objects": {
+     "DEV": [
+      "4",
+      "10",
+      "5"
+     ],
+     "FIT": [
+      "7",
+      "6",
+      "9",
+      "2",
+      "1"
+     ],
+     "FRESH": [
+      "3",
+      "8"
+     ]
+    },
+    "views": {
+     "DEV": 123,
+     "FIT": 205,
+     "FRESH": 82
+    }
+   },
+   "dog": {
+    "objects": {
+     "DEV": [
+      "9",
+      "5",
+      "8"
+     ],
+     "FIT": [
+      "1",
+      "3",
+      "2",
+      "4",
+      "7"
+     ],
+     "FRESH": [
+      "6",
+      "10"
+     ]
+    },
+    "views": {
+     "DEV": 123,
+     "FIT": 205,
+     "FRESH": 82
+    }
+   },
+   "horse": {
+    "objects": {
+     "DEV": [
+      "10",
+      "5",
+      "8"
+     ],
+     "FIT": [
+      "4",
+      "9",
+      "7",
+      "2",
+      "3"
+     ],
+     "FRESH": [
+      "1",
+      "6"
+     ]
+    },
+    "views": {
+     "DEV": 123,
+     "FIT": 205,
+     "FRESH": 82
+    }
+   },
+   "pear": {
+    "objects": {
+     "DEV": [
+      "3",
+      "4",
+      "2"
+     ],
+     "FIT": [
+      "6",
+      "8",
+      "1",
+      "7",
+      "10"
+     ],
+     "FRESH": [
+      "9",
+      "5"
+     ]
+    },
+    "views": {
+     "DEV": 123,
+     "FIT": 205,
+     "FRESH": 82
+    }
+   },
+   "tomato": {
+    "objects": {
+     "DEV": [
+      "2",
+      "7",
+      "1"
+     ],
+     "FIT": [
+      "8",
+      "6",
+      "3",
+      "4",
+      "10"
+     ],
+     "FRESH": [
+      "5",
+      "9"
+     ]
+    },
+    "views": {
+     "DEV": 123,
+     "FIT": 205,
+     "FRESH": 82
+    }
+   }
+  },
+  "totals": {
+   "DEV": {
+    "objects": 24,
+    "views": 984
+   },
+   "FIT": {
+    "objects": 40,
+    "views": 1640
+   },
+   "FRESH": {
+    "objects": 16,
+    "views": 656
+   }
+  },
+  "views_per_object": [
+   41
+  ]
+ },
+ "deal": {
+  "DEV": 3,
+  "FIT": 5,
+  "FRESH": 2
+ },
+ "rule": "sha256(salt|class|instance), 5/3/2 per class",
+ "salt": "M20-split-v1-2026-11-18",
+ "splits": {
+  "DEV": {
+   "n_objects": 24,
+   "n_views": 984,
+   "objects": [
+    {
+     "class": "apple",
+     "instance": "10",
+     "label": "apple10",
+     "views": 41
+    },
+    {
+     "class": "apple",
+     "instance": "5",
+     "label": "apple5",
+     "views": 41
+    },
+    {
+     "class": "apple",
+     "instance": "2",
+     "label": "apple2",
+     "views": 41
+    },
+    {
+     "class": "car",
+     "instance": "10",
+     "label": "car14",
+     "views": 41
+    },
+    {
+     "class": "car",
+     "instance": "9",
+     "label": "car9",
+     "views": 41
+    },
+    {
+     "class": "car",
+     "instance": "3",
+     "label": "car3",
+     "views": 41
+    },
+    {
+     "class": "cow",
+     "instance": "4",
+     "label": "cow4",
+     "views": 41
+    },
+    {
+     "class": "cow",
+     "instance": "9",
+     "label": "cow9",
+     "views": 41
+    },
+    {
+     "class": "cow",
+     "instance": "10",
+     "label": "cow10",
+     "views": 41
+    },
+    {
+     "class": "cup",
+     "instance": "4",
+     "label": "cup4",
+     "views": 41
+    },
+    {
+     "class": "cup",
+     "instance": "10",
+     "label": "cup10",
+     "views": 41
+    },
+    {
+     "class": "cup",
+     "instance": "5",
+     "label": "cup5",
+     "views": 41
+    },
+    {
+     "class": "dog",
+     "instance": "9",
+     "label": "dog9",
+     "views": 41
+    },
+    {
+     "class": "dog",
+     "instance": "5",
+     "label": "dog5",
+     "views": 41
+    },
+    {
+     "class": "dog",
+     "instance": "8",
+     "label": "dog8",
+     "views": 41
+    },
+    {
+     "class": "horse",
+     "instance": "10",
+     "label": "horse10",
+     "views": 41
+    },
+    {
+     "class": "horse",
+     "instance": "5",
+     "label": "horse5",
+     "views": 41
+    },
+    {
+     "class": "horse",
+     "instance": "8",
+     "label": "horse8",
+     "views": 41
+    },
+    {
+     "class": "pear",
+     "instance": "3",
+     "label": "pear3",
+     "views": 41
+    },
+    {
+     "class": "pear",
+     "instance": "4",
+     "label": "pear4",
+     "views": 41
+    },
+    {
+     "class": "pear",
+     "instance": "2",
+     "label": "pear2",
+     "views": 41
+    },
+    {
+     "class": "tomato",
+     "instance": "2",
+     "label": "tomato2",
+     "views": 41
+    },
+    {
+     "class": "tomato",
+     "instance": "7",
+     "label": "tomato7",
+     "views": 41
+    },
+    {
+     "class": "tomato",
+     "instance": "1",
+     "label": "tomato1",
+     "views": 41
+    }
+   ]
+  },
+  "FIT": {
+   "n_objects": 40,
+   "n_views": 1640,
+   "objects": [
+    {
+     "class": "apple",
+     "instance": "9",
+     "label": "apple9",
+     "views": 41
+    },
+    {
+     "class": "apple",
+     "instance": "1",
+     "label": "apple1",
+     "views": 41
+    },
+    {
+     "class": "apple",
+     "instance": "6",
+     "label": "apple6",
+     "views": 41
+    },
+    {
+     "class": "apple",
+     "instance": "7",
+     "label": "apple7",
+     "views": 41
+    },
+    {
+     "class": "apple",
+     "instance": "3",
+     "label": "apple3",
+     "views": 41
+    },
+    {
+     "class": "car",
+     "instance": "7",
+     "label": "car7",
+     "views": 41
+    },
+    {
+     "class": "car",
+     "instance": "1",
+     "label": "car1",
+     "views": 41
+    },
+    {
+     "class": "car",
+     "instance": "8",
+     "label": "car12",
+     "views": 41
+    },
+    {
+     "class": "car",
+     "instance": "5",
+     "label": "car5",
+     "views": 41
+    },
+    {
+     "class": "car",
+     "instance": "6",
+     "label": "car6",
+     "views": 41
+    },
+    {
+     "class": "cow",
+     "instance": "8",
+     "label": "cow8",
+     "views": 41
+    },
+    {
+     "class": "cow",
+     "instance": "6",
+     "label": "cow6",
+     "views": 41
+    },
+    {
+     "class": "cow",
+     "instance": "7",
+     "label": "cow7",
+     "views": 41
+    },
+    {
+     "class": "cow",
+     "instance": "2",
+     "label": "cow2",
+     "views": 41
+    },
+    {
+     "class": "cow",
+     "instance": "3",
+     "label": "cow3",
+     "views": 41
+    },
+    {
+     "class": "cup",
+     "instance": "7",
+     "label": "cup7",
+     "views": 41
+    },
+    {
+     "class": "cup",
+     "instance": "6",
+     "label": "cup6",
+     "views": 41
+    },
+    {
+     "class": "cup",
+     "instance": "9",
+     "label": "cup9",
+     "views": 41
+    },
+    {
+     "class": "cup",
+     "instance": "2",
+     "label": "cup2",
+     "views": 41
+    },
+    {
+     "class": "cup",
+     "instance": "1",
+     "label": "cup1",
+     "views": 41
+    },
+    {
+     "class": "dog",
+     "instance": "1",
+     "label": "dog1",
+     "views": 41
+    },
+    {
+     "class": "dog",
+     "instance": "3",
+     "label": "dog3",
+     "views": 41
+    },
+    {
+     "class": "dog",
+     "instance": "2",
+     "label": "dog2",
+     "views": 41
+    },
+    {
+     "class": "dog",
+     "instance": "4",
+     "label": "dog4",
+     "views": 41
+    },
+    {
+     "class": "dog",
+     "instance": "7",
+     "label": "dog7",
+     "views": 41
+    },
+    {
+     "class": "horse",
+     "instance": "4",
+     "label": "horse4",
+     "views": 41
+    },
+    {
+     "class": "horse",
+     "instance": "9",
+     "label": "horse9",
+     "views": 41
+    },
+    {
+     "class": "horse",
+     "instance": "7",
+     "label": "horse7",
+     "views": 41
+    },
+    {
+     "class": "horse",
+     "instance": "2",
+     "label": "horse2",
+     "views": 41
+    },
+    {
+     "class": "horse",
+     "instance": "3",
+     "label": "horse3",
+     "views": 41
+    },
+    {
+     "class": "pear",
+     "instance": "6",
+     "label": "pear6",
+     "views": 41
+    },
+    {
+     "class": "pear",
+     "instance": "8",
+     "label": "pear8",
+     "views": 41
+    },
+    {
+     "class": "pear",
+     "instance": "1",
+     "label": "pear1",
+     "views": 41
+    },
+    {
+     "class": "pear",
+     "instance": "7",
+     "label": "pear7",
+     "views": 41
+    },
+    {
+     "class": "pear",
+     "instance": "10",
+     "label": "pear10",
+     "views": 41
+    },
+    {
+     "class": "tomato",
+     "instance": "8",
+     "label": "tomato8",
+     "views": 41
+    },
+    {
+     "class": "tomato",
+     "instance": "6",
+     "label": "tomato6",
+     "views": 41
+    },
+    {
+     "class": "tomato",
+     "instance": "3",
+     "label": "tomato3",
+     "views": 41
+    },
+    {
+     "class": "tomato",
+     "instance": "4",
+     "label": "tomato4",
+     "views": 41
+    },
+    {
+     "class": "tomato",
+     "instance": "10",
+     "label": "tomato10",
+     "views": 41
+    }
+   ]
+  },
+  "FRESH": {
+   "n_objects": 16,
+   "n_views": 656,
+   "objects": [
+    {
+     "class": "apple",
+     "instance": "8",
+     "label": "apple8",
+     "views": 41
+    },
+    {
+     "class": "apple",
+     "instance": "4",
+     "label": "apple4",
+     "views": 41
+    },
+    {
+     "class": "car",
+     "instance": "2",
+     "label": "car2",
+     "views": 41
+    },
+    {
+     "class": "car",
+     "instance": "4",
+     "label": "car11",
+     "views": 41
+    },
+    {
+     "class": "cow",
+     "instance": "5",
+     "label": "cow5",
+     "views": 41
+    },
+    {
+     "class": "cow",
+     "instance": "1",
+     "label": "cow1",
+     "views": 41
+    },
+    {
+     "class": "cup",
+     "instance": "3",
+     "label": "cup3",
+     "views": 41
+    },
+    {
+     "class": "cup",
+     "instance": "8",
+     "label": "cup8",
+     "views": 41
+    },
+    {
+     "class": "dog",
+     "instance": "6",
+     "label": "dog6",
+     "views": 41
+    },
+    {
+     "class": "dog",
+     "instance": "10",
+     "label": "dog10",
+     "views": 41
+    },
+    {
+     "class": "horse",
+     "instance": "1",
+     "label": "horse1",
+     "views": 41
+    },
+    {
+     "class": "horse",
+     "instance": "6",
+     "label": "horse6",
+     "views": 41
+    },
+    {
+     "class": "pear",
+     "instance": "9",
+     "label": "pear9",
+     "views": 41
+    },
+    {
+     "class": "pear",
+     "instance": "5",
+     "label": "pear5",
+     "views": 41
+    },
+    {
+     "class": "tomato",
+     "instance": "5",
+     "label": "tomato5",
+     "views": 41
+    },
+    {
+     "class": "tomato",
+     "instance": "9",
+     "label": "tomato9",
+     "views": 41
+    }
+   ]
+  }
+ },
+ "tree": "/home/user/Percept6/data/ETH-80-master",
+ "unit": "object"
+}

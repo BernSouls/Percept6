@@ -60,7 +60,11 @@ def fetch() -> None:
             for m in members:
                 parts = m.name.split("/")
                 m.name = "/".join(parts[1:])       # strip the repo root dir
-                tf.extractall(RAW, members=members)
+            # [M20] ONE pass.  This line used to sit inside the `for m in members`
+            # loop one level deeper: `extractall` then ran once PER MEMBER, i.e. 6,560
+            # extractions of the whole 322 MB archive.  Measured: more than an hour of
+            # CPU and one class of eight on disk.  The download was never the problem.
+            tf.extractall(RAW, members=members)
     LINK.parent.mkdir(parents=True, exist_ok=True)
     if LINK.is_symlink() or LINK.is_file():
         LINK.unlink()
@@ -71,8 +75,9 @@ def fetch() -> None:
 
 def verify() -> dict:
     out: dict = {"source": URL, "layout": str(LINK), "normalised": False,
-                 "note": "mirror already has <class>/<instance>/<name>.png + maps/; "
-                         "no layout change was needed"}
+                 "note": "layout: <class>/<instance>/<name>-<az>-<el>.png with the mask "
+                         "beside it as <name>-<az>-<el>-map.png (this mirror has no "
+                         "maps/ subdirectory); no layout change was needed"}
     from PIL import Image
     per_class = {}
     total_obj = total_map = 0
@@ -82,16 +87,17 @@ def verify() -> dict:
         root = LINK / CLASS_DIR[cls]
         inst = {}
         for d in sorted(p for p in root.iterdir() if p.is_dir() and p.name != "maps"):
-            objs = sorted(f.name for f in d.iterdir() if NAME.match(f.name))
-            others = sorted(f.name for f in d.iterdir()
-                            if f.is_file() and f.suffix == ".png"
-                            and not NAME.match(f.name))
+            names = [f.name for f in d.iterdir() if f.is_file() and f.suffix == ".png"]
+            objs = sorted(n for n in names if NAME.match(n))
+            maps = sorted(n for n in names if MAP_NAME.match(n))
+            others = sorted(n for n in names
+                            if not NAME.match(n) and not MAP_NAME.match(n))
             if others:
                 raise RuntimeError("%s: stray pngs %r" % (d, others[:3]))
-            maps_dir = d / "maps"
-            maps = (sorted(f.name for f in maps_dir.iterdir()
-                           if MAP_NAME.match(f.name))
-                    if maps_dir.is_dir() else [])
+            maps_dir = d / "maps"      # tolerated, but this mirror does not use it
+            if maps_dir.is_dir():
+                maps += sorted(f.name for f in maps_dir.iterdir()
+                               if MAP_NAME.match(f.name))
             inst[d.name] = {"images": len(objs), "masks": len(maps),
                             "views": len({NAME.match(f).group(0)[-11:]
                                           for f in objs})}
@@ -109,17 +115,24 @@ def verify() -> dict:
         "views_per_instance": sorted({v["images"] for c in CLASSES
                                       for v in per_class[c]["detail"].values()}),
         "object_images": total_obj, "mask_images": total_map,
-        "views_used": {"-090-000": view_counts["-090-000"],
-                       "-035-135": view_counts["-035-135"]},
         "image_sizes": dict(sizes),
         "distinct_views": len(view_counts),
     }
+    # [M20] The view KEYS are what the pose-matched task pairs on, so their identity is
+    # recorded rather than assumed: this mirror numbers elevations 000/090/180/270 and
+    # azimuths in ~22.5 deg steps, 41 views per object.  The earlier check hard-coded
+    # "-090-000"/"-035-135" from an imagined layout and would have failed a good corpus.
+    keys = sorted(view_counts)
+    out["counts"]["view_keys"] = keys
+    out["counts"]["views_used"] = {k: view_counts[k] for k in keys}
+    out["counts"]["view_set_identical_across_instances"] = all(
+        v["views"] == 41 for c in CLASSES for v in per_class[c]["detail"].values())
     expected = (len(per_class) == 8
                 and all(per_class[c]["instances"] == 10 for c in CLASSES)
                 and out["counts"]["views_per_instance"] == [41]
                 and total_obj == 3280 and total_map == 3280
-                and out["counts"]["views_used"]["-090-000"] == 80
-                and out["counts"]["views_used"]["-035-135"] == 80
+                and len(keys) == 41 and set(view_counts.values()) == {80}
+                and out["counts"]["view_set_identical_across_instances"]
                 and dict(sizes) == {"256x256": 80}
                 and (LINK / "1" / "2" / "apple2-022-000.png").is_file())
     out["verified"] = bool(expected)
