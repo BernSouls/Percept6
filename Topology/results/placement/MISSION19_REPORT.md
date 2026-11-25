@@ -223,6 +223,14 @@ Caveat, stated rather than hidden: `sec.total` (which includes the graph build w
 cache is cold) was only recorded from the O5 run onward; the numbers above are the
 scoring-loop seconds and the exact counters, which are the quantities the cap could affect.
 
+**The descriptor's own cost, measured the same way** (same run, same cache state): score
+time per cell **0.73 s → 1.12 s** (+54 %) with the node descriptor on — it computes two
+`config_descriptor`s per node and one `config_similarity` per positive cell, which is the
+whole of its cost.  The `sec.total` figures in the O5 run are **43.4 s** per cell for A1 and
+**26.7 s** for A0, and they are **not** a comparison: A1 ran first and built the fresh
+graphs, A0 reused them from the cache.  They are reported here so that "the pipeline costs
+43 s per image" is not read into a number that is mostly a cold cache.
+
 ---
 
 ## 6. O5 — THE FRESH READ
