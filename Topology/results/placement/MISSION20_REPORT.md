@@ -43,9 +43,11 @@ of the four cell AUCs** — the number M19 printed. Both are stated because they
 pools; the per-image values are identical to the record either way.
 
 **Defaults byte-identical.** `Topology/placement_m12_perf.py --check --workers 1`: 28 pairs
-(14 synthetic, 14 real), `identical: True (0 diffs)`. Wall 820.9 s against the 633.8 s
-baseline of the M19 close-out; the difference is contention with two other runs on the same
-two-core box, not work.
+(14 synthetic, 14 real), `identical: True (0 diffs)`. Run twice — once with the bundle in
+place (820.9 s, contended by two other runs) and again after the last edit to
+`rescore_matrix` (806.4 s on an idle box, 0 diffs). The wall figure against the 633.8 s
+M19 close-out is not a regression: the paired per-pair times are 6.63 s (A) and 7.42 s (C),
+and every cell is byte-identical.
 
 **The test that would catch the old defect.** `tests/test_m20_bundle.py` runs a child
 process with `PLACEMENT_M19=1` and fails if the manifest reports the descriptor off, or if
