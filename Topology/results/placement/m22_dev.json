@@ -1,0 +1,560 @@
+{
+ "frontdoor": {
+  "S": 8,
+  "count_diag": {
+   "objects_scored_mean": 24.0,
+   "places_used_mean": 512.375
+  },
+  "frontdoors": {
+   "appearance": {
+    "S": 8,
+    "chance_recall_s": 0.3333333333333333,
+    "chance_top1": 0.041666666666666664,
+    "gallery": 24,
+    "n": 24,
+    "per_class": {
+     "apple": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.6666666666666666
+     },
+     "car": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 1.0
+     },
+     "cow": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.0
+     },
+     "cup": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     },
+     "dog": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.0
+     },
+     "horse": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     },
+     "pear": {
+      "n": 3,
+      "recall_s": 0.3333333333333333,
+      "top1": 0.0
+     },
+     "tomato": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.6666666666666666
+     }
+    },
+    "rank_median": 2.0,
+    "ranks": [
+     2,
+     1,
+     1,
+     1,
+     1,
+     1,
+     10,
+     2,
+     5,
+     3,
+     2,
+     1,
+     8,
+     5,
+     4,
+     5,
+     1,
+     3,
+     11,
+     8,
+     10,
+     1,
+     1,
+     2
+    ],
+    "recall_s": 0.875,
+    "top1": 0.375
+   },
+   "count": {
+    "S": 8,
+    "chance_recall_s": 0.3333333333333333,
+    "chance_top1": 0.041666666666666664,
+    "gallery": 24,
+    "n": 24,
+    "per_class": {
+     "apple": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     },
+     "car": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.6666666666666666
+     },
+     "cow": {
+      "n": 3,
+      "recall_s": 0.3333333333333333,
+      "top1": 0.0
+     },
+     "cup": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     },
+     "dog": {
+      "n": 3,
+      "recall_s": 0.3333333333333333,
+      "top1": 0.3333333333333333
+     },
+     "horse": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.3333333333333333
+     },
+     "pear": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.0
+     },
+     "tomato": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 1.0
+     }
+    },
+    "rank_median": 2.0,
+    "ranks": [
+     1,
+     4,
+     3,
+     1,
+     1,
+     2,
+     11,
+     13,
+     2,
+     2,
+     3,
+     1,
+     19,
+     9,
+     1,
+     1,
+     9,
+     2,
+     3,
+     7,
+     17,
+     1,
+     1,
+     1
+    ],
+    "recall_s": 0.75,
+    "top1": 0.375
+   },
+   "fused": {
+    "S": 8,
+    "chance_recall_s": 0.3333333333333333,
+    "chance_top1": 0.041666666666666664,
+    "gallery": 24,
+    "n": 24,
+    "per_class": {
+     "apple": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.6666666666666666
+     },
+     "car": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     },
+     "cow": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     },
+     "cup": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     },
+     "dog": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.0
+     },
+     "horse": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     },
+     "pear": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.0
+     },
+     "tomato": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     }
+    },
+    "rank_median": 3.0,
+    "ranks": [
+     1,
+     1,
+     2,
+     5,
+     5,
+     1,
+     4,
+     1,
+     7,
+     2,
+     3,
+     1,
+     12,
+     3,
+     7,
+     2,
+     1,
+     6,
+     6,
+     12,
+     3,
+     5,
+     1,
+     4
+    ],
+    "recall_s": 0.9166666666666666,
+    "top1": 0.2916666666666667
+   },
+   "fused_count": {
+    "S": 8,
+    "chance_recall_s": 0.3333333333333333,
+    "chance_top1": 0.041666666666666664,
+    "gallery": 24,
+    "n": 24,
+    "per_class": {
+     "apple": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.6666666666666666
+     },
+     "car": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 1.0
+     },
+     "cow": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.0
+     },
+     "cup": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     },
+     "dog": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.3333333333333333
+     },
+     "horse": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.6666666666666666
+     },
+     "pear": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.0
+     },
+     "tomato": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.6666666666666666
+     }
+    },
+    "rank_median": 2.0,
+    "ranks": [
+     1,
+     1,
+     2,
+     1,
+     1,
+     1,
+     9,
+     6,
+     3,
+     2,
+     3,
+     1,
+     14,
+     2,
+     1,
+     1,
+     4,
+     1,
+     3,
+     5,
+     15,
+     1,
+     1,
+     2
+    ],
+    "recall_s": 0.875,
+    "top1": 0.4583333333333333
+   },
+   "voting": {
+    "S": 8,
+    "chance_recall_s": 0.3333333333333333,
+    "chance_top1": 0.041666666666666664,
+    "gallery": 24,
+    "n": 24,
+    "per_class": {
+     "apple": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.6666666666666666
+     },
+     "car": {
+      "n": 3,
+      "recall_s": 0.3333333333333333,
+      "top1": 0.3333333333333333
+     },
+     "cow": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.3333333333333333
+     },
+     "cup": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.3333333333333333
+     },
+     "dog": {
+      "n": 3,
+      "recall_s": 0.3333333333333333,
+      "top1": 0.0
+     },
+     "horse": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.0
+     },
+     "pear": {
+      "n": 3,
+      "recall_s": 0.6666666666666666,
+      "top1": 0.3333333333333333
+     },
+     "tomato": {
+      "n": 3,
+      "recall_s": 1.0,
+      "top1": 0.0
+     }
+    },
+    "rank_median": 5.5,
+    "ranks": [
+     1,
+     1,
+     6,
+     10,
+     14,
+     1,
+     4,
+     1,
+     11,
+     2,
+     6,
+     1,
+     15,
+     5,
+     17,
+     7,
+     4,
+     12,
+     5,
+     17,
+     1,
+     8,
+     4,
+     7
+    ],
+    "recall_s": 0.7083333333333334,
+    "top1": 0.25
+   }
+  },
+  "gallery": 24,
+  "objects": 24,
+  "per_class": 0,
+  "pool": {
+   "buckets": 504,
+   "dropped": {
+    "no_config": 180,
+    "no_position": 0,
+    "no_scale": 0,
+    "no_sig": 0
+   },
+   "objects": 24,
+   "places": 11814
+  },
+  "sec_per_query": {
+   "appearance": 0.020339637994766235,
+   "count": 0.33758504192034405,
+   "voting": 0.35673682888348895
+  },
+  "split": "DEV",
+  "vote_diag": {
+   "bins_mean": 2729.75,
+   "objects_scored_mean": 24.0,
+   "places_used_mean": 512.375,
+   "votes_mean": 1522.625
+  }
+ },
+ "manifest": {
+  "code": "c4f2370f7f67",
+  "endpoints": {
+   "flag_on": false,
+   "lenses": [
+    "Blob",
+    "BoundaryArc",
+    "CornerPoint"
+   ],
+   "source": "PLACEMENT_M15_PLACE_LENSES"
+  },
+  "flags": {
+   "ATTACHMENT_EVERY_NAMED_HOST": true,
+   "BINDER_COMPLETE_POSITION_MAP": true,
+   "FE_KEYPOINTS": false,
+   "FE_L3_SPINE": false,
+   "FE_L4_JUNCTIONS": false,
+   "FE_L6_ADDRESS": false,
+   "FE_PLACE_LAYER": false,
+   "FE_SOFT_CHANNEL_GATE": true,
+   "FE_SOFT_GATE_BAND": 0.1,
+   "FE_SOFT_GATE_CENTRE_SHIFT": 0.0,
+   "FE_SOFT_GATE_EDGE_WEIGHT": true,
+   "FE_SOFT_GATE_NOISE_FLOOR": 0.05,
+   "FE_SOFT_GATE_PERCENTILE": 0.95,
+   "FE_SOFT_L3_L4_GATE": true,
+   "FE_SUBPIXEL_GABOR_ANCHOR": false,
+   "FE_SUBPIXEL_PEAK_POS": false,
+   "FE_VECTOR_ADDRESS": false,
+   "FIELD_BORDER_DISCARD_PER_CHANNEL": false,
+   "GRAPH_STAGE6_RELATIONS": false,
+   "KP_GRADED_POPULATION": false,
+   "KP_GRADED_POP_VARIANT": "theta2-balanced",
+   "KP_GRADED_SIMILARITY": false,
+   "KP_GRADED_VARIANT": "wide",
+   "KP_POPULATION_PAYLOAD_STRICT": false,
+   "PLACEMENT_ASSEMBLED": false,
+   "PLACEMENT_CAND_CAP": 24,
+   "PLACEMENT_CAP_ADAPTIVE": false,
+   "PLACEMENT_CAP_ADAPTIVE_K": 0.125,
+   "PLACEMENT_CAP_ADAPTIVE_MAX": 64,
+   "PLACEMENT_CAP_DEDUP": false,
+   "PLACEMENT_CLASS_SCORE": false,
+   "PLACEMENT_COLLAPSE_PLACES": false,
+   "PLACEMENT_CONTEXT_ASSIGN": true,
+   "PLACEMENT_CONTEXT_ASSIGN_ITERS": 0,
+   "PLACEMENT_CONTEXT_ASSIGN_LAMBDA": 0.5,
+   "PLACEMENT_CONTEXT_CONSENSUS": false,
+   "PLACEMENT_CONTEXT_CONSENSUS_BONUS": 0.15,
+   "PLACEMENT_CONTEXT_CONSENSUS_LAMBDA": 0.5,
+   "PLACEMENT_CONTEXT_CONSENSUS_MODES": 1,
+   "PLACEMENT_CONTEXT_CONSENSUS_SOFT": false,
+   "PLACEMENT_CONTEXT_CONSENSUS_TOL": 0.175,
+   "PLACEMENT_CONTEXT_M17": false,
+   "PLACEMENT_CONTEXT_M17_ITERS": 5,
+   "PLACEMENT_CONTEXT_M17_MARGIN": 0.0,
+   "PLACEMENT_CONTEXT_M17_MAX_RIVALS": 1,
+   "PLACEMENT_CONTEXT_M17_MUTUAL": false,
+   "PLACEMENT_CONTEXT_M17_RIVAL_TOL": 0.02,
+   "PLACEMENT_COUNT_HITS": 8,
+   "PLACEMENT_ENDPOINT_LENSES": [],
+   "PLACEMENT_EXCLUDE_LENSES": [],
+   "PLACEMENT_E_MIN_JUDGED": 0,
+   "PLACEMENT_E_NORMALISED": false,
+   "PLACEMENT_FRAME_FALLBACK": "none",
+   "PLACEMENT_FRAME_KEYPOINT": false,
+   "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
+   "PLACEMENT_FRAME_MULTISCALE": false,
+   "PLACEMENT_FRAME_SUBPIXEL": false,
+   "PLACEMENT_FREEZE_GUARD_SUPPORT": false,
+   "PLACEMENT_FRONTDOOR": "off",
+   "PLACEMENT_GATE_ENABLED": false,
+   "PLACEMENT_LLR_EMPTY_BIN_NEUTRAL": false,
+   "PLACEMENT_LLR_MIN_BIN_COUNT": 0,
+   "PLACEMENT_LLR_MONOTONE": false,
+   "PLACEMENT_LLR_TABLE_M17": false,
+   "PLACEMENT_LLR_TABLE_M18": true,
+   "PLACEMENT_LLR_TABLE_PATH": "",
+   "PLACEMENT_M15_PLACES": false,
+   "PLACEMENT_M15_PLACE_LENSES": [
+    "Blob",
+    "BoundaryArc",
+    "CornerPoint"
+   ],
+   "PLACEMENT_M15_TRUTH_RULE": false,
+   "PLACEMENT_M19": true,
+   "PLACEMENT_M19_K": 24,
+   "PLACEMENT_M19_W": 0.25,
+   "PLACEMENT_M21_COVERAGE_DRAWS": 5,
+   "PLACEMENT_M21_COVERAGE_SEED": 20261118,
+   "PLACEMENT_MATCHER_ENABLED": false,
+   "PLACEMENT_MATCHER_PRESENCE": false,
+   "PLACEMENT_MATCHER_STRICT": false,
+   "PLACEMENT_MAX_NEIGHBOUR_CREDIT": 1.0,
+   "PLACEMENT_NODE_DESC": true,
+   "PLACEMENT_NODE_DESC_K": 24,
+   "PLACEMENT_NODE_DESC_MAXCELLS": 0,
+   "PLACEMENT_NODE_DESC_VARIANT": "sorted",
+   "PLACEMENT_NODE_DESC_W": 0.25,
+   "PLACEMENT_PAIR_NORMALISED": false,
+   "PLACEMENT_PAYLOAD_ENABLED": false,
+   "PLACEMENT_PLACE_GRID_PX": 1.0,
+   "PLACEMENT_PREFILTER": false,
+   "PLACEMENT_PREFILTER_V2": false,
+   "PLACEMENT_RIDGE_ACROSS_MIN": 0.5,
+   "PLACEMENT_RIDGE_ACROSS_ONLY": false,
+   "PLACEMENT_SCORER_ENABLED": false,
+   "PLACEMENT_SCORE_EVIDENCE": false,
+   "PLACEMENT_SCORE_SHRINK": 8.0,
+   "PLACEMENT_SCORE_WEIGHT": 0.0,
+   "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST": false,
+   "PLACEMENT_SLOT_COUNT_JUDGED": false,
+   "PLACEMENT_SPACING_RADIUS": false,
+   "PLACEMENT_SPACING_TOL": false,
+   "PLACEMENT_SUPPORT_SIGMA": 1.0,
+   "PLACEMENT_TOLERANCE": null,
+   "PLACEMENT_VOTE_HITS": 3,
+   "PLACEMENT_VOTE_ROT": true,
+   "PLACEMENT_WEIGHT": 0.25
+  },
+  "frame": {
+   "fallback": "none",
+   "keypoint": false,
+   "keypoint_sigma": "largest"
+  },
+  "weight": {
+   "field": "w_top1",
+   "file": "matching/placement_score_params.json",
+   "ml_at_boundary": true,
+   "value": 0.375,
+   "w_ml": 3.0
+  }
+ }
+}

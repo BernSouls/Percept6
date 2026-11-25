@@ -4491,6 +4491,28 @@ PLACEMENT_M21_COVERAGE_SEED: int = int(os.environ.get("PLACEMENT_M21_COVERAGE_SE
 #: [M21 / O3] how many draws of the equal-coverage subsample are reported as a spread.
 PLACEMENT_M21_COVERAGE_DRAWS: int = int(os.environ.get("PLACEMENT_M21_COVERAGE_DRAWS", "5"))
 
+#: [M22] THE ASSEMBLED SYSTEM (front door -> matcher rerank) and its parts.  All OFF/side-effect
+#: free by default: with these off nothing in the tree calls the front door, the assembler or
+#: the class score, and every deployed number is unchanged.
+#:   PLACEMENT_FRONTDOOR   which front door the harness may build a shortlist with:
+#:                         "off" | "appearance" | "voting" | "fused"
+#:   PLACEMENT_ASSEMBLED   on = the matcher re-orders the front door's shortlist
+#:   PLACEMENT_CLASS_SCORE on = a class is scored by pooling its instances' matcher scores
+PLACEMENT_FRONTDOOR: str = os.environ.get("PLACEMENT_FRONTDOOR", "off")
+PLACEMENT_ASSEMBLED: bool = os.environ.get("PLACEMENT_ASSEMBLED", "0") != "0"
+PLACEMENT_CLASS_SCORE: bool = os.environ.get("PLACEMENT_CLASS_SCORE", "0") != "0"
+
+#: [M22] the voting front door's parameters, fixed before any measurement:
+#:   VOTE_HITS  how many nearest pool places one query place may vote with
+#:   VOTE_ROT   whether a place that carries a frame also votes on the rotation (off = the
+#:              3-D vote only; the ablation arm of (A))
+PLACEMENT_VOTE_HITS: int = int(os.environ.get("PLACEMENT_VOTE_HITS", "3"))
+PLACEMENT_VOTE_ROT: bool = os.environ.get("PLACEMENT_VOTE_ROT", "1") != "0"
+#: [M22] how many pool places one query place may count in the COUNTED door (the shipped one).
+#: 8 sits in the middle of a plateau that is flat from 2 to 32 on FIT (0.875-0.925 recall@8):
+#: it is a design value, not a tuned one, and the report prints the whole grid.
+PLACEMENT_COUNT_HITS: int = int(os.environ.get("PLACEMENT_COUNT_HITS", "8"))
+
 # --- the bundle's DERIVED switches -------------------------------------------------------
 # Written as derived values, not as a second source of truth: `m15_manifest.effective_flags`
 # reads these module attributes, so with the bundle on the manifest cannot say "descriptor
