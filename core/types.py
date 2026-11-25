@@ -38,6 +38,35 @@ from core.population import (
 from core.slots import class_slot_distance  # noqa: F401
 from parameters import EPSILON  # noqa: F401
 
+
+#: [M17 / O5] A SIGNATURE'S PAYLOAD IS PART OF WHAT AN ARM NEEDS.
+#:
+#: The graded population vector rides in the signature payload but NOT in the graph
+#: cache key's node content, so a graph built with `KP_GRADED_POPULATION` off carries
+#: no payload -- and before this counter existed, the population arm read it anyway,
+#: silently scoring on the plain kernel and reporting itself as the population reading.
+#: Mission 16's equivalence build caught it by accident (identical node keys, different
+#: AUC); this makes it impossible to miss: every such comparison is counted here, and
+#: `KP_POPULATION_PAYLOAD_STRICT` turns it into an exception.
+POPULATION_PAYLOAD_MISSES: Dict[str, int] = {}
+
+
+class PopulationPayloadMissing(RuntimeError):
+    """A population arm was handed a signature that carries no population payload."""
+
+
+def record_population_payload_miss(class_: str) -> None:
+    POPULATION_PAYLOAD_MISSES[class_] = POPULATION_PAYLOAD_MISSES.get(class_, 0) + 1
+    import parameters as _P
+    if bool(getattr(_P, "KP_POPULATION_PAYLOAD_STRICT", False)):
+        raise PopulationPayloadMissing(
+            "class %r has registered population axes and the population arm is on, but "
+            "this signature carries no population payload: the graph it came from was "
+            "built with KP_GRADED_POPULATION off (that flag is in the front-end digest, "
+            "so this is a graph built outside the cache path, or a signature made by "
+            "hand).  Reading it would score on the plain kernel and call itself the "
+            "population arm." % (class_,))
+
 from core.hashing import (
     hash_64,
     hash_64_signed,
@@ -457,6 +486,12 @@ def _similarity_gaussian(self, other, context: Any = None) -> float:
         _pop_axes = get_population_axes(self.class_)
         _pa = self.population
         _pb = getattr(other, "population", ())
+        if _pop_axes is not None and not _pa and not _pb:
+            # [M17 / O5] the arm is on, the axes are registered, and neither side carries
+            # the payload.  Counted, and refused when strict.
+            import parameters as _P
+            if bool(getattr(_P, "KP_GRADED_POPULATION", False)):
+                record_population_payload_miss(self.class_)
         if (_pa and _pb and _pop_axes is not None
                 and P.POPULATION_CODING_ENABLED):
             _without_absent = _population_skipping_absent(self, other, _pop_axes)
@@ -548,6 +583,12 @@ def _similarity_linear(self, other, context: Any = None) -> float:
         _pop_axes = get_population_axes(self.class_)
         _pa = self.population
         _pb = getattr(other, "population", ())
+        if _pop_axes is not None and not _pa and not _pb:
+            # [M17 / O5] the arm is on, the axes are registered, and neither side carries
+            # the payload.  Counted, and refused when strict.
+            import parameters as _P
+            if bool(getattr(_P, "KP_GRADED_POPULATION", False)):
+                record_population_payload_miss(self.class_)
         if (_pa and _pb and _pop_axes is not None
                 and P.POPULATION_CODING_ENABLED):
             _without_absent = _population_skipping_absent(self, other, _pop_axes)

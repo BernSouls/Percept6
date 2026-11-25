@@ -25,6 +25,10 @@ and then frozen.
 """
 from __future__ import annotations
 
+import math
+
+import numpy as np
+
 from typing import Any, Callable, Dict, List, Mapping, Sequence, Tuple
 
 #: Synchronous sweeps.  Small and fixed on purpose.  FIT context accuracy
@@ -157,3 +161,125 @@ def agreement(a: Mapping[int, int], b: Mapping[int, int]) -> float:
     if not keys:
         return float("nan")
     return float(sum(1 for k in keys if int(a[k]) == int(b[k])) / len(keys))
+
+
+# ---------------------------------------------------------------------------
+# [M17 / O2] THE CONFIDENT-CONTEXT FILTER THAT ACTUALLY HAS SIGNAL
+#
+# The O2 sweep moved the geometry AUC at 15 deg by < 0.005 across iters 0/2/5/8,
+# margin 0/0.02, rival count 0/1/3, rival tolerance 0.02/0.05 and mutual on/off.  The
+# measurement that explains it: the context ACCURACY at 15 deg -- the share of places
+# whose mapping is the truth partner -- is 0.173 for the argmax-of-similarity the
+# iteration starts from.  Five sweeps of a damped filter cannot rescue a start that is
+# wrong 83 % of the time, and the score the filter optimises is computed FROM that
+# mapping, so the loop is circular.
+#
+# Two mechanisms that are not circular, both truth-free:
+#
+#   CONFIGURATION DESCRIPTOR -- a place's neighbourhood as a multiset of
+#   (log distance, direction in the source's own frame).  `PlacementVector.direction`
+#   is already measured in the source node's frame (matching/placement.py:85-104), so
+#   this descriptor is invariant to a rotation of the image and to a change of scale,
+#   and -- unlike the residual -- it needs NO correspondence, which is what makes it
+#   usable before the context is known.
+#
+#   ONE-TO-ONE ASSIGNMENT -- the mapping is a bijection, not a per-node argmax, so two
+#   places cannot claim the same reference place.  Solved exactly with
+#   `scipy.optimize.linear_sum_assignment`.
+# ---------------------------------------------------------------------------
+
+#: Weight of the configuration term when the assignment mode is used.  Fitted on FIT
+#: (see MISSION17_REPORT.md); 0.0 is the pure-appearance assignment.
+ASSIGN_LAMBDA = 0.5
+#: Neighbours kept, nearest first.  Six is the number of slots the scorer can judge
+#: (`SLOT_CAP = 8`) and more than the median place has.
+ASSIGN_K = 6
+
+
+def _axial(th: float) -> float:
+    return (float(th) + math.pi / 2.0) % math.pi - math.pi / 2.0
+
+
+def config_descriptor(side: Any, u: int, k: int = ASSIGN_K):
+    """(sorted log distances, sorted source-frame directions) to ``u``'s neighbours."""
+    rows: List[Tuple[float, float]] = []
+    for (other, is_source, name) in side.incident.get(int(u), ()):
+        key = ((int(u), int(other), name) if is_source
+               else (int(other), int(u), name))
+        pv = side.index.get(key)
+        if pv is None:
+            continue
+        d = float(getattr(pv, "distance", float("nan")))
+        if not math.isfinite(d) or d <= 0.0:
+            continue
+        th = float(getattr(pv, "direction", 0.0))
+        rows.append((math.log(d), th if not getattr(pv, "axial", False) else _axial(th)))
+    if len(rows) < 2:
+        return None
+    rows.sort()
+    return ([r[0] for r in rows][:k], [r[1] for r in rows][:k])
+
+
+def config_similarity(a, b, sigma_d: float = 0.35, sigma_a: float = 0.5) -> float:
+    """Rank-aligned agreement of two configuration descriptors, in [0, 1]."""
+    if a is None or b is None:
+        return 0.0
+    da, aa = a
+    db, bb = b
+    n = min(len(da), len(db))
+    if n < 2:
+        return 0.0
+    sd = sum((da[i] - db[i]) ** 2 for i in range(n))
+    sa = 0.0
+    for i in range(n):
+        d = (aa[i] - bb[i] + math.pi) % (2.0 * math.pi) - math.pi
+        d = min(abs(d), abs(abs(d) - math.pi))
+        sa += d * d
+    return float(math.exp(-0.5 * (sd / (n * sigma_d ** 2)
+                                  + sa / (n * sigma_a ** 2))))
+
+
+def assignment_mapping(pop: Sequence[int],
+                       cands: Mapping[int, Sequence[Tuple[int, float]]],
+                       side_a: Any, side_b: Any,
+                       lam: float = ASSIGN_LAMBDA) -> Dict[int, int]:
+    """One-to-one assignment maximising ``(1-lam)*sim + lam*config``.
+
+    Truth is not read: the input is the candidate rows the matcher already has and the
+    two sides' own payloads.
+    """
+    from scipy.optimize import linear_sum_assignment
+    desc_q = {int(u): config_descriptor(side_a, int(u)) for u in pop}
+    cols = sorted({int(v) for u in pop for (v, _s) in cands.get(int(u), ())})
+    if not cols:
+        return {}
+    cmap = {v: j for j, v in enumerate(cols)}
+    rows = [int(u) for u in pop if cands.get(int(u))]
+    desc_r = {v: config_descriptor(side_b, v) for v in cols}
+    big = np.full((len(rows), len(cols)), -1e9, dtype=float)
+    for i, u in enumerate(rows):
+        dq = desc_q[u]
+        for (v, s) in cands[u]:
+            big[i, cmap[int(v)]] = ((1.0 - lam) * float(s)
+                                    + lam * config_similarity(dq, desc_r[int(v)]))
+    ri, ci = linear_sum_assignment(-big)
+    return {rows[i]: cols[j] for i, j in zip(ri, ci) if big[i, j] > -1e8}
+
+
+def assignment_context(pop: Sequence[int],
+                       cands: Mapping[int, Sequence[Tuple[int, float]]],
+                       side_a: Any, side_b: Any,
+                       score_fn: Callable[[int, int, Mapping[int, int]], float],
+                       iters: int = ITERS, lam: float = ASSIGN_LAMBDA,
+                       stats: Dict[str, Any] = None) -> Dict[int, int]:
+    """Assignment start, then ``iters`` damped sweeps of `score_fn` -- else unchanged.
+
+    ``iters = 0`` is the assignment alone: the honest baseline for "what does the
+    bijection buy without the iteration on top of it".
+    """
+    base = assignment_mapping(pop, cands, side_a, side_b, lam=lam)
+    if int(iters) <= 0:
+        if stats is not None:
+            stats.update({"moved": 0, "kept": len(base), "refused": 0})
+        return base
+    return iterate_context(pop, cands, base, score_fn, iters=iters, stats=stats)

@@ -34,6 +34,9 @@ import numpy as np
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 FROZEN_PATH = os.path.join(_HERE, "placement_frozen_params.json")
+#: [M17 / O1] the refitted table; read only when `PLACEMENT_LLR_TABLE_M17` is on, so the
+#: deployed default stays byte-identical.
+FROZEN_PATH_M17 = os.path.join(_HERE, "placement_frozen_params_m17.json")
 
 #: Counters for the loud-but-survivable production path.  A test or a harness can
 #: read them; production logs them.
@@ -46,12 +49,28 @@ _FIT = None
 _PFIT = None
 
 
+def active_path() -> str:
+    """Which table this process reads.  Flag OFF (the default) is the deployed one."""
+    import parameters as P
+    if bool(getattr(P, "PLACEMENT_LLR_TABLE_M17", False)):
+        return FROZEN_PATH_M17
+    return FROZEN_PATH
+
+
+def reset_cache() -> None:
+    """Drop the loaded bundle.  A harness that switches table must call this."""
+    global _BUNDLE, _FIT, _PFIT
+    _BUNDLE = None
+    _FIT = None
+    _PFIT = None
+
+
 def frozen() -> Dict[str, Any]:
     """The frozen bundle, loaded once and checked against the live constants."""
     global _BUNDLE, _FIT, _PFIT
     if _BUNDLE is None:
         from matching import placement_llr as L
-        with open(FROZEN_PATH) as fh:
+        with open(active_path()) as fh:
             b = json.load(fh)
         _FIT, _PFIT, ae, ag = L.from_jsonbundle(b)   # raises on a cap mismatch
         b["_a_exist"], b["_a_geom"] = ae, ag
@@ -301,6 +320,8 @@ def context_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
                     iters: Optional[int] = None,
                     margin: Optional[float] = None,
                     mutual: Optional[bool] = None,
+                    max_rivals: Optional[int] = None,
+                    rival_tol: Optional[float] = None,
                     stats: Optional[Dict[str, Any]] = None
                     ) -> Dict[int, int]:
     """N's mapping, then the damped context iteration over the same rows."""
@@ -314,7 +335,42 @@ def context_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
     it = int(b["iteration"]["iters"] if iters is None else iters)
     mar = float(b["iteration"]["margin"] if margin is None else margin)
     mut = bool(b["iteration"]["mutual"] if mutual is None else mutual)
+    # [M17 / O2] the place-regime constants, when the re-fit flag is on.  They are read
+    # here rather than baked into `placement_context` so the frozen tiling constants stay
+    # exactly what they were for every existing caller.
+    import parameters as _P
+    if bool(getattr(_P, "PLACEMENT_CONTEXT_M17", False)):
+        it = int(getattr(_P, "PLACEMENT_CONTEXT_M17_ITERS", it))
+        mar = float(getattr(_P, "PLACEMENT_CONTEXT_M17_MARGIN", mar))
+        mut = bool(getattr(_P, "PLACEMENT_CONTEXT_M17_MUTUAL", mut))
+        if max_rivals is None:
+            max_rivals = int(getattr(_P, "PLACEMENT_CONTEXT_M17_MAX_RIVALS", 1))
+        if rival_tol is None:
+            rival_tol = float(getattr(_P, "PLACEMENT_CONTEXT_M17_RIVAL_TOL", 0.02))
     beta = float(b["beta"])
+
+    # [M17 / O2] the assignment start, when the flag is on.  It replaces the
+    # per-node argmax that the damped iteration starts from; everything after it is
+    # the same code path.
+    if bool(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN", False)):
+        from matching import placement_context as _Ctx2
+        cands0: Dict[int, List[Tuple[int, float]]] = {}
+        for i, row in enumerate(rows):
+            u0 = int(nodes_a[i])
+            if row:
+                cands0[u0] = [(int(vid), float(sim_v)) for (_j, vid, sim_v) in row]
+        if cands0:
+            _ss: Dict[str, Any] = {}
+            asg = _Ctx2.assignment_context(
+                sorted(cands0), cands0, side_a, side_b,
+                lambda u, v, m: 0.0,        # score_fn unused when iters == 0
+                iters=int(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN_ITERS", 0)),
+                lam=float(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN_LAMBDA", 0.5)),
+                stats=_ss)
+            if stats is not None:
+                stats.update({"assign": True, "assign_moved": _ss.get("moved")})
+            if int(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN_ITERS", 0)) <= 0:
+                return asg
 
     cands: Dict[int, List[Tuple[int, float]]] = {}
     sim: Dict[Tuple[int, int], float] = {}
@@ -338,8 +394,13 @@ def context_mapping(rows: Sequence[Sequence[Tuple[int, int, float]]],
                             normalise=norm, min_judged=_min_judged())
         return (1.0 - beta) * sim.get((int(u), int(v)), 0.0) + beta * term
 
+    if max_rivals is None:
+        max_rivals = int(b["iteration"].get("max_rivals", 1))
+    if rival_tol is None:
+        rival_tol = float(b["iteration"].get("rival_tol", 0.02))
     return Ctx.iterate_context(sorted(cands), cands, base, score, iters=it,
-                               margin=mar, mutual=mut, stats=stats)
+                               margin=mar, mutual=mut, max_rivals=int(max_rivals),
+                               rival_tol=float(rival_tol), stats=stats)
 
 
 def rescore_matrix(matrix: Sequence[Sequence[float]],

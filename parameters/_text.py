@@ -4357,3 +4357,45 @@ PLACEMENT_LLR_MONOTONE: bool = os.environ.get("PLACEMENT_LLR_MONOTONE", "0") != 
 #: a refit with a different `res_max`/`n_bins` is REFUSED rather than loaded.
 PLACEMENT_FREEZE_GUARD_SUPPORT: bool = os.environ.get(
     "PLACEMENT_FREEZE_GUARD_SUPPORT", "0") != "0"
+
+#: [M17 / O1] WHICH TABLE.  Off, the deployed `placement_frozen_params.json` is read
+#: exactly as before (byte-identical defaults).  On, the refitted
+#: `placement_frozen_params_m17.json` is read instead: fitted on the pooled places-mode
+#: residuals with the empty-bin rule and the monotone projection ON, 36 bins of 0.05
+#: tolunits over [0, 1.8), carrying its per-bin counts.  The deployed table pays
+#: +0.597 nats at 5.0 tolunits and -2.237 at 1.5 -- i.e. it rewards distance.
+PLACEMENT_LLR_TABLE_M17: bool = os.environ.get("PLACEMENT_LLR_TABLE_M17", "0") != "0"
+
+#: [M17 / O2] THE CONTEXT LEVERS, re-fitted on the PLACE regime.  The frozen constants
+#: (iters 5, margin 0.0, max_rivals 1, rival_tol 0.02, mutual False) were fitted on the
+#: TILING-LENS regime, where similarity was graded.  Place endpoints had a BINARY
+#: similarity until Mission 16, so a margin, a rival count and a mutual test meant
+#: something else there.  Off, `placement_context`'s own constants are used unchanged.
+PLACEMENT_CONTEXT_M17: bool = os.environ.get("PLACEMENT_CONTEXT_M17", "0") != "0"
+PLACEMENT_CONTEXT_M17_ITERS: int = int(os.environ.get("PLACEMENT_CONTEXT_M17_ITERS", "5"))
+PLACEMENT_CONTEXT_M17_MARGIN: float = float(
+    os.environ.get("PLACEMENT_CONTEXT_M17_MARGIN", "0.0"))
+PLACEMENT_CONTEXT_M17_MAX_RIVALS: int = int(
+    os.environ.get("PLACEMENT_CONTEXT_M17_MAX_RIVALS", "1"))
+PLACEMENT_CONTEXT_M17_RIVAL_TOL: float = float(
+    os.environ.get("PLACEMENT_CONTEXT_M17_RIVAL_TOL", "0.02"))
+PLACEMENT_CONTEXT_M17_MUTUAL: bool = os.environ.get(
+    "PLACEMENT_CONTEXT_M17_MUTUAL", "0") != "0"
+
+#: [M17 / O2] THE ASSIGNMENT CONTEXT.  The context iteration starts from the argmax of
+#: the appearance similarity, which at 15 deg is the truth partner 17.3 % of the time;
+#: a bijection (and a rotation-invariant configuration term) is not circular the way the
+#: damped filter is.  Off, `context_mapping` is byte-for-byte what it was.
+PLACEMENT_CONTEXT_ASSIGN: bool = os.environ.get("PLACEMENT_CONTEXT_ASSIGN", "0") != "0"
+PLACEMENT_CONTEXT_ASSIGN_LAMBDA: float = float(
+    os.environ.get("PLACEMENT_CONTEXT_ASSIGN_LAMBDA", "0.5"))
+PLACEMENT_CONTEXT_ASSIGN_ITERS: int = int(
+    os.environ.get("PLACEMENT_CONTEXT_ASSIGN_ITERS", "0"))
+
+#: [M17 / O5] THE SIGNATURE PAYLOAD IS PART OF WHAT AN ARM NEEDS.  The population vector
+#: rides in the signature payload and not in the graph cache key, so a graph built with
+#: `KP_GRADED_POPULATION` off cannot serve the population arm.  Off, such a read is
+#: COUNTED (`core/types.POPULATION_PAYLOAD_MISSES`) and falls back to the kernel; on, it
+#: RAISES.  Strict is the deployment gate; tolerant is never silent.
+KP_POPULATION_PAYLOAD_STRICT: bool = os.environ.get(
+    "KP_POPULATION_PAYLOAD_STRICT", "0") != "0"

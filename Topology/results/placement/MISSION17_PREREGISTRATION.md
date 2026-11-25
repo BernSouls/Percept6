@@ -77,9 +77,17 @@ one impostor; and images contributing a non-tied top-1 decision.
   differences.
 * **Planning effect: +0.42** (M16: top-1 0.116 at w=0 → 0.539 at w=0.375, on 5,322 DEV
   queries).
-* **Planning sd: to be filled from the DEV cells before a single fresh graph is built**,
-  from the per-image difference distribution on the 4 DEV images. It has 3 degrees of
-  freedom, so it is an estimate and is labelled as one.
+* **Planning sd (filled before a single fresh graph was built, from the four DEV images
+  at 15°, arm `llr17`): per-image differences full-minus-appearance-only
+  +0.0513, +0.0824, +0.1196, +0.0168 → mean **+0.0675**, sd **0.0438** (3 df).
+  Therefore **MDE = 0.660 × 0.0438 = 0.0289**.
+* **Verdict on power, taken now:** MDE 0.0289 is far below the registered planning
+  effect (+0.42) and below the DEV-measured gain (+0.0675), so the read **is powered**
+  for a ~+0.03 effect at its registered size. It is also recorded that the *effect this
+  mission actually has to detect* is far smaller than the +0.42 the pre-registration
+  inherited from M16's bank: the DEV gain on this definition is +0.0675, because M16's
+  +0.42 was measured against a fully tied appearance column and with ties counted as
+  successes. Both are stated; the read judges the smaller one.
 * **Verdict rule, registered now:** if `MDE > 0.42` the read is **not powered**; the
   result is then reported as an **estimate with its interval**, never as a detection, and
   the number of images that would have been needed is stated. If `MDE ≤ 0.42` and the

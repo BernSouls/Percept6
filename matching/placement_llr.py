@@ -633,11 +633,15 @@ def _fit_to_dict(fit: "LLRFit") -> Dict[str, Any]:
 
 
 def _fit_from_dict(d: Mapping[str, Any]) -> "LLRFit":
+    extra: Dict[str, Any] = {}
+    for k in ("bin_counts_true", "bin_counts_wrong", "weight_profile_digest"):
+        if k in d:
+            extra[k] = d[k]
     return LLRFit(edges=np.asarray(d["edges"], dtype=float),
                   llr=np.asarray(d["llr"], dtype=float),
                   mu_wrong=float(d["mu_wrong"]),
                   n_true=int(d.get("n_true", 0)),
-                  n_wrong=int(d.get("n_wrong", 0)))
+                  n_wrong=int(d.get("n_wrong", 0)), extra=extra)
 
 
 def _pres_to_dict(p: "PresenceFit") -> Dict[str, Any]:
@@ -663,20 +667,95 @@ def to_jsonbundle(fit: "LLRFit", pfit: "PresenceFit", a_e: float,
                           "llr_clip": float(LLR_CLIP),
                           "fixed_tol": float(FIXED_TOL),
                           "res_max": float(RES_MAX),
-                          "n_bins": int(N_BINS)}}
+                          "n_bins": int(N_BINS)},
+            # [M17 / O1] THE WEIGHT PROFILE TRAVELS WITH THE TABLE.  Without it a
+            # projection cannot be weighted honestly (M16 had to use uniform weights
+            # on the deployed table because the counts were never written) and the
+            # guard has nothing to check a refit against.
+            **({"bin_counts": {"true": [int(x) for x in fit.extra["bin_counts_true"]],
+                               "wrong": [int(x) for x in fit.extra["bin_counts_wrong"]]}}
+               if "bin_counts_true" in getattr(fit, "extra", {}) else {})}
 
 
-#: [M16 / bar 5] Every support/resolution mismatch this module SAW while the strict
-#: guard was off.  A tolerant guard that records is not a silent one: the harnesses
-#: assert this is empty (`assert_guard_clean`), and tests flip the guard on to prove
-#: the refusal path exists.
+#: [M16 / bar 5, extended M17 / O1] Everything the guard SAW while the strict gate was
+#: off.  A tolerant guard that records is not a silent one: the harnesses assert this is
+#: empty (`assert_guard_clean`), and the tests flip the gate on to prove the refusals.
 GUARD_RECORD: Dict[str, Any] = {}
 
 
 def assert_guard_clean() -> None:
     if GUARD_RECORD:
-        raise AssertionError("freeze guard mismatches were tolerated: %r"
+        raise AssertionError("freeze guard findings were tolerated: %r"
                              % (GUARD_RECORD,))
+
+
+def audit_bundle(b: Mapping[str, Any]) -> Dict[str, Any]:
+    """[M17 / O1] What is wrong with this bundle, as data.
+
+    Two classes of finding, and they are not the same thing:
+
+    * **INCOHERENT** -- the file contradicts itself: the declared support or
+      resolution does not match its own edge array, or the counts do not span it.
+      A file like that can never be read correctly, so it is ALWAYS an error.
+    * **UNSHIPPABLE** -- the file is internally consistent but carries a defect the
+      programme has decided not to deploy: no per-bin counts (so its weight profile
+      cannot be checked), a table that RISES in |residual|, or an empty bin paying
+      positive credit.  Strict mode refuses it; tolerant mode records it.
+    """
+    c = b.get("constants") or {}
+    f = b.get("fit") or {}
+    edges = np.asarray(f.get("edges", []), dtype=float)
+    llr = np.asarray(f.get("llr", []), dtype=float)
+    finding: Dict[str, Any] = {"incoherent": [], "unshippable": []}
+    if edges.size < 2 or llr.size == 0:
+        finding["incoherent"].append("no edges or no llr")
+        return finding
+    n_bins = int(llr.size)
+    # ---- coherence: the declared support/resolution against the real edges
+    if n_bins != int(edges.size) - 1:
+        finding["incoherent"].append(
+            "resolution: %d llr values against %d bins of edges" % (n_bins, edges.size - 1))
+    if "res_max" in c and abs(float(c["res_max"]) - float(edges[-1])) > 1e-9:
+        finding["incoherent"].append(
+            "support: declared res_max %r, edges end at %r" % (c["res_max"], edges[-1]))
+    if "n_bins" in c and int(c["n_bins"]) != n_bins:
+        finding["incoherent"].append(
+            "resolution: declared n_bins %r, table has %d" % (c["n_bins"], n_bins))
+    # ---- the weight profile
+    counts = b.get("bin_counts") or {}
+    ct = counts.get("true", f.get("bin_counts_true"))
+    cw = counts.get("wrong", f.get("bin_counts_wrong"))
+    if ct is None or cw is None:
+        finding["unshippable"].append(
+            "weight profile: no per-bin counts, so the table cannot be re-weighted, "
+            "projected, or checked")
+    else:
+        if len(ct) != n_bins or len(cw) != n_bins:
+            finding["incoherent"].append(
+                "weight profile: %d/%d counts for %d bins" % (len(ct), len(cw), n_bins))
+        else:
+            if int(sum(ct)) != int(f.get("n_true", sum(ct))):
+                finding["incoherent"].append(
+                    "weight profile: counts sum to %d, n_true says %r"
+                    % (sum(ct), f.get("n_true")))
+            if int(sum(cw)) != int(f.get("n_wrong", sum(cw))):
+                finding["incoherent"].append(
+                    "weight profile: counts sum to %d, n_wrong says %r"
+                    % (sum(cw), f.get("n_wrong")))
+            empty_pos = [int(i) for i in range(n_bins)
+                         if (int(ct[i]) + int(cw[i])) == 0 and float(llr[i]) > 0.0]
+            if empty_pos:
+                finding["unshippable"].append(
+                    "empty bins %r carry positive credit" % (empty_pos,))
+    # ---- shippability: monotone in |residual|
+    rises = [int(i) for i in range(n_bins - 1) if float(llr[i + 1]) > float(llr[i]) + 1e-12]
+    if rises:
+        finding["unshippable"].append(
+            "table rises at bins %r (max %+.3f nats above a nearer bin)"
+            % (rises, max(float(llr[i + 1]) - float(llr[i]) for i in rises)))
+    finding["n_rises"] = len(rises)
+    finding["positive_bins"] = int((llr > 0).sum())
+    return finding
 
 
 def from_jsonbundle(b: Mapping[str, Any]) -> Tuple["LLRFit", "PresenceFit", float, float]:
@@ -689,25 +768,17 @@ def from_jsonbundle(b: Mapping[str, Any]) -> Tuple["LLRFit", "PresenceFit", floa
                 "frozen %s %r does not match the live constant %r: a deployed "
                 "score must not be read with different caps" %
                 (name, c[name], mine))
-    # [M16 / bar 5] THE SUPPORT AND THE RESOLUTION.  A table fitted over [0, 1.8] with
-    # 36 bins cannot be read as if it were the shipped [0, 6] with 24: the edges are
-    # the index, so every residual would land in the wrong bin and nothing would say
-    # so.  Strict (flag on) => REFUSE; tolerant (default) => record, never silently.
     strict = bool(getattr(_P, "PLACEMENT_FREEZE_GUARD_SUPPORT", False))
-    for name, mine in (("res_max", RES_MAX), ("n_bins", N_BINS)):
-        if name not in c:
-            GUARD_RECORD[name] = "absent from the bundle"
-            if strict:
-                raise ValueError("frozen bundle has no %r: its support/resolution "
-                                 "cannot be checked against the live %r"
-                                 % (name, mine))
-            continue
-        if abs(float(c[name]) - float(mine)) > 1e-12:
-            GUARD_RECORD[name] = {"bundle": c[name], "live": mine}
-            if strict:
-                raise ValueError(
-                    "frozen %s %r does not match the live %r: a table fitted with a "
-                    "different support or bin count would be indexed wrongly"
-                    % (name, c[name], mine))
+    finding = audit_bundle(b)
+    if finding["incoherent"]:
+        # a self-contradictory file is never acceptable, strict or not
+        raise ValueError("frozen bundle is incoherent: %s"
+                         % "; ".join(finding["incoherent"]))
+    if finding["unshippable"]:
+        GUARD_RECORD["unshippable"] = finding["unshippable"]
+        if strict:
+            raise ValueError(
+                "frozen bundle is not shippable (strict guard): %s"
+                % "; ".join(finding["unshippable"]))
     return (_fit_from_dict(b["fit"]), _pres_from_dict(b["presence"]),
             float(b["plus"]["a_exist"]), float(b["plus"]["a_geom"]))

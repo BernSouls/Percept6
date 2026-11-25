@@ -115,6 +115,20 @@ _FRONTEND_SWITCHES = (
                       # not be served across a change of either.
                       "PLACEMENT_LLR_MONOTONE",
                       "PLACEMENT_FREEZE_GUARD_SUPPORT",
+                      # M17: the table selector and the place-regime context levers.
+                      # Both change what an edge weighs, so a cached graph may not be
+                      # served across a change of either.
+                      "PLACEMENT_LLR_TABLE_M17",
+                      "PLACEMENT_CONTEXT_M17",
+                      "PLACEMENT_CONTEXT_M17_ITERS",
+                      "PLACEMENT_CONTEXT_M17_MARGIN",
+                      "PLACEMENT_CONTEXT_M17_MAX_RIVALS",
+                      "PLACEMENT_CONTEXT_M17_RIVAL_TOL",
+                      "PLACEMENT_CONTEXT_M17_MUTUAL",
+                      "PLACEMENT_CONTEXT_ASSIGN",
+                      "PLACEMENT_CONTEXT_ASSIGN_LAMBDA",
+                      "PLACEMENT_CONTEXT_ASSIGN_ITERS",
+                      "KP_POPULATION_PAYLOAD_STRICT",
                       "PLACEMENT_M15_PLACES",
                       "PLACEMENT_M15_PLACE_LENSES",
                       "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST",

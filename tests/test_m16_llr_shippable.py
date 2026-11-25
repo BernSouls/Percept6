@@ -80,6 +80,14 @@ class MonotoneTableTests(unittest.TestCase):
 
 
 class FreezeGuardTests(unittest.TestCase):
+    """The guard as MISSION 17 redefined it.
+
+    M16 asked whether the DECLARED support matched the LIVE constants.  M17 asks the
+    stronger, honest question: does the bundle agree with ITS OWN edges, does it carry
+    the weight profile, and is it shippable at all?  The consequence is that the
+    DEPLOYED bundle now fails the strict gate -- which is the finding of O1, not a
+    regression, and it is pinned below.
+    """
     def setUp(self):
         self._g = P.PLACEMENT_FREEZE_GUARD_SUPPORT
         self.path = os.path.join(ROOT, "matching", "placement_frozen_params.json")
@@ -94,26 +102,31 @@ class FreezeGuardTests(unittest.TestCase):
         b.setdefault("constants", {}).update(const)
         return b
 
-    def test_a_refit_with_a_different_support_is_refused_when_strict(self):
-        P.PLACEMENT_FREEZE_GUARD_SUPPORT = True
-        L.GUARD_RECORD.clear()
-        with self.assertRaises(ValueError):
-            L.from_jsonbundle(self._bundle(res_max=1.8))
-        with self.assertRaises(ValueError):
-            L.from_jsonbundle(self._bundle(n_bins=36))
+    def test_a_declaration_that_contradicts_its_own_edges_always_raises(self):
+        """Coherence is not a policy: a file that contradicts itself can never be read."""
+        for strict in (False, True):
+            P.PLACEMENT_FREEZE_GUARD_SUPPORT = strict
+            L.GUARD_RECORD.clear()
+            with self.assertRaises(ValueError):
+                L.from_jsonbundle(self._bundle(res_max=1.8))
+            with self.assertRaises(ValueError):
+                L.from_jsonbundle(self._bundle(n_bins=36))
 
-    def test_the_shipped_bundle_still_loads(self):
+    def test_the_DEPLOYED_bundle_fails_the_strict_gate(self):
+        """O1's finding, pinned: the shipped table has no counts and rises 5 times."""
         P.PLACEMENT_FREEZE_GUARD_SUPPORT = True
         L.GUARD_RECORD.clear()
-        L.from_jsonbundle(self.base)
-        self.assertEqual(L.GUARD_RECORD, {})
+        with self.assertRaises(ValueError) as cm:
+            L.from_jsonbundle(self.base)
+        msg = str(cm.exception)
+        self.assertIn("weight profile", msg)
+        self.assertIn("rises", msg)
 
     def test_tolerant_mode_records_without_swallowing(self):
         P.PLACEMENT_FREEZE_GUARD_SUPPORT = False
         L.GUARD_RECORD.clear()
-        L.from_jsonbundle(self._bundle(res_max=1.8, n_bins=36))
-        self.assertIn("res_max", L.GUARD_RECORD)
-        self.assertIn("n_bins", L.GUARD_RECORD)
+        L.from_jsonbundle(self.base)          # the deployed bundle, tolerated
+        self.assertIn("unshippable", L.GUARD_RECORD)
         with self.assertRaises(AssertionError):
             L.assert_guard_clean()
         L.GUARD_RECORD.clear()
