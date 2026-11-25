@@ -218,9 +218,12 @@ def main() -> int:
                  r["deployed"]["top1"], r["deployed"]["top1_n"],
                  r["harness"]["geo_auc"] or 0.0, r["disagree_n"], r["cells_compared"],
                  r["max_score_diff"] or 0.0,
-                 r["effective"]["node_desc"], r["effective"]["node_desc_w"],
-                 r["effective"]["node_desc_k"], r["effective"]["node_desc_maxcells"],
-                 r["effective"]["llr_table"], r["effective"]["context_assign"]), flush=True)
+                 r["effective"]["PLACEMENT_NODE_DESC"],
+                 r["effective"]["PLACEMENT_NODE_DESC_W"],
+                 r["effective"]["PLACEMENT_NODE_DESC_K"],
+                 r["effective"]["PLACEMENT_NODE_DESC_MAXCELLS"],
+                 r["effective"]["llr_table"],
+                 r["effective"]["PLACEMENT_CONTEXT_ASSIGN"]), flush=True)
     out = {"pose": args.pose, "images": list(tags), "queries": q, "record": RECORD,
            "pooled": {"geo_auc": pooled_geo, "geo_auc_mean_of_cells": mean_geo,
                       "geo_auc_cells": [round(x, 6) for x in cell_geo],

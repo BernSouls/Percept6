@@ -1,0 +1,214 @@
+{
+ "runs": [
+  {
+   "by_class": {
+    "apple": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "car": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "cow": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 1,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "cup": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 1,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "dog": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "horse": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "pear": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 2,
+     "n": 2
+    },
+    "tomato": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    }
+   },
+   "queries": 16,
+   "split": "FIT",
+   "tag": "m20_fit_t3g2",
+   "tags": {
+    "AGGREGATION": 0,
+    "APPEARANCE": 2,
+    "CORRESPONDENCE": 0,
+    "SHORTLIST": 4
+   },
+   "task": "T3"
+  },
+  {
+   "by_class": {
+    "apple": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "car": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "cow": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "cup": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "dog": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "horse": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "pear": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "tomato": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    }
+   },
+   "queries": 16,
+   "split": "FIT",
+   "tag": "m20_fit_t0g2",
+   "tags": {
+    "AGGREGATION": 0,
+    "APPEARANCE": 0,
+    "CORRESPONDENCE": 0,
+    "SHORTLIST": 0
+   },
+   "task": "T0"
+  },
+  {
+   "by_class": {
+    "apple": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "car": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "cow": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "cup": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "dog": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 1,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "horse": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "pear": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "tomato": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    }
+   },
+   "queries": 16,
+   "split": "DEV",
+   "tag": "m20_dev_t3g2",
+   "tags": {
+    "AGGREGATION": 0,
+    "APPEARANCE": 1,
+    "CORRESPONDENCE": 0,
+    "SHORTLIST": 5
+   },
+   "task": "T3"
+  }
+ ]
+}
