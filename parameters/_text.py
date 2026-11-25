@@ -4214,3 +4214,88 @@ VECTOR_ADDRESS_DIM: int = 1024
 VECTOR_ADDRESS_SELF_WEIGHT: float = 1.0
 #: [2] Number of WL levels kept (1..3), mirroring the existing L6 flag.
 VECTOR_ADDRESS_MAX_K: int = 3
+
+
+# ---------------------------------------------------------------------------
+# [MISSION 15] PLACEMENT ON REAL PLACES.  Every switch below is DARK; with all of
+# them off the tree computes exactly what Mission 14 left it computing.
+# ---------------------------------------------------------------------------
+
+#: [M15 / item 2] SLOT ADMISSION.  `slots_for_candidate` sorts a node's incident
+#: placement edges by (class name, neighbour id), appends the slots it cannot
+#: check, and TRUNCATES to SLOT_CAP = 8 -- while `TARGET_K = 16`, so half the
+#: edges the builder made are never looked at, and which half is decided by node
+#: id.  With this on, the CHECKABLE slots are admitted first and the uncheckable
+#: ones only fill what is left; the order inside each group is a stated
+#: reliability rule (smallest residual first = the most reliable evidence first),
+#: ties broken by (class, neighbour id).  Nothing about the estimator changes.
+PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST: bool = os.environ.get(
+    "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST", "0") != "0"
+
+#: [M15 / item 2] COUNT JUDGED SLOTS, NOT SLOTS.  `plus_score(normalise=True)`
+#: divides by `len(slots)` and `min_judged` compares `len(slots)`, and BOTH
+#: include the slots whose residual is None (unmapped neighbour, missing payload
+#: edge, missing frame).  So "the mean over the slots this pair judged" is really
+#: the mean over the slots it mentioned, and "refuse a pair that judged fewer
+#: than k" refuses on a count that includes evidence that does not exist.  On,
+#: both count only slots with a residual.
+PLACEMENT_SLOT_COUNT_JUDGED: bool = os.environ.get(
+    "PLACEMENT_SLOT_COUNT_JUDGED", "0") != "0"
+
+#: [M15 / item 5c] AN EMPTY BIN IS NEUTRAL, NOT THE PRIOR RATIO.  `fit_llr` gives
+#: a bin with no samples of either population log((N_wrong+12)/(N_true+12)),
+#: which is POSITIVE whenever the wrong sample outnumbers the true one -- i.e.
+#: "we have never measured here" is read as "this residual is evidence FOR the
+#: match".  13 of 24 shipped bins sit at that constant (+0.5966).  On, a bin with
+#: no TRUE and no WRONG sample is 0.0 (neutral) and a bin with one side empty
+#: takes the nearest non-empty bin's value (the wrong-mean reading) instead of the
+#: prior.  Off, the shipped arithmetic is untouched.
+PLACEMENT_LLR_EMPTY_BIN_NEUTRAL: bool = os.environ.get(
+    "PLACEMENT_LLR_EMPTY_BIN_NEUTRAL", "0") != "0"
+
+#: [M15 / item 5b] A MINIMUM COUNT PER BIN, and the smoothing applied before the
+#: log ratio.  A bin whose (true + wrong) count is below this is treated as EMPTY
+#: (see above), so a bin resting on one or two observations cannot produce a
+#: confident LLR.  0 = the shipped behaviour (no minimum).
+PLACEMENT_LLR_MIN_BIN_COUNT: int = int(os.environ.get(
+    "PLACEMENT_LLR_MIN_BIN_COUNT", "0"))
+
+#: [M15 / item 6] NO CHECKABLE EDGE = NEUTRAL.  A pair whose two nodes are BOTH
+#: degree-0 in the placement graph has no relation to check; today
+#: `_relational_agreement` returns 0.0 for it, so the pair's quality is
+#: `s*(1-beta)` -- a systematic PENALTY for having no structure, on a corpus
+#: where most nodes are degree-0.  On, such a pair takes its OWN appearance `s`
+#: in place of the relation score, in the assignment, in the swap objective and in
+#: the final prune (one helper, three call sites).  A connected pair is untouched,
+#: so a perfectly agreeing connected pair still scores at least the
+#: appearance-only value it would have scored as an isolated one.
+MATCH_DEGREE0_PAIR_USES_APPEARANCE: bool = os.environ.get(
+    "MATCH_DEGREE0_PAIR_USES_APPEARANCE", "0") != "0"
+
+#: [M15 / item 9] THE REFINEMENT BUDGET.  `MATCH_ALIGN_MAX_PAIR_EVALS` is charged
+#: per relational evaluation, and one refinement matrix over two ~600-node graphs
+#: is 360 000 evaluations, so the budget (200 000) is exhausted INSIDE the first
+#: round.  On, the budget is scaled at call time by the number of POSITIVE
+#: similarity cells (`max(configured, cells) * MATCH_ALIGN_BUDGET_CELL_FACTOR`), so
+#: the rounds a pair is entitled to do not depend on how big its graphs are.
+MATCH_ALIGN_BUDGET_SCALES_WITH_CELLS: bool = os.environ.get(
+    "MATCH_ALIGN_BUDGET_SCALES_WITH_CELLS", "0") != "0"
+MATCH_ALIGN_BUDGET_CELL_FACTOR: float = float(os.environ.get(
+    "MATCH_ALIGN_BUDGET_CELL_FACTOR", "1.0"))
+
+#: [M15 / item 3] THE PLACE ENDPOINT LIST.  Filled from the repeatability atlas
+#: (`Topology/results/placement/m15_atlas.json`, `place_lenses`), never by hand
+#: here: the atlas is the artifact that names a lens a PLACE because it re-detects
+#: under a view change, and this parameter exists so the choice travels with the
+#: run instead of being re-typed.  Empty = the flag is unusable (the builder
+#: raises).  Ridge places enter only ACROSS the ridge (that is what
+#: PLACEMENT_RIDGE_ACROSS_ONLY is for).
+PLACEMENT_M15_PLACES: bool = os.environ.get("PLACEMENT_M15_PLACES", "0") != "0"
+PLACEMENT_M15_PLACE_LENSES: Tuple[str, ...] = ()
+#: [M15 / item 4] THE TRUTH RULE.  A true pair counts only when both nodes are
+#: place lenses of the SAME lens within tolerance (across-ridge only for ridge
+#: lenses), instead of "any two nodes within 1 px".  Off, the M12/M13 rule stands,
+#: and every rate computed under the new rule must be reported beside the old
+#: count so a shrinking denominator is never read as progress.
+PLACEMENT_M15_TRUTH_RULE: bool = os.environ.get(
+    "PLACEMENT_M15_TRUTH_RULE", "0") != "0"

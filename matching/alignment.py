@@ -771,6 +771,15 @@ def _address_seed_factor(
             for u in nodes_a]
 
 
+def _degree0_neutral() -> bool:
+    """[M15 / item 6] the dark switch: a pair with no checkable edge is neutral."""
+    try:
+        import parameters as P
+    except Exception:            # pragma: no cover
+        return False
+    return bool(getattr(P, "MATCH_DEGREE0_PAIR_USES_APPEARANCE", False))
+
+
 def global_consistency_alignment(
     nodes_a: Sequence[int],
     nodes_b: Sequence[int],
@@ -867,6 +876,20 @@ def global_consistency_alignment(
          for j in range(len(nodes_b))]
         for i in range(len(nodes_a))
     ]
+
+    # [M15 / item 9] THE BUDGET MUST SCALE WITH THE GRAPHS IT BUDGETS.
+    #
+    # `MATCH_ALIGN_MAX_PAIR_EVALS` is charged per relational evaluation, and one
+    # refinement matrix over two ~600-node graphs is ~360 000 evaluations, so the
+    # configured 200 000 is exhausted INSIDE the first round: the mapping a run
+    # reports can be the seed plus part of one round, and `_swap_pass` may never
+    # run.  On, the budget is raised to at least `positive_cells * factor`, i.e.
+    # to the size of the matrix the round actually costs.
+    if (max_pair_evals is not None
+            and bool(getattr(P, "MATCH_ALIGN_BUDGET_SCALES_WITH_CELLS", False))):
+        _pos = int(sum(1 for _row in matrix for _v in _row if _v > 0.0))
+        _fac = float(getattr(P, "MATCH_ALIGN_BUDGET_CELL_FACTOR", 1.0))
+        max_pair_evals = max(int(max_pair_evals), int(_pos * _fac))
 
     # [B2] Address seed: multiply the SEED matrix element-wise by the clamped
     # cosine of the per-graph address vectors.  Nothing else -- no pruning of
@@ -1023,10 +1046,25 @@ def global_consistency_alignment(
 
     def _quality(u: int, v: int, mp: Dict[int, int], rv: Dict[int, int],
                  beta: float) -> float:
-        """The pair quality: the appearance term plus the structure term."""
+        """The pair quality: the appearance term plus the structure term.
+
+        [M15 / item 6] NO CHECKABLE EDGE = NEUTRAL.  A pair whose two nodes are
+        BOTH degree-0 has nothing to check: `_relational_agreement` reads it as
+        0.0, so its quality is `s*(1-beta)` -- half of what the same appearance
+        would be worth on a connected pair, on graphs where most nodes are
+        degree-0.  Under MATCH_DEGREE0_PAIR_USES_APPEARANCE such a pair takes its
+        OWN appearance in place of the relation score, so it is neither rewarded
+        nor punished for having no relations.  A connected pair is untouched, and
+        because rel <= 1 <= s is not needed for the guarantee: at rel = 1 the
+        connected pair scores `s*(1-beta)+beta >= s` for every s in [0,1], so a
+        perfectly agreeing connected pair can never score below the
+        appearance-only value.
+        """
         s = matrix[idx_a[u]][idx_b[v]]
         if s <= 0.0:
             return 0.0
+        if _degree0_neutral() and not inc_a.get(u) and not inc_b.get(v):
+            return float(s)
         rel = _rel(u, v, mp, rv)
         return s * (1.0 - beta) + beta * rel
 
@@ -1226,7 +1264,12 @@ def global_consistency_alignment(
                 rel = _rel(u, v, filtered, rev_filtered)
             else:
                 rel = 1.0
-            q = s * (1.0 - final_beta) + final_beta * rel
+            # [M15 / item 6] the SAME rule in the prune: a degree-0 pair is not
+            # dropped for having no relations to check.
+            if _degree0_neutral() and not inc_a.get(u) and not inc_b.get(v):
+                q = float(s)
+            else:
+                q = s * (1.0 - final_beta) + final_beta * rel
             if q <= unmatched_cost:
                 continue
             new_filtered[u] = v

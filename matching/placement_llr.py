@@ -61,6 +61,29 @@ _PSEUDO = 0.5
 Slot = Tuple[str, int, Optional[float]]      # (class name, neighbour id, residual)
 
 
+def _admit_checkable_first() -> bool:
+    """[M15 / item 2] the dark switch that changes WHICH slots are admitted."""
+    try:
+        import parameters as P
+    except Exception:            # pragma: no cover
+        return False
+    return bool(getattr(P, "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST", False))
+
+
+def _count_judged_slots() -> bool:
+    """[M15 / item 2] count slots whose residual EXISTS (dark)."""
+    try:
+        import parameters as P
+    except Exception:            # pragma: no cover
+        return False
+    return bool(getattr(P, "PLACEMENT_SLOT_COUNT_JUDGED", False))
+
+
+def judged_slots(slots: Sequence[Slot]) -> int:
+    """How many of `slots` carry a residual -- i.e. how many can be checked."""
+    return int(sum(1 for (_n, _o, r) in slots if r is not None))
+
+
 def slots_for_candidate(u: int, v: int,
                         mapping: Mapping[int, int],
                         q_inc: Mapping[int, List[Tuple[int, bool, str]]],
@@ -94,6 +117,26 @@ def slots_for_candidate(u: int, v: int,
         out.append((name, int(other),
                     float(payload_residual(qv, rv,
                                            FIXED_TOL if tol is None else tol))))
+    if _admit_checkable_first():
+        # [M15 / item 2] ADMIT THE EVIDENCE THAT EXISTS.
+        #
+        # The shipped order is (class name, neighbour id) over ALL slots, and the
+        # truncation to SLOT_CAP = 8 then happens afterwards -- so with
+        # TARGET_K = 16 the eight lowest-id neighbours win, whether or not their
+        # residual can be formed, and a checkable edge at rank 9 is discarded
+        # while uncheckable slots keep the credit of the padding value.
+        #
+        # The stated reliability rule is: a slot that can be checked is more
+        # reliable than one that cannot, and among checkable slots the SMALLEST
+        # RESIDUAL is the most reliable evidence (it is the slot whose geometry
+        # agrees best, which is also the one the estimator can speak about most
+        # precisely).  Ties break on (class, neighbour id) so the order stays
+        # deterministic and node ids never decide alone.
+        checkable = sorted((s for s in out if s[2] is not None),
+                           key=lambda s: (float(s[2]), str(s[0]), int(s[1])))
+        rest = sorted((s for s in out if s[2] is None),
+                      key=lambda s: (str(s[0]), int(s[1])))
+        out = checkable + rest
     return out[:SLOT_CAP]
 
 
@@ -118,6 +161,52 @@ class LLRFit:
         return float(self.llr[i])
 
 
+def _neutralise_empty_bins(llr: "np.ndarray", ht: "np.ndarray",
+                           hw: "np.ndarray", edges: "np.ndarray",
+                           min_count: Optional[int] = None) -> "np.ndarray":
+    """[M15 / item 5c] Empty (or too thin) bins stop carrying the prior ratio.
+
+    A bin is EMPTY when it has no TRUE and no WRONG sample (or fewer than
+    ``PLACEMENT_LLR_MIN_BIN_COUNT`` in total): it takes 0.0.  A bin with one
+    population empty but the other present takes the value of the nearest bin
+    that has both -- the wrong-mean reading -- because one population is a
+    measurement and the other is an absence, and the absence must not invent a
+    ratio.  Bins that have both are left exactly as fitted.
+    """
+    import parameters as _P
+    mc = int(getattr(_P, "PLACEMENT_LLR_MIN_BIN_COUNT", 0)) if min_count is None \
+        else int(min_count)
+    counts = np.asarray(ht, dtype=float) + np.asarray(hw, dtype=float)
+    empty = counts <= max(0, mc - 1)
+    out = np.array(llr, dtype=float, copy=True)
+    good = (~empty) & (np.asarray(ht) > 0) & (np.asarray(hw) > 0)
+    if not good.any():
+        out[:] = 0.0
+        return out
+    idx_good = np.flatnonzero(good)
+    for i in np.flatnonzero(empty | ~good)[:]:
+        if counts[i] <= 0 or empty[i]:
+            out[i] = 0.0 if counts[i] <= 0 else float(np.interp(
+                i, idx_good, out[idx_good]))
+        else:
+            out[i] = float(np.interp(i, idx_good, out[idx_good]))
+    return out
+
+
+def llr_monotonicity(llr: "np.ndarray", edges: "np.ndarray") -> Dict[str, Any]:
+    """[M15 / item 5c] Where does the fitted LLR RISE with the residual?
+
+    The LLR must be non-increasing in |residual|: a closer placement is never
+    worse evidence than a farther one.  This reports every bin where it rises,
+    so the claim is checkable instead of asserted.
+    """
+    rises = [{"bin": int(i), "res_lo": float(edges[i]), "res_hi": float(edges[i + 1]),
+              "llr": float(llr[i]), "next_llr": float(llr[i + 1]),
+              "rise": float(llr[i + 1] - llr[i])}
+             for i in range(len(llr) - 1) if float(llr[i + 1]) > float(llr[i]) + 1e-12]
+    return {"rises": rises, "n_rises": len(rises), "n_bins": int(len(llr))}
+
+
 def fit_llr(res_true: Sequence[float], res_wrong: Sequence[float],
             res_max: float = RES_MAX, n_bins: int = N_BINS) -> LLRFit:
     """Bin the two residual populations and take the log ratio.
@@ -135,6 +224,18 @@ def fit_llr(res_true: Sequence[float], res_wrong: Sequence[float],
     pt = (ht + _PSEUDO) / (ht.sum() + _PSEUDO * n_bins)
     pw = (hw + _PSEUDO) / (hw.sum() + _PSEUDO * n_bins)
     llr = np.log(pt / pw)
+    # [M15 / item 5c] AN EMPTY BIN IS NOT EVIDENCE FOR A MATCH.
+    #
+    # With no samples the two smoothed densities are the two PRIORS, so the LLR
+    # is log((N_wrong+12)/(N_true+12)) -- positive whenever there are more wrong
+    # samples than true ones, which is always.  The shipped table therefore gives
+    # +0.5966 to 13 of its 24 bins, i.e. "never measured here" is read as
+    # "this residual supports the match".  On, a bin with NEITHER population
+    # takes 0.0 (neutral) and a bin with one population empty takes the nearest
+    # non-empty bin's value (the wrong-mean reading, never the prior).
+    import parameters as _P
+    if bool(getattr(_P, "PLACEMENT_LLR_EMPTY_BIN_NEUTRAL", False)):
+        llr = _neutralise_empty_bins(llr, ht, hw, edges)
     llr = np.clip(llr, -LLR_CLIP, LLR_CLIP)
     # The padding value is the mean LLR the WRONG population would receive.
     centres = 0.5 * (edges[:-1] + edges[1:])
@@ -389,8 +490,12 @@ def plus_score(u: int, v: int, mapping: Mapping[int, int],
                               normalise=normalise)
     if not normalise:
         return plus_map(e_sum, g_sum, a_e, a_g, slot_cap=slot_cap)
-    n = len(slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx,
-                                tol=tol)[:slot_cap])
+    _sl = slots_for_candidate(u, v, mapping, q_inc, q_idx, r_idx,
+                              tol=tol)[:slot_cap]
+    # [M15 / item 2] "judged" must mean "has a residual".  len(slots) counts the
+    # unformable ones too, so both the mean's denominator and the min_judged
+    # refusal were computed over evidence that does not exist.
+    n = judged_slots(_sl) if _count_judged_slots() else len(_sl)
     # [MISSION 12 / step 2] A MINIMUM JUDGED COUNT.  One or two measurements are
     # not evidence, and reading them on the mean scale gives a pair with a single
     # slot the same weight as a pair with eight.  Below `min_judged` the pair is

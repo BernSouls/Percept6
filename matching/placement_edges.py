@@ -485,6 +485,30 @@ def lens_map_of(g: Any) -> Dict[int, str]:
     return out
 
 
+def _require_m15_configuration() -> None:
+    """[M15 / item 3] The atlas configuration the places flag is defined under.
+
+    The place endpoint list was measured on graphs with the keypoint layer ON and
+    the ADOPTED frame provider (M13 step 1: keypoint, largest sigma, no
+    fallback).  A run that asks for place endpoints on any other configuration is
+    asking about a graph the atlas never measured, so it is refused rather than
+    silently answered.
+    """
+    import parameters as P
+    need = {"FE_KEYPOINTS": True,
+            "PLACEMENT_FRAME_KEYPOINT": True,
+            "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
+            "PLACEMENT_FRAME_FALLBACK": "none"}
+    bad = {k: getattr(P, k, None) for k, want in need.items()
+           if getattr(P, k, None) != want}
+    if bad:
+        raise ValueError(
+            "PLACEMENT_M15_PLACES requires the atlas configuration "
+            "(FE_KEYPOINTS=1, PLACEMENT_FRAME_KEYPOINT=1, "
+            "PLACEMENT_FRAME_KEYPOINT_SIGMA='largest', "
+            "PLACEMENT_FRAME_FALLBACK='none'); got %r" % (bad,))
+
+
 def build_edges(subgraph: Any, image_u8: np.ndarray,
                 tolerance: Optional[float] = None,
                 k: int = TARGET_K,
@@ -574,8 +598,25 @@ def build_edges(subgraph: Any, image_u8: np.ndarray,
     # attaches to one (coverage 0.736 within 4 px, Mission 6) and inherits its
     # support; it does not get to be an endpoint itself.  Empty (the default)
     # means "no restriction", so the shipped behaviour is untouched.
-    ends = tuple(endpoint_lenses if endpoint_lenses is not None
-                 else _param("PLACEMENT_ENDPOINT_LENSES", ()))
+    # [M15 / item 3] THE ATLAS ENDPOINT LIST.  `PLACEMENT_M15_PLACES` selects the
+    # place lenses the Mission-15 repeatability atlas named (see
+    # `PLACEMENT_M15_PLACE_LENSES` and `Topology/results/placement/m15_atlas.json`),
+    # so the payload's endpoints, and therefore the scorer's context and its
+    # neighbour set, are built on places rather than on whatever the shipped
+    # whitelist happened to contain.  An explicit `endpoint_lenses` argument
+    # always wins, and with the flag off the shipped list is used unchanged.
+    _m15 = bool(_param("PLACEMENT_M15_PLACES", False))
+    if endpoint_lenses is not None:
+        _ends_default = endpoint_lenses
+    elif _m15:
+        _ends_default = _param("PLACEMENT_M15_PLACE_LENSES", ())
+        if not _ends_default:
+            raise ValueError("PLACEMENT_M15_PLACES is on but "
+                             "PLACEMENT_M15_PLACE_LENSES is empty")
+        _require_m15_configuration()
+    else:
+        _ends_default = _param("PLACEMENT_ENDPOINT_LENSES", ())
+    ends = tuple(_ends_default)
     if ends and lens:
         pos = {u: p for u, p in pos.items() if lens.get(u) in ends}
         frames = {u: t for u, t in frames.items() if lens.get(u) in ends}
