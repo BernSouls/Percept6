@@ -213,9 +213,10 @@ per pair on average. Five draws, seed **20261118** (`PLACEMENT_M21_COVERAGE_SEED
 **The shipped advantage survives the control on this run** — and, more usefully, nothing changes:
 every arm keeps its top-1 at m = min over the shortlist, with n unchanged (8 → 8). S0 is the
 built-in control (B does not read the mapping, so it *must* be invariant) and it is. The
-score-vs-count Spearman is reported with **n = 1 whatever**: only one query's S3 vector had
-non-zero variance among its 8 candidates (−0.119 before, +0.314 after), which is too few to call
-a correlation; that half of the acceptance is **not** answered and is listed as open.
+score-vs-count Spearman has **n = 1 query**: only one query's S3 vector had non-zero variance
+across its 8 candidates (−0.119 before equalisation, +0.314 after), so it is reported as a single
+observation and not as a correlation. That half of the acceptance is **not** answered and is
+listed as open (problem 5).
 
 Honest limits: 8 queries and 1 hit make this a control with almost no power. It shows the
 operation now *is* subsample-and-recompute and that it does not change the ranking on a sample
