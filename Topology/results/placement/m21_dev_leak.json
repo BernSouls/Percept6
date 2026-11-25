@@ -1,0 +1,13 @@
+{
+ "action": "widths restored; all DEV numbers re-measured under the FIT widths",
+ "device_value": {
+  "sigma_a": 1.0,
+  "sigma_d": 0.35
+ },
+ "restored": {
+  "sigma_a": 0.5,
+  "sigma_d": 0.35
+ },
+ "what": "the fit script's --stage all ran 'choose' on DEV and rewrote the frozen ruler",
+ "why_it_matters": "the ruler is fitted on FIT; a DEV-chosen width is a held-out leak"
+}

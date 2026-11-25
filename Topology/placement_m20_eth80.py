@@ -132,15 +132,23 @@ def _cell(path: str, tag: str):
 
 
 def bag_job(path: str) -> Dict[str, Any]:
-    """One image -> its configuration bag (tens of KB), so stage 1 never rebuilds a graph."""
+    """One image -> its configuration bags, so stage 1 never rebuilds a graph.
+
+    Both conventions are produced in one pass: ``bag`` is the Mission-20 fixed-width bag
+    (per-reference standardization at scoring time) and ``bag_v2`` is the Mission-21 raw
+    per-slot descriptor with its mask.  One graph build, one side build, two bags: the cache
+    is what makes re-measuring stage 1 cheap enough to do repeatedly.
+    """
     import guard
     guard.activate()
     from matching import placement_prefilter as PF
     t0 = time.time()
     img, g, side = _cell(path, "bag")
     nodes = sorted(int(n) for n in g.subgraph.nodes)
-    return {"path": path, "bag": PF.bag_of(side, nodes),
-            "n_nodes": len(nodes), "sec": time.time() - t0}
+    out = {"path": path, "bag": PF.bag_of(side, nodes),
+           "bag_v2": PF.bag_v2(side, nodes),
+           "n_nodes": len(nodes), "sec": time.time() - t0}
+    return out
 
 
 def pair_job(args: Tuple[str, str, bool]) -> Dict[str, Any]:
@@ -151,12 +159,20 @@ def pair_job(args: Tuple[str, str, bool]) -> Dict[str, Any]:
     """
     qpath, rpath, want_a = args
     try:
-        return _pair_job(qpath, rpath, want_a)
+        return _pair_job(qpath, rpath, want_a, save_places=SAVE_PLACES)
     except Exception as exc:                      # noqa: BLE001 - recorded, not swallowed
         return {"q": qpath, "r": rpath, "error": repr(exc)[:200]}
 
 
-def _pair_job(qpath: str, rpath: str, want_a: bool = True) -> Dict[str, Any]:
+#: [M21 / O3] when True, every pair also records the per-mapped-place contributions the arms
+#: are made of, so the equal-coverage control can SUBSAMPLE AND RECOMPUTE instead of filtering
+#: candidates (which is what Mission 20 did, and which proves nothing).  Set by the CLI before
+#: the pool is created; the workers inherit it by fork.
+SAVE_PLACES = False
+
+
+def _pair_job(qpath: str, rpath: str, want_a: bool = True,
+              save_places: bool = False) -> Dict[str, Any]:
     import guard
     guard.activate()
     import parameters as P
@@ -198,14 +214,20 @@ def _pair_job(qpath: str, rpath: str, want_a: bool = True) -> Dict[str, Any]:
     mapping = dict(c.mapping)
     num = 0.0
     judged_places = 0
+    places: List[List[Any]] = []
     for u, v in sorted(mapping.items()):
         slots = L.slots_for_candidate(u, v, mapping, side_q.incident, side_q.index,
                                       side_r.index)
         if not slots:
+            if save_places:
+                places.append([int(u), int(v), None, 0])
             continue
         judged_places += 1
-        num += float(L.plus_score(u, v, mapping, side_q.incident, side_q.index,
-                                  side_r.index, fit, pfit, a_e, a_g)) - 0.5
+        term = float(L.plus_score(u, v, mapping, side_q.incident, side_q.index,
+                                  side_r.index, fit, pfit, a_e, a_g))
+        num += term - 0.5
+        if save_places:
+            places.append([int(u), int(v), term, 1])
     # the denominator: query places that CARRY a graded incident relation, mapping or not
     den = sum(1 for u in sorted(int(n) for n in q.subgraph.nodes)
               if side_q.incident.get(int(u)))
@@ -218,6 +240,7 @@ def _pair_job(qpath: str, rpath: str, want_a: bool = True) -> Dict[str, Any]:
             "s3_num": float(num), "s3_den": int(den), "S3": s3,
             "judged_places": int(judged_places),
             "sec_a": sec_a, "sec_c": sec_c,
+            **({"places": places, "den": int(den)} if save_places else {}),
             "falls_back": int(__import__("matching.placement_matcher",
                                          fromlist=["FAILURES"]).FAILURES["fell_back"])}
 
@@ -309,16 +332,28 @@ def main(argv=None) -> int:
     ap.add_argument("--shortlist", type=int, default=8)
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--stride", type=int, default=1,
+                    help="keep every N-th query object (a stratified sample across classes, "
+                         "because the object list is sorted by class)")
     ap.add_argument("--per-class", type=int, default=0,
                     help="gallery (=queries) objects per class; 0 means all")
     ap.add_argument("--no-arm-a", action="store_true",
                     help="skip the matcher-off arm (it is not one of the four arms)")
     ap.add_argument("--tag", default="")
+    ap.add_argument("--save-places", action="store_true",
+                    help="[M21/O3] record per-mapped-place contributions for the "
+                         "equal-coverage control")
     a = ap.parse_args(argv)
+    global SAVE_PLACES
+    SAVE_PLACES = bool(a.save_places)
+    import parameters as P
     tag = a.tag or ("m20_%s_%s" % (a.split.lower(), a.task.lower()))
     p1 = os.path.join(OUT, tag + "_stage1.jsonl")
     p2 = os.path.join(OUT, tag + "_pairs.jsonl")
     queries, gallery = build_plan(a.split, a.task, a.per_class)
+    if a.stride and a.stride > 1:
+        keep = {o["key"] for i, o in enumerate(queries) if i % a.stride == 0}
+        queries = [o for o in queries if o["key"] in keep]
     if a.limit:
         queries = queries[:a.limit]
     print("%s %s: %d queries, %d gallery items, shortlist %d"
@@ -355,10 +390,20 @@ def main(argv=None) -> int:
         from matching import placement_prefilter as PF
         t0 = time.time()
         n = 0
+        use_v2 = bool(getattr(P, "PLACEMENT_PREFILTER_V2", False))
+        params = PF.load_params() if use_v2 else None
+        std: Dict[str, Any] = {}
+        if use_v2:
+            std = {p: PF.standardize(bags[p]["bag_v2"], params)
+                   for p in sorted({q["path"] for q in queries} |
+                                   {g["path"] for g in gallery})}
         with open(p1, "w") as fh:
             for q in queries:
                 for g in gallery:
-                    out = PF.score_bags(bags[q["path"]]["bag"], bags[g["path"]]["bag"])
+                    if use_v2:
+                        out = PF.score_bags_v2(std[q["path"]], std[g["path"]], params)
+                    else:
+                        out = PF.score_bags(bags[q["path"]]["bag"], bags[g["path"]]["bag"])
                     fh.write(json.dumps({"q": q["path"], "r": g["path"],
                                          "score": out["score"],
                                          "n_places": out["n_places"]},

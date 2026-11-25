@@ -1,0 +1,386 @@
+{
+ "manifest": {
+  "code": "6dd1aa9ec528",
+  "endpoints": {
+   "flag_on": false,
+   "lenses": [
+    "Blob",
+    "BoundaryArc",
+    "CornerPoint"
+   ],
+   "source": "PLACEMENT_M15_PLACE_LENSES"
+  },
+  "flags": {
+   "ATTACHMENT_EVERY_NAMED_HOST": true,
+   "BINDER_COMPLETE_POSITION_MAP": true,
+   "FE_KEYPOINTS": false,
+   "FE_L3_SPINE": false,
+   "FE_L4_JUNCTIONS": false,
+   "FE_L6_ADDRESS": false,
+   "FE_PLACE_LAYER": false,
+   "FE_SOFT_CHANNEL_GATE": true,
+   "FE_SOFT_GATE_BAND": 0.1,
+   "FE_SOFT_GATE_CENTRE_SHIFT": 0.0,
+   "FE_SOFT_GATE_EDGE_WEIGHT": true,
+   "FE_SOFT_GATE_NOISE_FLOOR": 0.05,
+   "FE_SOFT_GATE_PERCENTILE": 0.95,
+   "FE_SOFT_L3_L4_GATE": true,
+   "FE_SUBPIXEL_GABOR_ANCHOR": false,
+   "FE_SUBPIXEL_PEAK_POS": false,
+   "FE_VECTOR_ADDRESS": false,
+   "FIELD_BORDER_DISCARD_PER_CHANNEL": false,
+   "GRAPH_STAGE6_RELATIONS": false,
+   "KP_GRADED_POPULATION": false,
+   "KP_GRADED_POP_VARIANT": "theta2-balanced",
+   "KP_GRADED_SIMILARITY": false,
+   "KP_GRADED_VARIANT": "wide",
+   "KP_POPULATION_PAYLOAD_STRICT": false,
+   "PLACEMENT_CAND_CAP": 24,
+   "PLACEMENT_CAP_ADAPTIVE": false,
+   "PLACEMENT_CAP_ADAPTIVE_K": 0.125,
+   "PLACEMENT_CAP_ADAPTIVE_MAX": 64,
+   "PLACEMENT_CAP_DEDUP": false,
+   "PLACEMENT_COLLAPSE_PLACES": false,
+   "PLACEMENT_CONTEXT_ASSIGN": true,
+   "PLACEMENT_CONTEXT_ASSIGN_ITERS": 0,
+   "PLACEMENT_CONTEXT_ASSIGN_LAMBDA": 0.5,
+   "PLACEMENT_CONTEXT_CONSENSUS": false,
+   "PLACEMENT_CONTEXT_CONSENSUS_BONUS": 0.15,
+   "PLACEMENT_CONTEXT_CONSENSUS_LAMBDA": 0.5,
+   "PLACEMENT_CONTEXT_CONSENSUS_MODES": 1,
+   "PLACEMENT_CONTEXT_CONSENSUS_SOFT": false,
+   "PLACEMENT_CONTEXT_CONSENSUS_TOL": 0.175,
+   "PLACEMENT_CONTEXT_M17": false,
+   "PLACEMENT_CONTEXT_M17_ITERS": 5,
+   "PLACEMENT_CONTEXT_M17_MARGIN": 0.0,
+   "PLACEMENT_CONTEXT_M17_MAX_RIVALS": 1,
+   "PLACEMENT_CONTEXT_M17_MUTUAL": false,
+   "PLACEMENT_CONTEXT_M17_RIVAL_TOL": 0.02,
+   "PLACEMENT_ENDPOINT_LENSES": [],
+   "PLACEMENT_EXCLUDE_LENSES": [],
+   "PLACEMENT_E_MIN_JUDGED": 0,
+   "PLACEMENT_E_NORMALISED": false,
+   "PLACEMENT_FRAME_FALLBACK": "none",
+   "PLACEMENT_FRAME_KEYPOINT": false,
+   "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
+   "PLACEMENT_FRAME_MULTISCALE": false,
+   "PLACEMENT_FRAME_SUBPIXEL": false,
+   "PLACEMENT_FREEZE_GUARD_SUPPORT": false,
+   "PLACEMENT_GATE_ENABLED": false,
+   "PLACEMENT_LLR_EMPTY_BIN_NEUTRAL": false,
+   "PLACEMENT_LLR_MIN_BIN_COUNT": 0,
+   "PLACEMENT_LLR_MONOTONE": false,
+   "PLACEMENT_LLR_TABLE_M17": false,
+   "PLACEMENT_LLR_TABLE_M18": true,
+   "PLACEMENT_LLR_TABLE_PATH": "",
+   "PLACEMENT_M15_PLACES": false,
+   "PLACEMENT_M15_PLACE_LENSES": [
+    "Blob",
+    "BoundaryArc",
+    "CornerPoint"
+   ],
+   "PLACEMENT_M15_TRUTH_RULE": false,
+   "PLACEMENT_M19": true,
+   "PLACEMENT_M19_K": 24,
+   "PLACEMENT_M19_W": 0.25,
+   "PLACEMENT_M21_COVERAGE_DRAWS": 5,
+   "PLACEMENT_M21_COVERAGE_SEED": 20261118,
+   "PLACEMENT_MATCHER_ENABLED": false,
+   "PLACEMENT_MATCHER_PRESENCE": false,
+   "PLACEMENT_MATCHER_STRICT": false,
+   "PLACEMENT_MAX_NEIGHBOUR_CREDIT": 1.0,
+   "PLACEMENT_NODE_DESC": true,
+   "PLACEMENT_NODE_DESC_K": 24,
+   "PLACEMENT_NODE_DESC_MAXCELLS": 0,
+   "PLACEMENT_NODE_DESC_VARIANT": "sorted",
+   "PLACEMENT_NODE_DESC_W": 0.25,
+   "PLACEMENT_PAIR_NORMALISED": false,
+   "PLACEMENT_PAYLOAD_ENABLED": false,
+   "PLACEMENT_PLACE_GRID_PX": 1.0,
+   "PLACEMENT_PREFILTER": false,
+   "PLACEMENT_PREFILTER_V2": false,
+   "PLACEMENT_RIDGE_ACROSS_MIN": 0.5,
+   "PLACEMENT_RIDGE_ACROSS_ONLY": false,
+   "PLACEMENT_SCORER_ENABLED": false,
+   "PLACEMENT_SCORE_EVIDENCE": false,
+   "PLACEMENT_SCORE_SHRINK": 8.0,
+   "PLACEMENT_SCORE_WEIGHT": 0.0,
+   "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST": false,
+   "PLACEMENT_SLOT_COUNT_JUDGED": false,
+   "PLACEMENT_SPACING_RADIUS": false,
+   "PLACEMENT_SPACING_TOL": false,
+   "PLACEMENT_SUPPORT_SIGMA": 1.0,
+   "PLACEMENT_TOLERANCE": null,
+   "PLACEMENT_WEIGHT": 0.25
+  },
+  "frame": {
+   "fallback": "none",
+   "keypoint": false,
+   "keypoint_sigma": "largest"
+  },
+  "weight": {
+   "field": "w_top1",
+   "file": "matching/placement_score_params.json",
+   "ml_at_boundary": true,
+   "value": 0.375,
+   "w_ml": 3.0
+  }
+ },
+ "recipe": "M16",
+ "scenes": 20,
+ "variant_default": "sorted",
+ "variants": {
+  "chosen": {
+   "angles": {
+    "fit_half_acc_y20": 0.20463112547119008,
+    "fit_half_n": 1857,
+    "sigma_d": 0.2
+   },
+   "rank": {
+    "fit_half_acc_y20": 0.20463112547119008,
+    "fit_half_n": 1857,
+    "sigma_d": 0.35
+   },
+   "ratio": {
+    "fit_half_acc_y20": 0.21109316101238557,
+    "fit_half_n": 1857,
+    "sigma_d": 0.35
+   },
+   "seed_only": {
+    "fit_half_acc_y20": 0.193322563274098,
+    "fit_half_n": 1857,
+    "sigma_d": 0.2
+   },
+   "sorted": {
+    "fit_half_acc_y20": 0.21701669359181475,
+    "fit_half_n": 1857,
+    "sigma_d": 0.2
+   }
+  },
+  "fit_half_scenes": [
+   "oopm_sphere_00",
+   "oopm_box_00",
+   "oopm_cylinder_00",
+   "oopm_irregular_00",
+   "oopm_sphere_01",
+   "oopm_box_01",
+   "oopm_cylinder_01",
+   "oopm_irregular_01",
+   "oopm_sphere_02",
+   "oopm_box_02"
+  ],
+  "report_half": {
+   "angles": {
+    "id00": {
+     "acc": 0.933753079660553,
+     "cells": 10,
+     "n": 3653,
+     "spread": [
+      0.8983516483516484,
+      0.9682080924855492
+     ]
+    },
+    "rot15": {
+     "acc": 0.1962768110076892,
+     "cells": 10,
+     "n": 2471,
+     "spread": [
+      0.1223021582733813,
+      0.2701863354037267
+     ]
+    },
+    "scale115": {
+     "acc": 0.18951079770824153,
+     "cells": 10,
+     "n": 2269,
+     "spread": [
+      0.006896551724137931,
+      0.31932773109243695
+     ]
+    },
+    "y20": {
+     "acc": 0.21308016877637131,
+     "cells": 10,
+     "n": 1896,
+     "spread": [
+      0.0880503144654088,
+      0.30845771144278605
+     ]
+    }
+   },
+   "rank": {
+    "id00": {
+     "acc": 0.933753079660553,
+     "cells": 10,
+     "n": 3653,
+     "spread": [
+      0.8983516483516484,
+      0.9682080924855492
+     ]
+    },
+    "rot15": {
+     "acc": 0.19749089437474707,
+     "cells": 10,
+     "n": 2471,
+     "spread": [
+      0.12949640287769784,
+      0.2732919254658385
+     ]
+    },
+    "scale115": {
+     "acc": 0.19391802556192156,
+     "cells": 10,
+     "n": 2269,
+     "spread": [
+      0.006896551724137931,
+      0.3235294117647059
+     ]
+    },
+    "y20": {
+     "acc": 0.21308016877637131,
+     "cells": 10,
+     "n": 1896,
+     "spread": [
+      0.0880503144654088,
+      0.30845771144278605
+     ]
+    }
+   },
+   "ratio": {
+    "id00": {
+     "acc": 0.933753079660553,
+     "cells": 10,
+     "n": 3653,
+     "spread": [
+      0.8983516483516484,
+      0.9682080924855492
+     ]
+    },
+    "rot15": {
+     "acc": 0.18575475515985432,
+     "cells": 10,
+     "n": 2471,
+     "spread": [
+      0.0873015873015873,
+      0.2670807453416149
+     ]
+    },
+    "scale115": {
+     "acc": 0.2009695901278096,
+     "cells": 10,
+     "n": 2269,
+     "spread": [
+      0.006896551724137931,
+      0.3235294117647059
+     ]
+    },
+    "y20": {
+     "acc": 0.205168776371308,
+     "cells": 10,
+     "n": 1896,
+     "spread": [
+      0.07547169811320754,
+      0.3383084577114428
+     ]
+    }
+   },
+   "seed_only": {
+    "id00": {
+     "acc": 0.9019983575143717,
+     "cells": 10,
+     "n": 3653,
+     "spread": [
+      0.7527472527472527,
+      0.953757225433526
+     ]
+    },
+    "rot15": {
+     "acc": 0.16835289356535815,
+     "cells": 10,
+     "n": 2471,
+     "spread": [
+      0.06349206349206349,
+      0.2577639751552795
+     ]
+    },
+    "scale115": {
+     "acc": 0.17893345085940943,
+     "cells": 10,
+     "n": 2269,
+     "spread": [
+      0.020689655172413793,
+      0.264
+     ]
+    },
+    "y20": {
+     "acc": 0.20253164556962025,
+     "cells": 10,
+     "n": 1896,
+     "spread": [
+      0.12234042553191489,
+      0.2994011976047904
+     ]
+    }
+   },
+   "sorted": {
+    "id00": {
+     "acc": 0.933753079660553,
+     "cells": 10,
+     "n": 3653,
+     "spread": [
+      0.8983516483516484,
+      0.9682080924855492
+     ]
+    },
+    "rot15": {
+     "acc": 0.2027519222986645,
+     "cells": 10,
+     "n": 2471,
+     "spread": [
+      0.13095238095238096,
+      0.2732919254658385
+     ]
+    },
+    "scale115": {
+     "acc": 0.2146319964742177,
+     "cells": 10,
+     "n": 2269,
+     "spread": [
+      0.006896551724137931,
+      0.35714285714285715
+     ]
+    },
+    "y20": {
+     "acc": 0.23417721518987342,
+     "cells": 10,
+     "n": 1896,
+     "spread": [
+      0.07547169811320754,
+      0.3681592039800995
+     ]
+    }
+   }
+  },
+  "report_scenes": [
+   "oopm_cylinder_02",
+   "oopm_irregular_02",
+   "oopm_sphere_03",
+   "oopm_box_03",
+   "oopm_cylinder_03",
+   "oopm_irregular_03",
+   "oopm_sphere_04",
+   "oopm_box_04",
+   "oopm_cylinder_04",
+   "oopm_irregular_04"
+  ]
+ },
+ "views": [
+  "id00",
+  "rot15",
+  "scale115",
+  "y20",
+  "x20",
+  "y35",
+  "x35"
+ ]
+}

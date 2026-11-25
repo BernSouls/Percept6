@@ -1,0 +1,2759 @@
+{
+ "K": 24,
+ "S": 8,
+ "asymmetry_v1": {
+  "frac_gt_0.05": 0.16666666666666666,
+  "max_abs": 0.1037869427498247,
+  "mean_abs": 0.02413898450046116,
+  "n_pairs": 60,
+  "n_sampled_from": 3160,
+  "p95_abs": 0.074786265014762,
+  "seed": 0
+ },
+ "asymmetry_v2": {
+  "frac_gt_0.05": 0.5670886075949367,
+  "max_abs": 0.2693162587332836,
+  "mean_abs": 0.0708350029545176,
+  "n_pairs": 3160,
+  "p95_abs": 0.17438717109729424
+ },
+ "channels": {
+  "app": {
+   "T1": {
+    "chance": 0.2,
+    "depth": 8,
+    "lift": 5.0,
+    "n": 40,
+    "n_hits": 40,
+    "recall": 1.0,
+    "rows": [
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T1"
+   },
+   "T2": {
+    "chance": 0.6174514595567226,
+    "depth": 8,
+    "lift": 1.2956484070413108,
+    "n": 40,
+    "n_hits": 32,
+    "recall": 0.8,
+    "rows": [
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T2"
+   },
+   "T3": {
+    "chance": 0.025,
+    "depth": 8,
+    "lift": 27.0,
+    "n": 40,
+    "n_hits": 27,
+    "recall": 0.675,
+    "rows": [
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T3"
+   },
+   "T3_fit_half": {
+    "chance": 0.025000000000000005,
+    "depth": 8,
+    "lift": 25.999999999999996,
+    "n": 20,
+    "n_hits": 13,
+    "recall": 0.65,
+    "rows": [
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/6"
+     }
+    ],
+    "task": "T3"
+   },
+   "T3_rep_half": {
+    "chance": 0.025000000000000005,
+    "depth": 8,
+    "lift": 27.999999999999993,
+    "n": 20,
+    "n_hits": 14,
+    "recall": 0.7,
+    "rows": [
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T3"
+   }
+  },
+  "geo": {
+   "T1": {
+    "chance": 0.2,
+    "depth": 8,
+    "lift": 5.0,
+    "n": 40,
+    "n_hits": 40,
+    "recall": 1.0,
+    "rows": [
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T1"
+   },
+   "T2": {
+    "chance": 0.6174514595567226,
+    "depth": 8,
+    "lift": 0.7692912416807782,
+    "n": 40,
+    "n_hits": 19,
+    "recall": 0.475,
+    "rows": [
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T2"
+   },
+   "T3": {
+    "chance": 0.025,
+    "depth": 8,
+    "lift": 6.999999999999999,
+    "n": 40,
+    "n_hits": 7,
+    "recall": 0.175,
+    "rows": [
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T3"
+   },
+   "T3_fit_half": {
+    "chance": 0.025000000000000005,
+    "depth": 8,
+    "lift": 7.999999999999999,
+    "n": 20,
+    "n_hits": 4,
+    "recall": 0.2,
+    "rows": [
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/6"
+     }
+    ],
+    "task": "T3"
+   },
+   "T3_rep_half": {
+    "chance": 0.025000000000000005,
+    "depth": 8,
+    "lift": 5.999999999999998,
+    "n": 20,
+    "n_hits": 3,
+    "recall": 0.15,
+    "rows": [
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T3"
+   }
+  },
+  "geo+w*app": {
+   "T1": {
+    "chance": 0.2,
+    "depth": 8,
+    "lift": 5.0,
+    "n": 40,
+    "n_hits": 40,
+    "recall": 1.0,
+    "rows": [
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/6"
+     },
+     {
+      "chance": 0.2,
+      "hit": 1,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T1"
+   },
+   "T2": {
+    "chance": 0.6174514595567226,
+    "depth": 8,
+    "lift": 0.8502692671208603,
+    "n": 40,
+    "n_hits": 21,
+    "recall": 0.525,
+    "rows": [
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 0,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/6"
+     },
+     {
+      "chance": 0.6174514595567226,
+      "hit": 1,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T2"
+   },
+   "T3": {
+    "chance": 0.025,
+    "depth": 8,
+    "lift": 18.999999999999996,
+    "n": 40,
+    "n_hits": 19,
+    "recall": 0.475,
+    "rows": [
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T3"
+   },
+   "T3_fit_half": {
+    "chance": 0.025000000000000005,
+    "depth": 8,
+    "lift": 19.999999999999996,
+    "n": 20,
+    "n_hits": 10,
+    "recall": 0.5,
+    "rows": [
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/5"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "dog/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/6"
+     }
+    ],
+    "task": "T3"
+   },
+   "T3_rep_half": {
+    "chance": 0.025000000000000005,
+    "depth": 8,
+    "lift": 17.999999999999996,
+    "n": 20,
+    "n_hits": 9,
+    "recall": 0.45,
+    "rows": [
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "apple/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "car/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "car/8"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/3"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "cow/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/1"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/6"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "cup/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "dog/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "dog/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/2"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "horse/9"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "pear/7"
+     },
+     {
+      "chance": 0.025,
+      "hit": 1,
+      "query": "tomato/10"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/4"
+     },
+     {
+      "chance": 0.025,
+      "hit": 0,
+      "query": "tomato/8"
+     }
+    ],
+    "task": "T3"
+   }
+  }
+ },
+ "gallery": 40,
+ "manifest": {
+  "code": "d3773270b0de",
+  "endpoints": {
+   "flag_on": false,
+   "lenses": [
+    "Blob",
+    "BoundaryArc",
+    "CornerPoint"
+   ],
+   "source": "PLACEMENT_M15_PLACE_LENSES"
+  },
+  "flags": {
+   "ATTACHMENT_EVERY_NAMED_HOST": true,
+   "BINDER_COMPLETE_POSITION_MAP": true,
+   "FE_KEYPOINTS": false,
+   "FE_L3_SPINE": false,
+   "FE_L4_JUNCTIONS": false,
+   "FE_L6_ADDRESS": false,
+   "FE_PLACE_LAYER": false,
+   "FE_SOFT_CHANNEL_GATE": true,
+   "FE_SOFT_GATE_BAND": 0.1,
+   "FE_SOFT_GATE_CENTRE_SHIFT": 0.0,
+   "FE_SOFT_GATE_EDGE_WEIGHT": true,
+   "FE_SOFT_GATE_NOISE_FLOOR": 0.05,
+   "FE_SOFT_GATE_PERCENTILE": 0.95,
+   "FE_SOFT_L3_L4_GATE": true,
+   "FE_SUBPIXEL_GABOR_ANCHOR": false,
+   "FE_SUBPIXEL_PEAK_POS": false,
+   "FE_VECTOR_ADDRESS": false,
+   "FIELD_BORDER_DISCARD_PER_CHANNEL": false,
+   "GRAPH_STAGE6_RELATIONS": false,
+   "KP_GRADED_POPULATION": false,
+   "KP_GRADED_POP_VARIANT": "theta2-balanced",
+   "KP_GRADED_SIMILARITY": false,
+   "KP_GRADED_VARIANT": "wide",
+   "KP_POPULATION_PAYLOAD_STRICT": false,
+   "PLACEMENT_CAND_CAP": 24,
+   "PLACEMENT_CAP_ADAPTIVE": false,
+   "PLACEMENT_CAP_ADAPTIVE_K": 0.125,
+   "PLACEMENT_CAP_ADAPTIVE_MAX": 64,
+   "PLACEMENT_CAP_DEDUP": false,
+   "PLACEMENT_COLLAPSE_PLACES": false,
+   "PLACEMENT_CONTEXT_ASSIGN": true,
+   "PLACEMENT_CONTEXT_ASSIGN_ITERS": 0,
+   "PLACEMENT_CONTEXT_ASSIGN_LAMBDA": 0.5,
+   "PLACEMENT_CONTEXT_CONSENSUS": false,
+   "PLACEMENT_CONTEXT_CONSENSUS_BONUS": 0.15,
+   "PLACEMENT_CONTEXT_CONSENSUS_LAMBDA": 0.5,
+   "PLACEMENT_CONTEXT_CONSENSUS_MODES": 1,
+   "PLACEMENT_CONTEXT_CONSENSUS_SOFT": false,
+   "PLACEMENT_CONTEXT_CONSENSUS_TOL": 0.175,
+   "PLACEMENT_CONTEXT_M17": false,
+   "PLACEMENT_CONTEXT_M17_ITERS": 5,
+   "PLACEMENT_CONTEXT_M17_MARGIN": 0.0,
+   "PLACEMENT_CONTEXT_M17_MAX_RIVALS": 1,
+   "PLACEMENT_CONTEXT_M17_MUTUAL": false,
+   "PLACEMENT_CONTEXT_M17_RIVAL_TOL": 0.02,
+   "PLACEMENT_ENDPOINT_LENSES": [],
+   "PLACEMENT_EXCLUDE_LENSES": [],
+   "PLACEMENT_E_MIN_JUDGED": 0,
+   "PLACEMENT_E_NORMALISED": false,
+   "PLACEMENT_FRAME_FALLBACK": "none",
+   "PLACEMENT_FRAME_KEYPOINT": false,
+   "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
+   "PLACEMENT_FRAME_MULTISCALE": false,
+   "PLACEMENT_FRAME_SUBPIXEL": false,
+   "PLACEMENT_FREEZE_GUARD_SUPPORT": false,
+   "PLACEMENT_GATE_ENABLED": false,
+   "PLACEMENT_LLR_EMPTY_BIN_NEUTRAL": false,
+   "PLACEMENT_LLR_MIN_BIN_COUNT": 0,
+   "PLACEMENT_LLR_MONOTONE": false,
+   "PLACEMENT_LLR_TABLE_M17": false,
+   "PLACEMENT_LLR_TABLE_M18": true,
+   "PLACEMENT_LLR_TABLE_PATH": "",
+   "PLACEMENT_M15_PLACES": false,
+   "PLACEMENT_M15_PLACE_LENSES": [
+    "Blob",
+    "BoundaryArc",
+    "CornerPoint"
+   ],
+   "PLACEMENT_M15_TRUTH_RULE": false,
+   "PLACEMENT_M19": true,
+   "PLACEMENT_M19_K": 24,
+   "PLACEMENT_M19_W": 0.25,
+   "PLACEMENT_M21_COVERAGE_DRAWS": 5,
+   "PLACEMENT_M21_COVERAGE_SEED": 20261118,
+   "PLACEMENT_MATCHER_ENABLED": false,
+   "PLACEMENT_MATCHER_PRESENCE": false,
+   "PLACEMENT_MATCHER_STRICT": false,
+   "PLACEMENT_MAX_NEIGHBOUR_CREDIT": 1.0,
+   "PLACEMENT_NODE_DESC": true,
+   "PLACEMENT_NODE_DESC_K": 24,
+   "PLACEMENT_NODE_DESC_MAXCELLS": 0,
+   "PLACEMENT_NODE_DESC_VARIANT": "sorted",
+   "PLACEMENT_NODE_DESC_W": 0.25,
+   "PLACEMENT_PAIR_NORMALISED": false,
+   "PLACEMENT_PAYLOAD_ENABLED": false,
+   "PLACEMENT_PLACE_GRID_PX": 1.0,
+   "PLACEMENT_PREFILTER": false,
+   "PLACEMENT_PREFILTER_V2": false,
+   "PLACEMENT_RIDGE_ACROSS_MIN": 0.5,
+   "PLACEMENT_RIDGE_ACROSS_ONLY": false,
+   "PLACEMENT_SCORER_ENABLED": false,
+   "PLACEMENT_SCORE_EVIDENCE": false,
+   "PLACEMENT_SCORE_SHRINK": 8.0,
+   "PLACEMENT_SCORE_WEIGHT": 0.0,
+   "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST": false,
+   "PLACEMENT_SLOT_COUNT_JUDGED": false,
+   "PLACEMENT_SPACING_RADIUS": false,
+   "PLACEMENT_SPACING_TOL": false,
+   "PLACEMENT_SUPPORT_SIGMA": 1.0,
+   "PLACEMENT_TOLERANCE": null,
+   "PLACEMENT_WEIGHT": 0.25
+  },
+  "frame": {
+   "fallback": "none",
+   "keypoint": false,
+   "keypoint_sigma": "largest"
+  },
+  "weight": {
+   "field": "w_top1",
+   "file": "matching/placement_score_params.json",
+   "ml_at_boundary": true,
+   "value": 0.375,
+   "w_ml": 3.0
+  }
+ },
+ "params": "matching/placement_prefilter_params.json",
+ "per_class": 5,
+ "sigma_a": 0.5,
+ "sigma_d": 0.35,
+ "split": "FIT",
+ "splits": {
+  "n_fit": 20,
+  "n_rep": 20
+ },
+ "w_chosen": 0.5,
+ "w_grid": [
+  {
+   "n": 20,
+   "recall8_T3_fit_half": 0.2,
+   "w": 0.0
+  },
+  {
+   "n": 20,
+   "recall8_T3_fit_half": 0.35,
+   "w": 0.15
+  },
+  {
+   "n": 20,
+   "recall8_T3_fit_half": 0.4,
+   "w": 0.3
+  },
+  {
+   "n": 20,
+   "recall8_T3_fit_half": 0.5,
+   "w": 0.5
+  },
+  {
+   "n": 20,
+   "recall8_T3_fit_half": 0.5,
+   "w": 0.8
+  }
+ ],
+ "w_source": "chosen on this split's fit half"
+}

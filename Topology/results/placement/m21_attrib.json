@@ -1,0 +1,468 @@
+{
+ "runs": [
+  {
+   "selftest": {
+    "ok": true,
+    "rows": [
+     {
+      "B": 0.9,
+      "E": 0.0,
+      "S3": -0.2,
+      "judged": 5,
+      "mapped": 10,
+      "r": "truth"
+     },
+     {
+      "B": 0.8,
+      "E": 0.9,
+      "S3": 0.4,
+      "judged": 5,
+      "mapped": 10,
+      "r": "other"
+     }
+    ],
+    "tag_S0": "",
+    "tag_S1": "AGGREGATION",
+    "tag_S2": "AGGREGATION"
+   }
+  },
+  {
+   "arm": "S0",
+   "by_class": {
+    "apple": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "car": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "cow": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 1,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "cup": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 1,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "dog": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "horse": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "pear": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 2,
+     "n": 2
+    },
+    "tomato": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    }
+   },
+   "file": "m20_fit_t3g2_pairs.jsonl",
+   "lambda_s2": 1.0,
+   "queries": 16,
+   "tags": {
+    "AGGREGATION": 0,
+    "APPEARANCE": 2,
+    "CORRESPONDENCE": 0,
+    "SHORTLIST": 4
+   },
+   "top1": 10,
+   "top1_rate": 0.625,
+   "w_evidence": 0.375
+  },
+  {
+   "arm": "S1",
+   "by_class": {
+    "apple": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "car": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "cow": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 1,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "cup": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 1,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "dog": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "horse": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "pear": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 2,
+     "n": 2
+    },
+    "tomato": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    }
+   },
+   "file": "m20_fit_t3g2_pairs.jsonl",
+   "lambda_s2": 1.0,
+   "queries": 16,
+   "tags": {
+    "AGGREGATION": 0,
+    "APPEARANCE": 2,
+    "CORRESPONDENCE": 0,
+    "SHORTLIST": 4
+   },
+   "top1": 10,
+   "top1_rate": 0.625,
+   "w_evidence": 0.375
+  },
+  {
+   "arm": "S2",
+   "by_class": {
+    "apple": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "car": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "cow": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "cup": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 1,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "dog": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "horse": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "pear": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 2,
+     "n": 2
+    },
+    "tomato": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    }
+   },
+   "file": "m20_fit_t3g2_pairs.jsonl",
+   "lambda_s2": 1.0,
+   "queries": 16,
+   "tags": {
+    "AGGREGATION": 0,
+    "APPEARANCE": 1,
+    "CORRESPONDENCE": 0,
+    "SHORTLIST": 4
+   },
+   "top1": 11,
+   "top1_rate": 0.6875,
+   "w_evidence": 0.375
+  },
+  {
+   "arm": "S0",
+   "by_class": {
+    "apple": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "car": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "cow": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "cup": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "dog": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 1,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "horse": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "pear": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "tomato": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    }
+   },
+   "file": "m20_dev_t3g2_pairs.jsonl",
+   "lambda_s2": 1.0,
+   "queries": 16,
+   "tags": {
+    "AGGREGATION": 0,
+    "APPEARANCE": 1,
+    "CORRESPONDENCE": 0,
+    "SHORTLIST": 5
+   },
+   "top1": 10,
+   "top1_rate": 0.625,
+   "w_evidence": 0.375
+  },
+  {
+   "arm": "S1",
+   "by_class": {
+    "apple": {
+     "AGGREGATION": 1,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "car": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "cow": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "cup": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "dog": {
+     "AGGREGATION": 1,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "horse": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "pear": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "tomato": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    }
+   },
+   "file": "m20_dev_t3g2_pairs.jsonl",
+   "lambda_s2": 1.0,
+   "queries": 16,
+   "tags": {
+    "AGGREGATION": 2,
+    "APPEARANCE": 0,
+    "CORRESPONDENCE": 0,
+    "SHORTLIST": 5
+   },
+   "top1": 9,
+   "top1_rate": 0.5625,
+   "w_evidence": 0.375
+  },
+  {
+   "arm": "S2",
+   "by_class": {
+    "apple": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "car": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "cow": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "cup": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 0,
+     "n": 2
+    },
+    "dog": {
+     "AGGREGATION": 1,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "horse": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "pear": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    },
+    "tomato": {
+     "AGGREGATION": 0,
+     "APPEARANCE": 0,
+     "CORRESPONDENCE": 0,
+     "SHORTLIST": 1,
+     "n": 2
+    }
+   },
+   "file": "m20_dev_t3g2_pairs.jsonl",
+   "lambda_s2": 1.0,
+   "queries": 16,
+   "tags": {
+    "AGGREGATION": 1,
+    "APPEARANCE": 0,
+    "CORRESPONDENCE": 0,
+    "SHORTLIST": 5
+   },
+   "top1": 10,
+   "top1_rate": 0.625,
+   "w_evidence": 0.375
+  }
+ ]
+}

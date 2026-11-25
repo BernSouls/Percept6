@@ -4470,6 +4470,27 @@ PLACEMENT_CAND_CAP: int = int(os.environ.get("PLACEMENT_CAND_CAP", "0"))
 #: a read is run under appears in the manifest instead of in a notebook.
 PLACEMENT_PREFILTER: bool = os.environ.get("PLACEMENT_PREFILTER", "0") != "0"
 
+#: [M21 / O6] WHICH SHAPE OF THE CONFIGURATION DESCRIPTOR the matcher and the assignment use:
+#: "sorted" (the Mission-17/19 descriptor, default and byte-identical), "rank", "angles" or
+#: "ratio".  Declared here BEFORE any graph is built under it, and read by
+#: `placement_context.descriptor_variant()`.
+PLACEMENT_NODE_DESC_VARIANT: str = os.environ.get("PLACEMENT_NODE_DESC_VARIANT", "sorted")
+
+#: [M21 / O1] THE FROZEN-RULER STAGE 1.  When on, the shortlist scores every pair with the
+#: standardization frozen in `matching/placement_prefilter_params.json` -- one ruler for every
+#: gallery item, no per-reference feature selection, no padding -- instead of the Mission-20
+#: per-reference convention.  OFF by default: with it off the shortlist is byte-identical to
+#: M20's.  Declared here before any shortlist is built under it.
+PLACEMENT_PREFILTER_V2: bool = os.environ.get("PLACEMENT_PREFILTER_V2", "0") != "0"
+
+#: [M21 / O3] the seed of the deterministic subsampling in the equal-coverage control.  Stated
+#: here, not chosen at call time, so a re-run draws the same subsamples and the draws can be
+#: repeated as a spread rather than as fresh luck.
+PLACEMENT_M21_COVERAGE_SEED: int = int(os.environ.get("PLACEMENT_M21_COVERAGE_SEED", "20261118"))
+
+#: [M21 / O3] how many draws of the equal-coverage subsample are reported as a spread.
+PLACEMENT_M21_COVERAGE_DRAWS: int = int(os.environ.get("PLACEMENT_M21_COVERAGE_DRAWS", "5"))
+
 # --- the bundle's DERIVED switches -------------------------------------------------------
 # Written as derived values, not as a second source of truth: `m15_manifest.effective_flags`
 # reads these module attributes, so with the bundle on the manifest cannot say "descriptor

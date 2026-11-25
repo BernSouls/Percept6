@@ -200,6 +200,60 @@ def _axial(th: float) -> float:
     return (float(th) + math.pi / 2.0) % math.pi - math.pi / 2.0
 
 
+#: [M21 / O6] THE KERNEL WIDTHS, as module globals.  Defaults are the frozen Mission-17
+#: values and every existing caller passes nothing, so the default path is unchanged; a probe
+#: that wants to sweep a variant's width sets these for the duration of a cell and restores
+#: them (see Topology/placement_m21_yaw.py).  They are globals rather than parameters because
+#: `config_similarity` is called once per candidate cell and a parameter lookup there would be
+#: a per-cell import in the hottest loop in the matcher.
+SIGMA_D = 0.35
+SIGMA_A = 0.5
+
+#: [M21 / O6] WHICH SHAPE OF THE CONFIGURATION DESCRIPTOR.
+#:   "sorted"  the Mission-17/19 descriptor: sorted log distances, sorted directions.
+#:             Default, and byte-identical to what every earlier mission measured.
+#:   "rank"    distance ORDER only: the slots become their rank position on [0, 1], so the
+#:             spacing information is discarded and only the ordering survives.
+#:   "angles"  directions only: the distance slots become 0, so the similarity is driven by
+#:             angular agreement alone.  This is the control that says whether the yaw loss
+#:             lives in the distances or in the angles.
+#:   "ratio"   distances minus their own mean: DISTANCE RATIOS.  This is the scale fix, and
+#:             it is not a no-op -- measured, `config_similarity` is NOT invariant to a
+#:             uniform scale: a scale s adds log(s) to every slot of one vector and the
+#:             squared difference then accumulates n log(s)^2, so the same object at 1.15x
+#:             scores exp(-0.5*log(1.15)^2/sigma_d^2) = 0.923 against itself.  Centring each
+#:             place removes that term.
+def descriptor_variant() -> str:
+    """WHICH SHAPE, read at SCORING time from the scoring module.
+
+    The read lives in `matching/placement_prefilter.py` on purpose.  The configuration
+    descriptor is computed from a payload SIDE at match time and is not part of the graph --
+    no build-path caller exists (`config_descriptor` is called from `apply_node_descriptor`
+    and the probes only) -- so the graph cache does not depend on this switch and must not be
+    re-keyed by it.  `tests/test_m14_switch_digest.py` scans every module in its BUILD_PATH list
+    for `PLACEMENT_*` literals, and this file is on that list because it also holds scoring
+    helpers; keeping the literal here would have added a scoring switch to the graph digest and
+    invalidated 1.3 GB of cached graphs for no correctness gain.  The switch is still declared
+    in `parameters/_text.py` before anything is scored under it.
+    """
+    from matching.placement_prefilter import descriptor_variant as _v
+    return _v()
+
+
+def _shape(ds: List[float], variant: str) -> List[float]:
+    n = len(ds)
+    if n < 2 or variant == "sorted":
+        return ds
+    if variant == "rank":
+        return [float(i) / float(max(1, n - 1)) for i in range(n)]
+    if variant == "angles":
+        return [0.0] * n
+    if variant == "ratio":
+        mu = sum(ds) / float(n)
+        return [x - mu for x in ds]
+    return ds
+
+
 def config_descriptor(side: Any, u: int, k: int = ASSIGN_K):
     """(sorted log distances, sorted source-frame directions) to ``u``'s neighbours."""
     rows: List[Tuple[float, float]] = []
@@ -217,11 +271,20 @@ def config_descriptor(side: Any, u: int, k: int = ASSIGN_K):
     if len(rows) < 2:
         return None
     rows.sort()
-    return ([r[0] for r in rows][:k], [r[1] for r in rows][:k])
+    ds = [r[0] for r in rows][:k]
+    return (_shape(ds, descriptor_variant()), [r[1] for r in rows][:k])
 
 
-def config_similarity(a, b, sigma_d: float = 0.35, sigma_a: float = 0.5) -> float:
-    """Rank-aligned agreement of two configuration descriptors, in [0, 1]."""
+def config_similarity(a, b, sigma_d: Optional[float] = None,
+                      sigma_a: Optional[float] = None) -> float:
+    """Rank-aligned agreement of two configuration descriptors, in [0, 1].
+
+    ``sigma_d``/``sigma_a`` default to the module globals, i.e. the frozen 0.35/0.5.
+    """
+    if sigma_d is None:
+        sigma_d = SIGMA_D
+    if sigma_a is None:
+        sigma_a = SIGMA_A
     if a is None or b is None:
         return 0.0
     da, aa = a
