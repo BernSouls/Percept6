@@ -1,0 +1,614 @@
+{
+ "manifest": {
+  "code": "541b9f213c3c",
+  "endpoints": {
+   "flag_on": false,
+   "lenses": [
+    "Blob",
+    "BoundaryArc",
+    "CornerPoint"
+   ],
+   "source": "PLACEMENT_M15_PLACE_LENSES"
+  },
+  "flags": {
+   "ATTACHMENT_EVERY_NAMED_HOST": true,
+   "BINDER_COMPLETE_POSITION_MAP": true,
+   "FE_KEYPOINTS": false,
+   "FE_L3_SPINE": false,
+   "FE_L4_JUNCTIONS": false,
+   "FE_L6_ADDRESS": false,
+   "FE_PLACE_LAYER": false,
+   "FE_SOFT_CHANNEL_GATE": true,
+   "FE_SOFT_GATE_BAND": 0.1,
+   "FE_SOFT_GATE_CENTRE_SHIFT": 0.0,
+   "FE_SOFT_GATE_EDGE_WEIGHT": true,
+   "FE_SOFT_GATE_NOISE_FLOOR": 0.05,
+   "FE_SOFT_GATE_PERCENTILE": 0.95,
+   "FE_SOFT_L3_L4_GATE": true,
+   "FE_SUBPIXEL_GABOR_ANCHOR": false,
+   "FE_SUBPIXEL_PEAK_POS": false,
+   "FE_VECTOR_ADDRESS": false,
+   "FIELD_BORDER_DISCARD_PER_CHANNEL": false,
+   "GRAPH_STAGE6_RELATIONS": false,
+   "PLACEMENT_COLLAPSE_PLACES": false,
+   "PLACEMENT_ENDPOINT_LENSES": [],
+   "PLACEMENT_EXCLUDE_LENSES": [],
+   "PLACEMENT_E_MIN_JUDGED": 0,
+   "PLACEMENT_E_NORMALISED": false,
+   "PLACEMENT_FRAME_FALLBACK": "none",
+   "PLACEMENT_FRAME_KEYPOINT": false,
+   "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
+   "PLACEMENT_FRAME_MULTISCALE": false,
+   "PLACEMENT_FRAME_SUBPIXEL": false,
+   "PLACEMENT_GATE_ENABLED": false,
+   "PLACEMENT_LLR_EMPTY_BIN_NEUTRAL": false,
+   "PLACEMENT_LLR_MIN_BIN_COUNT": 0,
+   "PLACEMENT_M15_PLACES": false,
+   "PLACEMENT_M15_PLACE_LENSES": [
+    "Blob",
+    "BoundaryArc",
+    "CornerPoint"
+   ],
+   "PLACEMENT_M15_TRUTH_RULE": false,
+   "PLACEMENT_MATCHER_ENABLED": false,
+   "PLACEMENT_MATCHER_PRESENCE": false,
+   "PLACEMENT_MATCHER_STRICT": false,
+   "PLACEMENT_MAX_NEIGHBOUR_CREDIT": 1.0,
+   "PLACEMENT_PAIR_NORMALISED": false,
+   "PLACEMENT_PAYLOAD_ENABLED": false,
+   "PLACEMENT_PLACE_GRID_PX": 1.0,
+   "PLACEMENT_RIDGE_ACROSS_MIN": 0.5,
+   "PLACEMENT_RIDGE_ACROSS_ONLY": false,
+   "PLACEMENT_SCORER_ENABLED": false,
+   "PLACEMENT_SCORE_EVIDENCE": false,
+   "PLACEMENT_SCORE_SHRINK": 8.0,
+   "PLACEMENT_SCORE_WEIGHT": 0.0,
+   "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST": false,
+   "PLACEMENT_SLOT_COUNT_JUDGED": false,
+   "PLACEMENT_SPACING_RADIUS": false,
+   "PLACEMENT_SPACING_TOL": false,
+   "PLACEMENT_SUPPORT_SIGMA": 1.0,
+   "PLACEMENT_TOLERANCE": null,
+   "PLACEMENT_WEIGHT": 0.25
+  },
+  "frame": {
+   "fallback": "none",
+   "keypoint": false,
+   "keypoint_sigma": "largest"
+  },
+  "weight": {
+   "field": "w_top1",
+   "file": "matching/placement_score_params.json",
+   "ml_at_boundary": true,
+   "value": 0.375,
+   "w_ml": 3.0
+  }
+ },
+ "per_lens": {
+  "BorderOwnership": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 89,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 72.00694410957877,
+     "median_move": 0.0,
+     "moved_share": 0.047058823529411764,
+     "shared": 85
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 89
+    },
+    "subpixel": {
+     "max_move": 72.00694410957877,
+     "median_move": 0.0,
+     "moved_share": 0.047058823529411764,
+     "shared": 85
+    }
+   }
+  },
+  "Boundary": {
+   "finer_writer": "FE_PLACE_LAYER (gabor_place_positions), FE_SUBPIXEL_PEAK_POS (node_frames_keypoint)",
+   "finer_writer_exists": true,
+   "nodes": 69,
+   "tiling": false,
+   "verdict": "PLACE-capable: a finer writer exists (FE_PLACE_LAYER (gabor_place_positions), FE_SUBPIXEL_PEAK_POS (node_frames_keypoint)), so precision may be preferred over first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 78.81227038683203,
+     "median_move": 28.288689974526058,
+     "moved_share": 1.0,
+     "shared": 64
+    },
+    "place_layer": {
+     "max_move": 67.88225099390856,
+     "median_move": 22.627416997969522,
+     "moved_share": 0.5072463768115942,
+     "shared": 69
+    },
+    "subpixel": {
+     "max_move": 67.88225099390856,
+     "median_move": 22.627416997969522,
+     "moved_share": 0.5072463768115942,
+     "shared": 69
+    }
+   }
+  },
+  "CONTOUR_PEAK": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 128,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 0.4570678237040511,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 128
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 128
+    },
+    "subpixel": {
+     "max_move": 0.4570678237040511,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 128
+    }
+   }
+  },
+  "Color": {
+   "finer_writer": "FE_PLACE_LAYER (gabor_place_positions), FE_SUBPIXEL_PEAK_POS (node_frames_keypoint)",
+   "finer_writer_exists": true,
+   "nodes": 4,
+   "tiling": true,
+   "verdict": "PLACE-capable: a finer writer exists (FE_PLACE_LAYER (gabor_place_positions), FE_SUBPIXEL_PEAK_POS (node_frames_keypoint)), so precision may be preferred over first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 300.0266654815868,
+     "median_move": 58.78547227831719,
+     "moved_share": 1.0,
+     "shared": 4
+    },
+    "place_layer": {
+     "max_move": 328.2925524589311,
+     "median_move": 44.03299480773257,
+     "moved_share": 1.0,
+     "shared": 4
+    },
+    "subpixel": {
+     "max_move": 328.2925524589311,
+     "median_move": 44.03299480773257,
+     "moved_share": 1.0,
+     "shared": 4
+    }
+   }
+  },
+  "Contour": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 13,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 12.020815280171307,
+     "median_move": 11.84671640505003,
+     "moved_share": 1.0,
+     "shared": 2
+    },
+    "place_layer": {
+     "max_move": 22.627416997969522,
+     "median_move": 0.0,
+     "moved_share": 0.07692307692307693,
+     "shared": 13
+    },
+    "subpixel": {
+     "max_move": 22.627416997969522,
+     "median_move": 0.0,
+     "moved_share": 0.07692307692307693,
+     "shared": 13
+    }
+   }
+  },
+  "ContourFragment": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 41,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 36.55876561269196,
+     "median_move": 10.126907220404618,
+     "moved_share": 1.0,
+     "shared": 41
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 41
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 41
+    }
+   }
+  },
+  "Corner": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 22,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 0.31548050442093256,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 21
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 22
+    },
+    "subpixel": {
+     "max_move": 0.31548050442093256,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 22
+    }
+   }
+  },
+  "CurveComplex": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 8,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 106.621995854514,
+     "median_move": 68.26343852022029,
+     "moved_share": 1.0,
+     "shared": 2
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 8
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 8
+    }
+   }
+  },
+  "EndStopped": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 26,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 26
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 26
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 26
+    }
+   }
+  },
+  "Junction": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 5,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": null,
+     "median_move": null,
+     "moved_share": null,
+     "shared": 0
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 5
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 5
+    }
+   }
+  },
+  "Onset": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 1,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 26.870057685088806,
+     "median_move": 26.870057685088806,
+     "moved_share": 1.0,
+     "shared": 1
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 1
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 1
+    }
+   }
+  },
+  "Orientation": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 36,
+   "tiling": true,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 64.64487693369203,
+     "median_move": 12.88656758399399,
+     "moved_share": 1.0,
+     "shared": 33
+    },
+    "place_layer": {
+     "max_move": 57.688820407423826,
+     "median_move": 0.0,
+     "moved_share": 0.08333333333333333,
+     "shared": 36
+    },
+    "subpixel": {
+     "max_move": 57.688820407423826,
+     "median_move": 0.0,
+     "moved_share": 0.08333333333333333,
+     "shared": 36
+    }
+   }
+  },
+  "PEAK_CHAIN": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 22,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 22
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 22
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 22
+    }
+   }
+  },
+  "Polarity": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 3,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 57.483945324752625,
+     "median_move": 26.870057685088806,
+     "moved_share": 0.6666666666666666,
+     "shared": 3
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 3
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 3
+    }
+   }
+  },
+  "Position": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 104,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 28.991378028648448,
+     "median_move": 26.870057685088806,
+     "moved_share": 1.0,
+     "shared": 59
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 104
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 104
+    }
+   }
+  },
+  "RegionShape": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 18,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 14
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 18
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 14
+    }
+   }
+  },
+  "Surface": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 11,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 11
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 11
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 11
+    }
+   }
+  },
+  "Texture": {
+   "finer_writer": "FE_PLACE_LAYER (gabor_place_positions), FE_SUBPIXEL_PEAK_POS (node_frames_keypoint)",
+   "finer_writer_exists": true,
+   "nodes": 33,
+   "tiling": true,
+   "verdict": "PLACE-capable: a finer writer exists (FE_PLACE_LAYER (gabor_place_positions), FE_SUBPIXEL_PEAK_POS (node_frames_keypoint)), so precision may be preferred over first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 260.07787295346753,
+     "median_move": 103.44162702914342,
+     "moved_share": 1.0,
+     "shared": 30
+    },
+    "place_layer": {
+     "max_move": 339.4112549695428,
+     "median_move": 67.88225099390856,
+     "moved_share": 0.6666666666666666,
+     "shared": 33
+    },
+    "subpixel": {
+     "max_move": 339.4112549695428,
+     "median_move": 67.88225099390856,
+     "moved_share": 0.6666666666666666,
+     "shared": 33
+    }
+   }
+  },
+  "TextureBoundary": {
+   "finer_writer": null,
+   "finer_writer_exists": false,
+   "nodes": 29,
+   "tiling": false,
+   "verdict": "ATTRIBUTE, no finer writer: position is the tiling centroid, first-write-wins",
+   "writers": {
+    "both": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 29
+    },
+    "place_layer": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 29
+    },
+    "subpixel": {
+     "max_move": 0.0,
+     "median_move": 0.0,
+     "moved_share": 0.0,
+     "shared": 29
+    }
+   }
+  }
+ },
+ "tag": "syn|m11ir_00",
+ "tiling_lenses_assumed": [
+  "Texture",
+  "Color",
+  "Orientation"
+ ],
+ "writers": {
+  "both": "both finer writers",
+  "defaults": "Binder._step_anchor_positions -> note_pattern_node_position (tiling centroid, first-write-wins)",
+  "place_layer": "lenses/base.py:step -> gabor_place_positions (sub-pixel peak)",
+  "subpixel": "FE_SUBPIXEL_PEAK_POS -> matching/placement_edges.node_frames_keypoint"
+ }
+}

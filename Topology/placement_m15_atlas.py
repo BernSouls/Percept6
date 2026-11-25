@@ -229,13 +229,16 @@ def main() -> int:
                             continue
                         n += r["n"]
                         for kk in ("i1", "i2", "ii1", "ii2"):
-                            if r[kk] == r[kk]:
+                            if r.get(kk) == r.get(kk) and r.get(kk) is not None:
                                 vals[kk].append(float(r[kk]))
-                        for kk in ("along_median", "across_median"):
-                            if r.get(kk) is not None:
-                                vals[kk].append(float(r[kk]))
+                        for kk in ("along", "across"):
+                            v0 = r.get(kk + "_median")
+                            if v0 is not None:
+                                vals[kk].append(float(v0))
                 if not vals["i1"]:
                     continue
+                vals = {kk: [x for x in vv if x is not None]
+                        for kk, vv in vals.items()}
                 agg.setdefault("m15=%d" % int(m15), {}).setdefault(pose, {})[lens] = {
                     "n_nodes": int(n), "images": len(vals["i1"]),
                     **{kk: float(np.mean(vv)) if vv else float("nan")
