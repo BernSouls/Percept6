@@ -12,6 +12,26 @@ Everything is behind a flag that is **OFF** by default; the defaults are byte-id
 
 ---
 
+## THE FOUR NUMBERS
+
+| | before | after | where |
+|---|---|---|---|
+| geometry AUC at 15°, matcher's context | 0.631 | **0.710** | O2, 4 DEV images, 1,166 queries |
+| top-1 at 15° (ties fail) | 0.105 | **0.198** | O3, same cells |
+| context accuracy at 15° | 0.173 | **0.288** | O2 diagnostic |
+| placement's contribution to top-1 at 15° | — | **+0.109 [+0.088, +0.129]** | O6 fresh read, **20 images**, MDE 0.0064 |
+
+The change that produced them: the context no longer starts from a per-node argmax of
+appearance; it starts from a **one-to-one assignment** over a score that adds a
+**rotation-invariant configuration descriptor**. The damped iteration's own constants were
+re-fitted first, and **none of them moved anything** (§O2).
+
+The table refit of O1 was built, validated and **not shipped** — it loses the registered
+objective (§O1, §O4). The defect it repairs is therefore live, and that is the single next
+change.
+
+---
+
 ## O1 — THE DEPLOYED LLR IS DEFENSIBLE
 
 ### The defect, as a number
@@ -224,7 +244,55 @@ Now (both directions tested, `tests/test_m17_payload_key.py`):
 
 ## O6 — ONE FRESH READ, SIZED IN IMAGES
 
-PLACEHOLDER-FRESH
+**Design (registered in `MISSION17_PREREGISTRATION.md` before any fresh graph existed):**
+20 images — 16 new-seed synthetic scenes (seeds 71000+`i`, a range no fit, read or report
+has ever used) plus the four photographs M15/M16 never touched (`page`, `gravel`, `moon`,
+`retina`); poses 15° and 0°; primary contrast = the deployed blend vs appearance-only on
+top-1 at 15°, image-clustered, paired. Planning sd 0.0438 (filled from the four DEV
+images, 3 df) → **MDE = 0.660 × 0.0438 = 0.0289**, well under the registered planning
+effect of 0.42, so the read **is powered**. The registered correction of the arm
+definition (the deployed blend has no separate `w`) is recorded in the pre-registration and
+in the manifest.
+
+### Non-vacuity (checked before the verdict)
+
+| counter | value |
+|---|---|
+| images | **20** |
+| images with a decided row (a query where full ≠ appearance) | **20 / 20** |
+| images where appearance alone is already perfect | 0 |
+| queries at 15° | **4,320** |
+| fewest queries from one image | 139 |
+| truth pairs whose true partner was admissible | 100 % (the M16 result, re-measured on these graphs) |
+
+### The result
+
+| 15°, n = 20 images | value |
+|---|---|
+| full placement, top-1 (pooled over queries) | **0.184** |
+| appearance-only (w = 0), top-1 | **0.088** |
+| **paired per-image difference, mean** | **+0.1088** |
+| sd across images | 0.0436 |
+| standard error | 0.0097 |
+| t (19 df) | **11.17** |
+| 95 % CI on the mean difference | **[+0.0884, +0.1292]** |
+| MDE at this n | 0.0064 |
+| **verdict** | **DETECTION** — the CI excludes 0 by 9 SE and clears the MDE |
+
+**Every one of the 20 images is positive**: +0.035 (`gravel`) to +0.183 (`m17ir_09`).
+The synthetic scenes run +0.050 to +0.183 on 16 images; the four photographs run +0.035 to
++0.140. This is the first number in the mission that is not a development number.
+
+**Control at 0° (20 images, 8,899 queries):** full 0.989 vs appearance-only 0.966,
+paired mean **+0.0275** (sd 0.0206) — placement helps where appearance is already good and
+destroys nothing, which is what a term that is *supposed* to rank should do.
+
+**The honest comparison to the pre-registration's planning effect:** the registered
+planning effect was +0.42, inherited from M16's bank; the fresh read measures **+0.109**.
+Both clear their MDE. The difference is not a disappointment but a unit change: M16's
++0.42 was measured against a fully tied appearance column with ties counted as successes,
+and it was on 5,322 pooled queries from four images. On the strict definition registered
+here — ties are failures — the effect is +0.109 with a 95 % CI of ±0.020.
 
 ---
 
@@ -232,7 +300,15 @@ PLACEHOLDER-FRESH
 
 | bar | where it is pinned | goes red on revert because |
 |---|---|---|
-| 1 flags OFF, defaults byte-identical | `placement_m12_perf.py --check`, 14 pairs: **0 diffs** at the M16 tip (`3b2fc61`, 204.3 s) and PLACEHOLDER-PERF after the digest change | any default move shifts a float |
+| 1 flags OFF, defaults byte-identical | `placement_m12_perf.py --check`, 14 pairs: **0 diffs** at the M16 tip (`3b2fc61`, 204.3 s) and **0 diffs** (196.1 s, 14 pairs) — and the *first* attempt at this check is part of the
+result: it reported **63 diffs** on a tree whose flags were all off, because the block
+that adds the assignment start had been inserted by a pattern that matched two functions
+and landed in `rescore_matrix` too, where the name it reads does not exist. The matcher
+caught the `NameError` and **fell back to the raw matrix** — silently, as far as any
+result file was concerned. That is this programme's recurring bug in its purest form, and
+the defaults check is what caught it. The duplicate is removed, and
+`NoSilentFallbackTests` pins both halves: `rescore_matrix` must not increment
+`FAILURES["fell_back"]`, and only `context_mapping` may read the switch. after the digest change | any default move shifts a float |
 | 2 a test that goes red if the fix is reverted | `test_m17_llr_bundle.py` (9): the deployed table's `of(5.0) > of(1.5)` and its missing profile; `test_m17_assignment_context.py` (7): argmax collides, the assignment does not; `test_m17_payload_key.py` (4) | reverting the assignment restores the collision; reverting the table check restores the rising table |
 | 3 no silent fallback | `audit_bundle` + `GUARD_RECORD` + `assert_guard_clean`; `POPULATION_PAYLOAD_MISSES` + `PopulationPayloadMissing`; `KP_GRADED_VARIANT` raising on an unknown name | a silent path leaves the counters empty |
 | 4 units stated | every result file's `units`; §O1 states every residual in tolunits | — |
@@ -273,4 +349,14 @@ and a `--pose` selector; the guard and the tests are reusable as they stand.
 
 ## 8. DEFAULTS, SUITES
 
-PLACEHOLDER-SUITES
+* `python -m unittest discover -s tests`: **71 tests, OK** (was 47 at the M16 tip;
+  +9 assignment, +9 bundle, +4 payload, +2 no-silent-fallback).
+* `PYTHONPATH=.:Topology python -m unittest Topology.test_placement Topology.test_placement_m3`:
+  **29 tests, OK**.
+* Determinism: `test_it_is_deterministic` pins the assignment; the fresh read is a new
+  tree of graphs, so its numbers cannot be a cache artefact of anything earlier.
+* Flags, all **OFF** by default: `PLACEMENT_LLR_TABLE_M17`, `PLACEMENT_CONTEXT_M17` (and
+  its five lever constants), `PLACEMENT_CONTEXT_ASSIGN` (+`_LAMBDA`, `_ITERS`),
+  `KP_POPULATION_PAYLOAD_STRICT`; the M16 flags are unchanged.
+* Every result file carries a manifest and keeps its per-cell rows. The largest is
+  `m17_fresh.json` at 4.1 MB (40 cells × every query); nothing is dropped.

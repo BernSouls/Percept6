@@ -424,21 +424,6 @@ def rescore_matrix(matrix: Sequence[Sequence[float]],
     # a slightly worse raw similarity suddenly outranks it.  Measured with the
     # literal "top six only" reading: the deployed matcher's ambiguous accuracy
     # fell from 0.4226 to 0.2234 and it re-parted 708 nodes per match.
-    # [M17 / O2] THE ASSIGNMENT START.  It replaces the per-node argmax the damped
-    # iteration starts from -- nothing else changes, and with the flag off this block
-    # does not run at all.  Two mechanisms: a bijection (two places cannot claim the
-    # same reference place) and a rotation-invariant configuration term, so the start
-    # is not computed from the mapping it is supposed to fix.
-    if bool(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN", False)) and cands:
-        from matching import placement_context as _Ctx2
-        _asg = _Ctx2.assignment_mapping(
-            sorted(cands), cands, side_a, side_b,
-            lam=float(getattr(_P, "PLACEMENT_CONTEXT_ASSIGN_LAMBDA", 0.5)))
-        for _u, _v in _asg.items():
-            base[_u] = _v
-        if stats is not None:
-            stats.update({"assign": True, "assign_n": len(_asg)})
-
     tol_of = _spacing_tol_fn(side_a, side_b)
     norm = _pair_normalised()
     scored = 0

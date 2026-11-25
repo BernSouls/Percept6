@@ -114,3 +114,38 @@ class FlagTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class NoSilentFallbackTests(unittest.TestCase):
+    """Bar 3.  The block that adds the assignment start was first inserted by a
+    pattern that matched TWO functions, so it also landed in `rescore_matrix`, where
+    the name it reads is not defined -- the matcher caught the NameError and FELL BACK
+    to the raw matrix, and the 14-pair defaults check caught the result (63 diffs on a
+    tree whose flags were all off).  Both halves are pinned here.
+    """
+
+    def test_rescore_matrix_does_not_fall_back(self):
+        import numpy as np
+        from matching import placement_matcher as PM
+        from matching.placement import PlacementVector
+        n = 3
+        side = PM.Side(payload={}, index={(0, 1, "EDGE"): PlacementVector(
+            direction=0.1, distance=2.0, log_scale=0.0, source_theta=0.0,
+            source_scale=1.0)},
+            incident={0: [(1, True, "EDGE")]}, lens={0: "BLOB", 1: "BLOB"},
+            nodes=(0, 1))
+        before = dict(PM.FAILURES)
+        matrix = [[0.5, 0.2], [0.1, 0.4]]
+        PM.rescore_matrix(matrix, [0, 1], [0, 1], side, side)
+        self.assertEqual(PM.FAILURES["fell_back"], before["fell_back"],
+                         "rescore_matrix fell back -- a name it reads is undefined")
+
+    def test_the_assignment_block_appears_in_one_function_only(self):
+        import inspect
+        from matching import placement_matcher as PM
+        self.assertEqual(inspect.getsource(PM.rescore_matrix).count(
+            "PLACEMENT_CONTEXT_ASSIGN"), 0,
+            "rescore_matrix reads a switch it cannot resolve")
+        self.assertGreater(inspect.getsource(PM.context_mapping).count(
+            "PLACEMENT_CONTEXT_ASSIGN"), 0,
+            "context_mapping is where the assignment start belongs")
