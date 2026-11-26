@@ -114,13 +114,13 @@ def endpoint_report(graph: Any, lenses: Optional[Sequence[str]] = None) -> Dict[
 
 # --------------------------------------------------------------------------- truth
 def _forward(spec: Dict[str, Any], p: np.ndarray, shape: Tuple[int, int]) -> np.ndarray:
-    from Topology.placement_m12_read_real import _forward as F
+    from matching.placement_truth import forward as F
     return F(spec, p, shape)
 
 
 def _inverse(spec: Dict[str, Any], p: np.ndarray, shape: Tuple[int, int]) -> np.ndarray:
     """QUERY anchors -> the REFERENCE frame (the direction the truth rule needs)."""
-    from Topology.placement_m12_read_real import _inverse as F
+    from matching.placement_truth import inverse as F
     return F(spec, p, shape)
 
 
@@ -182,7 +182,7 @@ def positional_truth(graph_q: Any, graph_r: Any, spec: Dict[str, Any],
                      shape: Tuple[int, int], tol: float = TRUTH_TOL
                      ) -> Dict[int, int]:
     """OLD rule: the shipped positional truth, reused verbatim from the read code."""
-    from Topology.placement_m12_read_real import _truth
+    from matching.placement_truth import truth as _truth
     return _truth(graph_q, graph_r, spec, shape)
 
 

@@ -302,7 +302,7 @@ _SIDE_CACHE_MAX = 4096
 def _image_digest(image_u8: Any) -> Any:
     """A content hash of the pixels (the graph cache's own key, when possible)."""
     try:
-        from Topology.placement_cache import key_for
+        from matching.placement_cache import key_for
         return key_for(image_u8)
     except Exception:
         try:

@@ -53,8 +53,13 @@ class ManifestTests(unittest.TestCase):
         a number nobody can attribute; this fails if one does.
         """
         import glob
+        # [MISSION 24] the M15 result files moved to archive/ with their scripts; the pin follows
+        # them, because "a number nobody can attribute" is a property of the file, not of the
+        # directory it sits in.  Both places are scanned, so a new one cannot slip in either.
         paths = sorted(glob.glob(os.path.join(
-            ROOT, "Topology", "results", "placement", "m15_*.json")))
+            ROOT, "Topology", "results", "placement", "m15_*.json")) +
+            glob.glob(os.path.join(
+                ROOT, "archive", "Topology", "results", "placement", "m15_*.json")))
         self.assertTrue(paths, "no M15 result file found to check")
         for path in paths:
             payload = json.load(open(path))

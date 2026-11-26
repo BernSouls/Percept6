@@ -84,122 +84,13 @@ def _registration() -> Dict[str, Any]:
         return json.load(fh)
 
 
-def _transform(img: np.ndarray, spec: Dict[str, Any]) -> np.ndarray:
-    """The registration's own transform, verbatim."""
-    from scipy.ndimage import rotate, zoom, shift as nd_shift
-    a = img.astype(np.float64)
-    if "rot_deg" in spec:
-        a = rotate(a, float(spec["rot_deg"]), reshape=False, order=1, mode="nearest")
-    if "scale" in spec:
-        s = float(spec["scale"])
-        a = zoom(a, (s, s, 1.0), order=1)
-        h, w = a.shape[:2]
-        cy, cx = h / 2.0, w / 2.0
-        y0, x0 = int(round(cy - img.shape[0] / 2.0)), int(round(cx - img.shape[1] / 2.0))
-        a = a[max(0, y0):y0 + img.shape[0], max(0, x0):x0 + img.shape[1]]
-        a = np.pad(a, ((0, img.shape[0] - a.shape[0]),
-                       (0, img.shape[1] - a.shape[1]), (0, 0)), mode="edge")
-    if "shift" in spec:
-        a = nd_shift(a, (float(k) for k in (spec["shift"][1], spec["shift"][0], 0.0)),
-                     order=1, mode="nearest")
-    return np.clip(a, 0, 255).astype(np.uint8)
-
-
-def _inverse(spec: Dict[str, Any], pts: np.ndarray, shape: Tuple[int, int]) -> np.ndarray:
-    """Query-image pixels -> original-image pixels, for the registration's spec.
-
-    The rotation convention is the one the Step-2 frame test CALIBRATED: with the
-    image rotated by `+delta`, an anchor at p in the original sits at
-    `c + R(-delta)(p - c)` in the rotated image, so the inverse is
-    `p = c + R(+delta)(q - c)`.
-    """
-    h, w = shape
-    c = np.asarray([(w - 1) / 2.0, (h - 1) / 2.0])
-    p = np.asarray(pts, dtype=float)
-    if "rot_deg" in spec:
-        th = np.deg2rad(float(spec["rot_deg"]))
-        ct, st = float(np.cos(th)), float(np.sin(th))
-        d = p - c
-        p = np.stack([ct * d[:, 0] - st * d[:, 1], st * d[:, 0] + ct * d[:, 1]],
-                     axis=1) + c
-    if "scale" in spec:
-        s = float(spec["scale"])
-        y0 = int(round((s * h) / 2.0 - h / 2.0))
-        x0 = int(round((s * w) / 2.0 - w / 2.0))
-        p = np.stack([(p[:, 0] + x0) / s, (p[:, 1] + y0) / s], axis=1)
-    if "shift" in spec:
-        p = np.stack([p[:, 0] - float(spec["shift"][0]),
-                      p[:, 1] - float(spec["shift"][1])], axis=1)
-    return p
-
-
-def _anchors(g: Any) -> np.ndarray:
-    sub = g.subgraph
-    return np.asarray([(float(sub.anchor_of_node[n][0]), float(sub.anchor_of_node[n][1]))
-                       for n in sorted(sub.nodes) if n in sub.anchor_of_node], dtype=float)
-
-
-def _forward(spec: Dict[str, Any], pts: np.ndarray, shape: Tuple[int, int]) -> np.ndarray:
-    """Original-image pixels -> query-image pixels (the inverse of `_inverse`)."""
-    h, w = shape
-    c = np.asarray([(w - 1) / 2.0, (h - 1) / 2.0])
-    p = np.asarray(pts, dtype=float)
-    if "rot_deg" in spec:
-        th = np.deg2rad(-float(spec["rot_deg"]))
-        ct, st = float(np.cos(th)), float(np.sin(th))
-        d = p - c
-        p = np.stack([ct * d[:, 0] - st * d[:, 1], st * d[:, 0] + ct * d[:, 1]],
-                     axis=1) + c
-    if "scale" in spec:
-        s = float(spec["scale"])
-        y0 = int(round((s * h) / 2.0 - h / 2.0))
-        x0 = int(round((s * w) / 2.0 - w / 2.0))
-        p = np.stack([p[:, 0] * s - x0, p[:, 1] * s - y0], axis=1)
-    if "shift" in spec:
-        p = np.stack([p[:, 0] + float(spec["shift"][0]),
-                      p[:, 1] + float(spec["shift"][1])], axis=1)
-    return p
-
-
-def _truth(gq: Any, gr: Any, spec: Dict[str, Any],
-           shape: Tuple[int, int]) -> Dict[int, int]:
-    """query node -> the reference node the exact transform says it is.
-
-    Nearest within TRUTH_TOL px, SEPARATED from the runner-up by TRUTH_SEP,
-    INJECTIVE, and MUTUAL (the forward image of the reference anchor must pick
-    the query anchor back).  A pair the anchors cannot resolve is not truth.
-    """
-    subq, subr = gq.subgraph, gr.subgraph
-    qn = [int(n) for n in sorted(subq.nodes) if n in subq.anchor_of_node]
-    rn = [int(n) for n in sorted(subr.nodes) if n in subr.anchor_of_node]
-    if not qn or not rn:
-        return {}
-    qa = np.asarray([subq.anchor_of_node[n] for n in qn], dtype=float)
-    ra = np.asarray([subr.anchor_of_node[n] for n in rn], dtype=float)
-    h, w = shape
-    back = _inverse(spec, qa, (h, w))
-    fwd = _forward(spec, ra, (h, w))
-    cand: List[Tuple[float, int, int]] = []
-    for i, (x, y) in enumerate(back):
-        if not (BORDER <= x < w - BORDER and BORDER <= y < h - BORDER):
-            continue
-        d = np.hypot(ra[:, 0] - x, ra[:, 1] - y)
-        order = np.argsort(d)
-        j = int(order[0])
-        d1 = float(d[j])
-        d2 = float(d[order[1]]) if d.size > 1 else float("inf")
-        if d1 > TRUTH_TOL or d2 < TRUTH_SEP * max(d1, 1e-9):
-            continue
-        # MUTUAL: the reference anchor's forward image must pick this query anchor
-        dd = np.hypot(qa[:, 0] - fwd[j, 0], qa[:, 1] - fwd[j, 1])
-        if int(np.argmin(dd)) != i or float(dd.min()) > TRUTH_TOL:
-            continue
-        cand.append((d1, int(qn[i]), int(rn[j])))
-    cand.sort()
-    used_r: Dict[int, int] = {}
-    for _d, u, v in cand:
-        used_r[v] = used_r.get(v, 0) + 1
-    return {u: v for _d, u, v in cand if used_r[v] == 1}
+# [MISSION 24] The truth rule moved to `matching/placement_truth.py`, because a core module
+# (`matching/m15_places.py`) needs it and core may not import from Topology.  These are the SAME
+# objects under their old private names, so every Mission-12..19 call site is unchanged -- and
+# there is one definition of what "correct" means, not two.
+from matching.placement_truth import BORDER, TRUTH_SEP, TRUTH_TOL          # noqa: E402,F401
+from matching.placement_truth import (                                     # noqa: E402,F401
+    _anchors, _forward, _inverse, _transform, _truth)
 
 
 def _graph_job(args: Tuple[str, str]) -> Tuple[str, Any]:

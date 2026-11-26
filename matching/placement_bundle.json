@@ -1,0 +1,48 @@
+{
+ "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
+ "code_digest": "8b29a9912b13be9278c15b8db65c2ec13bcddb328db61e4237b541b5f0a07923",
+ "date": "2026-11-26",
+ "door": {
+  "n_hits": 8,
+  "note": "the counted door: each query place counts its n_hits nearest pool places by the frozen configuration ruler, one vote per object; the object score is count / sqrt(n_query_places * n_object_places)"
+ },
+ "frontend": {
+  "extra_pre": {
+   "KP_GRADED_POPULATION": true
+  },
+  "keypoint_class": "wide",
+  "note": "the recipe is the graph cache's identity; it is the M16/M20 recipe the M19 matcher record was measured under",
+  "params": "matching/placement_prefilter_params.json",
+  "recipe": {
+   "FE_KEYPOINTS": true,
+   "FE_PLACE_LAYER": true,
+   "FE_SUBPIXEL_GABOR_ANCHOR": true,
+   "FE_SUBPIXEL_PEAK_POS": true,
+   "KP_GRADED_SIMILARITY": true,
+   "PLACEMENT_FRAME_FALLBACK": "none",
+   "PLACEMENT_FRAME_KEYPOINT": true,
+   "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
+   "PLACEMENT_M15_PLACES": true
+  }
+ },
+ "matcher": {
+  "bundle": "matching/placement_score_params.json",
+  "entry": "matching.joint_mcs.joint_mcs -> score_shipped",
+  "flags": {
+   "PLACEMENT_MATCHER_ENABLED": true,
+   "PLACEMENT_MATCHER_STRICT": true,
+   "PLACEMENT_SCORE_EVIDENCE": true
+  },
+  "weight": 0.375
+ },
+ "mission": "M24",
+ "name": "placement-shipped-v1",
+ "provenance": {
+  "entry_point": "matching/placement_recognise.py",
+  "measured_by": "MISSION23_REPORT.md section 5 (the read)",
+  "note": "frozen from the configuration Mission 23 shipped"
+ },
+ "rerank": "plain",
+ "rrf_k": 60,
+ "shortlist": 8
+}
