@@ -15,6 +15,8 @@ ranking of the gallery.  Two layers, the first cheap and approximate, the second
 image -> graph (perception pipeline) -> PLACES  (nameable parts with a configuration and a frame)
                                           |
    CONTENT-COUNT DOOR (cheap, no matching) -> shortlist of S = 8 objects
+       an object may be stored under several views (M25: k = 1 by default); its score is the MAX
+       over its views, so a stored view that suits the query is what counts.
        every query place probes a pooled index of gallery places by content key, keeps its
        nearest 8 pool places under the frozen Mission-21 ruler, and COUNTS which object they
        belong to: score = count / sqrt(n_query_places x n_object_places).  One dict probe and
@@ -47,13 +49,20 @@ items   = [("apple/1", "apple1-000-000.png"), ("apple/2", "apple2-000-000.png"),
 gallery = build_gallery(items)                  # place graphs, pooled index, appearance; cached
 result  = recognise("apple3-035-045.png", gallery)
 
+# several stored views per object (M25): the object's score is the max over its views, and the
+# matcher scores it on the one view the door chose (8 pairs per query, whatever k is)
+items = [("apple/1", {"000-000": "apple1-000-000.png", "045-000": "apple1-045-000.png"}), ...]
+gallery = build_gallery(items, views=["000-000", "045-000"])
+result.best_view                                # {object index: the stored view that won}
+
 result.top, gallery.keys[result.top]            # the best gallery item
 result.ranking                                 # EVERY gallery index, best first (re-order drops none)
 result.shortlist                               # the S = 8 the matcher actually scored
 result.door_order                              # the door's own ranking of the whole gallery
 result.scores, result.unscored                 # matcher scores per index; refused pairs are listed,
                                                # never zeroed and never defaulted
-result.seconds                                 # {"appearance", "door", "matcher", "total"}
+result.best_view                                # per shortlisted object, the stored view that won
+result.seconds                                 # {"appearance", "query_record", "door", "matcher", "total"}
 ```
 
 That is the shipped system: no environment variable to set, no flag to remember, no import from
@@ -85,7 +94,8 @@ digest test both name them -- see `archive/ARCHIVE_INDEX.md`.
 | the frozen configuration | `matching/placement_bundle.json` (+ `placement_score_params.json`, `placement_prefilter_params.json`) |
 | the front end and place records | `matching/placement_frontend.py` (+ `matching/placement_cache.py` for graphs) |
 | the door | `matching/placement_frontdoor.py` |
-| the gallery and its cache | `matching/placement_gallery.py` |
+| the gallery and its cache | `matching/placement_gallery.py` (k views per object, one pooled index) |
+| **the stored-view rule** | `matching/placement_views.py` -- the grid, the angular metric, and `reference_views(k)`, which chooses the views with no score in sight |
 | what the shipped path touches | **`KEEP_MAP.md`** |
 | everything moved out of the way | **`archive/ARCHIVE_INDEX.md`** (375 files, nothing deleted) |
 | the checks that prove it is the same system | `Topology/verify_m24_equivalence.py`, `Topology/placement_m12_perf.py --check`, `tests/test_m24_core.py` |
@@ -104,12 +114,29 @@ digest test both name them -- see `archive/ARCHIVE_INDEX.md`.
 | assembled top-1, **view-held-out read** (view `-035-045`, 80-item gallery) | **0.250** (20/80) | 80 | 0.0125 |
 | deployed matcher, same read | 0.075 (6/80) | 80 | 0.0125 |
 | door recall@8, same read | 0.550 (44/80) | 80 | 0.100 |
+| door recall@8, same read, **four stored views** (M25) | 0.575 (46/80) | 80 | 0.100 |
+| assembled top-1, same read, four stored views (M25) | **0.375** (30/80) | 80 | 0.0125 |
+| door recall@8, view `-045-180` (never read before M25), one stored view | 0.512 (41/80) | 80 | 0.100 |
+| assembled top-1, view `-045-180`, one stored view | 0.225 (18/80) | 80 | 0.0125 |
 
 **The confirmatory read** (`MISSION23_REPORT.md` §5): on view `-035-045`, which no earlier mission
 had read, the assembled system beats the deployed one by **+0.175 (20 against 6 of 80, 95 % CI
 [0.088, 0.263], bootstrap p = 0.0001)**.  It is **one view and view-held-out, not object-held-out**
 -- all 80 objects were used to choose the door -- and the interval is wide; the effect is real, its
 size is not pinned.
+
+**Does storing more views raise the ceiling?  (M25, `MISSION25_REPORT.md`).**  No.  Storing four
+views per object instead of one -- chosen by a score-free rule, covering radius 65.5 deg instead of
+90 deg, putting the query view 30.0 deg from its nearest stored view instead of 35.0 -- moves the
+door's recall@8 by **+0.025 (44 -> 46 of 80, 95 % CI [-0.100, 0.150], p = 0.77)**.  The assembled
+top-1 moves further, **+0.125 (20 -> 30 of 80, CI [0.013, 0.250])**, because the matcher gets a view
+that suits the query, but that is not significant across the mission's two primaries (Holm 0.092),
+the read finished with one complete cell (`per_obj = 1`, MDE 0.187 against a planning effect of
+0.20), and the mission keys the shipping decision on the recall.  **The bundle stays at k = 1.**
+The measured reason the door misses is not view distance -- it is flat from 30 to 45 deg (0.575 at
+30, 0.550 at 35, 0.512 at 45) -- but what the door counts: 0.20 for cows and horses and 0.25 for
+pears against 0.90 for cups (n = 20 each), i.e. a count of shared place-keys that thins out over
+objects built from generic parts.
 
 **The door on DEV, stated plainly.**  The counted door and the fusion were chosen on FIT.  On DEV
 the counted door alone reaches **0.750 (18/24)** -- *below* appearance alone at 0.875 (21/24) --

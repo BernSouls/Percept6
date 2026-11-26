@@ -26,7 +26,7 @@ import hashlib
 import json
 import os
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Sequence
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -44,7 +44,7 @@ PREFILTER_PARAMS = os.path.join(ROOT, "matching", "placement_prefilter_params.js
 #: NOT in this list: it holds the digest, and a file cannot contain its own hash.
 CODE_MODULES = ("matching/placement_frontend.py", "matching/placement_cache.py",
                 "matching/placement_frontdoor.py", "matching/placement_gallery.py",
-                "matching/placement_recognise.py")
+                "matching/placement_recognise.py", "matching/placement_views.py")
 
 #: Data files whose bytes define the shipped behaviour (frozen parameters, not code).
 CODE_DATA = ("matching/placement_score_params.json", "matching/placement_prefilter_params.json")
@@ -87,6 +87,9 @@ class PlacementBundle:
     recipe: Dict[str, Any]
     recipe_extra: Dict[str, Any]
     keypoint_class: str
+    reference_views: List[str] = field(default_factory=list)
+    reserved: List[str] = field(default_factory=list)
+    references: Dict[str, Any] = field(default_factory=dict)
     provenance: Dict[str, Any] = field(default_factory=dict)
     code_digest: str = ""
     file_digest: str = ""
@@ -108,7 +111,7 @@ class PlacementBundle:
         except Exception as exc:
             raise BundleRefusal("bundle at %s is unreadable: %r" % (p, exc)) from exc
         missing = [k for k in ("name", "shortlist", "rrf_k", "rerank", "door", "appearance",
-                               "matcher", "frontend", "code_digest") if k not in d]
+                               "matcher", "frontend", "references", "code_digest") if k not in d]
         if missing:
             raise BundleRefusal("bundle at %s is missing %s -- refusing rather than guessing"
                                 % (p, ", ".join(missing)))
@@ -132,6 +135,9 @@ class PlacementBundle:
                 recipe=dict(d["frontend"]["recipe"]),
                 recipe_extra=dict(d["frontend"].get("extra_pre") or {}),
                 keypoint_class=str(d["frontend"].get("keypoint_class", "wide")),
+                reference_views=[str(v) for v in (d["references"].get("views") or [])],
+                reserved=[str(v) for v in (d["references"].get("reserved") or [])],
+                references=dict(d["references"]),
                 provenance=dict(d.get("provenance") or {}),
                 code_digest=have,
                 file_digest=hashlib.sha256(raw_bytes).hexdigest())
@@ -143,10 +149,20 @@ class PlacementBundle:
                 "code_digest": self.code_digest}
 
 
-def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any]) -> Dict[str, Any]:
-    """Write the bundle for THIS tree.  Operator action; prints the digest it froze."""
+def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any],
+           k: Optional[int] = None, reserved: Sequence[str] = ("035-045", "045-180")
+           ) -> Dict[str, Any]:
+    """Write the bundle for THIS tree.  Operator action; prints the digest it froze.
+
+    ``k`` is the number of stored views per object the bundle ships as its default; the views
+    themselves come from ``matching/placement_views.reference_views`` (the score-free rule), and the
+    read's query views are recorded as RESERVED so they can never be stored.
+    """
     from matching import placement_frontend as FE
+    from matching import placement_views as V
     import json as _json
+    k = int(k if k is not None else 4)
+    views = V.reference_views(k, reserved)
     p = path or BUNDLE_PATH
     with open(SCORE_PARAMS) as fh:
         w = float(_json.load(fh)["w"])
@@ -171,6 +187,15 @@ def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any])
                      "params": "matching/placement_prefilter_params.json",
                      "note": "the recipe is the graph cache's identity; it is the M16/M20 recipe "
                              "the M19 matcher record was measured under"},
+        "references": {"k": k, "views": views, "reserved": list(reserved),
+                       "rule": "kcenter-4-pinned-000-000-v1: {000-000} union the 3-subset of "
+                               "the non-reserved grid views that minimises the covering radius "
+                               "over all 41 views (exhaustive, ties by label) -- see "
+                               "matching/placement_views.py",
+                       "grid_views": len(V.GRID),
+                       "min_spacing_deg": round(V.min_spacing(), 2),
+                       "covering_deg": round(V.covering_radius(views), 2),
+                       "nearest_stored": V.distances_to_nearest(views, reserved)},
         "provenance": provenance,
         "code_digest": compute_code_digest(),
     }

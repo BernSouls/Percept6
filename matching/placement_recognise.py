@@ -1,43 +1,58 @@
-"""THE ENTRY POINT: recognise an object against a gallery of known objects (Mission 24).
+"""THE ENTRY POINT: recognise an object against a gallery of known objects.
 
     from matching.placement_recognise import build_gallery, recognise
 
-    gallery = build_gallery([("apple/1", "apple1-000-000.png"),
-                             ("apple/2", "apple2-000-000.png"), ...])
-    result  = recognise("apple3-035-045.png", gallery)
+    gallery = build_gallery([
+        ("apple/1", {"000-000": "apple1-000-000.png", "045-000": "apple1-045-000.png", ...}),
+        ("apple/2", {"000-000": "apple2-000-000.png", "045-000": "apple2-045-000.png", ...}),
+    ])                                     # one entry per OBJECT, k stored views each
+    result = recognise("apple3-035-045.png", gallery)
 
-    result.ranking     every gallery index, best first (the shortlist re-ordered by the matcher,
-                       then everything else in the door's order -- the re-order never drops)
-    result.shortlist   the S = 8 the matcher scored
-    result.door_order  the fused door's ranking of the whole gallery
-    result.scores      {gallery index: shipped matcher score} for the scored candidates
-    result.unscored    shortlisted candidates the matcher could not score (a refused pair, not a
-                       zero and not a fallback -- they stay in the ranking at their door rank)
-    result.seconds     {"appearance", "door", "matcher", "total"}
+    result.ranking      every gallery OBJECT, best first (the shortlist re-ordered by the matcher,
+                        then everything else in the door's order -- the re-order never drops)
+    result.shortlist    the S = 8 OBJECTS the matcher scored
+    result.door_order   the fused door's ranking of every object
+    result.best_view    {object index: the stored view the door chose for this query}
+    result.scores       {object index: shipped matcher score}, scored on that best view
+    result.unscored     shortlisted objects the matcher could not score (a refused pair, not a zero)
+    result.seconds      {"appearance", "door", "matcher", "total"}
 
-WHAT IT IS.  The content-count door -- every query place probes a pooled index of gallery places
-by content key, keeps its nearest few by the frozen Mission-21 ruler and COUNTS which object they
-belong to -- fused by reciprocal rank fusion (k = 60) with an unfitted colour+gradient histogram,
-shortlist S = 8, then the M19 matcher scores those 8 and the final order is its plain re-order.
-Mission 23 measured this configuration and it is what ships; nothing here re-tunes it.
+WHAT IT IS.  For every stored view of every object the content-count door scores the query's place
+probes -- each query place probes a pooled index of gallery places by content key, keeps its
+nearest few by the frozen Mission-21 ruler, and COUNTS which view they belong to; a view scores
+``count / sqrt(query places x view places)``.  An OBJECT scores the MAXIMUM over its stored views,
+and likewise the appearance channel.  The two object score lists are fused by reciprocal rank
+fusion (k = 60) and the shortlist is S = 8 OBJECTS -- the same S as before, so recall is comparable
+with chance 8 / N_objects.  The M19 matcher scores each shortlisted object on the ONE stored view
+the door chose for it, and the final order is its plain re-order.  At one stored view per object
+every number here is exactly the Mission-24 number, because a max over a single view is that view.
 
-WHAT IT DOES NOT DO.  It does not estimate pose, it does not recognise a new instance of a class
-reliably (0.500 against 0.103 chance), and it degrades at yaw beyond ~20 degrees (pitch is fine).
+WHAT IT DOES NOT DO.  It does not estimate pose; it does not recognise a new instance of a class
+reliably (0.500 against 0.103 chance); and it degrades at yaw beyond ~20 degrees, which is why more
+stored views help only in so far as one of them is CLOSE in yaw to the query.
 
-CONFIGURATION.  One frozen file, ``matching/placement_bundle.json`` (see ``placement_bundle``).
-No environment variable is needed and none is read: the entry point applies the bundle internally,
-inside a scope that restores every switch it touched, so the legacy env-flag path is exactly as it
-was before the call (``tests/test_m24_core.py`` asserts that).
+CONFIGURATION.  One frozen file, ``matching/placement_bundle.json`` (see ``placement_bundle``),
+which also names the stored views.  No environment variable is needed and none is read: the entry
+point applies the bundle internally, inside a scope that restores every switch it touched, so the
+legacy env-flag path is exactly as it was before the call (``tests/test_m24_core.py`` asserts it).
 
-WHY THE 8 PAIR SCORES RUN IN PARALLEL.  They are independent -- one (query, gallery) pair each --
-and each costs ~15 s on this box.  They are scored in a process pool and collected IN SHORTLIST
+CACHES.  Graph builds (content-hashed, ``matching/placement_cache``), gallery records (keyed on the
+items and the bundle's code digest, ``matching/placement_gallery``) and PAIR SCORES (keyed on the
+two image paths, the M19 weight and a digest of the matcher's own parameters, in
+``.cache/placement/pairs.jsonl``).  The pair cache is what makes a re-read free: the matcher is the
+expensive stage, and a pair that has been scored is never scored twice.  A pair the matcher refuses
+is never cached as a number.
+
+WHY PAIRS RUN IN PARALLEL.  The S pair scores are independent -- one (query, stored view) pair each
+-- and each costs ~15 s on this box.  They run in a process pool and are collected IN SHORTLIST
 ORDER, so the output is identical to the serial run (asserted by a test).  The pool is created per
 call because a worker must not inherit a half-applied flag scope.
 """
 from __future__ import annotations
 
+import hashlib
+import json
 import os
-import sys
 import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
@@ -46,7 +61,15 @@ import numpy as np
 
 from matching import placement_bundle as PB
 
-__all__ = ["Gallery", "Result", "build_gallery", "recognise", "order_plain", "PlacementBundle"]
+__all__ = ["Gallery", "Result", "build_gallery", "recognise", "order_plain", "PlacementBundle",
+           "matcher_digest", "pair_cache_path"]
+
+Gallery = Any                                       # matching.placement_gallery.Gallery
+PlacementBundle = PB.PlacementBundle
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PAIR_CACHE = os.environ.get("PLACEMENT_PAIR_CACHE") or os.path.join(
+    ROOT, ".cache", "placement", "pairs.jsonl")
 
 
 def _library() -> Tuple[Any, Any, Any]:
@@ -57,21 +80,19 @@ def _library() -> Tuple[Any, Any, Any]:
     return FE, FD, GL
 
 
-Gallery = Any                                       # matching.placement_gallery.Gallery
-PlacementBundle = PB.PlacementBundle
-
-
 @dataclass
 class Result:
-    """What ``recognise`` returns.  Every field is deterministic given (query, gallery, bundle)."""
+    """What ``recognise`` returns.  Deterministic given (query, gallery, bundle)."""
 
     query: str
     ranking: List[int]
     shortlist: List[int]
     door_order: List[int]
+    best_view: Dict[int, str]
     scores: Dict[int, float]
     unscored: List[int]
     seconds: Dict[str, float]
+    views: List[str] = field(default_factory=list)
     bundle: Dict[str, Any] = field(default_factory=dict)
 
     @property
@@ -84,14 +105,17 @@ class Result:
     def as_dict(self) -> Dict[str, Any]:
         return {"query": os.path.basename(self.query), "ranking": self.ranking,
                 "shortlist": self.shortlist, "door_order": self.door_order,
+                "best_view": {str(k): v for k, v in sorted(self.best_view.items())},
                 "scores": {str(k): v for k, v in sorted(self.scores.items())},
-                "unscored": self.unscored, "seconds": self.seconds, "bundle": self.bundle}
+                "unscored": self.unscored, "seconds": self.seconds, "views": self.views,
+                "bundle": self.bundle}
 
 
 # --------------------------------------------------------------------------- the flag scope
 def _validate(bundle: PlacementBundle) -> None:
     """Refuse a bundle this code cannot honour.  No silent fallback anywhere."""
     FE, _FD, _GL = _library()
+    from matching import placement_views as V
     if dict(bundle.recipe) != dict(FE.RECIPE):
         raise PB.BundleRefusal(
             "the bundle's front-end recipe is not this tree's recipe: %d key(s) differ.  A "
@@ -109,15 +133,17 @@ def _validate(bundle: PlacementBundle) -> None:
     if abs(float(bundle.matcher_weight) - PB.shipped_weight()) > 1e-12:
         raise PB.BundleRefusal("the bundle's matcher weight %.6f is not the M19 record's %.6f"
                                % (bundle.matcher_weight, PB.shipped_weight()))
+    unknown = [v for v in bundle.reference_views if v not in V.GRID]
+    if unknown:
+        raise PB.BundleRefusal("the bundle names stored views that are not on the grid: %r"
+                               % (unknown,))
+    if bundle.reserved and set(bundle.reserved) & set(bundle.reference_views):
+        raise PB.BundleRefusal("a view cannot be both a stored reference and a read query: %r"
+                               % sorted(set(bundle.reserved) & set(bundle.reference_views)))
 
 
 class _FlagScope:
-    """Set switches for the duration of a call and put every one of them back.
-
-    The legacy path reads these as ordinary ``parameters`` module attributes at call time, so a
-    scope is all that is needed -- but it must be a scope: a caller that leaves
-    ``PLACEMENT_SCORE_WEIGHT`` at 0.375 changes every later measurement in the process.
-    """
+    """Set switches for the duration of a call and put every one of them back."""
 
     def __init__(self, values: Dict[str, Any]):
         self.values = dict(values)
@@ -154,6 +180,68 @@ def _bundle_flags(bundle: PlacementBundle) -> Dict[str, Any]:
     return vals
 
 
+# --------------------------------------------------------------------------- the pair cache
+def matcher_digest() -> str:
+    """Digest of the MATCHER's own configuration: the M19 record plus the flags it runs under.
+
+    Deliberately narrower than the bundle's code digest: a pair score depends on the matcher and
+    its weight, not on the door or the gallery code, so an edit to the door must not throw a
+    perfectly good pair score away.  An edit to the matcher MUST.
+    """
+    from matching import placement_frontend as FE
+    h = hashlib.sha256()
+    with open(PB.SCORE_PARAMS, "rb") as fh:
+        h.update(fh.read())
+    h.update(repr(sorted(FE.MATCHER_FLAGS.items())).encode())
+    h.update(repr(PB.shipped_weight()).encode())
+    return h.hexdigest()[:16]
+
+
+def pair_cache_path() -> str:
+    return PAIR_CACHE
+
+
+def _pair_key(qpath: str, rpath: str, weight: float) -> str:
+    return "%s|%s|%s|%.12g" % (matcher_digest(), os.path.basename(qpath),
+                               os.path.basename(rpath), float(weight))
+
+
+def load_pair_cache(path: Optional[str] = None) -> Dict[str, float]:
+    """Read the on-disk pair cache; entries for another matcher digest are ignored."""
+    p = path or PAIR_CACHE
+    out: Dict[str, float] = {}
+    if not os.path.exists(p):
+        return out
+    with open(p, encoding="utf-8", errors="replace") as fh:
+        lines = fh.readlines()
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            r = json.loads(line)
+        except Exception:
+            continue                                        # a corrupt line is a miss
+        if r.get("d") == matcher_digest() and "B" in r:
+            out["%s|%s|%s|%.12g" % (r["d"], r["q"], r["r"], float(r["w"]))] = float(r["B"])
+    return out
+
+
+def append_pair_cache(rows: Sequence[Dict[str, Any]], path: Optional[str] = None) -> None:
+    """Append scored pairs (``{"q", "r", "w", "B"}`` with basenames) to the cache file."""
+    p = path or PAIR_CACHE
+    if not rows:
+        return
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    d = matcher_digest()
+    with open(p, "a", encoding="utf-8") as fh:
+        for r in rows:
+            fh.write(json.dumps({"d": d, "q": os.path.basename(str(r["q"])),
+                                 "r": os.path.basename(str(r["r"])), "w": float(r["w"]),
+                                 "B": float(r["B"])}, sort_keys=True) + "\n")
+
+
+# --------------------------------------------------------------------------- the two entry points
 def order_plain(cands: Sequence[int], scores: Dict[int, float]) -> List[int]:
     """THE SHIPPED ORDER: the matcher's plain re-order of the candidates, dropping none.
 
@@ -164,23 +252,23 @@ def order_plain(cands: Sequence[int], scores: Dict[int, float]) -> List[int]:
     return sorted(cands, key=lambda j: (-float(scores.get(j, 0.0)), j))
 
 
-# --------------------------------------------------------------------------- the two entry points
 def build_gallery(items: Iterable[Any], *, bundle: Optional[PlacementBundle] = None,
                   workers: int = 2, use_cache: bool = True,
-                  cache_dir: Optional[str] = None) -> Gallery:
-    """Build (or load) the gallery for ``items``: (key, path) pairs or dicts with key and path.
+                  cache_dir: Optional[str] = None, views: Optional[Sequence[str]] = None
+                  ) -> Gallery:
+    """Build (or load) the gallery for ``items`` (one entry per object).
 
-    The bundle is loaded (and validated) first, because its ``code_digest`` is half of the cache
-    key: a gallery built by different code is not this gallery.
+    ``items`` are ``(key, path)``, ``(key, {view: path})`` or ``(key, [(view, path), ...])``.
+    ``views`` overrides the stored views the bundle names (the read uses this to compare k = 1
+    against k = 4 on the same code); everything else comes from the frozen bundle.
     """
-    FE, _FD, GL = _library()
+    _FE, _FD, GL = _library()
     b = bundle or PB.PlacementBundle.load()
     _validate(b)
+    vs = list(b.reference_views if views is None else views)
     with _FlagScope(_bundle_flags(b)):
-        g = GL.build_gallery(items, code_digest=b.code_digest, workers=workers,
-                             use_cache=use_cache, cache_dir=cache_dir)
-    g.seconds["total"] = g.seconds.get("total", 0.0)
-    return g
+        return GL.build_gallery(items, code_digest=b.code_digest, views=vs, workers=workers,
+                                use_cache=use_cache, cache_dir=cache_dir)
 
 
 def _score_one(job: Tuple[str, str, float]) -> Optional[float]:
@@ -194,54 +282,85 @@ def _score_one(job: Tuple[str, str, float]) -> Optional[float]:
         return None
 
 
-def _worker_init(bundle_fields: Dict[str, Any]) -> None:  # pragma: no cover - runs in a worker
-    with _FlagScope(bundle_fields):
-        pass
+def _max_over_views(flat: np.ndarray, n_obj: int, n_views: int) -> np.ndarray:
+    """(n, n_obj * n_views) object-major -> (n, n_obj) maximum over each object's views."""
+    return flat.reshape(flat.shape[0], n_obj, n_views).max(axis=2)
+
+
+def _argmax_over_views(flat: np.ndarray, n_obj: int, n_views: int) -> List[int]:
+    """Which view of each object scored highest; ties go to the lowest view index."""
+    m = flat.reshape(flat.shape[0], n_obj, n_views)[0]
+    return [int(np.argmax(m[j])) if n_views > 1 else 0 for j in range(n_obj)]
 
 
 def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle] = None,
-              workers: int = 2, s: Optional[int] = None, matcher: bool = True) -> Result:
-    """Rank ``gallery`` for ``query``.  ``query`` is a path or a (key, path) pair.
+              workers: int = 2, s: Optional[int] = None, matcher: bool = True,
+              use_pair_cache: bool = True) -> Result:
+    """Rank ``gallery``'s OBJECTS for ``query``.  ``query`` is a path or a (key, path) pair.
 
-    ``matcher=False`` stops after the door: the result carries the door's ranking and the
+    ``matcher=False`` stops after the door: the result carries the door's object ranking and the
     shortlist, and ``unscored`` is the whole shortlist (nothing was scored, nothing is claimed).
-    That is what a caller who only wants candidates should use -- it costs no part of the ~15 s a
-    pair score takes.
     """
     FE, FD, _GL = _library()
     b = bundle or PB.PlacementBundle.load()
     _validate(b)
     qpath = str(query[1]) if isinstance(query, (tuple, list)) else str(query)
     s_eff = int(b.shortlist if s is None else s)
+    n_obj, n_views = gallery.n, gallery.n_views
     t_all = time.time()
     with _FlagScope(_bundle_flags(b)):
         t0 = time.time()
-        q = FD.appearance_feature(qpath)
-        app = np.asarray([q], dtype=np.float64) @ gallery.appearance.T
+        q_app = FD.appearance_feature(qpath)
+        app_flat = np.asarray([q_app], dtype=np.float64) @ gallery.appearance.T
         t_app = time.time() - t0
         t0 = time.time()
-        cnt, _diag = FD.count_scores(gallery.index, [FE.place_record(qpath, tag="query")],
-                                     n_hits=int(b.door_n_hits))
-        fused = FD.rank_fuse(app, cnt, k=int(b.rrf_k))
-        door_order = [j for j in sorted(range(len(gallery)), key=lambda j: (-fused[0, j], j))]
-        t_door = time.time() - t0
-        short = door_order[:s_eff]
+        qrec = FE.place_record(qpath, tag="query")     # the query's own graph, built once
+        t_rec = time.time() - t0
         t0 = time.time()
-        jobs = [(qpath, gallery.paths[j], float(b.matcher_weight)) for j in short]
-        if not matcher:
-            vals = [None] * len(jobs)
-        elif workers and int(workers) > 1 and len(jobs) > 1:
-            import multiprocessing as mp
-            from concurrent.futures import ProcessPoolExecutor
-            try:
-                ctx = mp.get_context("fork")
-            except ValueError:                             # pragma: no cover - non-fork platforms
-                ctx = mp.get_context()
-            with ProcessPoolExecutor(max_workers=int(workers), mp_context=ctx) as ex:
-                vals = list(ex.map(_score_one, jobs, chunksize=1))
-        else:
-            vals = [_score_one(j) for j in jobs]
-        t_mat = time.time() - t0
+        cnt_flat, _diag = FD.count_scores(gallery.index, [qrec], n_hits=int(b.door_n_hits))
+        t_door = time.time() - t0
+    app = _max_over_views(app_flat, n_obj, n_views)
+    cnt = _max_over_views(cnt_flat, n_obj, n_views)
+    which = _argmax_over_views(cnt_flat, n_obj, n_views)
+    fused = FD.rank_fuse(app, cnt, k=int(b.rrf_k))
+    door_order = [j for j in sorted(range(n_obj), key=lambda j: (-fused[0, j], j))]
+    short = door_order[:s_eff]
+    best_view = {j: gallery.views[which[j]] for j in short}
+    t0 = time.time()
+    jobs = [(qpath, gallery.paths[j][which[j]], float(b.matcher_weight)) for j in short]
+    if not matcher:
+        vals: List[Optional[float]] = [None] * len(jobs)
+    else:
+        vals = [None] * len(jobs)
+        cached = load_pair_cache() if use_pair_cache else {}
+        todo: List[int] = []
+        fresh: List[Dict[str, Any]] = []
+        for i, (qp, rp, w) in enumerate(jobs):
+            hit = cached.get(_pair_key(qp, rp, w))
+            if hit is not None:
+                vals[i] = hit
+            else:
+                todo.append(i)
+        if todo:
+            sub = [jobs[i] for i in todo]
+            if workers and int(workers) > 1 and len(sub) > 1:
+                import multiprocessing as mp
+                from concurrent.futures import ProcessPoolExecutor
+                try:
+                    ctx = mp.get_context("fork")
+                except ValueError:                         # pragma: no cover - non-fork
+                    ctx = mp.get_context()
+                with ProcessPoolExecutor(max_workers=int(workers), mp_context=ctx) as ex:
+                    got = list(ex.map(_score_one, sub, chunksize=1))
+            else:
+                got = [_score_one(j) for j in sub]
+            for i, v in zip(todo, got):
+                vals[i] = v
+                if v is not None:
+                    fresh.append({"q": jobs[i][0], "r": jobs[i][1], "w": jobs[i][2], "B": v})
+            if use_pair_cache:
+                append_pair_cache(fresh)
+    t_mat = time.time() - t0
     scores: Dict[int, float] = {}
     unscored: List[int] = []
     for j, v in zip(short, vals):                          # collected in SHORTLIST order
@@ -251,18 +370,16 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
             scores[j] = float(v)
     ordered = order_plain(short, scores)
     rest = [j for j in door_order if j not in set(short)]
-    ranking = ordered + rest
-    return Result(query=qpath, ranking=ranking, shortlist=short, door_order=door_order,
-                  scores=scores, unscored=unscored,
-                  seconds={"appearance": t_app, "door": t_door, "matcher": t_mat,
-                           "total": time.time() - t_all},
-                  bundle=b.as_dict())
+    return Result(query=qpath, ranking=ordered + rest, shortlist=short, door_order=door_order,
+                  best_view=best_view, scores=scores, unscored=unscored,
+                  seconds={"appearance": t_app, "query_record": t_rec, "door": t_door,
+                           "matcher": t_mat, "total": time.time() - t_all},
+                  views=list(gallery.views), bundle=b.as_dict())
 
 
 # --------------------------------------------------------------------------- operator CLI
 def _main(argv: Optional[Sequence[str]] = None) -> int:   # pragma: no cover - operator action
     import argparse
-    import json
     # Run it as `python -m matching.placement_recognise` from the repository root: that is what
     # puts the tree's top-level modules (eth80_frontend, parameters) on sys.path.  Nothing here
     # touches sys.path -- a library that rearranges the import path for its caller is a library
@@ -272,19 +389,25 @@ def _main(argv: Optional[Sequence[str]] = None) -> int:   # pragma: no cover - o
                     help="write matching/placement_bundle.json for this tree")
     ap.add_argument("--describe", action="store_true", help="print the frozen bundle")
     ap.add_argument("--date", default="")
+    ap.add_argument("--k", type=int, default=0,
+                    help="with --freeze: the default number of stored views per object")
     a = ap.parse_args(list(argv) if argv is not None else None)
     if a.freeze:
-        d = PB.freeze(date=a.date or time.strftime("%Y-%m-%d"),
-                      provenance={"measured_by": "MISSION23_REPORT.md section 5 (the read)",
+        d = PB.freeze(date=a.date or time.strftime("%Y-%m-%d"), k=(a.k or None),
+                      provenance={"measured_by": "MISSION23_REPORT.md section 5 (the read); "
+                                                 "MISSION25_REPORT.md section 4 (the k = 1 vs "
+                                                 "k = 4 read)",
                                   "entry_point": "matching/placement_recognise.py",
-                                  "note": "frozen from the configuration Mission 23 shipped"})
-        print("froze %s\n  code_digest %s\n  shortlist %d, rrf_k %d, rerank %s, door n_hits %d"
-              % (PB.BUNDLE_PATH, d["code_digest"][:16], d["shortlist"], d["rrf_k"],
-                 d["rerank"], d["door"]["n_hits"]))
+                                  "note": "frozen from the configuration Mission 25 shipped"})
+        print("froze %s\n  code_digest %s\n  shortlist %d objects, rrf_k %d, rerank %s, "
+              "door n_hits %d\n  stored views (k=%d): %s"
+              % (PB.BUNDLE_PATH, d["code_digest"][:16], d["shortlist"], d["rrf_k"], d["rerank"],
+                 d["door"]["n_hits"], d["references"]["k"], d["references"]["views"]))
         return 0
     b = PB.PlacementBundle.load()
     print(json.dumps(b.as_dict() | {"door_n_hits": b.door_n_hits,
                                     "matcher_weight": b.matcher_weight,
+                                    "views": b.reference_views,
                                     "appearance": b.appearance}, indent=1))
     return 0
 

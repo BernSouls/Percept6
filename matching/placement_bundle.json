@@ -1,48 +1,104 @@
 {
- "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
- "code_digest": "8b29a9912b13be9278c15b8db65c2ec13bcddb328db61e4237b541b5f0a07923",
- "date": "2026-11-26",
- "door": {
-  "n_hits": 8,
-  "note": "the counted door: each query place counts its n_hits nearest pool places by the frozen configuration ruler, one vote per object; the object score is count / sqrt(n_query_places * n_object_places)"
- },
- "frontend": {
-  "extra_pre": {
-   "KP_GRADED_POPULATION": true
+  "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
+  "code_digest": "7a6821ba78ce901e436cd90e1cd4b9d9c0dc4260ddadd4e89adce341e29dd232",
+  "date": "2026-11-26",
+  "door": {
+    "n_hits": 8,
+    "note": "the counted door: each query place counts its n_hits nearest pool places by the frozen configuration ruler, one vote per object; the object score is count / sqrt(n_query_places * n_object_places)"
   },
-  "keypoint_class": "wide",
-  "note": "the recipe is the graph cache's identity; it is the M16/M20 recipe the M19 matcher record was measured under",
-  "params": "matching/placement_prefilter_params.json",
-  "recipe": {
-   "FE_KEYPOINTS": true,
-   "FE_PLACE_LAYER": true,
-   "FE_SUBPIXEL_GABOR_ANCHOR": true,
-   "FE_SUBPIXEL_PEAK_POS": true,
-   "KP_GRADED_SIMILARITY": true,
-   "PLACEMENT_FRAME_FALLBACK": "none",
-   "PLACEMENT_FRAME_KEYPOINT": true,
-   "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
-   "PLACEMENT_M15_PLACES": true
+  "frontend": {
+    "extra_pre": {
+      "KP_GRADED_POPULATION": true
+    },
+    "keypoint_class": "wide",
+    "note": "the recipe is the graph cache's identity; it is the M16/M20 recipe the M19 matcher record was measured under",
+    "params": "matching/placement_prefilter_params.json",
+    "recipe": {
+      "FE_KEYPOINTS": true,
+      "FE_PLACE_LAYER": true,
+      "FE_SUBPIXEL_GABOR_ANCHOR": true,
+      "FE_SUBPIXEL_PEAK_POS": true,
+      "KP_GRADED_SIMILARITY": true,
+      "PLACEMENT_FRAME_FALLBACK": "none",
+      "PLACEMENT_FRAME_KEYPOINT": true,
+      "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
+      "PLACEMENT_M15_PLACES": true
+    }
+  },
+  "matcher": {
+    "bundle": "matching/placement_score_params.json",
+    "entry": "matching.joint_mcs.joint_mcs -> score_shipped",
+    "flags": {
+      "PLACEMENT_MATCHER_ENABLED": true,
+      "PLACEMENT_MATCHER_STRICT": true,
+      "PLACEMENT_SCORE_EVIDENCE": true
+    },
+    "weight": 0.375
+  },
+  "mission": "M24",
+  "name": "placement-shipped-v1",
+  "provenance": {
+    "entry_point": "matching/placement_recognise.py",
+    "measured_by": "MISSION23_REPORT.md section 5 (the read); MISSION25_REPORT.md section 4 (the k = 1 vs k = 4 read)",
+    "note": "frozen from the configuration Mission 25 shipped"
+  },
+  "references": {
+    "covering_deg": 90.0,
+    "grid_views": 41,
+    "k": 1,
+    "min_spacing_deg": 22.0,
+    "nearest_stored": {
+      "035-045": {
+        "deg": 35.0,
+        "nearest": "000-000"
+      },
+      "045-180": {
+        "deg": 45.0,
+        "nearest": "000-000"
+      }
+    },
+    "reserved": [
+      "035-045",
+      "045-180"
+    ],
+    "rule": "kcenter-4-pinned-000-000-v1: {000-000} union the 3-subset of the non-reserved grid views that minimises the covering radius over all 41 views (exhaustive, ties by label) -- see matching/placement_views.py",
+    "views": [
+      "000-000"
+    ]
+  },
+  "rerank": "plain",
+  "rrf_k": 60,
+  "shortlist": 8,
+  "measured": {
+    "mission": "M25",
+    "file": "Topology/results/placement/m25_read.json",
+    "read": "view -035-045, 80 objects, paired k=4 minus k=1",
+    "door_recall_s": {
+      "k1": 0.55,
+      "k4": 0.575,
+      "diff": 0.025,
+      "ci95": [
+        -0.1,
+        0.15
+      ],
+      "p_holm": 0.7646,
+      "n": 80,
+      "chance": 0.1
+    },
+    "assembled_top1": {
+      "k1": 0.25,
+      "k4": 0.375,
+      "diff": 0.125,
+      "ci95": [
+        0.0125,
+        0.25
+      ],
+      "p_holm": 0.0916,
+      "n": 80,
+      "chance": 0.0125
+    },
+    "mde_at_realised_design": 0.187,
+    "decision": "k = 4 does not raise the ceiling (the shortlist); the bundle ships k = 1. Detection of the assembled top-1 gain is left to a later mission with a complete two-view cell.",
+    "note": "documentation only: this block is not part of code_digest and freeze() overwrites it"
   }
- },
- "matcher": {
-  "bundle": "matching/placement_score_params.json",
-  "entry": "matching.joint_mcs.joint_mcs -> score_shipped",
-  "flags": {
-   "PLACEMENT_MATCHER_ENABLED": true,
-   "PLACEMENT_MATCHER_STRICT": true,
-   "PLACEMENT_SCORE_EVIDENCE": true
-  },
-  "weight": 0.375
- },
- "mission": "M24",
- "name": "placement-shipped-v1",
- "provenance": {
-  "entry_point": "matching/placement_recognise.py",
-  "measured_by": "MISSION23_REPORT.md section 5 (the read)",
-  "note": "frozen from the configuration Mission 23 shipped"
- },
- "rerank": "plain",
- "rrf_k": 60,
- "shortlist": 8
 }

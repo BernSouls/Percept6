@@ -11,9 +11,10 @@ M19 matcher's plain re-order**.  Its one entry point is `matching/placement_reco
 
 | file | lives in | note |
 |---|---|---|
-| `matching/placement_recognise.py` | **core (new)** | the entry point: build_gallery, recognise, order_plain |
+| `matching/placement_recognise.py` | **core (M24, extended M25)** | the entry point: build_gallery, recognise, order_plain, the pair cache |
+| `matching/placement_views.py` | **core (M25)** | the view grid, the angular metric, and the score-free rule that picks k stored views per object |
 | `matching/placement_bundle.py` | **core (new)** | the frozen bundle: load/validate/freeze, refusal on mismatch |
-| `matching/placement_gallery.py` | **core (new)** | place records -> Gallery (index + appearance + disk cache) |
+| `matching/placement_gallery.py` | **core (M24, extended M25)** | place records -> Gallery: k views per object, one flat pooled index, appearance, disk cache |
 | `matching/placement_frontend.py` | **core (new, moved)** | the RECIPE, `cell`, `place_record`, `pair_score` -- was `Topology/placement_m20_eth80.RECIPE/_recipe/_cell` + `Topology/placement_m23_eth80.image_job` |
 | `matching/placement_truth.py` | **core (new, moved)** | the exact-transform truth rule -- was `Topology/placement_m12_read_real._forward/_inverse/_truth` |
 | `matching/placement_cache.py` | **core (new, moved)** | content-hash graph cache -- was `Topology/placement_cache.py`, which now re-exports it |
@@ -35,11 +36,12 @@ walks the AST of every core package and fails on either.
 
 | file | lives in | why it is frozen |
 |---|---|---|
-| `matching/placement_bundle.json` | core (new) | the configuration: recipe, door `n_hits`, RRF `k`, S, rerank, M19 weight, provenance, code digest |
+| `matching/placement_bundle.json` | core (new) | the configuration: recipe, door `n_hits`, RRF `k`, S (objects), rerank, M19 weight, the stored view set and its rule, reserved query views, provenance, code digest |
 | `matching/placement_score_params.json` | core | the M19 record's weight `w = 0.375` (and its fit provenance) |
 | `matching/placement_prefilter_params.json` | core | the Mission-21 frozen ruler: per-slot mu/sd/keep + widths sigma 0.35 / 0.50 |
 | `.cache/graphcache/*.pkl` | working state (gitignored) | built graphs, keyed on pixels + switch digest + source digest |
-| `.cache/placement/gallery-*.pkl` | working state (gitignored) | gallery records, keyed on items + the bundle's code digest |
+| `.cache/placement/gallery-*.pkl` | working state (gitignored) | gallery records, keyed on items + views + the bundle's code digest |
+| `.cache/placement/pairs.jsonl` | working state (gitignored) | matcher pair scores, keyed on (matcher digest, query, view, weight) -- a re-read costs nothing |
 | `data/ETH-80-master/` | corpus (gitignored symlink) | the images; fetched by `Topology/fetch_corpus.py --fetch` |
 | `matching/placement_frozen_params*.json` | core | older frozen M17/M18 bundles: **no shipped code reads them** -- kept because the matcher's own tests pin them |
 
@@ -49,6 +51,7 @@ walks the AST of every core package and fails on either.
 |---|---|
 | `Topology/placement_m12_perf.py` (the legacy parity check) | corpus, placement_cache, placement_census, placement_dev, placement_eval_spec, placement_families_m9, placement_gate, placement_m11_eth80, placement_m11_families, placement_scenes, placement_truth, guard |
 | `Topology/verify_m24_equivalence.py` (item 4) | placement_m23_eth80, placement_m22_eth80, placement_m20_eth80, placement_m23_stages, placement_m12_read_real |
+| `Topology/placement_m25_read.py` (the M25 read) | placement_m23_eth80 (bootstrap), placement_m20_eth80 (objects) |
 | the report-producing M20-M23 harnesses | placement_m20_eth80, m22_eth80, m23_eth80, m23_stages, m21_* , m20_fit, m22_power, m12_realphotos |
 | the test suite (`tests/`) | 20 Topology modules, all inside the two lists above |
 | result files cited by the README / the reports | `m12_perf_baseline.json`, `m20_splits.json`, `m22_*.json`, `m23_*.json`, `m23_read_rows.jsonl`, `m23_read_pairs.jsonl`, MISSION14..23 `.md` |

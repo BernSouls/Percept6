@@ -58,7 +58,8 @@ def _pair_cache() -> Dict[Tuple[str, str], float]:
     return out
 
 
-def run(workers: int = 2, limit: int = 0) -> Dict[str, Any]:
+def run(workers: int = 2, limit: int = 0, out_name: str = "m24_equivalence.json",
+        views: Optional[Sequence[str]] = None) -> Dict[str, Any]:
     global _G
     from Topology.placement_m23_eth80 import all_objects
     from matching import m15_manifest as MF
@@ -72,7 +73,8 @@ def run(workers: int = 2, limit: int = 0) -> Dict[str, Any]:
         rows = rows[:int(limit)]
     print("gallery: %d items" % len(objs), flush=True)
     t_g = time.time()
-    _G = RC.build_gallery(list(zip(keys, refs)), workers=workers)
+    _G = RC.build_gallery(list(zip(keys, refs)), workers=workers,
+                          views=list(views) if views else None)
     print("gallery built %.0fs (%d items, digest %s)"
           % (time.time() - t_g, _G.n, _G.digest[:12]), flush=True)
     if _G.keys != keys:
@@ -125,10 +127,11 @@ def run(workers: int = 2, limit: int = 0) -> Dict[str, Any]:
         "gallery": {"items": _G.n, "digest": _G.digest, "keys_match_read_order": True},
         "bundle": PB.PlacementBundle.load().as_dict(),
         "seconds": {"total": time.time() - t0},
-        "how": "python Topology/verify_m24_equivalence.py --workers %d%s"
-               % (workers, (" --limit %d" % limit) if limit else ""),
+        "how": "python Topology/verify_m24_equivalence.py --workers %d%s%s"
+               % (workers, (" --limit %d" % limit) if limit else "",
+                  (" --views " + ",".join(views)) if views else ""),
     }
-    MF.write_result(os.path.join(OUT, "m24_equivalence.json"), out)
+    MF.write_result(os.path.join(OUT, out_name), out)
     print("DOOR    %d/%d equal to the read's door_s" % (door_ok, len(rows)), flush=True)
     print("MATCHER %d/%d equal (queries with a full pair cache: %d)"
           % (mat_ok, mat_rows, mat_rows), flush=True)
@@ -141,8 +144,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--out", default="m24_equivalence.json")
+    ap.add_argument("--views", default="", help="comma-separated stored views (default: bundle)")
     a = ap.parse_args(list(argv) if argv is not None else None)
-    out = run(workers=a.workers, limit=a.limit)
+    vs = [x for x in a.views.split(",") if x] or None
+    out = run(workers=a.workers, limit=a.limit, out_name=a.out, views=vs)
     ok = out["door"]["mismatched"] == 0 and out["matcher"]["mismatched"] == 0
     return 0 if ok else 1
 
