@@ -285,6 +285,12 @@ def main(argv=None) -> int:
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--scenes", type=int, default=20)
     ap.add_argument("--tag", default="m21_yaw")
+    # [M23] READ-ONLY extension: the mission allowed the missing PITCH cell to be added to the
+    # accuracy harness and nothing else.  Both defaults are the M21 values, so every M21 number
+    # reproduces bit-for-bit; a caller passes e.g. --views y20,x20 --variants sorted to measure
+    # pitch and yaw side by side without touching M21's own files (a separate --tag).
+    ap.add_argument("--views", default="")
+    ap.add_argument("--variants", default="")
     a = ap.parse_args(argv)
     import guard
     guard.activate()
@@ -350,8 +356,10 @@ def main(argv=None) -> int:
                  for d in done2}
         # sigma is chosen on the FIRST HALF of the scenes and reported on the second half
         half = names[: len(names) // 2]
-        todo2 = [(s, v, var, sg) for s in names for v in VAR_VIEWS
-                 for var in VARIANTS for sg in SIGMAS
+        var_views = tuple(x for x in a.views.split(",") if x) or VAR_VIEWS
+        var_variants = tuple(x for x in a.variants.split(",") if x) or VARIANTS
+        todo2 = [(s, v, var, sg) for s in names for v in var_views
+                 for var in var_variants for sg in SIGMAS
                  if (s, v, var, round(sg, 3)) not in seen2]
         print("\nvariants: %d to go" % len(todo2), flush=True)
         t0 = time.time()

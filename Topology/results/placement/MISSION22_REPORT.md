@@ -275,3 +275,27 @@ already carries the arms, the constants and the decision rule.  (3) If the geome
 wanted, it needs a correspondence model that is not a similarity -- an affine or a
 view-conditioned transform -- because the measured failure is that the transforms of true
 correspondences do not agree, and no key or bin width can repair that.
+
+## 10. Addendum (Mission 23) -- two statements in this report were wrong
+
+Mission 23 audited this report and found two claims that were measured the wrong way.  They are
+corrected here, as an addendum, so the numbers above stay as they were reported and the correction
+is visible beside them.
+
+**(1) (C) was instance identification, not class generalisation.**  §5's class score was computed
+on a gallery that *contained the query's own object*.  A class score whose best instance is the
+query's own reference answers "can you find this object again", and the 0.625 quoted in §5 is that
+number, not "is this a new instance of a known class".  The honest measurement removes the query's
+own object from the gallery before the door runs (39 of 40), and it is in
+`MISSION23_REPORT.md` §1: **class top-1 0.500 (20/40) against a chance of 0.103** for the
+registered top-2 primary.  The class signal survives, but it is half, not 0.625, and the 0.625 is
+withdrawn as a class-level claim.
+
+**(2) The transform failure was measured on the matcher's own, mostly wrong, correspondences.**
+§3.2's diagnosis -- "the correspondences the matcher chooses do not agree on a similarity" -- is
+true of *those* correspondences, and only about a third of them are even in the same content
+bucket (`bucket_hit` 0.33-0.38), so they are largely wrong pairs.  A wrong pair cannot agree on a
+transform whatever the transform model is, so §3.2 was evidence about the matcher, not about
+place voting.  The measurement that settles it uses the synthetic renderer, where the true partner
+of every place is known by geometry: `MISSION23_REPORT.md` §2, and the conclusion recorded there
+is the one the README carries.

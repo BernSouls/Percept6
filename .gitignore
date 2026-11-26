@@ -22,3 +22,11 @@ Topology/results/placement/m16_bank_raw.json
 
 # M21: the paired score matrices are binary intermediates; the JSON that quotes them is kept.
 *.npy
+
+# Mission 23 pair caches: working state for resumable stages, not evidence.  m23_t2_pairs.jsonl
+# also contains the --limit 4 smoke rows (chance arithmetic differs on a 4-object gallery), so it
+# is kept out of the tree rather than committed and misquoted.  The READ's rows and pairs ARE
+# committed: they are the data behind m23_read.json.
+Topology/results/placement/m23_t2_pairs.jsonl
+Topology/results/placement/m23_fit_pairs.jsonl
+Topology/results/placement/m23_dev_pairs.jsonl

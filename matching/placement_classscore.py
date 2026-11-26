@@ -78,3 +78,39 @@ def chance_at_s(n_same_class: int, n_gallery: int, s: int) -> float:
     if n_gallery - n_same_class < s:
         return 1.0
     return 1.0 - comb(n_gallery - n_same_class, s) / float(comb(n_gallery, s))
+
+
+# --------------------------------------------------------------------------- T2, measured properly
+def t2_gallery(keys: Sequence[str], query_key: str) -> List[str]:
+    """The gallery a T2 ("same kind of thing") read is scored on: the query's own object REMOVED.
+
+    Mission 22 scored (C) on a gallery that contained the query's own object, so its number was
+    instance identification wearing a class label.  T2 is the question "is this a new instance of
+    a known class", and it only means that if the only way to be right is to generalise to the
+    class.  This function is the one place that removal happens, and it refuses to be a no-op.
+    """
+    keys = list(keys)
+    if query_key not in keys:
+        raise ValueError("T2 gallery: the query's own object %r is not in the gallery, so it "
+                         "cannot be removed -- pass the full gallery" % (query_key,))
+    out = [k for k in keys if k != query_key]
+    if query_key in out:                                     # pragma: no cover - unrepresentable
+        raise AssertionError("T2 gallery: the query's own object survived its own removal")
+    if len(out) != len(keys) - 1:                            # pragma: no cover
+        raise AssertionError("T2 gallery: removal dropped %d items, expected 1"
+                             % (len(keys) - len(out)))
+    return out
+
+
+def class_scores_t2(instance_scores: Mapping[int, float], class_of: Mapping[int, str],
+                    query_key: str, gallery_keys: Sequence[str],
+                    agg: str = "top2") -> Dict[str, float]:
+    """`class_scores`, but it REFUSES a gallery that still contains the query's own object.
+
+    The guard is the point: a caller that forgets to reduce the gallery gets an exception, not a
+    inflated number.  `tests/test_m23_bundle.py` asserts that it raises.
+    """
+    if query_key in set(gallery_keys):
+        raise ValueError("T2: the query's own object %r is in the gallery -- T2 would be instance "
+                         "identification, not class generalisation" % (query_key,))
+    return class_scores(instance_scores, class_of, agg)
