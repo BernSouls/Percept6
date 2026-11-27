@@ -63,9 +63,54 @@ side so `id()` cannot be reused): a blended pair is 25.3 s against 23.2 s shippe
 `tests/test_m30_content.py::TestColourCache` pins the cached vectors to be *equal* to the
 uncached ones (`_legacy_node_colour` is kept for exactly that test).
 
-## A3 — one read at S = 8
+## A3 — one read at S = 8 (26 of 80 queries scored; estimate only, no claim)
 
-<!-- A3 -->
+Arms: **A1's fused door** (RRF counted + appearance + colour@0.5) and **A2's blend on in the
+matcher** (`w_col = 0.10`, `w_cfg` held). Cell: query `-035-045`, gallery `-000-000`, S = 8,
+80 gallery objects, chance top-1 0.0125, chance recall@8 0.100. Runner
+`Topology/m30_read.py --run --split FIT` (resumable, `m30_read_pairs.jsonl`, progress file,
+partial results only on fully scored queries: a query with any unscored pair is reported as
+`lacking`, never scored against a constant).
+
+**MDE, stated before the read:** 80 paired queries with an expected discordance of ~0.15 gives
+SE = sqrt(0.15/80) = 0.043 and MDE(80 % power) = 2.80 × 0.043 = **0.121** against a planning effect
+of **+0.075**. At the 26 queries actually scored, MDE = 2.80 × sqrt(0.15/26) = **0.213**.
+
+| | n | hits | top-1 | 95 % CI | chance |
+|---|---|---|---|---|---|
+| read arm (door fused + blend) | 26 | 10 | **0.385** | [0.192, 0.577] | 0.0125 |
+| M27's shipped S = 8, same cell (FIT) | 40 | 10 | 0.250 | [0.125, 0.400] | 0.0125 |
+| door ceiling (truth inside the shortlist, this subset) | 26 | 18 | 0.692 | | |
+
+Per class (n = 5 each except horse/1 = 1): apple 3/5, car 3/5, cow 1/5, cup 1/5, dog 1/5,
+horse 1/1. The matcher realises **10 of the 18** place a query inside its shortlist (55.6 % of the
+door's ceiling).
+
+**This is an estimate and it is not a claim**: the observed difference to M27's shipped read is
++0.147, *below* the 0.213 MDE at this n, the difference is unpaired (M27's json keeps no per-object
+vector, so a paired bootstrap cannot be formed here), and the 26 scored queries are the first 26 in
+name order — the classes apple…horse/1 — not a random sample of the 80. All three reasons point the
+same way: report the number, claim nothing, and finish the read (the runner resumes exactly where
+it stopped).
+
+**Why the read is partial — the mechanism, with the number:** one pair costs **21 s of wall time
+in the 2-worker pool / ~25 s of CPU** (`pair_score` on two ~1,563-node graphs with the colour term
+on), so 640 pairs is 3.7 h of wall time on this box's single physical core, and the run stopped at
+26 queries after its 62-minute budget. The earlier 57 %-overhead bug (per-pair ring recomputation,
+see A2) is fixed; what remains is the matcher's own cost, which no M30 change touched.
+
+Loss table, re-made (16 failures among the 26 scored queries):
+
+| | losses | share of queries |
+|---|---|---|
+| same-class winner | 10 | 38.5 % |
+| other-class winner | 6 | 23.1 % |
+| truth outside the shortlist (door ceiling) | 8 | 30.8 % |
+| median score gap to the truth | 0.0152 | |
+
+So the read's remaining error is *mostly* the door refusing the right object (8 of 16) and, when it
+does admit it, the matcher handing the win to a same-class sibling (10 of 16) on a median gap of
+0.015 — the two levers the earlier missions named, unchanged by colour.
 
 ## B1 — saturation, per lens (confirmed, with the M29 error corrected)
 
@@ -188,7 +233,31 @@ numbers, rather than shipped.
   `eth80_frontend._FRONTEND_SWITCHES`; the graph/pair cache key moves with them.
 * **Records**: 37.4 MB, committed; nothing deleted; per-cell cache and progress file make the build
   resumable.
-* **Determinism**: see the note in the A3 section.
+* **Determinism and parity**: `Topology/m30_parity.py` re-scores 3 of the read's own pairs
+  sequentially with `OPENBLAS/OMP/MKL_NUM_THREADS = 1` and compares against the numbers the
+  2-worker pool wrote from a different process: **max |diff| = 0.0** on all 3 (gate 1e-12),
+  `Topology/results/placement/m30_parity.json`. The shipped path's identity is also pinned by the
+  A2 ablation (deployed 0.349997291 reproduced exactly with the flag on and `w_col = 0`).
+* **Bundle digest**: unchanged (`73b9a7e1…`) — none of `placement_bundle.CODE_MODULES` was edited
+  in M30, so no re-freeze was needed; the *graph* cache key did move (the two new switches are in
+  `_FRONTEND_SWITCHES`), which is why the read warmed 160 graphs before scoring.
+
+## Deviations, stated
+
+1. **A3 is partial (26 of 80 queries).** The runner, its progress file and its pair log are
+   committed; the read resumes exactly where it stopped. Mechanism in the A3 section: 21 s of wall
+   time per pair in the pool, 640 pairs, one physical core.
+2. **B4's threshold was not lowered** although `corner_quantile = 90` is the FIT winner on *total*
+   identity (39,852 vs 38,649 bits, +3.1 %): the same sweep shows identity *per place* falling 28 %,
+   and the change would re-detect every record's places for 3.1 % of a place-count-dependent
+   statistic. Numbers in B4.
+3. **A2 is not shipped** (its switch defaults to off) even though it is wired, tested and measured:
+   its ablation is Δ −0.0026 on a pair score and it costs 2× per pair before the cache fix.
+4. **B5 was not run**: the mission conditions it on B3 passing, and B3 failed both halves of its bar.
+5. **The 30-pair `m28_speed.py` parity gate was not re-run** — 30 pairs is 12.5 minutes of the same
+   single core the read needed. The substitutes are `m30_parity.py` (3 pairs, max |diff| 0.0 against
+   a different process's numbers, BLAS pinned to one thread) and the A2 ablation's exact
+   reproduction of the deployed score with the flag on and `w_col = 0`.
 
 ## The one paragraph
 
@@ -198,6 +267,9 @@ six-number colour content — which M28 measured at a 0.745 same-class cross-vie
 fused into the door at a stated discount, which is what moved recall@8 from 0.550 to 0.675 / 0.650
 on FIT and 0.650 / 0.600 on CONF (top-1 0.125 → 0.250, 0.250 → 0.275), with no query losing a hit.
 **Shipped: the colour door (A1) and the record format v29 with five graded shape columns (B2).**
+The one read at S = 8 that was completed (26 queries, all FIT) reads **top-1 0.385 (10/26, CI
+[0.192, 0.577])** against M27's shipped 0.250 on FIT, with the truth inside the door's shortlist for
+18 of the 26 — an estimate that is smaller than the MDE at that n (0.213) and that claims nothing.
 Not shipped: the matcher's colour blend (A2 — measured at Δ −0.0026 on a pair score, and its 57 %
 cost overhead fixed rather than paid) and the shape term (B5 — its cross-view transfer is +0.077
 against a +0.10 bar and its object-level aggregate is 0.514, at chance, because two of its five

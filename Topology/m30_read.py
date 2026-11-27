@@ -84,6 +84,14 @@ def _score_unit(arg: Tuple[str, List[Tuple[str, str]], bool, float]
     import parameters as P
     import matching.placement_frontend as FE
     obj, jobs, use_colour, w = arg
+    FE.apply_recipe()
+    # The graph cache key is the switch digest, i.e. the VALUE of every declared front-end switch
+    # -- including PLACEMENT_NODE_COLOUR.  Warm this query's graphs with the switch OFF (the digest
+    # the warm stage built under), then turn the blend on: `cell()` memoises by path, so the blend
+    # runs on the shipped graphs instead of rebuilding them under a second digest.
+    P.PLACEMENT_NODE_COLOUR = False
+    for p in sorted({q for q, _r in jobs} | {r for _q, r in jobs}):
+        FE.cell(p, "m30read")
     if use_colour:
         P.PLACEMENT_NODE_COLOUR = True
         P.PLACEMENT_NODE_COLOUR_W = float(w)
@@ -199,6 +207,7 @@ def report(json_out: str = OUT) -> Dict[str, Any]:
     got = _load_pairs()
     hits: Dict[str, Tuple[float, float]] = {}
     per_class: Dict[str, List[Tuple[int, int]]] = {}
+    per_split: Dict[str, Dict[str, Tuple[float, float]]] = {}
     losses: List[Dict[str, Any]] = []
     lacking = []
     for r in rows:
@@ -212,11 +221,14 @@ def report(json_out: str = OUT) -> Dict[str, Any]:
         ceiling = int(r["truth"] in r["order"])
         hits[r["object"]] = (float(hit), float(ceiling))
         per_class.setdefault(r["cls"], []).append((hit, ceiling))
+        per_split.setdefault(r["split"], {})[r["object"]] = (float(hit), float(ceiling))
         if not hit:
             same = best[0] != r["truth"] and keys[best[0]].split("/")[0] == r["cls"]
+            truth_s = dict(ps).get(r["truth"])
             losses.append({"object": r["object"], "winner": keys[best[0]],
                            "same_class": bool(same),
-                           "gap": float(best[1] - max(s for j, s in ps if j == r["truth"]))})
+                           "in_shortlist": truth_s is not None,
+                           "gap": (float(best[1] - truth_s) if truth_s is not None else None)})
     ci = _one_ci(hits)
     out: Dict[str, Any] = {
         "cell": {"queries": len(rows), "scored": len(hits), "S": S, "view": VIEW,
@@ -224,7 +236,9 @@ def report(json_out: str = OUT) -> Dict[str, Any]:
                  "chance_recall_s8": S / len(keys)},
         "arm": {"door": "RRF(counted, appearance, colour@0.5)",
                 "matcher": "shipped + colour blend w_col=%.2f (w_cfg held)" % COLOUR_W,
-                "top1": ci, "by_class": {c: {"n": len(v), "hits": sum(h for h, _ in v),
+                "top1": ci,
+                "by_split": {sp: _one_ci(v) for sp, v in sorted(per_split.items())},
+                "by_class": {c: {"n": len(v), "hits": sum(h for h, _ in v),
                                              "top1": sum(h for h, _ in v) / len(v),
                                              "ceiling_hits": sum(c for _, c in v)}
                                          for c, v in sorted(per_class.items())}},
@@ -234,7 +248,9 @@ def report(json_out: str = OUT) -> Dict[str, Any]:
                 "note": "MDE > effect: this read reports an estimate and claims nothing"},
         "losses": {"n": len(losses), "same_class": sum(1 for x in losses if x["same_class"]),
                    "other_class": sum(1 for x in losses if not x["same_class"]),
-                   "median_gap": float(np.median([x["gap"] for x in losses])) if losses else None,
+                   "out_of_shortlist": sum(1 for x in losses if not x["in_shortlist"]),
+                   "median_gap": float(np.median([x["gap"] for x in losses if x["gap"] is not None]))
+                   if any(x["gap"] is not None for x in losses) else None,
                    "by_class": {c: {"same": sum(1 for x in losses if x["same_class"]
                                                and x["object"].startswith(c)),
                                     "other": sum(1 for x in losses if not x["same_class"]
