@@ -166,17 +166,19 @@ Per edge class, measured over the same 6 images (n ≈ 2,731 edges per image):
 | AMODAL_LINK | 8.2 | 18 | 3.88 | 1.00 | 1.000 |
 | CONCENTRICITY | 3.3 | 3 | 1.37 | 1.00 | 1.000 |
 
-Aggregate: with 2,731 edges per image and the per-class entropies above, one image's relational
-layer carries **≈ 8.9 × 10³ bits of parameter variation** — against a nominal declaration of
-2,731 edges × ~12.3 slots-bits ≈ 3.4 × 10⁴, and against a node layer of 1,563 nodes × ~35 nominal
-bits ≈ 5.5 × 10⁴.  The graph asserts far more structure than it measures, and the parts it measures
-densely (contour, colour-opponent border, border ownership) are not the parts it asserts most often.
+Aggregate (measured, `Σ edges_per_image × H(params)` over the 28 emitted classes): one image's
+relational layer carries **14,733 bits** of parameter variation over **2,731 edges — 5.40 bits per
+edge on average**, against a per-class nominal mean of 12.3 bits.  The distribution is brutal:
+**11.5 % of edges carry exactly zero bits** (classes whose tuple never varies) and **20.9 % carry
+≤ 2.14 bits**.  The graph asserts far more structure than it measures, and the parts it measures
+densely (`COLOR_OPPONENT_BORDER`, `BORDER_OWNERSHIP_EDGE`, the contour tier) are not the parts it
+asserts most often.
 
 **The busiest edge types are the emptiest.**  `CONTOUR_ORIENTATION` is 124 edges per image whose
 parameter tuple is *the same tuple every time* — 4.5 % of all edges carrying exactly zero bits.
 `CO_LOCATED` is 252 edges per image with 7 distinct tuples (2.14 bits), `REGION_CONTENT` 121 edges
-with 2 tuples (0 bits).  Those three alone are **18 % of every edge in the graph and together carry
-less than one bit of variation per edge**.  The informative classes are fewer and smaller:
+with 2 tuples (0 bits).  Those three alone are **18.2 % of every edge in the graph** (497.5 of 2,731 per image) and together
+carry less than one bit of variation per edge.  The informative classes are fewer and smaller:
 `COLOR_OPPONENT_BORDER` (8.81 bits), `BORDER_OWNERSHIP_EDGE` (7.30), and the contour tier
 (`CONTOUR_CONTINUITY` 5.03, `COCIRCULAR` 4.80) — which is exactly the tier the matcher's
 `EDGE_ORIENTATION_CONTINUITY` schema was designed around.
@@ -231,9 +233,9 @@ right.
    image* and a poor carrier of *which object* — which is precisely why M28's six colour ring means,
    attached at the place, moved the same-class gauge from 0.496 to 0.745 without changing the graph
    at all.
-2. **The busiest relations are constant.**  18 % of edges are three classes with ≤ 2.14 bits
-   between them, and the edge term as a whole is a ~16 % additive offset that does not discriminate
-   correct from incorrect pairs.  A relation that is true of everything tells you nothing; the
+2. **The busiest relations are constant.**  11.5 % of edges carry zero bits and 18.2 % are three
+   classes with ≤ 2.14 bits between them; the edge term as a whole is a **15.6 %** additive offset
+   that does not discriminate correct from incorrect pairs (14.0–17.8 % across eight pairs).  A relation that is true of everything tells you nothing; the
    representation asserts a great many of them.
 3. **Half the graph is isolated** (53 %), so the relational layer cannot speak about half the nodes,
    and the correspondence engine is matching those nodes on content alone.
