@@ -124,30 +124,41 @@ is worth +0.1125 recall@8, object-clustered, on the full 80 objects, at both rea
 chance rate of 0.100. Gained at −035-045: apple/8, car/1, car/8, car/9, cow/7, dog/8, horse/1,
 horse/2, horse/9.
 
-### 2b — the matcher read: 59 of 80 queries, one arm, no claim
+### 2b — the matcher read: all 80 queries, in two arithmetic regimes, no claim
 
 The S = 8 read of the full path (fused door, then the matcher with the colour blend). Cell: query
-`−035-045`, gallery `−000-000`, chance top-1 0.0125.
+`−035-045`, gallery `−000-000`, chance top-1 0.0125, **640 pairs, 0 failed, 0 queries unscored**.
 
 | split | n | hits | top-1 | 95 % CI |
 |---|---|---|---|---|
-| FIT (complete) | 40 | 14 | **0.350** | [0.200, 0.500] |
-| DEV (partial) | 17 | 3 | 0.176 | [0.000, 0.353] |
-| FRESH (partial) | 2 | 2 | 1.000 | — |
-| all scored | 59 | 19 | 0.322 | [0.203, 0.441] |
-| M27's shipped S = 8, FIT | 40 | 10 | 0.250 | [0.125, 0.400] |
+| FIT | 40 | 14 | **0.350** | [0.200, 0.500] |
+| DEV | 24 | 5 | 0.208 | [0.042, 0.375] |
+| FRESH | 16 | 4 | 0.250 | [0.062, 0.500] |
+| **all 80** | **80** | **23** | **0.2875** | **[0.188, 0.388]** |
+| M27's shipped S = 8, all 80 | 80 | 19 | 0.2375 | [0.150, 0.3375] |
 
-MDE at n = 40 is 0.171 against a planning effect of +0.075; the FIT difference is +0.100 and the
-comparison is unpaired (M27 stored no per-object vector). **Estimate, no claim.** Loss table over
-the 59: 22 same-class, 18 other-class, 19 out of the door's shortlist, median gap 0.0141.
+Per class (n = 10 each): apple 6, car 4, cow 3, cup 1, dog 2, horse 2, pear 1, tomato 4. The door
+admitted the truth in 53 of 80 (0.662); the matcher converts 23 of those 53 (43.4 %).
 
-**Why 59 and not 80 — the mechanism, with the number.** The 21 unscored queries were resumed in the
-background (`Topology/m30_read.py --run`, resumable, progress file) and are being scored now, but
-under a **different arithmetic**: item 1c's composition fix landed while they were queued, so the
-resumed pairs run the corrected 90/10 supplement while the first 59 ran M30's `0.4 · sim + 0.1 ·
-colour` mixture. Mixing them would make the "arm" two arms, so the mission's read stands at 59 (one
-arm, one arithmetic) and the resumed 21 are reported, if they complete, as their own arm. The cost
-of a single-arithmetic re-read of all 80 is 640 pairs × ~25 s ÷ 2 workers ≈ 2.2 h.
+Loss table, all 80: **57 losses** — 31 same-class (38.8 % of queries), 26 other-class (32.5 %),
+27 of which are outside the door's shortlist (33.8 %), median score gap to the truth **0.0145**.
+
+**Estimate, not a claim.** The all-80 difference to M27's shipped read is +0.050 against the
+**MDE of 0.121** stated before the read; the comparison is unpaired (M27 stored no per-object
+vector) and the two intervals overlap heavily.
+
+**The two arithmetic regimes, declared.** The first 63 objects were scored before item 1c's
+composition fix, under M30's `0.4 · sim + 0.1 · colour`; the last 17 after it, under the corrected
+`0.9 · sim + 0.1 · colour`:
+
+| regime | n | hits | top-1 | 95 % CI |
+|---|---|---|---|---|
+| A — M30 mixture (0.4 / 0.1) | 63 | 20 | 0.318 | [0.206, 0.429] |
+| B — corrected supplement (0.9 / 0.1) | 17 | 3 | 0.176 | [0.000, 0.353] |
+
+B is not a weaker arm: its 17 objects are the ones the earlier runs left, i.e. almost all of DEV and
+FRESH, so the two rows differ in composition as much as in arithmetic and **no comparison is drawn
+between them**. What the mission has is the all-80 read above, described honestly as two regimes.
 
 ## 3 — USE COLOUR WHERE THE MATCHER LOSES
 
@@ -155,21 +166,22 @@ of a single-arithmetic re-read of all 80 is 640 pairs × ~25 s ÷ 2 workers ≈ 
 re-ranking of the pairs the read already scored, joined to the door's own channels from the records.
 
 **Oracle first, no fusion** (the mechanism, counted): of the matcher's losses *inside its own
-shortlist*, how often does each channel rank the truth above the matcher's winner?
+shortlist*, how often does each channel rank the truth above the matcher's winner?  (Computed on the
+objects with all S pairs scored; the run below is the complete 80.)
 
 | | losses | same-class | other-class | colour above | appearance above | counted above | any above |
 |---|---|---|---|---|---|---|---|
-| 59 scored objects | 21 | 14 | 7 | **14 (66.7 %)** | 17 (81.0 %) | 9 (42.9 %) | 21 (100 %) |
+| 80 objects | 30 | 19 | 11 | **22 (73.3 %)** | 22 (73.3 %) | 16 (53.3 %) | 30 (100 %) |
 
 Colour carries the answer in two thirds of the losses; appearance in four fifths. The information is
 there. What a fusion does with it:
 
 | arm | order | FIT top-1 | confirmation | ALL |
 |---|---|---|---|---|
-| **A** | matcher (shipped) | **0.350** | 0.176 (DEV, 17) | 19/59 = 0.322 |
-| B | door | 0.250 | 0.118 | 13/59 = 0.220 |
-| C | RRF(matcher, door) | 0.275 | 0.235 | 16/59 = 0.271 |
-| D | RRF(matcher, colour) | 0.250 | 0.235 | 14/59 = 0.237 |
+| **A** | matcher (shipped) | **0.350** | 0.208 (DEV+FRESH, 40) | 23/80 = 0.287 |
+| B | door | 0.250 | 0.208 | 20/80 = 0.250 |
+| C | RRF(matcher, door) | 0.275 | 0.250 | 21/80 = 0.263 |
+| D | RRF(matcher, colour) | 0.250 | 0.250 | 19/80 = 0.237 |
 
 Bar, fixed before running: FIT top-1 gain over A ≥ **+0.075** and confirmation not below A by more
 than **0.025**. Measured: B −0.100, C −0.075, D −0.100. **None passes; (A) stays.**
@@ -178,14 +190,15 @@ than **0.025**. Measured: B −0.100, C −0.075, D −0.100. **None passes; (A)
 
 | arm | gains vs A | losses vs A | net |
 |---|---|---|---|
-| B (door order) | +4 | −10 | −6 |
-| C (RRF matcher + door) | +3 | −6 | −3 |
-| D (RRF matcher + colour) | +5 | −10 | **−5** |
+| B (door order) | +8 | −11 | −3 |
+| C (RRF matcher + door) | +5 | −7 | −2 |
+| D (RRF matcher + colour) | +7 | −11 | **−4** |
 
-Colour recovers 5 answers the matcher got wrong and costs 10 the matcher had right: the oracle says
-the channel knows 14 of the 21 losses, and the fusion converts that into a net loss of 5 because an
-equal-weight rank vote cannot tell the 14 from the 7 — and because the matcher's winner sits at rank
-1, so demoting it demotes it everywhere.
+Colour (arm D) recovers 7 answers the matcher got wrong and costs 11 the matcher had right: the
+oracle says the channel ranks the truth above the matcher's winner in 22 of the 30 losses, and the
+fusion converts that into a net loss of 4 because an equal-weight rank vote cannot tell those 22
+from the 8 where colour is also wrong — and because the matcher's winner sits at rank 1, so
+demoting it demotes it everywhere. **The channel is worth 22/30; the fusion takes 4 back.**
 
 **The mechanism, stated:** colour knows the truth in 14 of 21 losses, but an equal-weight RRF cannot
 separate those 14 from the 7 where colour is also wrong, and it demotes answers the matcher already
@@ -270,9 +283,10 @@ mission, this number is where the search stops.
 
 1. **The shortlist ships at 8, not 16**, on M27's overlapping intervals; the 16-wide arm's nominal
    +0.0375 on ALL is recorded in the section 1a table rather than argued away.
-2. **The matcher read stands at 59 of 80 queries**, one arm and one arithmetic. The remaining 21 were
-   resumed in the background and run item 1c's corrected blend, so they are a second arm, not a tail
-   of the first; a single-arithmetic 80-query read is ~2.2 h of pair scoring.
+2. **The matcher read is complete (80/80) but spans two arithmetic regimes** (63 objects under
+   M30's 0.4/0.1 mixture, 17 under item 1c's corrected 0.9/0.1 supplement), because the composition
+   fix landed while the last 21 queries were queued. Both regimes are reported (section 2b); no
+   comparison is drawn between them, and a single-arithmetic 80-query read is 640 pairs ≈ 2.2 h.
 3. **Item 3's four arms all lose to the shipped matcher order** on FIT; (A) stays, and the oracle
    count (14 of 21) is the named mechanism rather than a weight change.
 4. **Shape does not enter the door.** The mission's 4b bar (+0.10) is missed (+0.045) and the 4c
@@ -318,8 +332,8 @@ n=40) does not license a claim for. The shape columns are corrected: `var_x` is 
 46,059 places at the query view — pinned at `_parabola`'s clip cap, not view-dependent — and zeroing
 it changes the gauge not at all (0.539 → 0.539), because a constant column cannot rank; the
 rotation-normalised replacement the M30 report proposed reads **0.508**, so shape does not ship and
-the ceiling is named. Colour carries the truth in **14 of the matcher's 21 losses** but every
-equal-weight rank fusion of it loses more wins than it recovers (+5 / −10 for D), so the matcher's
+the ceiling is named. Colour carries the truth in **22 of the matcher's 30 losses** (73.3 %) but every
+equal-weight rank fusion of it loses more wins than it recovers (+7 / −11 for D), so the matcher's
 order stays. **The single next lever** is not a channel but a *fusion with a gate*: colour is right
 where the matcher's own margin is thin (the 21 losses sit on a median score gap of 0.014), so the
 next mission should try a **margin-gated** colour re-rank — promote colour's candidate only where the
