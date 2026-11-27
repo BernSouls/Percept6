@@ -2,16 +2,16 @@
  "arm": {
   "by_class": {
    "apple": {
-    "ceiling_hits": 5,
-    "hits": 3,
-    "n": 5,
+    "ceiling_hits": 8,
+    "hits": 6,
+    "n": 10,
     "top1": 0.6
    },
    "car": {
-    "ceiling_hits": 4,
+    "ceiling_hits": 5,
     "hits": 3,
-    "n": 5,
-    "top1": 0.6
+    "n": 6,
+    "top1": 0.5
    },
    "cow": {
     "ceiling_hits": 1,
@@ -32,37 +32,71 @@
     "top1": 0.2
    },
    "horse": {
-    "ceiling_hits": 1,
+    "ceiling_hits": 3,
     "hits": 1,
-    "n": 1,
-    "top1": 1.0
+    "n": 5,
+    "top1": 0.2
+   },
+   "pear": {
+    "ceiling_hits": 3,
+    "hits": 1,
+    "n": 5,
+    "top1": 0.2
+   },
+   "tomato": {
+    "ceiling_hits": 4,
+    "hits": 3,
+    "n": 5,
+    "top1": 0.6
    }
   },
   "by_split": {
-   "FIT": {
+   "DEV": {
     "ci95": [
-     0.19230769230769232,
-     0.5769230769230769
+     0.0,
+     0.75
     ],
-    "hits": 10,
-    "n": 26,
+    "hits": 1,
+    "n": 4,
     "resamples": 10000,
     "seed": 20261118,
-    "top1": 0.38461538461538464
+    "top1": 0.25
+   },
+   "FIT": {
+    "ci95": [
+     0.2,
+     0.5
+    ],
+    "hits": 14,
+    "n": 40,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 0.35
+   },
+   "FRESH": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "hits": 2,
+    "n": 2,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 1.0
    }
   },
   "door": "RRF(counted, appearance, colour@0.5)",
   "matcher": "shipped + colour blend w_col=0.10 (w_cfg held)",
   "top1": {
    "ci95": [
-    0.19230769230769232,
-    0.5769230769230769
+    0.2391304347826087,
+    0.5
    ],
-   "hits": 10,
-   "n": 26,
+   "hits": 17,
+   "n": 46,
    "resamples": 10000,
    "seed": 20261118,
-   "top1": 0.38461538461538464
+   "top1": 0.3695652173913043
   }
  },
  "cell": {
@@ -71,39 +105,15 @@
   "chance_top1": 0.0125,
   "gallery": 80,
   "queries": 80,
-  "scored": 26,
+  "scored": 46,
   "view": "035-045"
  },
  "estimate_vs_m27": {
-  "diff": 0.14711538461538465,
+  "diff": 0.13206521739130433,
   "note": "M27's per-object vector is not in its json, so this difference is unpaired and is not a test",
   "unpaired": true
  },
  "lacking": [
-  {
-   "object": "apple/10",
-   "unscored": 8
-  },
-  {
-   "object": "apple/2",
-   "unscored": 8
-  },
-  {
-   "object": "apple/4",
-   "unscored": 8
-  },
-  {
-   "object": "apple/5",
-   "unscored": 8
-  },
-  {
-   "object": "apple/8",
-   "unscored": 8
-  },
-  {
-   "object": "car/10",
-   "unscored": 8
-  },
   {
    "object": "car/2",
    "unscored": 8
@@ -189,14 +199,6 @@
    "unscored": 8
   },
   {
-   "object": "horse/3",
-   "unscored": 8
-  },
-  {
-   "object": "horse/4",
-   "unscored": 8
-  },
-  {
    "object": "horse/5",
    "unscored": 8
   },
@@ -205,23 +207,7 @@
    "unscored": 8
   },
   {
-   "object": "horse/7",
-   "unscored": 8
-  },
-  {
    "object": "horse/8",
-   "unscored": 8
-  },
-  {
-   "object": "horse/9",
-   "unscored": 8
-  },
-  {
-   "object": "pear/1",
-   "unscored": 8
-  },
-  {
-   "object": "pear/10",
    "unscored": 8
   },
   {
@@ -241,18 +227,6 @@
    "unscored": 8
   },
   {
-   "object": "pear/6",
-   "unscored": 8
-  },
-  {
-   "object": "pear/7",
-   "unscored": 8
-  },
-  {
-   "object": "pear/8",
-   "unscored": 8
-  },
-  {
    "object": "pear/9",
    "unscored": 8
   },
@@ -261,19 +235,7 @@
    "unscored": 8
   },
   {
-   "object": "tomato/10",
-   "unscored": 8
-  },
-  {
    "object": "tomato/2",
-   "unscored": 8
-  },
-  {
-   "object": "tomato/3",
-   "unscored": 8
-  },
-  {
-   "object": "tomato/4",
    "unscored": 8
   },
   {
@@ -281,15 +243,7 @@
    "unscored": 8
   },
   {
-   "object": "tomato/6",
-   "unscored": 8
-  },
-  {
    "object": "tomato/7",
-   "unscored": 8
-  },
-  {
-   "object": "tomato/8",
    "unscored": 8
   },
   {
@@ -301,10 +255,10 @@
   "by_class": {
    "apple": {
     "other": 1,
-    "same": 1
+    "same": 3
    },
    "car": {
-    "other": 2,
+    "other": 3,
     "same": 0
    },
    "cow": {
@@ -318,13 +272,25 @@
    "dog": {
     "other": 2,
     "same": 2
+   },
+   "horse": {
+    "other": 3,
+    "same": 1
+   },
+   "pear": {
+    "other": 3,
+    "same": 1
+   },
+   "tomato": {
+    "other": 0,
+    "same": 2
    }
   },
-  "median_gap": 0.015188525307774342,
-  "n": 16,
-  "other_class": 6,
-  "out_of_shortlist": 8,
-  "same_class": 10
+  "median_gap": 0.01449326517639457,
+  "n": 29,
+  "other_class": 13,
+  "out_of_shortlist": 15,
+  "same_class": 16
  },
  "m27_s8": {
   "ci95": [
