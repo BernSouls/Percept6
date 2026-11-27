@@ -197,6 +197,30 @@ def matcher_digest() -> str:
     return h.hexdigest()[:16]
 
 
+def pair_env() -> str:
+    """Digest of the GRAPH PIPELINE that produced a score -- the thing a pair cache must pin.
+
+    ``matcher_digest`` covers the matcher's configuration (parameters file, flags, weight).  It does
+    not cover the code that turns pixels into graphs and the switches that code reads, and a pair
+    score depends on both.  Mission 27 measured the consequence: three of M23's committed pairs
+    recomputed at +0.0052, +0.0016 and +0.0099 on scores near 0.35, while the place RECORDS of the
+    same cells are byte-identical to the committed census.  So a score is only reusable by a run
+    whose pipeline digest equals the one that wrote it, and every row now carries this digest.
+    """
+    import hashlib
+    from matching import placement_cache as GC
+    h = hashlib.sha256()
+    for part in (GC._source_digest(), GC._switch_digest()):
+        h.update(str(part).encode())
+    for mod in ("numpy", "scipy"):
+        try:
+            m = __import__(mod)
+            h.update(("%s=%s" % (mod, getattr(m, "__version__", "?"))).encode())
+        except Exception:
+            h.update(("%s=missing" % mod).encode())
+    return h.hexdigest()[:16]
+
+
 def pair_cache_path() -> str:
     return PAIR_CACHE
 
@@ -206,10 +230,72 @@ def _pair_key(qpath: str, rpath: str, weight: float) -> str:
                                os.path.basename(rpath), float(weight))
 
 
-def load_pair_cache(path: Optional[str] = None) -> Dict[str, float]:
-    """Read the on-disk pair cache; entries for another matcher digest are ignored."""
+#: Pair scores COMMITTED by earlier missions, adopted under the current matcher digest.  They were
+#: scored with the shipped flags and the shipped weight (0.375), which is what the digest covers,
+#: so a fresh sandbox does not have to buy them again.  Keys are built from BASENAMES: a different
+#: checkout prefix must not turn a cached pair into a miss (Mission 27, item 1a).
+LEGACY_PAIR_FILES: Tuple[str, ...] = ("m23_read_pairs.jsonl", "m22_assemble_fit_pairs.jsonl",
+                                      "m22_assemble_dev_pairs.jsonl")
+LEGACY_PAIR_DIR = os.path.join(ROOT, "Topology", "results", "placement")
+ADOPTED: Dict[str, int] = {}
+
+
+def _legacy_pair_rows(path: str) -> List[Tuple[str, str, float]]:
+    """(query name, reference name, score) for every row of a committed pair file."""
+    rows: List[Tuple[str, str, float]] = []
+    try:
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            lines = fh.readlines()
+    except OSError:
+        return rows
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            r = json.loads(line)
+        except Exception:
+            continue
+        if "B" not in r or not r.get("q") or not r.get("r"):
+            continue
+        rows.append((os.path.basename(str(r["q"])), os.path.basename(str(r["r"])),
+                     float(r["B"])))
+    return rows
+
+
+def load_pair_cache(path: Optional[str] = None, *, legacy: bool = True,
+                    same_env: bool = False) -> Dict[str, float]:
+    """The pair scores on disk, keyed by BASENAME so a different checkout prefix still hits.
+
+    Two kinds of row end up here:
+
+    * rows this tree wrote, each carrying ``d`` (the matcher digest) and ``env`` (the graph-pipeline
+      digest, see ``pair_env``).  A row is used when ``d`` matches; with ``same_env=True`` its
+      ``env`` must match too, which is what a DECISION run needs: a score is only this tree's score
+      if the pipeline that produced it is this tree's pipeline.
+    * the committed M22/M23 files, adopted under the current matcher digest and counted in
+      ``ADOPTED``.  They carry no ``env`` (they predate it), so ``same_env=True`` drops them --
+      that is the honest reading of "the environment is the arithmetic", and Mission 27 measured
+      the size of the difference (+0.004 mean, max +0.010, on scores near 0.35).
+    """
+    from matching.placement_bundle import shipped_weight
     p = path or PAIR_CACHE
     out: Dict[str, float] = {}
+    ADOPTED.clear()
+    env = pair_env() if same_env else ""
+    if legacy and not same_env:
+        w = float(shipped_weight())
+        for name in LEGACY_PAIR_FILES:
+            lp = os.path.join(LEGACY_PAIR_DIR, name)
+            rows = _legacy_pair_rows(lp)
+            n = 0
+            for qn, rn, b in rows:
+                key = "%s|%s|%s|%.12g" % (matcher_digest(), qn, rn, w)
+                if key not in out:
+                    out[key] = b
+                    n += 1
+            if rows:
+                ADOPTED[name] = n
     if not os.path.exists(p):
         return out
     with open(p, encoding="utf-8", errors="replace") as fh:
@@ -222,8 +308,11 @@ def load_pair_cache(path: Optional[str] = None) -> Dict[str, float]:
             r = json.loads(line)
         except Exception:
             continue                                        # a corrupt line is a miss
-        if r.get("d") == matcher_digest() and "B" in r:
-            out["%s|%s|%s|%.12g" % (r["d"], r["q"], r["r"], float(r["w"]))] = float(r["B"])
+        if r.get("d") != matcher_digest() or "B" not in r:
+            continue
+        if same_env and str(r.get("env") or "") != env:
+            continue
+        out["%s|%s|%s|%.12g" % (r["d"], r["q"], r["r"], float(r["w"]))] = float(r["B"])
     return out
 
 
@@ -234,9 +323,11 @@ def append_pair_cache(rows: Sequence[Dict[str, Any]], path: Optional[str] = None
         return
     os.makedirs(os.path.dirname(p), exist_ok=True)
     d = matcher_digest()
+    env = pair_env()
     with open(p, "a", encoding="utf-8") as fh:
         for r in rows:
-            fh.write(json.dumps({"d": d, "q": os.path.basename(str(r["q"])),
+            fh.write(json.dumps({"d": d, "env": str(r.get("env") or env),
+                                 "q": os.path.basename(str(r["q"])),
                                  "r": os.path.basename(str(r["r"])), "w": float(r["w"]),
                                  "B": float(r["B"])}, sort_keys=True) + "\n")
 
@@ -418,13 +509,15 @@ def _main(argv: Optional[Sequence[str]] = None) -> int:   # pragma: no cover - o
     ap.add_argument("--k", type=int, default=0,
                     help="with --freeze: the default number of stored views per object")
     ap.add_argument("--door", default="counted", help="counted | graded (M26)")
+    ap.add_argument("--shortlist", type=int, default=8,
+                    help="the shipped shortlist size S (M27: 8 or 16)")
     ap.add_argument("--shortlist-rule", default="fixed", help="fixed | adaptive (M26 6D)")
     ap.add_argument("--margin-tau", type=float, default=0.0,
                     help="with --shortlist-rule adaptive: the FIT-fixed top-s margin threshold")
     a = ap.parse_args(list(argv) if argv is not None else None)
     if a.freeze:
         d = PB.freeze(date=a.date or time.strftime("%Y-%m-%d"), k=(a.k or None),
-                      door_kind=str(a.door or "counted"),
+                      door_kind=str(a.door or "counted"), shortlist=int(a.shortlist or 8),
                       shortlist_rule=str(a.shortlist_rule or "fixed"),
                       margin_tau=float(a.margin_tau or 0.0),
                       provenance={"measured_by": "MISSION23_REPORT.md section 5 (the read); "

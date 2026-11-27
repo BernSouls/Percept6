@@ -109,7 +109,10 @@ class TestBundleRefusal(unittest.TestCase):
     def test_bundle_is_frozen_for_this_code(self) -> None:
         b = PB.PlacementBundle.load()
         self.assertEqual(b.code_digest, PB.compute_code_digest())
-        self.assertEqual(int(b.shortlist), 8)
+        # M27 item 2: the full read chose flat S = 16 (FIT +0.075 over S = 8, confirmation +0.000),
+        # fixed rather than adaptive; the fingerprint moves with the shipped configuration.
+        self.assertEqual(int(b.shortlist), 16)
+        self.assertEqual(str(b.shortlist_rule), "fixed")
         self.assertEqual(int(b.rrf_k), 60)
         self.assertEqual(b.rerank, "plain")
         self.assertAlmostEqual(float(b.matcher_weight), PB.shipped_weight(), places=12)
@@ -179,7 +182,8 @@ class TestEntryPointNeedsNoEnv(unittest.TestCase):
         after = self._snapshot()
         changed = {k: (before[k], after[k]) for k in before if before[k] != after.get(k)}
         self.assertEqual(changed, {}, "the entry point leaked switches: %r" % (changed,))
-        self.assertEqual(len(r.shortlist), min(8, len(self.items)))
+        self.assertEqual(len(r.shortlist), min(int(PB.PlacementBundle.load().shortlist),
+                                               len(self.items)))
         self.assertEqual(sorted(r.shortlist), list(range(len(self.items))))
         self.assertEqual(r.unscored, r.shortlist)          # nothing scored, nothing claimed
         self.assertEqual(len(r.ranking), len(self.items))

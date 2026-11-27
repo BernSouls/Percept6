@@ -3,8 +3,8 @@
 Written before anything moved (Mission 24, item 1).  The rule the archive follows is at the
 bottom; this table is what the rule was applied to.
 
-The shipped system is: **content-count door + appearance, RRF k = 60, shortlist S = 8 or 16
-(adaptive, Mission 26 item 6D), then the M19 matcher's plain re-order**.  Its one entry point is `matching/placement_recognise.py`
+The shipped system is: **content-count door + appearance, RRF k = 60, flat shortlist S = 16
+(Mission 27 item 2), then the M19 matcher's plain re-order**.  Its one entry point is `matching/placement_recognise.py`
 (`build_gallery`, `recognise`), and its one configuration is `matching/placement_bundle.json`.
 
 ## 1. Modules the shipped path imports
@@ -19,7 +19,8 @@ The shipped system is: **content-count door + appearance, RRF k = 60, shortlist 
 | `matching/placement_frontend.py` | **core (new, moved)** | the RECIPE, `cell`, `place_record`, `pair_score` -- was `Topology/placement_m20_eth80.RECIPE/_recipe/_cell` + `Topology/placement_m23_eth80.image_job` |
 | `matching/placement_truth.py` | **core (new, moved)** | the exact-transform truth rule -- was `Topology/placement_m12_read_real._forward/_inverse/_truth` |
 | `matching/placement_cache.py` | **core (new, moved)** | content-hash graph cache -- was `Topology/placement_cache.py`, which now re-exports it |
-| `matching/placement_frontdoor.py` | core (was already) | PlaceIndex, count_scores (the shipped door), graded_scores (M26, `door.kind = "graded"`), appearance, rank_fuse |
+| `matching/placement_frontdoor.py` | core (was already) | PlaceIndex, count_scores (the shipped door), graded_scores (M26, `door.kind = "graded"`), relaxed_scores (M27 item 4b, experimental), appearance, rank_fuse |
+| `matching/placement_records.py` | **core (M27)** | the compact committed form of the 320 place records (`data/placement_records_m27.npz`), the loader the door reads, and `placed_workers()` (the default worker count) |
 | `matching/placement_prefilter.py` | core | `load_params`, `bag_v2`, `standardize`, `score_bags_v2` |
 | `matching/placement_edges.py` | core | `node_frames_keypoint` (the place frames) |
 | `matching/placement_matcher.py` | core | `build_side_cached`; its `_image_digest` now calls core's `key_for` |
@@ -57,6 +58,12 @@ walks the AST of every core package and fails on either.
 | `Topology/m26_census.py` (M26 item 1) | m26_records; read-only |
 | `Topology/m26_oracle.py` (M26 item 4) | m26_records, placement_frontdoor, placement_kernel |
 | `Topology/m26_matcher.py` (M26 item 7) | m26_records, placement_recognise (pair cache + the shipped door step) |
+| `Topology/m27_export_records.py` (M27 item 1b) | m26_records, matching/placement_records -- export + the 80/80 equivalence check |
+| `Topology/m27_profile.py` (M27 items 1a/1c) | placement_frontend -- the pair-cost profile and the 3-pair recomputation proof |
+| `Topology/m27_drift.py` (M27 item 1a) | placement_frontend -- recomputes committed shortlists to measure the pipeline drift |
+| `Topology/m27_read.py` (M27 items 2/3) | m26_records, placement_frontdoor, placement_recognise -- the S read and the loss table |
+| `Topology/m27_door.py` (M27 item 4) | m26_records, placement_frontdoor, placement_kernel, core/keypoint_classes -- the two door variants |
+| `scripts/bootstrap_cache.py` (M27 item 1d) | the whole environment restore, with per-step seconds |
 | the report-producing M20-M23 harnesses | placement_m20_eth80, m22_eth80, m23_eth80, m23_stages, m21_* , m20_fit, m22_power, m12_realphotos |
 | the test suite (`tests/`) | 20 Topology modules, all inside the two lists above |
 | result files cited by the README / the reports | `m12_perf_baseline.json`, `m20_splits.json`, `m22_*.json`, `m23_*.json`, `m23_read_rows.jsonl`, `m23_read_pairs.jsonl`, MISSION14..23 `.md` |

@@ -1,0 +1,47 @@
+{
+ "ready": true,
+ "seconds": 0.4,
+ "steps": [
+  {
+   "files": 3360,
+   "ok": true,
+   "present": true,
+   "seconds": 0.0,
+   "skipped": true,
+   "step": "corpus"
+  },
+  {
+   "mb": 25.7,
+   "objects": 80,
+   "ok": true,
+   "present": true,
+   "seconds": 0.3,
+   "step": "records",
+   "views": [
+    "000-000",
+    "022-000",
+    "035-045",
+    "045-180"
+   ]
+  },
+  {
+   "adopted": {
+    "m22_assemble_fit_pairs.jsonl": 441,
+    "m23_read_pairs.jsonl": 621
+   },
+   "entries": 1062,
+   "matcher_digest": "b760e41f39dd9899",
+   "ok": true,
+   "seconds": 0.0,
+   "step": "pairs"
+  },
+  {
+   "cached_graphs": 453,
+   "note": "graphs are warmed lazily by the first pair that needs them",
+   "ok": true,
+   "seconds": 0.0,
+   "step": "graphs",
+   "warm": false
+  }
+ ]
+}

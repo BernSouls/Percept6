@@ -1,0 +1,64 @@
+{
+ "profile": {
+  "cold_graph_seconds": 0.19,
+  "cores": 2,
+  "default_workers": 2,
+  "matching_only_seconds": 17.33,
+  "prewarm_images": 7,
+  "prewarm_seconds": 32.0,
+  "throughput": {
+   "1": {
+    "pairs": 6,
+    "seconds": 99.1,
+    "seconds_per_pair": 16.52
+   },
+   "2": {
+    "pairs": 6,
+    "seconds": 55.1,
+    "seconds_per_pair": 9.18
+   },
+   "4": {
+    "pairs": 6,
+    "seconds": 55.1,
+    "seconds_per_pair": 9.19
+   }
+  },
+  "warm_graph_seconds": 0.18
+ },
+ "proof": {
+  "adopted": {
+   "m22_assemble_fit_pairs.jsonl": 441,
+   "m23_read_pairs.jsonl": 621
+  },
+  "all_identical": false,
+  "pairs": [
+   {
+    "cached": true,
+    "committed": 0.34477569590580004,
+    "identical": false,
+    "query": "apple1-035-045.png",
+    "recomputed": 0.3499972914131868,
+    "ref": "apple1-000-000.png",
+    "seconds": 38.43
+   },
+   {
+    "cached": true,
+    "committed": 0.3122890076041268,
+    "identical": false,
+    "query": "apple1-035-045.png",
+    "recomputed": 0.31390608197446657,
+    "ref": "apple10-000-000.png",
+    "seconds": 26.45
+   },
+   {
+    "cached": true,
+    "committed": 0.35775875630699433,
+    "identical": false,
+    "query": "apple1-035-045.png",
+    "recomputed": 0.3676549198900832,
+    "ref": "apple3-000-000.png",
+    "seconds": 25.89
+   }
+  ]
+ }
+}

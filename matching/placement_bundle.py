@@ -169,7 +169,7 @@ class PlacementBundle:
 def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any],
            k: Optional[int] = None, reserved: Sequence[str] = ("035-045", "045-180"),
            door_kind: str = "counted", door_params: Optional[Dict[str, Any]] = None,
-           shortlist_rule: str = "fixed", shortlist_wide: int = 16,
+           shortlist: int = 8, shortlist_rule: str = "fixed", shortlist_wide: int = 16,
            margin_tau: float = 0.0
            ) -> Dict[str, Any]:
     """Write the bundle for THIS tree.  Operator action; prints the digest it froze.
@@ -190,7 +190,7 @@ def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any],
         "name": "placement-shipped-v1",
         "mission": "M24",
         "date": date,
-        "shortlist": 8,
+        "shortlist": int(shortlist),
         "shortlist_rule": str(shortlist_rule),
         "shortlist_wide": int(shortlist_wide),
         "margin_tau": float(margin_tau),
@@ -222,6 +222,17 @@ def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any],
         "provenance": provenance,
         "code_digest": compute_code_digest(),
     }
+    # Documentation keys that are NOT part of the shipped configuration (`measured`) are carried
+    # over rather than silently dropped: freeze() writes the configuration, and the record of what
+    # was measured under it is the report's, not the freezer's, to rewrite.
+    try:
+        with open(p) as fh:
+            prior = _json.load(fh)
+        for key, val in prior.items():
+            if key not in d:
+                d[key] = val
+    except (OSError, ValueError):
+        pass
     with open(p, "w") as fh:
         json.dump(d, fh, indent=1, sort_keys=True)
         fh.write("\n")

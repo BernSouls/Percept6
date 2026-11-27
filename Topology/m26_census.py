@@ -80,8 +80,7 @@ def census(views: Sequence[str] = REC.VIEWS) -> Dict[str, Any]:
     n_cells = 0
     for o in REC.objects():
         for v in views:
-            p = REC.cache_path(o["key"], v)
-            if not os.path.exists(p):
+            if not REC.have(o["key"], v):
                 continue
             rec = REC.load(o["key"], v)
             rows = rec["places"]

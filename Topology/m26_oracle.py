@@ -221,7 +221,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     want = [s.strip() for s in a.splits.split(",") if s.strip()]
     objs = objects()
     gal = objs                                   # gallery: all 80 at the reference view
-    missing = [o["key"] for o in gal if not os.path.exists(REC.cache_path(o["key"], REF))]
+    missing = [o["key"] for o in gal if not REC.have(o["key"], REF)]
     if missing:
         print("missing %d reference records (e.g. %s) -- run m26_records.py --build"
               % (len(missing), missing[0]))
@@ -233,7 +233,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         qs = [o for o in objs if o["split"] in splits]
         for v in views + ([VIEW_SAT] if split_name == "selection" else []):
             key = "%s|%s" % (split_name, v)
-            miss = [o["key"] for o in qs if not os.path.exists(REC.cache_path(o["key"], v))]
+            miss = [o["key"] for o in qs if not REC.have(o["key"], v)]
             if miss:
                 print("%s: %d records missing -- skipped" % (key, len(miss)))
                 continue

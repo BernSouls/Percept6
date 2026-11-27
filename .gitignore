@@ -13,6 +13,9 @@ data/ETH-80-master/
 Topology/cache/
 *.pkl
 *.npz
+# ... except the Mission-27 place-record export, which is committed ON PURPOSE (25.7 MB, budget
+# 40 MB): it is what makes a fresh sandbox ready in 0.4 s instead of rebuilding records for 1,824 s.
+!data/placement_records_m27.npz
 Topology/results/placement/_graphcache/
 
 # M16: the candidate-level bank is 138 MB (GitHub refused it at the pre-receive

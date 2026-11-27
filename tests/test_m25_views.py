@@ -188,12 +188,14 @@ class TestPairCache(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             p = os.path.join(td, "pairs.jsonl")
             RC.append_pair_cache([{"q": "/q/x.png", "r": "/r/y.png", "w": 0.375, "B": 0.5}], p)
-            got = RC.load_pair_cache(p)
+            # legacy=False: the DIGEST guard is what this test measures; the committed pair files
+            # (M27 item 1a) are adopted separately and counted in RC.ADOPTED.
+            got = RC.load_pair_cache(p, legacy=False)
             self.assertEqual(len(got), 1)
             with open(p, "a") as fh:                        # a line from another matcher
                 fh.write(json.dumps({"d": "0000000000000000", "q": "z.png", "r": "w.png",
                                      "w": 0.375, "B": 0.9}) + "\n")
-            self.assertEqual(len(RC.load_pair_cache(p)), 1)
+            self.assertEqual(len(RC.load_pair_cache(p, legacy=False)), 1)
 
 
 class TestK1EquivalenceArtifact(unittest.TestCase):

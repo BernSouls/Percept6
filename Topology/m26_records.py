@@ -23,6 +23,8 @@ import sys
 import time
 from typing import Any, Dict, List, Sequence, Tuple
 
+import numpy as np
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path[:0] = [ROOT]
 
@@ -76,23 +78,65 @@ def _job(arg: Tuple[str, str, str]) -> Tuple[str, str, float]:
     return obj_key, view, float(rec.get("sec", 0.0))
 
 
+#: The committed compact export (Mission 27 item 1b).  When the per-cell pickles are absent -- a
+#: fresh sandbox -- the door reads this instead, so nothing has to be rebuilt to reproduce a
+#: shortlist.  ``std_all`` is not in it; a consumer that needs it must rebuild the record.
+NPZ = os.path.join(ROOT, "data", "placement_records_m27.npz")
+_NPZ: Dict[str, Any] = {}
+
+
+def npz_available() -> bool:
+    return os.path.exists(NPZ)
+
+
+def _npz() -> Any:
+    if "z" not in _NPZ:
+        _NPZ["z"] = np.load(NPZ, allow_pickle=True)
+    return _NPZ["z"]
+
+
+def npz_keys() -> Tuple[bool, set]:
+    """(complete, object keys) of the committed export; ``(False, set())`` when it is absent."""
+    if not npz_available():
+        return False, set()
+    if "keys" not in _NPZ:
+        z = _npz()
+        meta = json.loads(str(z["meta"]))
+        _NPZ["keys"] = {str(k) for k in z["keys"]} if meta.get("complete") else set()
+    return bool(_NPZ["keys"]), _NPZ["keys"]
+
+
+def have(obj_key: str, view: str) -> bool:
+    """Is this cell available in either form?  A PARTIAL export is not a source: only the pickles."""
+    if os.path.exists(cache_path(obj_key, view)):
+        return True
+    ok, keys = npz_keys()
+    return bool(ok and obj_key in keys)
+
+
 def load(obj_key: str, view: str) -> Dict[str, Any]:
-    with open(cache_path(obj_key, view), "rb") as fh:
-        return pickle.load(fh)
+    """The record: the fast per-cell pickle when it exists, else the committed npz export."""
+    p = cache_path(obj_key, view)
+    if os.path.exists(p):
+        with open(p, "rb") as fh:
+            return pickle.load(fh)
+    from matching import placement_records as PR
+    return PR._cell_from(_npz(), obj_key, view)
 
 
 def load_all(views: Sequence[str] = VIEWS) -> Dict[Tuple[str, str], Dict[str, Any]]:
     out: Dict[Tuple[str, str], Dict[str, Any]] = {}
     for o in objects():
         for v in views:
-            p = cache_path(o["key"], v)
-            if os.path.exists(p):
+            if have(o["key"], v):
                 out[(o["key"], v)] = load(o["key"], v)
     return out
 
 
-def build(views: Sequence[str] = VIEWS, workers: int = 2) -> Dict[str, Any]:
+def build(views: Sequence[str] = VIEWS, workers: int = 0) -> Dict[str, Any]:
     import multiprocessing as mp
+    from matching.placement_records import placed_workers
+    workers = int(workers) or placed_workers()
     t0 = time.time()
     jobs: List[Tuple[str, str, str]] = []
     for o in objects():
@@ -124,8 +168,7 @@ def report(views: Sequence[str] = VIEWS) -> Dict[str, Any]:
     total_sec = 0.0
     for o in objects():
         for v in views:
-            p = cache_path(o["key"], v)
-            if not os.path.exists(p):
+            if not have(o["key"], v):
                 continue
             r = load(o["key"], v)
             total_sec += float(r.get("sec", 0.0))
@@ -141,7 +184,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     ap.add_argument("--build", action="store_true")
     ap.add_argument("--report", action="store_true")
     ap.add_argument("--views", default=",".join(VIEWS))
-    ap.add_argument("--workers", type=int, default=2)
+    ap.add_argument("--workers", type=int, default=0)
     ap.add_argument("--out")
     a = ap.parse_args(list(argv) if argv is not None else None)
     views = [v.strip().lstrip("-") for v in a.views.split(",") if v.strip()]

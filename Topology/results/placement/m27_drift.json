@@ -1,0 +1,64 @@
+{
+ "max_abs_delta": 0.009896163583088868,
+ "mean_delta": 0.00405498895296405,
+ "orders_identical": 2,
+ "pairs": 65,
+ "prewarm_seconds": 239.8,
+ "queries": 5,
+ "rows": [
+  {
+   "max_abs_delta": 0.009896163583088868,
+   "mean_delta": 0.0051613615169961635,
+   "n": 14,
+   "new_winner": "apple4-000-000.png",
+   "old_winner": "apple4-000-000.png",
+   "order_identical": false,
+   "query": "apple1-035-045.png",
+   "top1_identical": true
+  },
+  {
+   "max_abs_delta": 0.006451447860024495,
+   "mean_delta": 0.002660055332608192,
+   "n": 13,
+   "new_winner": "apple10-000-000.png",
+   "old_winner": "apple10-000-000.png",
+   "order_identical": false,
+   "query": "apple10-035-045.png",
+   "top1_identical": true
+  },
+  {
+   "max_abs_delta": 0.008494509435908182,
+   "mean_delta": 0.004783892785013481,
+   "n": 13,
+   "new_winner": "apple3-000-000.png",
+   "old_winner": "apple3-000-000.png",
+   "order_identical": false,
+   "query": "apple3-035-045.png",
+   "top1_identical": true
+  },
+  {
+   "max_abs_delta": 0.006637738482761502,
+   "mean_delta": 0.0037626867026382313,
+   "n": 12,
+   "new_winner": "apple4-000-000.png",
+   "old_winner": "apple4-000-000.png",
+   "order_identical": true,
+   "query": "apple4-035-045.png",
+   "top1_identical": true
+  },
+  {
+   "max_abs_delta": 0.007408066786136924,
+   "mean_delta": 0.003906948427564185,
+   "n": 13,
+   "new_winner": "apple6-000-000.png",
+   "old_winner": "apple6-000-000.png",
+   "order_identical": true,
+   "query": "apple6-035-045.png",
+   "top1_identical": true
+  }
+ ],
+ "seconds": 673.9,
+ "seconds_per_pair": 10.37,
+ "top1_identical": 5,
+ "workers": 2
+}

@@ -1,0 +1,1020 @@
+{
+ "arms": {
+  "adaptive": {
+   "by_class": {
+    "apple": {
+     "ceiling": 0.7,
+     "n": 10,
+     "top1": 0.5
+    },
+    "car": {
+     "ceiling": 0.5,
+     "n": 10,
+     "top1": 0.1
+    },
+    "cow": {
+     "ceiling": 0.4,
+     "n": 10,
+     "top1": 0.3
+    },
+    "cup": {
+     "ceiling": 1.0,
+     "n": 10,
+     "top1": 0.1
+    },
+    "dog": {
+     "ceiling": 0.7,
+     "n": 10,
+     "top1": 0.3
+    },
+    "horse": {
+     "ceiling": 0.4,
+     "n": 10,
+     "top1": 0.1
+    },
+    "pear": {
+     "ceiling": 0.4,
+     "n": 10,
+     "top1": 0.1
+    },
+    "tomato": {
+     "ceiling": 0.8,
+     "n": 10,
+     "top1": 0.3
+    }
+   },
+   "ceiling": 0.6125,
+   "ci95": [
+    0.1375,
+    0.3125
+   ],
+   "hits": 18,
+   "lacking": [],
+   "n": 80,
+   "resamples": 10000,
+   "scored_objects": [
+    "apple/1",
+    "apple/10",
+    "apple/2",
+    "apple/3",
+    "apple/4",
+    "apple/5",
+    "apple/6",
+    "apple/7",
+    "apple/8",
+    "apple/9",
+    "car/1",
+    "car/10",
+    "car/2",
+    "car/3",
+    "car/4",
+    "car/5",
+    "car/6",
+    "car/7",
+    "car/8",
+    "car/9",
+    "cow/1",
+    "cow/10",
+    "cow/2",
+    "cow/3",
+    "cow/4",
+    "cow/5",
+    "cow/6",
+    "cow/7",
+    "cow/8",
+    "cow/9",
+    "cup/1",
+    "cup/10",
+    "cup/2",
+    "cup/3",
+    "cup/4",
+    "cup/5",
+    "cup/6",
+    "cup/7",
+    "cup/8",
+    "cup/9",
+    "dog/1",
+    "dog/10",
+    "dog/2",
+    "dog/3",
+    "dog/4",
+    "dog/5",
+    "dog/6",
+    "dog/7",
+    "dog/8",
+    "dog/9",
+    "horse/1",
+    "horse/10",
+    "horse/2",
+    "horse/3",
+    "horse/4",
+    "horse/5",
+    "horse/6",
+    "horse/7",
+    "horse/8",
+    "horse/9",
+    "pear/1",
+    "pear/10",
+    "pear/2",
+    "pear/3",
+    "pear/4",
+    "pear/5",
+    "pear/6",
+    "pear/7",
+    "pear/8",
+    "pear/9",
+    "tomato/1",
+    "tomato/10",
+    "tomato/2",
+    "tomato/3",
+    "tomato/4",
+    "tomato/5",
+    "tomato/6",
+    "tomato/7",
+    "tomato/8",
+    "tomato/9"
+   ],
+   "seed": 20261118,
+   "top1": 0.225
+  },
+  "s16": {
+   "by_class": {
+    "apple": {
+     "ceiling": 0.9,
+     "n": 10,
+     "top1": 0.7
+    },
+    "car": {
+     "ceiling": 0.6,
+     "n": 10,
+     "top1": 0.2
+    },
+    "cow": {
+     "ceiling": 0.4,
+     "n": 10,
+     "top1": 0.3
+    },
+    "cup": {
+     "ceiling": 1.0,
+     "n": 10,
+     "top1": 0.1
+    },
+    "dog": {
+     "ceiling": 0.7,
+     "n": 10,
+     "top1": 0.3
+    },
+    "horse": {
+     "ceiling": 0.6,
+     "n": 10,
+     "top1": 0.2
+    },
+    "pear": {
+     "ceiling": 0.5,
+     "n": 10,
+     "top1": 0.1
+    },
+    "tomato": {
+     "ceiling": 0.9,
+     "n": 10,
+     "top1": 0.3
+    }
+   },
+   "ceiling": 0.7,
+   "ci95": [
+    0.175,
+    0.375
+   ],
+   "hits": 22,
+   "lacking": [],
+   "n": 80,
+   "resamples": 10000,
+   "scored_objects": [
+    "apple/1",
+    "apple/10",
+    "apple/2",
+    "apple/3",
+    "apple/4",
+    "apple/5",
+    "apple/6",
+    "apple/7",
+    "apple/8",
+    "apple/9",
+    "car/1",
+    "car/10",
+    "car/2",
+    "car/3",
+    "car/4",
+    "car/5",
+    "car/6",
+    "car/7",
+    "car/8",
+    "car/9",
+    "cow/1",
+    "cow/10",
+    "cow/2",
+    "cow/3",
+    "cow/4",
+    "cow/5",
+    "cow/6",
+    "cow/7",
+    "cow/8",
+    "cow/9",
+    "cup/1",
+    "cup/10",
+    "cup/2",
+    "cup/3",
+    "cup/4",
+    "cup/5",
+    "cup/6",
+    "cup/7",
+    "cup/8",
+    "cup/9",
+    "dog/1",
+    "dog/10",
+    "dog/2",
+    "dog/3",
+    "dog/4",
+    "dog/5",
+    "dog/6",
+    "dog/7",
+    "dog/8",
+    "dog/9",
+    "horse/1",
+    "horse/10",
+    "horse/2",
+    "horse/3",
+    "horse/4",
+    "horse/5",
+    "horse/6",
+    "horse/7",
+    "horse/8",
+    "horse/9",
+    "pear/1",
+    "pear/10",
+    "pear/2",
+    "pear/3",
+    "pear/4",
+    "pear/5",
+    "pear/6",
+    "pear/7",
+    "pear/8",
+    "pear/9",
+    "tomato/1",
+    "tomato/10",
+    "tomato/2",
+    "tomato/3",
+    "tomato/4",
+    "tomato/5",
+    "tomato/6",
+    "tomato/7",
+    "tomato/8",
+    "tomato/9"
+   ],
+   "seed": 20261118,
+   "top1": 0.275
+  },
+  "s8": {
+   "by_class": {
+    "apple": {
+     "ceiling": 0.7,
+     "n": 10,
+     "top1": 0.5
+    },
+    "car": {
+     "ceiling": 0.4,
+     "n": 10,
+     "top1": 0.1
+    },
+    "cow": {
+     "ceiling": 0.3,
+     "n": 10,
+     "top1": 0.2
+    },
+    "cup": {
+     "ceiling": 1.0,
+     "n": 10,
+     "top1": 0.2
+    },
+    "dog": {
+     "ceiling": 0.5,
+     "n": 10,
+     "top1": 0.2
+    },
+    "horse": {
+     "ceiling": 0.3,
+     "n": 10,
+     "top1": 0.1
+    },
+    "pear": {
+     "ceiling": 0.4,
+     "n": 10,
+     "top1": 0.1
+    },
+    "tomato": {
+     "ceiling": 0.8,
+     "n": 10,
+     "top1": 0.5
+    }
+   },
+   "ceiling": 0.55,
+   "ci95": [
+    0.15,
+    0.3375
+   ],
+   "hits": 19,
+   "lacking": [],
+   "n": 80,
+   "resamples": 10000,
+   "scored_objects": [
+    "apple/1",
+    "apple/10",
+    "apple/2",
+    "apple/3",
+    "apple/4",
+    "apple/5",
+    "apple/6",
+    "apple/7",
+    "apple/8",
+    "apple/9",
+    "car/1",
+    "car/10",
+    "car/2",
+    "car/3",
+    "car/4",
+    "car/5",
+    "car/6",
+    "car/7",
+    "car/8",
+    "car/9",
+    "cow/1",
+    "cow/10",
+    "cow/2",
+    "cow/3",
+    "cow/4",
+    "cow/5",
+    "cow/6",
+    "cow/7",
+    "cow/8",
+    "cow/9",
+    "cup/1",
+    "cup/10",
+    "cup/2",
+    "cup/3",
+    "cup/4",
+    "cup/5",
+    "cup/6",
+    "cup/7",
+    "cup/8",
+    "cup/9",
+    "dog/1",
+    "dog/10",
+    "dog/2",
+    "dog/3",
+    "dog/4",
+    "dog/5",
+    "dog/6",
+    "dog/7",
+    "dog/8",
+    "dog/9",
+    "horse/1",
+    "horse/10",
+    "horse/2",
+    "horse/3",
+    "horse/4",
+    "horse/5",
+    "horse/6",
+    "horse/7",
+    "horse/8",
+    "horse/9",
+    "pear/1",
+    "pear/10",
+    "pear/2",
+    "pear/3",
+    "pear/4",
+    "pear/5",
+    "pear/6",
+    "pear/7",
+    "pear/8",
+    "pear/9",
+    "tomato/1",
+    "tomato/10",
+    "tomato/2",
+    "tomato/3",
+    "tomato/4",
+    "tomato/5",
+    "tomato/6",
+    "tomato/7",
+    "tomato/8",
+    "tomato/9"
+   ],
+   "seed": 20261118,
+   "top1": 0.2375
+  }
+ },
+ "cell": {
+  "chance_recall_s16": 0.2,
+  "chance_recall_s8": 0.1,
+  "chance_top1": 0.0125,
+  "gallery": 80,
+  "queries": 80,
+  "view": "035-045"
+ },
+ "comparisons": {
+  "CONFIRMATION|adaptive_vs_s8": {
+   "a": 0.175,
+   "b": 0.225,
+   "ci95": [
+    -0.125,
+    0.0
+   ],
+   "diff": -0.05,
+   "n": 40,
+   "p_bootstrap": 0.5959,
+   "resamples": 10000,
+   "seed": 20261118
+  },
+  "CONFIRMATION|s16_vs_s8": {
+   "a": 0.225,
+   "b": 0.225,
+   "ci95": [
+    -0.1,
+    0.1
+   ],
+   "diff": 0.0,
+   "n": 40,
+   "p_bootstrap": 1.0,
+   "resamples": 10000,
+   "seed": 20261118
+  },
+  "FIT|adaptive_vs_s8": {
+   "a": 0.275,
+   "b": 0.25,
+   "ci95": [
+    -0.05,
+    0.125
+   ],
+   "diff": 0.025,
+   "n": 40,
+   "p_bootstrap": 0.7851,
+   "resamples": 10000,
+   "seed": 20261118
+  },
+  "FIT|s16_vs_s8": {
+   "a": 0.325,
+   "b": 0.25,
+   "ci95": [
+    -0.025,
+    0.175
+   ],
+   "diff": 0.075,
+   "n": 40,
+   "p_bootstrap": 0.5828,
+   "resamples": 10000,
+   "seed": 20261118
+  }
+ },
+ "losses": {
+  "by_class": {
+   "apple": {
+    "different": 0,
+    "same": 2
+   },
+   "car": {
+    "different": 4,
+    "same": 0
+   },
+   "cow": {
+    "different": 1,
+    "same": 0
+   },
+   "cup": {
+    "different": 1,
+    "same": 8
+   },
+   "dog": {
+    "different": 1,
+    "same": 3
+   },
+   "horse": {
+    "different": 3,
+    "same": 1
+   },
+   "pear": {
+    "different": 1,
+    "same": 3
+   },
+   "tomato": {
+    "different": 1,
+    "same": 5
+   }
+  },
+  "different_class": 12,
+  "losses": 34,
+  "median_gap": -0.012384342594348507,
+  "median_same_class_in_shortlist": 5.0,
+  "rows": [
+   {
+    "cls": "apple",
+    "gap": -0.028391582761595924,
+    "object": "apple/1",
+    "same_class": true,
+    "same_class_in_shortlist": 8,
+    "truth_score": 0.3499972914131868,
+    "winner": "apple/4",
+    "winner_cls": "apple",
+    "winner_score": 0.37838887417478273
+   },
+   {
+    "cls": "apple",
+    "gap": -0.05811441520077826,
+    "object": "apple/7",
+    "same_class": true,
+    "same_class_in_shortlist": 7,
+    "truth_score": 0.3363601898721236,
+    "winner": "apple/8",
+    "winner_cls": "apple",
+    "winner_score": 0.3944746050729019
+   },
+   {
+    "cls": "car",
+    "gap": -0.007025578947230993,
+    "object": "car/10",
+    "same_class": false,
+    "same_class_in_shortlist": 1,
+    "truth_score": 0.33975890151482585,
+    "winner": "cow/1",
+    "winner_cls": "cow",
+    "winner_score": 0.34678448046205684
+   },
+   {
+    "cls": "car",
+    "gap": -0.00564268595708034,
+    "object": "car/3",
+    "same_class": false,
+    "same_class_in_shortlist": 3,
+    "truth_score": 0.31934245039974557,
+    "winner": "dog/7",
+    "winner_cls": "dog",
+    "winner_score": 0.3249851363568259
+   },
+   {
+    "cls": "car",
+    "gap": -0.01938748225869935,
+    "object": "car/7",
+    "same_class": false,
+    "same_class_in_shortlist": 2,
+    "truth_score": 0.3236564997033592,
+    "winner": "dog/10",
+    "winner_cls": "dog",
+    "winner_score": 0.34304398196205854
+   },
+   {
+    "cls": "car",
+    "gap": -0.016564670768148992,
+    "object": "car/9",
+    "same_class": false,
+    "same_class_in_shortlist": 1,
+    "truth_score": 0.31270561870419794,
+    "winner": "pear/3",
+    "winner_cls": "pear",
+    "winner_score": 0.32927028947234693
+   },
+   {
+    "cls": "cow",
+    "gap": -0.027984222043924145,
+    "object": "cow/5",
+    "same_class": false,
+    "same_class_in_shortlist": 3,
+    "truth_score": 0.3313086033001707,
+    "winner": "horse/1",
+    "winner_cls": "horse",
+    "winner_score": 0.35929282534409485
+   },
+   {
+    "cls": "cup",
+    "gap": -0.013691675481481369,
+    "object": "cup/1",
+    "same_class": true,
+    "same_class_in_shortlist": 9,
+    "truth_score": 0.4356620919494938,
+    "winner": "cup/2",
+    "winner_cls": "cup",
+    "winner_score": 0.44935376743097516
+   },
+   {
+    "cls": "cup",
+    "gap": -0.06789256608625954,
+    "object": "cup/10",
+    "same_class": true,
+    "same_class_in_shortlist": 8,
+    "truth_score": 0.3912322685867758,
+    "winner": "cup/2",
+    "winner_cls": "cup",
+    "winner_score": 0.45912483467303533
+   },
+   {
+    "cls": "cup",
+    "gap": -0.00960387389124251,
+    "object": "cup/2",
+    "same_class": true,
+    "same_class_in_shortlist": 8,
+    "truth_score": 0.43896340642732756,
+    "winner": "cup/4",
+    "winner_cls": "cup",
+    "winner_score": 0.44856728031857007
+   },
+   {
+    "cls": "cup",
+    "gap": -0.05211201787403408,
+    "object": "cup/3",
+    "same_class": true,
+    "same_class_in_shortlist": 8,
+    "truth_score": 0.4160583519280849,
+    "winner": "cup/2",
+    "winner_cls": "cup",
+    "winner_score": 0.46817036980211896
+   },
+   {
+    "cls": "cup",
+    "gap": -0.0037984644761115405,
+    "object": "cup/4",
+    "same_class": true,
+    "same_class_in_shortlist": 9,
+    "truth_score": 0.38900229497799127,
+    "winner": "cup/2",
+    "winner_cls": "cup",
+    "winner_score": 0.3928007594541028
+   },
+   {
+    "cls": "cup",
+    "gap": -0.058510751996291466,
+    "object": "cup/5",
+    "same_class": true,
+    "same_class_in_shortlist": 8,
+    "truth_score": 0.42099738788370883,
+    "winner": "cup/2",
+    "winner_cls": "cup",
+    "winner_score": 0.4795081398800003
+   },
+   {
+    "cls": "cup",
+    "gap": -0.007047246198514379,
+    "object": "cup/6",
+    "same_class": true,
+    "same_class_in_shortlist": 9,
+    "truth_score": 0.45223536560600147,
+    "winner": "cup/2",
+    "winner_cls": "cup",
+    "winner_score": 0.45928261180451585
+   },
+   {
+    "cls": "cup",
+    "gap": -0.061318877237464875,
+    "object": "cup/7",
+    "same_class": true,
+    "same_class_in_shortlist": 8,
+    "truth_score": 0.40792766022369015,
+    "winner": "cup/2",
+    "winner_cls": "cup",
+    "winner_score": 0.469246537461155
+   },
+   {
+    "cls": "cup",
+    "gap": -0.006683588731337453,
+    "object": "cup/8",
+    "same_class": false,
+    "same_class_in_shortlist": 2,
+    "truth_score": 0.35529113179233124,
+    "winner": "apple/6",
+    "winner_cls": "apple",
+    "winner_score": 0.3619747205236687
+   },
+   {
+    "cls": "dog",
+    "gap": -0.008782723371854817,
+    "object": "dog/4",
+    "same_class": false,
+    "same_class_in_shortlist": 4,
+    "truth_score": 0.3160874006457097,
+    "winner": "pear/3",
+    "winner_cls": "pear",
+    "winner_score": 0.32487012401756454
+   },
+   {
+    "cls": "dog",
+    "gap": -0.001457174903216174,
+    "object": "dog/6",
+    "same_class": true,
+    "same_class_in_shortlist": 3,
+    "truth_score": 0.340565725108688,
+    "winner": "dog/7",
+    "winner_cls": "dog",
+    "winner_score": 0.34202290001190416
+   },
+   {
+    "cls": "dog",
+    "gap": -0.021070905895668013,
+    "object": "dog/8",
+    "same_class": true,
+    "same_class_in_shortlist": 2,
+    "truth_score": 0.3424047964191208,
+    "winner": "dog/2",
+    "winner_cls": "dog",
+    "winner_score": 0.3634757023147888
+   },
+   {
+    "cls": "dog",
+    "gap": -0.011599658324125628,
+    "object": "dog/9",
+    "same_class": true,
+    "same_class_in_shortlist": 4,
+    "truth_score": 0.3356505439575612,
+    "winner": "dog/7",
+    "winner_cls": "dog",
+    "winner_score": 0.34725020228168685
+   },
+   {
+    "cls": "horse",
+    "gap": -0.0067836674839169,
+    "object": "horse/10",
+    "same_class": false,
+    "same_class_in_shortlist": 3,
+    "truth_score": 0.3246067999865806,
+    "winner": "pear/10",
+    "winner_cls": "pear",
+    "winner_score": 0.3313904674704975
+   },
+   {
+    "cls": "horse",
+    "gap": -0.005489019519420768,
+    "object": "horse/2",
+    "same_class": false,
+    "same_class_in_shortlist": 1,
+    "truth_score": 0.33605160065708956,
+    "winner": "pear/8",
+    "winner_cls": "pear",
+    "winner_score": 0.3415406201765103
+   },
+   {
+    "cls": "horse",
+    "gap": -0.006871881427496174,
+    "object": "horse/3",
+    "same_class": true,
+    "same_class_in_shortlist": 3,
+    "truth_score": 0.3364226753485943,
+    "winner": "horse/4",
+    "winner_cls": "horse",
+    "winner_score": 0.3432945567760905
+   },
+   {
+    "cls": "horse",
+    "gap": -0.006445414378754455,
+    "object": "horse/4",
+    "same_class": false,
+    "same_class_in_shortlist": 5,
+    "truth_score": 0.3653483146390424,
+    "winner": "cow/9",
+    "winner_cls": "cow",
+    "winner_score": 0.37179372901779684
+   },
+   {
+    "cls": "pear",
+    "gap": -0.00013501393680814822,
+    "object": "pear/1",
+    "same_class": true,
+    "same_class_in_shortlist": 6,
+    "truth_score": 0.34846764257917684,
+    "winner": "pear/3",
+    "winner_cls": "pear",
+    "winner_score": 0.348602656515985
+   },
+   {
+    "cls": "pear",
+    "gap": -0.06614299463035139,
+    "object": "pear/2",
+    "same_class": true,
+    "same_class_in_shortlist": 5,
+    "truth_score": 0.35685046341618337,
+    "winner": "pear/10",
+    "winner_cls": "pear",
+    "winner_score": 0.42299345804653476
+   },
+   {
+    "cls": "pear",
+    "gap": -0.06559069455384225,
+    "object": "pear/6",
+    "same_class": false,
+    "same_class_in_shortlist": 2,
+    "truth_score": 0.3680089238572854,
+    "winner": "cup/2",
+    "winner_cls": "cup",
+    "winner_score": 0.43359961841112765
+   },
+   {
+    "cls": "pear",
+    "gap": -0.0063547835939608555,
+    "object": "pear/9",
+    "same_class": true,
+    "same_class_in_shortlist": 5,
+    "truth_score": 0.3752466957872632,
+    "winner": "pear/8",
+    "winner_cls": "pear",
+    "winner_score": 0.3816014793812241
+   },
+   {
+    "cls": "tomato",
+    "gap": -0.0008592599277711388,
+    "object": "tomato/1",
+    "same_class": true,
+    "same_class_in_shortlist": 9,
+    "truth_score": 0.3524889663454288,
+    "winner": "tomato/7",
+    "winner_cls": "tomato",
+    "winner_score": 0.35334822627319995
+   },
+   {
+    "cls": "tomato",
+    "gap": -0.00010043154277350475,
+    "object": "tomato/10",
+    "same_class": true,
+    "same_class_in_shortlist": 9,
+    "truth_score": 0.3666271965812248,
+    "winner": "tomato/7",
+    "winner_cls": "tomato",
+    "winner_score": 0.3667276281239983
+   },
+   {
+    "cls": "tomato",
+    "gap": -0.013169026864571387,
+    "object": "tomato/2",
+    "same_class": true,
+    "same_class_in_shortlist": 4,
+    "truth_score": 0.3585827605220907,
+    "winner": "tomato/3",
+    "winner_cls": "tomato",
+    "winner_score": 0.3717517873866621
+   },
+   {
+    "cls": "tomato",
+    "gap": -0.01802376883831397,
+    "object": "tomato/4",
+    "same_class": true,
+    "same_class_in_shortlist": 9,
+    "truth_score": 0.32620020762591584,
+    "winner": "tomato/3",
+    "winner_cls": "tomato",
+    "winner_score": 0.3442239764642298
+   },
+   {
+    "cls": "tomato",
+    "gap": -0.03649049144877464,
+    "object": "tomato/8",
+    "same_class": true,
+    "same_class_in_shortlist": 10,
+    "truth_score": 0.3276966250521377,
+    "winner": "tomato/3",
+    "winner_cls": "tomato",
+    "winner_score": 0.36418711650091234
+   },
+   {
+    "cls": "tomato",
+    "gap": -0.02198945247814621,
+    "object": "tomato/9",
+    "same_class": false,
+    "same_class_in_shortlist": 9,
+    "truth_score": 0.3565163062015401,
+    "winner": "apple/3",
+    "winner_cls": "apple",
+    "winner_score": 0.37850575867968633
+   }
+  ],
+  "same_class": 22,
+  "scored_queries": 80,
+  "truth_reachable": 56
+ },
+ "pairs": {
+  "asked": 1280,
+  "cached": 1280,
+  "missing": 0
+ },
+ "rule": {
+  "adaptive_in_bundle": false,
+  "adaptive_ships": false,
+  "conf_gain_s16": 0.0,
+  "fit_adaptive_minus_s16": -0.04999999999999999,
+  "fit_adaptive_minus_s8": 0.025000000000000022,
+  "fit_gain_s16": 0.07500000000000001,
+  "pairs_adaptive_sum": 992,
+  "queries_widened": 44,
+  "s16_ships": true,
+  "shipped": "s16"
+ },
+ "splits": {
+  "ALL": {
+   "adaptive": {
+    "ci95": [
+     0.1375,
+     0.3125
+    ],
+    "hits": 18,
+    "n": 80,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 0.225
+   },
+   "s16": {
+    "ci95": [
+     0.175,
+     0.375
+    ],
+    "hits": 22,
+    "n": 80,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 0.275
+   },
+   "s8": {
+    "ci95": [
+     0.15,
+     0.3375
+    ],
+    "hits": 19,
+    "n": 80,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 0.2375
+   }
+  },
+  "CONFIRMATION": {
+   "adaptive": {
+    "ci95": [
+     0.075,
+     0.3
+    ],
+    "hits": 7,
+    "n": 40,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 0.175
+   },
+   "s16": {
+    "ci95": [
+     0.1,
+     0.375
+    ],
+    "hits": 9,
+    "n": 40,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 0.225
+   },
+   "s8": {
+    "ci95": [
+     0.1,
+     0.35
+    ],
+    "hits": 9,
+    "n": 40,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 0.225
+   }
+  },
+  "FIT": {
+   "adaptive": {
+    "ci95": [
+     0.15,
+     0.425
+    ],
+    "hits": 11,
+    "n": 40,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 0.275
+   },
+   "s16": {
+    "ci95": [
+     0.175,
+     0.475
+    ],
+    "hits": 13,
+    "n": 40,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 0.325
+   },
+   "s8": {
+    "ci95": [
+     0.125,
+     0.4
+    ],
+    "hits": 10,
+    "n": 40,
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": 0.25
+   }
+  }
+ }
+}

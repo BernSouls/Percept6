@@ -14,8 +14,8 @@ ranking of the gallery.  Two layers, the first cheap and approximate, the second
 ```
 image -> graph (perception pipeline) -> PLACES  (nameable parts with a configuration and a frame)
                                           |
-   CONTENT-COUNT DOOR (cheap, no matching) -> shortlist of S = 8 objects, widened to 16 when the
-       door's own top-8 margin is not clear (Mission 26)
+   CONTENT-COUNT DOOR (cheap, no matching) -> shortlist of S = 16 objects (Mission 27: flat 16,
+       chosen on FIT and confirmed; the adaptive widening of Mission 26 is no longer the default)
        an object may be stored under several views (M25: k = 1 by default); its score is the MAX
        over its views, so a stored view that suits the query is what counts.
        every query place probes a pooled index of gallery places by content key, keeps its
@@ -25,7 +25,7 @@ image -> graph (perception pipeline) -> PLACES  (nameable parts with a configura
    + APPEARANCE: a fixed 4x4x4 colour + 12-bin gradient histogram, cosine.
    -> RRF (k = 60, no weight) fuses the two lists.
                                           |
-   MATCHER (Mission 19, unchanged)         ->  re-orders the 8 by the shipped pair score.
+   MATCHER (Mission 19, unchanged)         ->  re-orders the 16 by the shipped pair score.
                                           |
                                      ranking of the whole gallery
 ```
@@ -124,6 +124,29 @@ digest test both name them -- see `archive/ARCHIVE_INDEX.md`.
 | ceiling at adaptive S (M26), FIT cells | 0.613 (49/80) | 80 | 0.100 |
 | ceiling at fixed S = 16 (M26), FIT cells | 0.688 (55/80) | 80 | 0.100 |
 | assembled top-1, view `-045-180`, one stored view | 0.225 (18/80) | 80 | 0.0125 |
+| **assembled top-1, shipped (flat S = 16), view `-035-045`, full 80-object read (M27)** | **0.275 (22/80)**, CI [0.175, 0.375] | 80 | 0.0125 |
+| assembled top-1, flat S = 8, same read (M27) | 0.237 (19/80), CI [0.150, 0.338] | 80 | 0.0125 |
+| assembled top-1, adaptive S (M26 rule), same read (M27) | 0.225 (18/80), CI [0.138, 0.312] | 80 | 0.0125 |
+| door recall@16, same read (M27) | 0.700 (56/80) | 80 | 0.200 |
+| door recall@8, same read (M27) | 0.550 (44/80) | 80 | 0.100 |
+| graded door, **narrow** constitution, tau 0.5 and 0.7 (M27) | 0.275 / 0.325 (11/40, 13/40) | 40 | 0.100 |
+| relaxed partition (exact OR theta-neighbour) alone (M27) | 0.350 (14/40) | 40 | 0.100 |
+| RRF(relaxed, shipped door) (M27) | 0.475 (19/40) | 40 | 0.100 |
+
+**Settling the shortlist and the door (M27, `MISSION27_REPORT.md`).**  The full read runs all 80
+queries with a flat 16-candidate shortlist and scores all **1,280 pairs** in one environment.
+**Flat S = 16 ships**: FIT top-1 0.325 against S = 8's 0.250 (**+0.075**, the rule's threshold) and
+DEV + FRESH 0.225 against 0.225 (**+0.000**, the rule's floor), for an all-80 number of **0.275
+(22/80)** against S = 8's 0.237.  The **adaptive rule of M26 is demoted**: +0.025 over S = 8 on FIT
+but -0.050 against S = 16 there and -0.050 on the confirmation objects; its code stays behind
+`shortlist_rule` and the bundle now ships `shortlist = 16, shortlist_rule = "fixed"`.  The **door is
+frozen as the counted door**: the graded kernel in its registered NARROW constitution (sigma_theta =
+1 bin) is *worse* than the wide one (0.275/0.325 against 0.325 on FIT), and relaxing the partition to
+theta-neighbours at weight 0.5 does not beat the shipped door either (0.350 alone, 0.475 fused,
+against 0.550).  Three sweeps of the door's geometry have now failed; the descriptor, not the door,
+is what is left.  **Where the matcher loses:** of 56 queries whose shortlist holds the truth, it
+returns it first 22 times, loses **22 to another instance of the same class** and 12 to a different
+class (cups 8 of 9, tomatoes 5 of 6; cars 4 of 4 lose to other classes).
 
 **The confirmatory read** (`MISSION23_REPORT.md` §5): on view `-035-045`, which no earlier mission
 had read, the assembled system beats the deployed one by **+0.175 (20 against 6 of 80, 95 % CI
@@ -141,11 +164,14 @@ over ~500 places, a query place covers **77 of the 80 objects**, so the distinct
 the same for everyone and the door degenerates; the graded signature compared one place at a time
 is **exactly chance (0.100, 4/40)**, while the exact key's hard partition is what makes the counted
 door work at all.  The union of nine cheap channels reaches 0.825 (33/40) on `-035-045` but 0.775
-(62/80) over the two selection views, and no fixed RRF pair collects it.  What ships instead is
+(62/80) over the two selection views, and no fixed RRF pair collects it.  What M26 shipped was
 **adaptive S**: widen the shortlist to 16 when the door's top-8 margin is unclear (the FIT median,
 0.0072), which raises the ceiling from 0.550 to **0.613** (49/80) on FIT and 0.512 to 0.575 on the
-confirmation objects, for 12 pairs per query instead of 8; a flat S = 16 would reach 0.688/0.625 at
-16 pairs, and the report says so.
+confirmation objects, for 12 pairs per query instead of 8; a flat S = 16 reaches 0.688/0.625 at 16
+pairs, and the report said so.  **Mission 27 settled it the other way:** flat S = 16 ships and the
+adaptive rule is demoted to a flag (see the M27 paragraph above).  Two corrections to this
+paragraph, recorded in `MISSION26_REPORT.md`'s addendum: the graded-door result holds for the
+**wide** constitution only, and the "p = 0.02 against the door's own ceiling" row is withdrawn.
 
 **Does storing more views raise the ceiling?  (M25, `MISSION25_REPORT.md`).**  No.  Storing four
 views per object instead of one -- chosen by a score-free rule, covering radius 65.5 deg instead of
@@ -184,14 +210,18 @@ is exactly why the counted door ships.
 ## 6. What it does and does not do
 
 **Does:** find a known object from another view inside a gallery of 24-80 known objects -- top-1
-**0.250** on the hardest case measured (an 80-item gallery, a view never read, 20/80) and
+**0.275 (22/80)** on the hardest case measured (an 80-item gallery, a view never read, flat S = 16,
+M27) and
 0.550-0.750 on the FIT/DEV galleries, with the right object inside 8 candidates 0.550-0.900 of the
 time, at 0.015 s per candidate for the door against 0.33 s per pair for the
 matcher's own first stage.  It also says **which class** a new instance belongs to: with the
 query's own object removed from the gallery, the class is the top-scoring one 0.500 of the time
 (20/40) against a chance of 0.103.
 
-**Does not:** recognise a *new* instance of a class reliably -- 0.500 against 0.103 chance is real
+**Does not:** lose where retrieval could help.  Of the 34 losses the matcher makes inside a
+correct shortlist, **22 are to another instance of the same class** and 12 to a different class --
+the retrieval side has already done its job, and what remains is within-class identity (two cups).
+It also does not recognise a *new* instance of a class reliably -- 0.500 against 0.103 chance is real
 but half the time it is wrong, and the ceiling is not the class score: the door's 8 candidates
 contain, on average, only 46 % of the query's class instances.  Its confirmatory evidence is **one unseen view**, not a set of unseen objects -- every object in
 the read helped choose the door.  It does not recover pose: the transform between two views of an
@@ -204,6 +234,11 @@ number**: FIT and DEV chose the door, and every object is in Mission 23's view-h
 
 | file | what it holds |
 |---|---|
+| `MISSION27_PREREGISTRATION.md` | the rules of M27, written before its numbers: the S rule, the estimator and seed, the door thresholds |
+| `MISSION27_REPORT.md` | M27: the environment (pair cache, records npz, worker profile, bootstrap), the S read, the loss table, the two door variants, the ship and the closing |
+| `m27_read.json` | the full read: 1,280 pairs, three arms, per-class rates, the rule applied, item 3's rows |
+| `m27_door.json` | the four door variants with the registered verdict |
+| `m27_profile.json`, `m27_drift.json`, `m27_bootstrap.json` | pair cost and worker scaling, the committed-score drift, the environment restore |
 | `MISSION23_REPORT.md` | the current mission: T2 done properly, the view question closed, the read |
 | `MISSION23_PREREGISTRATION.md` | the read's design, its MDE, and the amendment recorded before it ran |
 | `MISSION22_REPORT.md` | the front door and the assembler; §10 is Mission 23's correction of two of its claims |

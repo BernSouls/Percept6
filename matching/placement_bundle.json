@@ -1,119 +1,186 @@
 {
-  "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
-  "code_digest": "9bf67c3b31c2b58f288025a71dd06d0997c0e1bd2f7c0ea42c369c3035532b4e",
-  "date": "2026-11-27",
-  "door": {
-    "kind": "counted",
-    "n_hits": 8,
-    "note": "the counted door: each query place counts its n_hits nearest pool places by the frozen configuration ruler, one vote per object; the object score is count / sqrt(n_query_places * n_object_places)",
-    "params": {}
+ "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
+ "code_digest": "3bb069122845f7e339652c330ab77ec92de4da259c0c79459a305abb6c4ae77b",
+ "date": "2026-11-27",
+ "door": {
+  "kind": "counted",
+  "n_hits": 8,
+  "note": "the counted door: each query place counts its n_hits nearest pool places by the frozen configuration ruler, one vote per object; the object score is count / sqrt(n_query_places * n_object_places)",
+  "params": {}
+ },
+ "frontend": {
+  "extra_pre": {
+   "KP_GRADED_POPULATION": true
   },
-  "frontend": {
-    "extra_pre": {
-      "KP_GRADED_POPULATION": true
-    },
-    "keypoint_class": "wide",
-    "note": "the recipe is the graph cache's identity; it is the M16/M20 recipe the M19 matcher record was measured under",
-    "params": "matching/placement_prefilter_params.json",
-    "recipe": {
-      "FE_KEYPOINTS": true,
-      "FE_PLACE_LAYER": true,
-      "FE_SUBPIXEL_GABOR_ANCHOR": true,
-      "FE_SUBPIXEL_PEAK_POS": true,
-      "KP_GRADED_SIMILARITY": true,
-      "PLACEMENT_FRAME_FALLBACK": "none",
-      "PLACEMENT_FRAME_KEYPOINT": true,
-      "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
-      "PLACEMENT_M15_PLACES": true
-    }
-  },
-  "margin_tau": 0.007168,
-  "matcher": {
-    "bundle": "matching/placement_score_params.json",
-    "entry": "matching.joint_mcs.joint_mcs -> score_shipped",
-    "flags": {
-      "PLACEMENT_MATCHER_ENABLED": true,
-      "PLACEMENT_MATCHER_STRICT": true,
-      "PLACEMENT_SCORE_EVIDENCE": true
-    },
-    "weight": 0.375
-  },
-  "mission": "M24",
-  "name": "placement-shipped-v1",
-  "provenance": {
-    "entry_point": "matching/placement_recognise.py",
-    "measured_by": "MISSION23_REPORT.md section 5 (the read); MISSION25_REPORT.md section 4 (the k = 1 vs k = 4 read)",
-    "note": "frozen from the configuration Mission 25 shipped"
-  },
-  "references": {
-    "covering_deg": 90.0,
-    "grid_views": 41,
-    "k": 1,
-    "min_spacing_deg": 22.0,
-    "nearest_stored": {
-      "035-045": {
-        "deg": 35.0,
-        "nearest": "000-000"
-      },
-      "045-180": {
-        "deg": 45.0,
-        "nearest": "000-000"
-      }
-    },
-    "reserved": [
-      "035-045",
-      "045-180"
-    ],
-    "rule": "kcenter-4-pinned-000-000-v1: {000-000} union the 3-subset of the non-reserved grid views that minimises the covering radius over all 41 views (exhaustive, ties by label) -- see matching/placement_views.py",
-    "views": [
-      "000-000"
-    ]
-  },
-  "rerank": "plain",
-  "rrf_k": 60,
-  "shortlist": 8,
-  "shortlist_rule": "adaptive",
-  "shortlist_wide": 16,
-  "measured": {
-    "M25": {
-      "file": "Topology/results/placement/m25_read.json",
-      "door_recall_s": {
-        "k1": 0.55,
-        "k4": 0.575,
-        "diff": 0.025,
-        "ci95": [
-          -0.1,
-          0.15
-        ],
-        "n": 80
-      },
-      "decision": "stored views stay at k = 1"
-    },
-    "M26": {
-      "file": "Topology/results/placement/m26_oracle.json",
-      "graded_door_recall_s": {
-        "value": 0.325,
-        "n": 40,
-        "chance": 0.1
-      },
-      "counted_door_recall_s": {
-        "value": 0.55,
-        "n": 40,
-        "chance": 0.1
-      },
-      "union_of_cheap_channels": {
-        "value": 0.825,
-        "n": 40,
-        "note": "view -035-045; 0.775 over both selection views"
-      },
-      "ceiling": {
-        "S8": 0.55,
-        "adaptive": 0.613,
-        "S16": 0.688,
-        "n": 80
-      },
-      "decision": "the door stays counted; the shortlist ships adaptive (S = 8 or 16)"
-    },
-    "note": "documentation only: this block is not part of code_digest and freeze() overwrites it"
+  "keypoint_class": "wide",
+  "note": "the recipe is the graph cache's identity; it is the M16/M20 recipe the M19 matcher record was measured under",
+  "params": "matching/placement_prefilter_params.json",
+  "recipe": {
+   "FE_KEYPOINTS": true,
+   "FE_PLACE_LAYER": true,
+   "FE_SUBPIXEL_GABOR_ANCHOR": true,
+   "FE_SUBPIXEL_PEAK_POS": true,
+   "KP_GRADED_SIMILARITY": true,
+   "PLACEMENT_FRAME_FALLBACK": "none",
+   "PLACEMENT_FRAME_KEYPOINT": true,
+   "PLACEMENT_FRAME_KEYPOINT_SIGMA": "largest",
+   "PLACEMENT_M15_PLACES": true
   }
+ },
+ "margin_tau": 0.0,
+ "matcher": {
+  "bundle": "matching/placement_score_params.json",
+  "entry": "matching.joint_mcs.joint_mcs -> score_shipped",
+  "flags": {
+   "PLACEMENT_MATCHER_ENABLED": true,
+   "PLACEMENT_MATCHER_STRICT": true,
+   "PLACEMENT_SCORE_EVIDENCE": true
+  },
+  "weight": 0.375
+ },
+ "measured": {
+  "M25": {
+   "decision": "stored views stay at k = 1",
+   "door_recall_s": {
+    "ci95": [
+     -0.1,
+     0.15
+    ],
+    "diff": 0.025,
+    "k1": 0.55,
+    "k4": 0.575,
+    "n": 80
+   },
+   "file": "Topology/results/placement/m25_read.json"
+  },
+  "M26": {
+   "ceiling": {
+    "S16": 0.688,
+    "S8": 0.55,
+    "adaptive": 0.613,
+    "n": 80
+   },
+   "counted_door_recall_s": {
+    "chance": 0.1,
+    "n": 40,
+    "value": 0.55
+   },
+   "decision": "the door stays counted; the shortlist ships adaptive (S = 8 or 16)",
+   "file": "Topology/results/placement/m26_oracle.json",
+   "graded_door_recall_s": {
+    "chance": 0.1,
+    "n": 40,
+    "value": 0.325
+   },
+   "union_of_cheap_channels": {
+    "n": 40,
+    "note": "view -035-045; 0.775 over both selection views",
+    "value": 0.825
+   }
+  },
+  "M27": {
+   "adaptive_shortlist": {
+    "confirmation_minus_s8": -0.05,
+    "decision": "removed from the bundle default; code stays behind the flag",
+    "fit_minus_s16": -0.05,
+    "fit_minus_s8": 0.025
+   },
+   "assembled_top1": {
+    "S16": 0.275,
+    "S8": 0.237,
+    "adaptive": 0.225,
+    "chance": 0.0125,
+    "ci95_S16": [
+     0.175,
+     0.375
+    ],
+    "n": 80,
+    "note": "view -035-045, 80-object gallery, 1280 pairs scored in this env"
+   },
+   "door_variants": {
+    "decision": "door frozen as the counted door; no further door work",
+    "narrow_tau0.5_fit_gain": [
+     -0.275,
+     -0.15
+    ],
+    "narrow_tau0.7_fit_gain": [
+     -0.225,
+     -0.175
+    ],
+    "relaxed_fit_gain": [
+     -0.2,
+     -0.075
+    ],
+    "rrf_relaxed_fit_gain": [
+     -0.075,
+     0.025
+    ]
+   },
+   "environment": {
+    "bootstrap_seconds": 0.4,
+    "committed_pair_drift": "+0.004 mean, max +0.010; 0 same-env rows",
+    "decision": "pair cache keys on basenames AND the pipeline digest (env)",
+    "pair_seconds_at_2_workers": 10.4,
+    "records_equiv_cells": "80/80 shortlists identical",
+    "records_npz_mb": 25.7
+   },
+   "files": [
+    "Topology/results/placement/m27_read.json",
+    "Topology/results/placement/m27_door.json",
+    "Topology/results/placement/m27_profile.json",
+    "Topology/results/placement/m27_bootstrap.json"
+   ],
+   "losses": {
+    "different_class": 12,
+    "median_gap": -0.0124,
+    "note": "item 3: the matcher's losses are dominated by same-class instances",
+    "same_class": 22,
+    "truth_first": 22,
+    "truth_reachable": 56
+   },
+   "shortlist_decision": {
+    "confirmation_gain": 0.0,
+    "fit_gain": 0.075,
+    "rule": "FIT gain >= +0.05 and confirmation gain >= 0",
+    "shipped": "flat S = 16"
+   }
+  },
+  "note": "documentation only: this block is not part of code_digest and freeze() overwrites it"
+ },
+ "mission": "M24",
+ "name": "placement-shipped-v1",
+ "provenance": {
+  "entry_point": "matching/placement_recognise.py",
+  "measured_by": "MISSION23_REPORT.md section 5 (the read); MISSION25_REPORT.md section 4 (k = 1 vs k = 4); MISSION27_REPORT.md sections 2-4 (S, losses, door)",
+  "note": "frozen from the configuration Mission 27 shipped: flat S = 16, counted door, k = 1"
+ },
+ "references": {
+  "covering_deg": 90.0,
+  "grid_views": 41,
+  "k": 1,
+  "min_spacing_deg": 22.0,
+  "nearest_stored": {
+   "035-045": {
+    "deg": 35.0,
+    "nearest": "000-000"
+   },
+   "045-180": {
+    "deg": 45.0,
+    "nearest": "000-000"
+   }
+  },
+  "reserved": [
+   "035-045",
+   "045-180"
+  ],
+  "rule": "kcenter-4-pinned-000-000-v1: {000-000} union the 3-subset of the non-reserved grid views that minimises the covering radius over all 41 views (exhaustive, ties by label) -- see matching/placement_views.py",
+  "views": [
+   "000-000"
+  ]
+ },
+ "rerank": "plain",
+ "rrf_k": 60,
+ "shortlist": 16,
+ "shortlist_rule": "fixed",
+ "shortlist_wide": 16
 }

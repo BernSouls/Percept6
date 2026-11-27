@@ -426,6 +426,68 @@ def count_scores(index: PlaceIndex, query_entries: Sequence[Dict[str, Any]],
     return out, diag
 
 
+def relaxed_scores(index: PlaceIndex, query_entries: Sequence[Dict[str, Any]],
+                   n_hits: int = 8, neighbour_weight: float = 0.5,
+                   theta_bins: int = 12) -> Tuple[np.ndarray, List[Dict[str, Any]]]:
+    """THE RELAXED PARTITION (Mission 27, item 4b) -- the counted door with a wider equality.
+
+    A query place's key is its quantised tuple, and two places must match on EVERY slot.  The
+    theta slot is the one that a rotation moves, and the counted door treats a one-bin difference
+    exactly like a twelve-bin one: a miss.  Here a pool place counts as
+
+        exact key                        weight 1.0
+        theta bin +-1 (cyclic mod 12)    weight `neighbour_weight` (0.5)
+
+    and the rest of the counted door is unchanged: within a group the pool places are ranked by the
+    frozen ruler's configuration distance, the best `n_hits` of them may count, an object earns the
+    BEST weight any of its places earned from that query place, weights are summed over the query's
+    places and divided by ``sqrt(used * n_places[object])`` -- the same normalisation, so the two
+    scores are on the same scale and RRF can fuse them without a weight.
+
+    It is a PARTITION variant, not a new mechanism: no new descriptor, no fitted constant, and the
+    same pooled index (a dict probe per group, no pairwise loop).
+    """
+    n_obj = len(index.obj_keys)
+    out = np.zeros((len(query_entries), n_obj), dtype=np.float64)
+    diag: List[Dict[str, Any]] = []
+    for i, qe in enumerate(query_entries):
+        used = 0
+        acc: Dict[int, float] = {}
+        for q in place_rows(qe):
+            if not _live(q):
+                continue
+            key = index._keyfn(q)
+            lens = key[0]
+            qt = tuple(float(x) for x in key[1])
+            groups: List[Tuple[float, List[Any]]] = []
+            pool = index.by_key.get(key)
+            if pool:
+                groups.append((1.0, pool))
+            if qt:
+                t = int(round(qt[0])) % int(theta_bins)
+                for dt in (-1, 1):
+                    nb = (lens, (float((t + dt) % int(theta_bins)),) + qt[1:])
+                    pool = index.by_key.get(nb)
+                    if pool:
+                        groups.append((float(neighbour_weight), pool))
+            if not groups:
+                continue
+            used += 1
+            best: Dict[int, float] = {}
+            for wgt, pool in groups:
+                ranked = sorted(pool, key=lambda tt: (cfg_distance(q, tt[1]), tt[0], tt[1]["n"]))
+                for (obj, r) in ranked[:n_hits]:
+                    if _live(r) and best.get(obj, 0.0) < wgt:
+                        best[obj] = wgt
+            for obj, wgt in best.items():
+                acc[obj] = acc.get(obj, 0.0) + wgt
+        for obj, c in acc.items():
+            out[i, obj] = float(c) / math.sqrt(max(1, used) * max(1, index.n_places[obj]))
+        diag.append({"places_used": used, "objects_scored": len(acc),
+                     "votes": int(round(sum(acc.values())))})
+    return out, diag
+
+
 # --------------------------------------------------------------------------- fusion
 def rank_fuse(a: np.ndarray, b: np.ndarray, k: int = RRF_K) -> np.ndarray:
     """Reciprocal rank fusion of two (n_query, n_object) score matrices.

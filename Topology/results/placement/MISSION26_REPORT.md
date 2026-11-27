@@ -285,3 +285,47 @@ place descriptor is not discriminative at this resolution -- what makes the exac
 it is a *partition*, not that equality is a good similarity.  The number that justifies the lever
 is that gap: 0.100 (graded, place-to-place) against 0.350 (the same places, hard-partitioned) --
 the descriptor needs enough concentration that a graded comparison can substitute for a bucket.
+
+---
+
+## Addendum (Mission 27, item 5)
+
+This is an addendum, not a rewrite: the sections above stand as written, and three things in them
+are corrected here because they were wrong when measured, not because the measurements changed.
+
+**1. The row "paired against the door's own ceiling, p = 0.02" is WITHDRAWN.**  The comparison was
+the assembled top-1 against the door's recall@S *on the same 17 queries*, and on that subset the
+door's recall is 1.000 -- every one of the 17 shortlists contains the truth.  A paired test against
+a column that is constant by construction tests nothing about the matcher: the difference is just
+`top1 - 1` and its p-value describes how often the matcher wins with 17 coin flips.  The measurement
+behind the row stands, as a count and not as a test: on the 17 fully scored queries the door's
+shortlist held the truth 17 times and the matcher returned it 6 times (0.353).  No p-value is
+attached to that.  This is the same defect the mission's standing rule names -- never compare
+against a constant -- and the shipped estimate in section 7 (0.353, CI [0.118, 0.588], against the
+recorded 0.250 as an interval difference) is unaffected.
+
+**2. "The graded door fails" holds for the WIDE constitution only.**  Every graded-door number in
+section 6 was measured with the kernel `core/keypoint_classes.py` registers as `wide`: theta range
+12.0 bins, i.e. sigma_theta = 4 bins = 60 deg.  The SAME file registers a `narrow` constitution
+(theta range 3.0 bins, sigma_theta = 1 bin = 15 deg), and it was never measured.  So the correct
+statement is that *this* kernel, with a 60-degree theta tolerance that makes a rotation almost free,
+fails; the registered narrow kernel is tested in Mission 27 item 4a, and the relaxed partition
+(item 4b) was never tried at all.  What does not change is the diagnosis of *why* the wide kernel
+loses: a query place covers 77 of 80 objects (`df`), so idf is inert and the vote is nearly uniform.
+
+**3. The 992 pairs were mostly already cached: 621 of them.**  Section 7 says "pairs already cached
+0 (this sandbox's pair cache was empty)" and then bought 209 pairs at 15.9 s each.  The sandbox's
+pair cache was empty, but the REPOSITORY was not: `Topology/results/placement/m23_read_pairs.jsonl`
+already held 621 scored pairs of exactly these queries against exactly these references, from M23's
+read of the same gallery.  They were invisible because the cache key was the absolute path of both
+images, and only ~352 pairs (the ranks 9-16 that the widened shortlist reaches) were actually new.
+Two defects followed from one root cause: ~53 minutes were spent re-buying 621 scores, and every new
+sandbox would do it again.  Mission 27 item 1a fixes the key (basename, not path) and adopts the
+committed files under the current matcher digest; `tests/test_m27_cache.py` fails if a path prefix
+change turns a cached pair into a miss again.
+
+**4. Adaptive S shipped without support, and this addendum does not defend it.**  Section 6's own
+table shows the margin rule is a poor predictor: it widens on 50 % of queries where widening helps
+11.7 % of the time, against 16.7 % of those it did not widen.  Flat S = 16 reaches 0.688 on FIT
+against the adaptive rule's 0.613.  Item 2 of Mission 27 settles S on the full 80-query read, by the
+rule fixed in `MISSION27_PREREGISTRATION.md`; whatever that rule says is what the bundle carries.
