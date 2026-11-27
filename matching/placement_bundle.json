@@ -225,6 +225,12 @@
      "any": 0.852,
      "same_class": 0.745
     },
+    "C1_diagnostic_foreground_only": {
+     "any": 0.8412,
+     "delta_vs_full_rings": -0.01,
+     "note": "post-hoc diagnostic, not a candidate: with the rings restricted to the object's own pixels (ETH-80 part maps) the colour signal barely moves, so it is the object's surface, not the background",
+     "same_class": 0.735
+    },
     "C2_orientation_population": {
      "any": 0.645,
      "same_class": 0.563

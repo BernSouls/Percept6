@@ -318,5 +318,71 @@
     "proceeds": true
    }
   }
+ },
+ "diagnostic_foreground": {
+  "C1_foreground_only": {
+   "G_any": 0.8411531279178338,
+   "G_same": 0.7347364871874676,
+   "chance": 0.5,
+   "feature": "C1f",
+   "n_same_pairs": 4284,
+   "places_by_lens": {
+    "Blob": 2344,
+    "BoundaryArc": 1805,
+    "CornerPoint": 135
+   },
+   "pool": 80,
+   "queries": [
+    "apple/1",
+    "car/1",
+    "cow/1",
+    "cup/1",
+    "dog/1",
+    "horse/1",
+    "pear/1",
+    "tomato/1"
+   ],
+   "query_places": 4284
+  },
+  "baseline": {
+   "G_any": 0.5147531586474252,
+   "G_same": 0.49577238302728494,
+   "chance": 0.5,
+   "feature": "baseline",
+   "n_same_pairs": 4284,
+   "places_by_lens": {
+    "Blob": 2344,
+    "BoundaryArc": 1805,
+    "CornerPoint": 135
+   },
+   "pool": 80,
+   "queries": [
+    "apple/1",
+    "car/1",
+    "cow/1",
+    "cup/1",
+    "dog/1",
+    "horse/1",
+    "pear/1",
+    "tomato/1"
+   ],
+   "query_places": 4284
+  },
+  "delta_same_class_vs_signature": 0.2389641041601827,
+  "item": "5 diagnostic (post-hoc, NOT a candidate)",
+  "manifest": {
+   "environment": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+    "logical_cores": 2,
+    "numpy": "2.4.6",
+    "pair_env": "9f98cfa1ec647f7d",
+    "physical_cores": 1,
+    "pil": "13.0.0",
+    "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+    "python": "3.11.2",
+    "scipy": "1.17.1"
+   }
+  },
+  "seconds": 33.8
  }
 }

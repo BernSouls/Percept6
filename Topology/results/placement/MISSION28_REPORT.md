@@ -202,8 +202,13 @@ sample before any door number was computed.
 Reading the failure honestly: orientation population (C2) and texture (C3) carry almost nothing
 across a view change at place resolution — +0.067 and +0.036 — while **local colour carries a lot**.
 The caveat worth stating: ETH-80 instances are photographed on their own backgrounds, so part of
-C1's power can be the scene's colour near the place rather than the object's own surface; the gauge
-cannot separate those two, and the door test below is where it would show.
+C1's power could be the scene's colour near the place rather than the object's own surface.  **The
+diagnostic says it is the object.**  ETH-80 ships a per-pixel part map beside every image
+(background exactly 0), so the same rings were re-sampled on foreground pixels only and the gauge
+re-run (`m28_gauge.py --diagnostic`, a post-hoc diagnostic and **not** a registered candidate):
+same-class **G = 0.7350** (any-object 0.8412) against the full-ring C1's **0.7445** — a drop of
+**0.010**, i.e. almost all of the colour signal comes from the object's own surface.  That also
+means the door's failure at the second FIT view is not a background artefact.
 
 ---
 

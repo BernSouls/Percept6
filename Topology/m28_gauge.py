@@ -101,6 +101,39 @@ def _lab(image_u8: np.ndarray) -> np.ndarray:
     return np.stack([L, a, b], axis=-1)
 
 
+def _features_foreground(path: str, places: Sequence[Dict[str, Any]],
+                         mask_path: str) -> np.ndarray:
+    """DIAGNOSTIC ONLY (not a candidate): C1's rings sampled on FOREGROUND pixels only.
+
+    The mission's rule was applied to C1 as specified; this variant answers a different question,
+    asked after the fact -- is the colour signal the OBJECT's surface or the scene's colour near the
+    place?  ET
+H-80 ships a per-pixel part map beside every image (`maps/<name>-<view>-map.png`), background
+    exactly 0, so a ring sample that lands on the background is dropped."""
+    from PIL import Image
+    from matching.placement_frontend import load_image
+    from matching.placement_content import bilinear, lab, unit
+    img = load_image(path)
+    lab_img = lab(img)
+    m = np.asarray(Image.open(mask_path).convert("RGB"))
+    fg = (m.max(axis=2) > 0)
+    n = len(places)
+    out = np.zeros((n, 6), dtype=np.float64)
+    ang = np.linspace(0.0, 2 * np.pi, RING_SAMPLES, endpoint=False)
+    ca, sa = np.cos(ang), np.sin(ang)
+    for i, p in enumerate(places):
+        s = max(float(p.get("s") or 0.0), 0.75)
+        for r_i, r in enumerate(RINGS):
+            px = float(p["x"]) + r * s * ca
+            py = float(p["y"]) + r * s * sa
+            ok = bilinear(fg.astype(np.float64), px, py) > 0.5
+            if int(ok.sum()) < 2:
+                continue
+            v = bilinear(lab_img, px[ok], py[ok]).mean(axis=0)
+            out[i, 3 * r_i:3 * r_i + 3] = (v[0] / 100.0, v[1] / 128.0, v[2] / 128.0)
+    return unit(out)
+
+
 def _gabor_bank(scale: float = 1.0) -> List[Tuple[float, float, np.ndarray]]:
     """8 orientations x 2 frequencies, built by the EXISTING bank's own kernel and fractions."""
     import parameters as P
@@ -383,6 +416,36 @@ def candidates() -> Dict[str, Any]:
     return res
 
 
+def diagnostic() -> Dict[str, Any]:
+    """POST-HOC DIAGNOSTIC, not a registered candidate: is C1 the object or the background?"""
+    from Topology import m26_records as REC
+    objs = [o["key"] for o in REC.objects()]
+    t0 = time.time()
+    feats: Dict[str, np.ndarray] = {}
+    for k in objs:
+        o = REC.objects()[objs.index(k)]
+        img_path = REC.path_of(o, REF)
+        mask = os.path.join(os.path.dirname(img_path), "maps",
+                            os.path.basename(img_path).replace(".png", "-map.png"))
+        feats[k] = _features_foreground(img_path, REC.load(k, REF)["places"], mask)
+    qfeats: Dict[str, np.ndarray] = {}
+    for k in SAMPLE:
+        o = REC.objects()[objs.index(k)]
+        img_path = REC.path_of(o, VIEW)
+        mask = os.path.join(os.path.dirname(img_path), "maps",
+                            os.path.basename(img_path).replace(".png", "-map.png"))
+        qfeats[k] = _features_foreground(img_path, REC.load(k, VIEW)["places"], mask)
+    r = gauge(list(SAMPLE), objs, "C1f", feats=feats, qfeats=qfeats)
+    base = gauge(list(SAMPLE), objs, "baseline")
+    out = {"item": "5 diagnostic (post-hoc, NOT a candidate)", "C1_foreground_only": r,
+           "baseline": base,
+           "delta_same_class_vs_signature": r["G_same"] - base["G_same"],
+           "seconds": round(time.time() - t0, 1),
+           "manifest": {"environment": _env()}}
+    print(json.dumps({k: v for k, v in out.items() if k != "manifest"}, indent=1))
+    return out
+
+
 def _env() -> Dict[str, Any]:
     from matching.placement_records import environment
     return environment()
@@ -392,22 +455,25 @@ def main(argv: Sequence[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--baseline", action="store_true")
     ap.add_argument("--candidates", action="store_true")
+    ap.add_argument("--diagnostic", action="store_true")
     a = ap.parse_args(list(argv) if argv is not None else None)
     import matching.placement_frontend as FE
     FE.apply_recipe()
     data: Dict[str, Any] = {}
     path = OUT
-    if a.baseline or a.candidates:
+    if a.baseline or a.candidates or a.diagnostic:
         if os.path.exists(path):
             data = json.load(open(path))
         if a.baseline:
             data["baseline"] = baseline()
         if a.candidates:
             data["candidates"] = candidates()
+        if a.diagnostic:
+            data["diagnostic_foreground"] = diagnostic()
         with open(path, "w") as fh:
             json.dump(data, fh, indent=1, sort_keys=True)
         print("wrote", path)
-    if not (a.baseline or a.candidates):
+    if not (a.baseline or a.candidates or a.diagnostic):
         ap.print_help()
     return 0
 
