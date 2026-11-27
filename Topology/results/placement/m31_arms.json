@@ -99,6 +99,30 @@
     },
     "confirm_delta_vs_A": -0.05882352941176472,
     "fit_gain_over_A": -0.09999999999999998,
+    "gained_vs_A": {
+     "n": 4,
+     "objects": [
+      "cup/5",
+      "cup/7",
+      "pear/1",
+      "pear/6"
+     ]
+    },
+    "lost_vs_A": {
+     "n": 10,
+     "objects": [
+      "apple/6",
+      "apple/8",
+      "car/1",
+      "car/6",
+      "car/8",
+      "car/9",
+      "cow/7",
+      "cow/9",
+      "horse/2",
+      "tomato/10"
+     ]
+    },
     "passes": false
    },
    "C": {
@@ -150,6 +174,25 @@
     },
     "confirm_delta_vs_A": 0.05882352941176469,
     "fit_gain_over_A": -0.07499999999999996,
+    "gained_vs_A": {
+     "n": 3,
+     "objects": [
+      "cup/5",
+      "cup/6",
+      "pear/1"
+     ]
+    },
+    "lost_vs_A": {
+     "n": 6,
+     "objects": [
+      "apple/6",
+      "apple/8",
+      "car/6",
+      "car/8",
+      "cow/7",
+      "horse/2"
+     ]
+    },
     "passes": false
    },
    "D": {
@@ -201,6 +244,31 @@
     },
     "confirm_delta_vs_A": -0.17647058823529413,
     "fit_gain_over_A": -0.09999999999999998,
+    "gained_vs_A": {
+     "n": 5,
+     "objects": [
+      "cup/4",
+      "cup/6",
+      "horse/10",
+      "pear/1",
+      "pear/6"
+     ]
+    },
+    "lost_vs_A": {
+     "n": 10,
+     "objects": [
+      "apple/4",
+      "apple/6",
+      "apple/8",
+      "apple/9",
+      "car/6",
+      "car/8",
+      "cow/9",
+      "dog/7",
+      "tomato/10",
+      "tomato/6"
+     ]
+    },
     "passes": false
    }
   },

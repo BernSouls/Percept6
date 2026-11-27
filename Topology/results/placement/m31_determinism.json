@@ -1,0 +1,27 @@
+{
+ "gate": 1e-12,
+ "max_abs_diff": 0.0,
+ "pairs_per_query": 2,
+ "passes": true,
+ "queries": 2,
+ "threads": "1",
+ "workers": {
+  "1": {
+   "pairs": 4,
+   "reference": true,
+   "seconds": 147.0
+  },
+  "2": {
+   "compared": 4,
+   "max_abs_diff": 0.0,
+   "pairs": 4,
+   "seconds": 58.0
+  },
+  "4": {
+   "compared": 4,
+   "max_abs_diff": 0.0,
+   "pairs": 4,
+   "seconds": 67.9
+  }
+ }
+}

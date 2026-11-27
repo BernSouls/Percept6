@@ -1,6 +1,9 @@
 {
- "done": 80,
- "of": 160,
- "seconds": 938.7,
- "stage": "warm"
+ "failed": 0,
+ "of": 21,
+ "pairs": 16,
+ "queries_done": 2,
+ "seconds": 480.8,
+ "seconds_per_query": 240.4,
+ "stage": "score"
 }

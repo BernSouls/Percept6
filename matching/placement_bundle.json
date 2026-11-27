@@ -1,6 +1,6 @@
 {
  "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
- "code_digest": "344be36f8976bb4af0fb1b8900168a4be83236b2f8c49614794d67334049b2e4",
+ "code_digest": "bcd290e526b7152fe1d9bd70823b7c3f6fd51d678ce61a3fa884385e24abee53",
  "content": {
   "digest": "26b1d1a2292034e5",
   "kind": "colour_rings",
@@ -286,8 +286,8 @@
  "name": "placement-shipped-v1",
  "provenance": {
   "entry_point": "matching/placement_recognise.py",
-  "measured_by": "MISSION30_REPORT.md (A1 door: FIT recall@8 0.550 -> 0.675 / 0.650, CONF 0.550 -> 0.650, 0.475 -> 0.600 at colour weight 0.5)",
-  "note": "M31 item 1: fused door (counted + appearance + colour@0.5), colour-ring content, shortlist 8"
+  "measured_by": "MISSION30_REPORT.md A1 (door) + MISSION31_REPORT.md item 1d (the product reproduces the M30 door on 160/160 cells) and the paired door claim at n=80: recall@8 +0.1125 [+0.050, +0.188] at both views",
+  "note": "M31 item 1: fused door (counted + appearance + colour@0.5, k=60), colour-ring content, shortlist 8 (M27: S=8 and S=16 indistinguishable)"
  },
  "references": {
   "covering_deg": 90.0,

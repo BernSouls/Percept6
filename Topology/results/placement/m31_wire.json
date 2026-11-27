@@ -12,14 +12,120 @@
   "rrf_k": 60,
   "shortlist": 8
  },
- "cells": 6,
+ "cells": 160,
+ "doorclaim": {
+  "S": 8,
+  "chance_recall": 0.1,
+  "chance_top1": 0.0125,
+  "objects": 80,
+  "views": {
+   "035-045": {
+    "recall": {
+     "ci95": [
+      0.05,
+      0.1875
+     ],
+     "delta": 0.1125,
+     "down": 0,
+     "fused": {
+      "hits": 53,
+      "rate": 0.6625
+     },
+     "objects_gained": [
+      "apple/8",
+      "car/1",
+      "car/8",
+      "car/9",
+      "cow/7",
+      "dog/8",
+      "horse/1",
+      "horse/2",
+      "horse/9"
+     ],
+     "objects_lost": [],
+     "shipped": {
+      "hits": 44,
+      "rate": 0.55
+     },
+     "tied": 71,
+     "up": 9
+    },
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": {
+     "ci95": [
+      0.05,
+      0.1875
+     ],
+     "delta": 0.1125,
+     "fused": {
+      "hits": 20,
+      "rate": 0.25
+     },
+     "shipped": {
+      "hits": 11,
+      "rate": 0.1375
+     }
+    }
+   },
+   "045-180": {
+    "recall": {
+     "ci95": [
+      0.05,
+      0.1875
+     ],
+     "delta": 0.1125,
+     "down": 0,
+     "fused": {
+      "hits": 50,
+      "rate": 0.625
+     },
+     "objects_gained": [
+      "apple/2",
+      "apple/8",
+      "cow/1",
+      "cow/7",
+      "cup/1",
+      "cup/4",
+      "horse/3",
+      "pear/6",
+      "tomato/7"
+     ],
+     "objects_lost": [],
+     "shipped": {
+      "hits": 41,
+      "rate": 0.5125
+     },
+     "tied": 71,
+     "up": 9
+    },
+    "resamples": 10000,
+    "seed": 20261118,
+    "top1": {
+     "ci95": [
+      -0.025,
+      0.1
+     ],
+     "delta": 0.0375,
+     "fused": {
+      "hits": 20,
+      "rate": 0.25
+     },
+     "shipped": {
+      "hits": 17,
+      "rate": 0.2125
+     }
+    }
+   }
+  }
+ },
  "fused_identical": true,
- "fused_matches": 6,
+ "fused_matches": 160,
  "mismatches": [],
- "objects": 3,
- "seconds": 15.8,
+ "objects": 80,
+ "seconds": 652.7,
  "shipped_identical": true,
- "shipped_matches": 6,
+ "shipped_matches": 160,
  "views": [
   "035-045",
   "045-180"
