@@ -14,7 +14,8 @@ ranking of the gallery.  Two layers, the first cheap and approximate, the second
 ```
 image -> graph (perception pipeline) -> PLACES  (nameable parts with a configuration and a frame)
                                           |
-   CONTENT-COUNT DOOR (cheap, no matching) -> shortlist of S = 8 objects
+   CONTENT-COUNT DOOR (cheap, no matching) -> shortlist of S = 8 objects, widened to 16 when the
+       door's own top-8 margin is not clear (Mission 26)
        an object may be stored under several views (M25: k = 1 by default); its score is the MAX
        over its views, so a stored view that suits the query is what counts.
        every query place probes a pooled index of gallery places by content key, keeps its
@@ -117,6 +118,11 @@ digest test both name them -- see `archive/ARCHIVE_INDEX.md`.
 | door recall@8, same read, **four stored views** (M25) | 0.575 (46/80) | 80 | 0.100 |
 | assembled top-1, same read, four stored views (M25) | **0.375** (30/80) | 80 | 0.0125 |
 | door recall@8, view `-045-180` (never read before M25), one stored view | 0.512 (41/80) | 80 | 0.100 |
+| graded door (M26), FIT objects, view `-035-045` | 0.325 (13/40) | 40 | 0.100 |
+| graded signature alone (M26), same cell | 0.100 (4/40) | 40 | 0.100 |
+| union of nine cheap channels (M26 oracle), same cell | **0.825** (33/40) | 40 | 0.100 |
+| ceiling at adaptive S (M26), FIT cells | 0.613 (49/80) | 80 | 0.100 |
+| ceiling at fixed S = 16 (M26), FIT cells | 0.688 (55/80) | 80 | 0.100 |
 | assembled top-1, view `-045-180`, one stored view | 0.225 (18/80) | 80 | 0.0125 |
 
 **The confirmatory read** (`MISSION23_REPORT.md` §5): on view `-035-045`, which no earlier mission
@@ -124,6 +130,22 @@ had read, the assembled system beats the deployed one by **+0.175 (20 against 6 
 [0.088, 0.263], bootstrap p = 0.0001)**.  It is **one view and view-held-out, not object-held-out**
 -- all 80 objects were used to choose the door -- and the interval is wide; the effect is real, its
 size is not pinned.
+
+**Can the door's hard equality become a graded comparison?  (M26, `MISSION26_REPORT.md`).**  No.
+The door compares places by exact equality of `(lens, quantised tuple)`; the matcher already
+compares them by the registry's graded kernel.  Vectorising that kernel into the door
+(`matching/placement_kernel.py`, parity to 1e-9 with `core.types`, 14,800 pairs) **lowers** the
+shortlist: 0.325 (13/40) against the shipped door's 0.550 (22/40) on the same FIT cells, and 0.200
+against 0.550 on the confirmation objects.  Measured reason: with `tau = 0.5` and a per-object max
+over ~500 places, a query place covers **77 of the 80 objects**, so the distinctiveness weight is
+the same for everyone and the door degenerates; the graded signature compared one place at a time
+is **exactly chance (0.100, 4/40)**, while the exact key's hard partition is what makes the counted
+door work at all.  The union of nine cheap channels reaches 0.825 (33/40) on `-035-045` but 0.775
+(62/80) over the two selection views, and no fixed RRF pair collects it.  What ships instead is
+**adaptive S**: widen the shortlist to 16 when the door's top-8 margin is unclear (the FIT median,
+0.0072), which raises the ceiling from 0.550 to **0.613** (49/80) on FIT and 0.512 to 0.575 on the
+confirmation objects, for 12 pairs per query instead of 8; a flat S = 16 would reach 0.688/0.625 at
+16 pairs, and the report says so.
 
 **Does storing more views raise the ceiling?  (M25, `MISSION25_REPORT.md`).**  No.  Storing four
 views per object instead of one -- chosen by a score-free rule, covering radius 65.5 deg instead of

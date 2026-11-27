@@ -282,6 +282,27 @@ def _score_one(job: Tuple[str, str, float]) -> Optional[float]:
         return None
 
 
+def _shortlist_size(scores: np.ndarray, order: Sequence[int], b: PlacementBundle,
+                    s: int) -> int:
+    """ADAPTIVE S (M26 item 6D), fixed on the FIT cells: widen when the top-s margin is not clear.
+
+    ``margin = (score[s-1] - score[s]) / score[0]`` on the fused door; the bundle holds the wide
+    size and the threshold the FIT-object cells fixed.  ``shortlist_rule = "fixed"`` keeps the
+    shipped S = 8 everywhere, which is what M24/M25 measured.
+    """
+    rule = str(getattr(b, "shortlist_rule", "fixed"))
+    if rule != "adaptive":
+        return int(s)
+    wide = int(getattr(b, "shortlist_wide", 16))
+    tau = float(getattr(b, "margin_tau", 0.0))
+    v = np.asarray([scores[j] for j in order], dtype=np.float64)
+    top = float(v[0]) if v.size else 0.0
+    if v.size <= s or top <= 0.0:
+        return int(s)
+    margin = float(v[s - 1] - v[s]) / top
+    return wide if margin < tau else int(s)
+
+
 def _max_over_views(flat: np.ndarray, n_obj: int, n_views: int) -> np.ndarray:
     """(n, n_obj * n_views) object-major -> (n, n_obj) maximum over each object's views."""
     return flat.reshape(flat.shape[0], n_obj, n_views).max(axis=2)
@@ -317,14 +338,19 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
         qrec = FE.place_record(qpath, tag="query")     # the query's own graph, built once
         t_rec = time.time() - t0
         t0 = time.time()
-        cnt_flat, _diag = FD.count_scores(gallery.index, [qrec], n_hits=int(b.door_n_hits))
+        if str(getattr(b, "door_kind", "counted")) == "graded":
+            cnt_flat, _diag = FD.graded_scores(gallery.index, [qrec],
+                                               **dict(getattr(b, "door_params", {}) or {}))
+        else:
+            cnt_flat, _diag = FD.count_scores(gallery.index, [qrec], n_hits=int(b.door_n_hits))
         t_door = time.time() - t0
     app = _max_over_views(app_flat, n_obj, n_views)
     cnt = _max_over_views(cnt_flat, n_obj, n_views)
     which = _argmax_over_views(cnt_flat, n_obj, n_views)
     fused = FD.rank_fuse(app, cnt, k=int(b.rrf_k))
     door_order = [j for j in sorted(range(n_obj), key=lambda j: (-fused[0, j], j))]
-    short = door_order[:s_eff]
+    s_used = _shortlist_size(fused[0], door_order, b, s_eff)
+    short = door_order[:s_used]
     best_view = {j: gallery.views[which[j]] for j in short}
     t0 = time.time()
     jobs = [(qpath, gallery.paths[j][which[j]], float(b.matcher_weight)) for j in short]
@@ -391,9 +417,16 @@ def _main(argv: Optional[Sequence[str]] = None) -> int:   # pragma: no cover - o
     ap.add_argument("--date", default="")
     ap.add_argument("--k", type=int, default=0,
                     help="with --freeze: the default number of stored views per object")
+    ap.add_argument("--door", default="counted", help="counted | graded (M26)")
+    ap.add_argument("--shortlist-rule", default="fixed", help="fixed | adaptive (M26 6D)")
+    ap.add_argument("--margin-tau", type=float, default=0.0,
+                    help="with --shortlist-rule adaptive: the FIT-fixed top-s margin threshold")
     a = ap.parse_args(list(argv) if argv is not None else None)
     if a.freeze:
         d = PB.freeze(date=a.date or time.strftime("%Y-%m-%d"), k=(a.k or None),
+                      door_kind=str(a.door or "counted"),
+                      shortlist_rule=str(a.shortlist_rule or "fixed"),
+                      margin_tau=float(a.margin_tau or 0.0),
                       provenance={"measured_by": "MISSION23_REPORT.md section 5 (the read); "
                                                  "MISSION25_REPORT.md section 4 (the k = 1 vs "
                                                  "k = 4 read)",
@@ -403,9 +436,11 @@ def _main(argv: Optional[Sequence[str]] = None) -> int:   # pragma: no cover - o
               "door n_hits %d\n  stored views (k=%d): %s"
               % (PB.BUNDLE_PATH, d["code_digest"][:16], d["shortlist"], d["rrf_k"], d["rerank"],
                  d["door"]["n_hits"], d["references"]["k"], d["references"]["views"]))
+        print("  door kind %s, shortlist rule %s (wide %d, margin tau %.4f)"
+              % (d["door"]["kind"], d["shortlist_rule"], d["shortlist_wide"], d["margin_tau"]))
         return 0
     b = PB.PlacementBundle.load()
-    print(json.dumps(b.as_dict() | {"door_n_hits": b.door_n_hits,
+    print(json.dumps(b.as_dict() | {"door_kind": b.door_kind, "door_n_hits": b.door_n_hits,
                                     "matcher_weight": b.matcher_weight,
                                     "views": b.reference_views,
                                     "appearance": b.appearance}, indent=1))

@@ -1,0 +1,412 @@
+{
+ "report": {
+  "baseline": 0.25,
+  "chance": 0.0125,
+  "missing": [
+   {
+    "object": "car/7",
+    "scored": 1,
+    "shortlist": 8,
+    "unscored": 7
+   },
+   {
+    "object": "car/8",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "car/9",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cow/1",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "cow/10",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cow/2",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cow/3",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cow/4",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "cow/5",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cow/6",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cow/7",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cow/8",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "cow/9",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cup/1",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cup/10",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "cup/2",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "cup/3",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "cup/4",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cup/5",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "cup/6",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "cup/7",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "cup/8",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "cup/9",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "dog/1",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "dog/10",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "dog/2",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "dog/3",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "dog/4",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "dog/5",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "dog/6",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "dog/7",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "dog/8",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "dog/9",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "horse/1",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "horse/10",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "horse/2",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "horse/3",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "horse/4",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "horse/5",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "horse/6",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "horse/7",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "horse/8",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "horse/9",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "pear/1",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "pear/10",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "pear/2",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "pear/3",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "pear/4",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "pear/5",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "pear/6",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "pear/7",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "pear/8",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "pear/9",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "tomato/1",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "tomato/10",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "tomato/2",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "tomato/3",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "tomato/4",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "tomato/5",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "tomato/6",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   },
+   {
+    "object": "tomato/7",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "tomato/8",
+    "scored": 0,
+    "shortlist": 8,
+    "unscored": 8
+   },
+   {
+    "object": "tomato/9",
+    "scored": 0,
+    "shortlist": 16,
+    "unscored": 16
+   }
+  ],
+  "n_queries": 80,
+  "paired_vs_ceiling": {
+   "ci95": [
+    -0.47058823529411764,
+    -0.058823529411764705
+   ],
+   "diff": -0.23529411764705882,
+   "note": "assembled top-1 minus the door's own recall on the same queries (the ceiling)",
+   "p_bootstrap": 0.02
+  },
+  "queries_complete": 17,
+  "queries_partial_or_missing": 63,
+  "top1": 0.35294117647058826,
+  "top1_ci95": [
+   0.11764705882352941,
+   0.5882352941176471
+  ],
+  "top1_hits": 6,
+  "vs_0_250": {
+   "ci95": [
+    -0.1323529411764706,
+    0.3382352941176471
+   ],
+   "diff": 0.10294117647058826,
+   "note": "the interval moved with the baseline: a fixed 0.250 has no sampling error of its own"
+  }
+ }
+}

@@ -1,10 +1,12 @@
 {
   "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
-  "code_digest": "7a6821ba78ce901e436cd90e1cd4b9d9c0dc4260ddadd4e89adce341e29dd232",
-  "date": "2026-11-26",
+  "code_digest": "9bf67c3b31c2b58f288025a71dd06d0997c0e1bd2f7c0ea42c369c3035532b4e",
+  "date": "2026-11-27",
   "door": {
+    "kind": "counted",
     "n_hits": 8,
-    "note": "the counted door: each query place counts its n_hits nearest pool places by the frozen configuration ruler, one vote per object; the object score is count / sqrt(n_query_places * n_object_places)"
+    "note": "the counted door: each query place counts its n_hits nearest pool places by the frozen configuration ruler, one vote per object; the object score is count / sqrt(n_query_places * n_object_places)",
+    "params": {}
   },
   "frontend": {
     "extra_pre": {
@@ -25,6 +27,7 @@
       "PLACEMENT_M15_PLACES": true
     }
   },
+  "margin_tau": 0.007168,
   "matcher": {
     "bundle": "matching/placement_score_params.json",
     "entry": "matching.joint_mcs.joint_mcs -> score_shipped",
@@ -69,36 +72,48 @@
   "rerank": "plain",
   "rrf_k": 60,
   "shortlist": 8,
+  "shortlist_rule": "adaptive",
+  "shortlist_wide": 16,
   "measured": {
-    "mission": "M25",
-    "file": "Topology/results/placement/m25_read.json",
-    "read": "view -035-045, 80 objects, paired k=4 minus k=1",
-    "door_recall_s": {
-      "k1": 0.55,
-      "k4": 0.575,
-      "diff": 0.025,
-      "ci95": [
-        -0.1,
-        0.15
-      ],
-      "p_holm": 0.7646,
-      "n": 80,
-      "chance": 0.1
+    "M25": {
+      "file": "Topology/results/placement/m25_read.json",
+      "door_recall_s": {
+        "k1": 0.55,
+        "k4": 0.575,
+        "diff": 0.025,
+        "ci95": [
+          -0.1,
+          0.15
+        ],
+        "n": 80
+      },
+      "decision": "stored views stay at k = 1"
     },
-    "assembled_top1": {
-      "k1": 0.25,
-      "k4": 0.375,
-      "diff": 0.125,
-      "ci95": [
-        0.0125,
-        0.25
-      ],
-      "p_holm": 0.0916,
-      "n": 80,
-      "chance": 0.0125
+    "M26": {
+      "file": "Topology/results/placement/m26_oracle.json",
+      "graded_door_recall_s": {
+        "value": 0.325,
+        "n": 40,
+        "chance": 0.1
+      },
+      "counted_door_recall_s": {
+        "value": 0.55,
+        "n": 40,
+        "chance": 0.1
+      },
+      "union_of_cheap_channels": {
+        "value": 0.825,
+        "n": 40,
+        "note": "view -035-045; 0.775 over both selection views"
+      },
+      "ceiling": {
+        "S8": 0.55,
+        "adaptive": 0.613,
+        "S16": 0.688,
+        "n": 80
+      },
+      "decision": "the door stays counted; the shortlist ships adaptive (S = 8 or 16)"
     },
-    "mde_at_realised_design": 0.187,
-    "decision": "k = 4 does not raise the ceiling (the shortlist); the bundle ships k = 1. Detection of the assembled top-1 gain is left to a later mission with a complete two-view cell.",
     "note": "documentation only: this block is not part of code_digest and freeze() overwrites it"
   }
 }

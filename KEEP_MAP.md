@@ -3,8 +3,8 @@
 Written before anything moved (Mission 24, item 1).  The rule the archive follows is at the
 bottom; this table is what the rule was applied to.
 
-The shipped system is: **content-count door + appearance, RRF k = 60, shortlist S = 8, then the
-M19 matcher's plain re-order**.  Its one entry point is `matching/placement_recognise.py`
+The shipped system is: **content-count door + appearance, RRF k = 60, shortlist S = 8 or 16
+(adaptive, Mission 26 item 6D), then the M19 matcher's plain re-order**.  Its one entry point is `matching/placement_recognise.py`
 (`build_gallery`, `recognise`), and its one configuration is `matching/placement_bundle.json`.
 
 ## 1. Modules the shipped path imports
@@ -12,13 +12,14 @@ M19 matcher's plain re-order**.  Its one entry point is `matching/placement_reco
 | file | lives in | note |
 |---|---|---|
 | `matching/placement_recognise.py` | **core (M24, extended M25)** | the entry point: build_gallery, recognise, order_plain, the pair cache |
+| `matching/placement_kernel.py` | **core (M26)** | the registry's graded signature kernel as a numpy block, with the equality fallback COUNTED (parity to 1e-9 against `core.types`) |
 | `matching/placement_views.py` | **core (M25)** | the view grid, the angular metric, and the score-free rule that picks k stored views per object |
 | `matching/placement_bundle.py` | **core (new)** | the frozen bundle: load/validate/freeze, refusal on mismatch |
 | `matching/placement_gallery.py` | **core (M24, extended M25)** | place records -> Gallery: k views per object, one flat pooled index, appearance, disk cache |
 | `matching/placement_frontend.py` | **core (new, moved)** | the RECIPE, `cell`, `place_record`, `pair_score` -- was `Topology/placement_m20_eth80.RECIPE/_recipe/_cell` + `Topology/placement_m23_eth80.image_job` |
 | `matching/placement_truth.py` | **core (new, moved)** | the exact-transform truth rule -- was `Topology/placement_m12_read_real._forward/_inverse/_truth` |
 | `matching/placement_cache.py` | **core (new, moved)** | content-hash graph cache -- was `Topology/placement_cache.py`, which now re-exports it |
-| `matching/placement_frontdoor.py` | core (was already) | PlaceIndex, count_scores, appearance, rank_fuse |
+| `matching/placement_frontdoor.py` | core (was already) | PlaceIndex, count_scores (the shipped door), graded_scores (M26, `door.kind = "graded"`), appearance, rank_fuse |
 | `matching/placement_prefilter.py` | core | `load_params`, `bag_v2`, `standardize`, `score_bags_v2` |
 | `matching/placement_edges.py` | core | `node_frames_keypoint` (the place frames) |
 | `matching/placement_matcher.py` | core | `build_side_cached`; its `_image_digest` now calls core's `key_for` |
@@ -52,6 +53,10 @@ walks the AST of every core package and fails on either.
 | `Topology/placement_m12_perf.py` (the legacy parity check) | corpus, placement_cache, placement_census, placement_dev, placement_eval_spec, placement_families_m9, placement_gate, placement_m11_eth80, placement_m11_families, placement_scenes, placement_truth, guard |
 | `Topology/verify_m24_equivalence.py` (item 4) | placement_m23_eth80, placement_m22_eth80, placement_m20_eth80, placement_m23_stages, placement_m12_read_real |
 | `Topology/placement_m25_read.py` (the M25 read) | placement_m23_eth80 (bootstrap), placement_m20_eth80 (objects) |
+| `Topology/m26_records.py` (M26 records) | placement_frontend (core) -- builds and caches the 320 place records, nothing else |
+| `Topology/m26_census.py` (M26 item 1) | m26_records; read-only |
+| `Topology/m26_oracle.py` (M26 item 4) | m26_records, placement_frontdoor, placement_kernel |
+| `Topology/m26_matcher.py` (M26 item 7) | m26_records, placement_recognise (pair cache + the shipped door step) |
 | the report-producing M20-M23 harnesses | placement_m20_eth80, m22_eth80, m23_eth80, m23_stages, m21_* , m20_fit, m22_power, m12_realphotos |
 | the test suite (`tests/`) | 20 Topology modules, all inside the two lists above |
 | result files cited by the README / the reports | `m12_perf_baseline.json`, `m20_splits.json`, `m22_*.json`, `m23_*.json`, `m23_read_rows.jsonl`, `m23_read_pairs.jsonl`, MISSION14..23 `.md` |

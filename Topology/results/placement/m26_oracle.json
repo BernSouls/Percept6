@@ -1,0 +1,4588 @@
+{
+ "cells": {
+  "confirmation|035-045": {
+   "chance": 0.1,
+   "info": {
+    "graded_diag_mean_df": 76.90178810232149,
+    "kernel_fallbacks": {},
+    "seconds_per_query": {
+     "a": 1.325,
+     "b": 0.024,
+     "d": 0.569,
+     "e": 0.704,
+     "f": 0.778,
+     "g": 0.872,
+     "h": 0.909,
+     "i": 0.003
+    },
+    "timings_sec": {
+     "a": 53.01,
+     "b": 0.95,
+     "d": 22.78,
+     "e": 28.16,
+     "f": 31.14,
+     "g": 34.89,
+     "h": 36.34,
+     "i": 0.14
+    },
+    "truth": [
+     1,
+     2,
+     4,
+     5,
+     8,
+     11,
+     12,
+     13,
+     14,
+     19,
+     20,
+     21,
+     24,
+     25,
+     29,
+     31,
+     33,
+     34,
+     35,
+     38,
+     41,
+     45,
+     46,
+     48,
+     49,
+     50,
+     51,
+     55,
+     56,
+     58,
+     62,
+     63,
+     64,
+     65,
+     69,
+     70,
+     72,
+     75,
+     77,
+     79
+    ]
+   },
+   "n": 40,
+   "splits": [
+    "DEV",
+    "FRESH"
+   ],
+   "thin_objects": {
+    "failures_a": 28,
+    "median_places": 470.0,
+    "share_of_failures_thin_a": 0.0,
+    "share_of_queries_thin": 0.0
+   },
+   "union_oracle": {
+    "hits": 33,
+    "n": 40,
+    "recall_s": 0.825
+   },
+   "variants": {
+    "a_counted": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 31.025,
+     "rank_median": 26.5,
+     "recall_hits": 12,
+     "recall_s": 0.3,
+     "top1": 0.1,
+     "top1_hits": 4
+    },
+    "b_appearance": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 9.5,
+     "rank_median": 8.0,
+     "recall_hits": 24,
+     "recall_s": 0.6,
+     "top1": 0.1,
+     "top1_hits": 4
+    },
+    "c_rrf_ab": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 14.05,
+     "rank_median": 8.0,
+     "recall_hits": 22,
+     "recall_s": 0.55,
+     "top1": 0.15,
+     "top1_hits": 6
+    },
+    "d_sig_only": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 37.775,
+     "rank_median": 37.5,
+     "recall_hits": 3,
+     "recall_s": 0.075,
+     "top1": 0.0,
+     "top1_hits": 0
+    },
+    "e_cfg_only": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 36.1,
+     "rank_median": 37.5,
+     "recall_hits": 6,
+     "recall_s": 0.15,
+     "top1": 0.0,
+     "top1_hits": 0
+    },
+    "f_graded": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 28.15,
+     "rank_median": 26.0,
+     "recall_hits": 8,
+     "recall_s": 0.2,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "g_noidf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 28.0,
+     "rank_median": 31.0,
+     "recall_hits": 8,
+     "recall_s": 0.2,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "h_pool8": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 33.85,
+     "rank_median": 27.0,
+     "recall_hits": 9,
+     "recall_s": 0.225,
+     "top1": 0.05,
+     "top1_hits": 2
+    },
+    "i_layout": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 32.3,
+     "rank_median": 32.5,
+     "recall_hits": 8,
+     "recall_s": 0.2,
+     "top1": 0.05,
+     "top1_hits": 2
+    },
+    "j_rrf_baf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 16.125,
+     "rank_median": 8.5,
+     "recall_hits": 20,
+     "recall_s": 0.5,
+     "top1": 0.1,
+     "top1_hits": 4
+    },
+    "j_rrf_bf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 12.45,
+     "rank_median": 8.0,
+     "recall_hits": 22,
+     "recall_s": 0.55,
+     "top1": 0.15,
+     "top1_hits": 6
+    },
+    "j_rrf_bfi": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 15.475,
+     "rank_median": 9.5,
+     "recall_hits": 18,
+     "recall_s": 0.45,
+     "top1": 0.075,
+     "top1_hits": 3
+    }
+   },
+   "view": "035-045"
+  },
+  "confirmation|045-180": {
+   "chance": 0.1,
+   "info": {
+    "graded_diag_mean_df": 77.4169218568436,
+    "kernel_fallbacks": {},
+    "seconds_per_query": {
+     "a": 1.462,
+     "b": 0.023,
+     "d": 0.476,
+     "e": 0.652,
+     "f": 0.773,
+     "g": 0.753,
+     "h": 0.879,
+     "i": 0.003
+    },
+    "timings_sec": {
+     "a": 58.46,
+     "b": 0.93,
+     "d": 19.03,
+     "e": 26.09,
+     "f": 30.92,
+     "g": 30.11,
+     "h": 35.18,
+     "i": 0.13
+    },
+    "truth": [
+     1,
+     2,
+     4,
+     5,
+     8,
+     11,
+     12,
+     13,
+     14,
+     19,
+     20,
+     21,
+     24,
+     25,
+     29,
+     31,
+     33,
+     34,
+     35,
+     38,
+     41,
+     45,
+     46,
+     48,
+     49,
+     50,
+     51,
+     55,
+     56,
+     58,
+     62,
+     63,
+     64,
+     65,
+     69,
+     70,
+     72,
+     75,
+     77,
+     79
+    ]
+   },
+   "n": 40,
+   "splits": [
+    "DEV",
+    "FRESH"
+   ],
+   "thin_objects": {
+    "failures_a": 24,
+    "median_places": 470.0,
+    "share_of_failures_thin_a": 0.0,
+    "share_of_queries_thin": 0.0
+   },
+   "union_oracle": {
+    "hits": 27,
+    "n": 40,
+    "recall_s": 0.675
+   },
+   "variants": {
+    "a_counted": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 24.525,
+     "rank_median": 16.5,
+     "recall_hits": 16,
+     "recall_s": 0.4,
+     "top1": 0.075,
+     "top1_hits": 3
+    },
+    "b_appearance": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 19.3,
+     "rank_median": 12.0,
+     "recall_hits": 17,
+     "recall_s": 0.425,
+     "top1": 0.1,
+     "top1_hits": 4
+    },
+    "c_rrf_ab": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 19.825,
+     "rank_median": 9.0,
+     "recall_hits": 19,
+     "recall_s": 0.475,
+     "top1": 0.175,
+     "top1_hits": 7
+    },
+    "d_sig_only": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 37.775,
+     "rank_median": 36.0,
+     "recall_hits": 4,
+     "recall_s": 0.1,
+     "top1": 0.0,
+     "top1_hits": 0
+    },
+    "e_cfg_only": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 34.775,
+     "rank_median": 33.0,
+     "recall_hits": 6,
+     "recall_s": 0.15,
+     "top1": 0.0,
+     "top1_hits": 0
+    },
+    "f_graded": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 27.55,
+     "rank_median": 20.0,
+     "recall_hits": 8,
+     "recall_s": 0.2,
+     "top1": 0.0,
+     "top1_hits": 0
+    },
+    "g_noidf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 26.975,
+     "rank_median": 20.0,
+     "recall_hits": 9,
+     "recall_s": 0.225,
+     "top1": 0.0,
+     "top1_hits": 0
+    },
+    "h_pool8": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 28.75,
+     "rank_median": 19.0,
+     "recall_hits": 11,
+     "recall_s": 0.275,
+     "top1": 0.05,
+     "top1_hits": 2
+    },
+    "i_layout": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 24.95,
+     "rank_median": 17.5,
+     "recall_hits": 12,
+     "recall_s": 0.3,
+     "top1": 0.1,
+     "top1_hits": 4
+    },
+    "j_rrf_baf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.6,
+       "top1_hits": 3
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 20.8,
+     "rank_median": 9.0,
+     "recall_hits": 19,
+     "recall_s": 0.475,
+     "top1": 0.175,
+     "top1_hits": 7
+    },
+    "j_rrf_bf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.6,
+       "top1_hits": 3
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 21.95,
+     "rank_median": 10.0,
+     "recall_hits": 17,
+     "recall_s": 0.425,
+     "top1": 0.1,
+     "top1_hits": 4
+    },
+    "j_rrf_bfi": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.6,
+       "top1_hits": 3
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 18.7,
+     "rank_median": 10.0,
+     "recall_hits": 18,
+     "recall_s": 0.45,
+     "top1": 0.125,
+     "top1_hits": 5
+    }
+   },
+   "view": "045-180"
+  },
+  "selection|022-000": {
+   "chance": 0.1,
+   "info": {
+    "graded_diag_mean_df": 77.53514374029703,
+    "kernel_fallbacks": {},
+    "seconds_per_query": {
+     "a": 1.365,
+     "b": 0.023,
+     "d": 0.518,
+     "e": 0.686,
+     "f": 0.788,
+     "g": 0.841,
+     "h": 0.881,
+     "i": 0.003
+    },
+    "timings_sec": {
+     "a": 54.59,
+     "b": 0.91,
+     "d": 20.73,
+     "e": 27.45,
+     "f": 31.53,
+     "g": 33.63,
+     "h": 35.25,
+     "i": 0.13
+    },
+    "truth": [
+     0,
+     3,
+     6,
+     7,
+     9,
+     10,
+     15,
+     16,
+     17,
+     18,
+     22,
+     23,
+     26,
+     27,
+     28,
+     30,
+     32,
+     36,
+     37,
+     39,
+     40,
+     42,
+     43,
+     44,
+     47,
+     52,
+     53,
+     54,
+     57,
+     59,
+     60,
+     61,
+     66,
+     67,
+     68,
+     71,
+     73,
+     74,
+     76,
+     78
+    ]
+   },
+   "n": 40,
+   "splits": [
+    "FIT"
+   ],
+   "thin_objects": {
+    "failures_a": 11,
+    "median_places": 470.0,
+    "share_of_failures_thin_a": 0.0,
+    "share_of_queries_thin": 0.0
+   },
+   "union_oracle": {
+    "hits": 35,
+    "n": 40,
+    "recall_s": 0.875
+   },
+   "variants": {
+    "a_counted": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.8,
+       "top1_hits": 4
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.6,
+       "top1_hits": 3
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 8.525,
+     "rank_median": 4.0,
+     "recall_hits": 29,
+     "recall_s": 0.725,
+     "top1": 0.325,
+     "top1_hits": 13
+    },
+    "b_appearance": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.8,
+       "top1_hits": 4
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.6,
+       "top1_hits": 3
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 12.45,
+     "rank_median": 8.5,
+     "recall_hits": 20,
+     "recall_s": 0.5,
+     "top1": 0.2,
+     "top1_hits": 8
+    },
+    "c_rrf_ab": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.6,
+       "top1_hits": 3
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 1.0,
+       "top1_hits": 5
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 6.9,
+     "rank_median": 4.0,
+     "recall_hits": 29,
+     "recall_s": 0.725,
+     "top1": 0.275,
+     "top1_hits": 11
+    },
+    "d_sig_only": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 39.6,
+     "rank_median": 39.0,
+     "recall_hits": 2,
+     "recall_s": 0.05,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "e_cfg_only": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 32.7,
+     "rank_median": 29.5,
+     "recall_hits": 5,
+     "recall_s": 0.125,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "f_graded": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 18.95,
+     "rank_median": 12.5,
+     "recall_hits": 15,
+     "recall_s": 0.375,
+     "top1": 0.1,
+     "top1_hits": 4
+    },
+    "g_noidf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 15.375,
+     "rank_median": 9.0,
+     "recall_hits": 20,
+     "recall_s": 0.5,
+     "top1": 0.125,
+     "top1_hits": 5
+    },
+    "h_pool8": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.8,
+       "top1_hits": 4
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.6,
+       "top1_hits": 3
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 14.3,
+     "rank_median": 8.5,
+     "recall_hits": 20,
+     "recall_s": 0.5,
+     "top1": 0.275,
+     "top1_hits": 11
+    },
+    "i_layout": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.8,
+       "top1_hits": 4
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 11.475,
+     "rank_median": 5.5,
+     "recall_hits": 22,
+     "recall_s": 0.55,
+     "top1": 0.2,
+     "top1_hits": 8
+    },
+    "j_rrf_baf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.6,
+       "top1_hits": 3
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.8,
+       "top1_hits": 4
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 7.125,
+     "rank_median": 4.0,
+     "recall_hits": 28,
+     "recall_s": 0.7,
+     "top1": 0.3,
+     "top1_hits": 12
+    },
+    "j_rrf_bf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.8,
+       "top1_hits": 4
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 11.1,
+     "rank_median": 7.0,
+     "recall_hits": 23,
+     "recall_s": 0.575,
+     "top1": 0.175,
+     "top1_hits": 7
+    },
+    "j_rrf_bfi": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.6,
+       "top1_hits": 3
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.8,
+       "top1_hits": 4
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 7.05,
+     "rank_median": 3.0,
+     "recall_hits": 30,
+     "recall_s": 0.75,
+     "top1": 0.3,
+     "top1_hits": 12
+    }
+   },
+   "view": "022-000"
+  },
+  "selection|035-045": {
+   "chance": 0.1,
+   "info": {
+    "graded_diag_mean_df": 76.97839671845387,
+    "kernel_fallbacks": {},
+    "seconds_per_query": {
+     "a": 1.29,
+     "b": 0.022,
+     "d": 0.536,
+     "e": 0.701,
+     "f": 0.774,
+     "g": 0.849,
+     "h": 0.843,
+     "i": 0.003
+    },
+    "timings_sec": {
+     "a": 51.6,
+     "b": 0.9,
+     "d": 21.43,
+     "e": 28.03,
+     "f": 30.98,
+     "g": 33.94,
+     "h": 33.73,
+     "i": 0.13
+    },
+    "truth": [
+     0,
+     3,
+     6,
+     7,
+     9,
+     10,
+     15,
+     16,
+     17,
+     18,
+     22,
+     23,
+     26,
+     27,
+     28,
+     30,
+     32,
+     36,
+     37,
+     39,
+     40,
+     42,
+     43,
+     44,
+     47,
+     52,
+     53,
+     54,
+     57,
+     59,
+     60,
+     61,
+     66,
+     67,
+     68,
+     71,
+     73,
+     74,
+     76,
+     78
+    ]
+   },
+   "n": 40,
+   "splits": [
+    "FIT"
+   ],
+   "thin_objects": {
+    "failures_a": 26,
+    "median_places": 470.0,
+    "share_of_failures_thin_a": 0.0,
+    "share_of_queries_thin": 0.0
+   },
+   "union_oracle": {
+    "hits": 33,
+    "n": 40,
+    "recall_s": 0.825
+   },
+   "variants": {
+    "a_counted": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 28.475,
+     "rank_median": 20.5,
+     "recall_hits": 14,
+     "recall_s": 0.35,
+     "top1": 0.125,
+     "top1_hits": 5
+    },
+    "b_appearance": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 10.625,
+     "rank_median": 7.5,
+     "recall_hits": 23,
+     "recall_s": 0.575,
+     "top1": 0.075,
+     "top1_hits": 3
+    },
+    "c_rrf_ab": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 14.5,
+     "rank_median": 7.0,
+     "recall_hits": 22,
+     "recall_s": 0.55,
+     "top1": 0.125,
+     "top1_hits": 5
+    },
+    "d_sig_only": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 38.55,
+     "rank_median": 36.5,
+     "recall_hits": 4,
+     "recall_s": 0.1,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "e_cfg_only": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 39.55,
+     "rank_median": 40.5,
+     "recall_hits": 5,
+     "recall_s": 0.125,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "f_graded": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 28.475,
+     "rank_median": 23.0,
+     "recall_hits": 13,
+     "recall_s": 0.325,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "g_noidf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 24.825,
+     "rank_median": 19.0,
+     "recall_hits": 12,
+     "recall_s": 0.3,
+     "top1": 0.05,
+     "top1_hits": 2
+    },
+    "h_pool8": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 28.125,
+     "rank_median": 24.0,
+     "recall_hits": 10,
+     "recall_s": 0.25,
+     "top1": 0.125,
+     "top1_hits": 5
+    },
+    "i_layout": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 26.575,
+     "rank_median": 19.0,
+     "recall_hits": 12,
+     "recall_s": 0.3,
+     "top1": 0.05,
+     "top1_hits": 2
+    },
+    "j_rrf_baf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 17.125,
+     "rank_median": 9.0,
+     "recall_hits": 20,
+     "recall_s": 0.5,
+     "top1": 0.15,
+     "top1_hits": 6
+    },
+    "j_rrf_bf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 14.25,
+     "rank_median": 8.5,
+     "recall_hits": 20,
+     "recall_s": 0.5,
+     "top1": 0.2,
+     "top1_hits": 8
+    },
+    "j_rrf_bfi": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.6,
+       "top1_hits": 3
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 13.725,
+     "rank_median": 7.5,
+     "recall_hits": 21,
+     "recall_s": 0.525,
+     "top1": 0.175,
+     "top1_hits": 7
+    }
+   },
+   "view": "035-045"
+  },
+  "selection|045-180": {
+   "chance": 0.1,
+   "info": {
+    "graded_diag_mean_df": 77.638834406961,
+    "kernel_fallbacks": {},
+    "seconds_per_query": {
+     "a": 1.408,
+     "b": 0.023,
+     "d": 0.506,
+     "e": 0.71,
+     "f": 0.79,
+     "g": 0.821,
+     "h": 0.866,
+     "i": 0.003
+    },
+    "timings_sec": {
+     "a": 56.3,
+     "b": 0.93,
+     "d": 20.25,
+     "e": 28.39,
+     "f": 31.59,
+     "g": 32.82,
+     "h": 34.65,
+     "i": 0.13
+    },
+    "truth": [
+     0,
+     3,
+     6,
+     7,
+     9,
+     10,
+     15,
+     16,
+     17,
+     18,
+     22,
+     23,
+     26,
+     27,
+     28,
+     30,
+     32,
+     36,
+     37,
+     39,
+     40,
+     42,
+     43,
+     44,
+     47,
+     52,
+     53,
+     54,
+     57,
+     59,
+     60,
+     61,
+     66,
+     67,
+     68,
+     71,
+     73,
+     74,
+     76,
+     78
+    ]
+   },
+   "n": 40,
+   "splits": [
+    "FIT"
+   ],
+   "thin_objects": {
+    "failures_a": 22,
+    "median_places": 470.0,
+    "share_of_failures_thin_a": 0.0,
+    "share_of_queries_thin": 0.0
+   },
+   "union_oracle": {
+    "hits": 29,
+    "n": 40,
+    "recall_s": 0.725
+   },
+   "variants": {
+    "a_counted": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 22.225,
+     "rank_median": 12.5,
+     "recall_hits": 18,
+     "recall_s": 0.45,
+     "top1": 0.175,
+     "top1_hits": 7
+    },
+    "b_appearance": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.6,
+       "top1_hits": 3
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 16.175,
+     "rank_median": 8.5,
+     "recall_hits": 20,
+     "recall_s": 0.5,
+     "top1": 0.15,
+     "top1_hits": 6
+    },
+    "c_rrf_ab": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.8,
+       "top1_hits": 4
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.8,
+       "top1_hits": 4
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 16.9,
+     "rank_median": 5.5,
+     "recall_hits": 22,
+     "recall_s": 0.55,
+     "top1": 0.25,
+     "top1_hits": 10
+    },
+    "d_sig_only": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 42.525,
+     "rank_median": 45.0,
+     "recall_hits": 2,
+     "recall_s": 0.05,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "e_cfg_only": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 34.675,
+     "rank_median": 40.5,
+     "recall_hits": 8,
+     "recall_s": 0.2,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "f_graded": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 24.575,
+     "rank_median": 18.0,
+     "recall_hits": 13,
+     "recall_s": 0.325,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "g_noidf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 24.625,
+     "rank_median": 18.5,
+     "recall_hits": 15,
+     "recall_s": 0.375,
+     "top1": 0.05,
+     "top1_hits": 2
+    },
+    "h_pool8": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 3,
+       "recall_s": 0.6,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 24.775,
+     "rank_median": 13.0,
+     "recall_hits": 16,
+     "recall_s": 0.4,
+     "top1": 0.175,
+     "top1_hits": 7
+    },
+    "i_layout": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.0,
+       "top1_hits": 0
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 24.525,
+     "rank_median": 15.5,
+     "recall_hits": 16,
+     "recall_s": 0.4,
+     "top1": 0.025,
+     "top1_hits": 1
+    },
+    "j_rrf_baf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.6,
+       "top1_hits": 3
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 18.2,
+     "rank_median": 6.0,
+     "recall_hits": 23,
+     "recall_s": 0.575,
+     "top1": 0.175,
+     "top1_hits": 7
+    },
+    "j_rrf_bf": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.6,
+       "top1_hits": 3
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 0,
+       "recall_s": 0.0,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 17.55,
+     "rank_median": 7.0,
+     "recall_hits": 21,
+     "recall_s": 0.525,
+     "top1": 0.15,
+     "top1_hits": 6
+    },
+    "j_rrf_bfi": {
+     "by_class": {
+      "apple": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "car": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.4,
+       "top1_hits": 2
+      },
+      "cow": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "cup": {
+       "n": 5,
+       "recall_hits": 4,
+       "recall_s": 0.8,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "dog": {
+       "n": 5,
+       "recall_hits": 2,
+       "recall_s": 0.4,
+       "top1": 0.2,
+       "top1_hits": 1
+      },
+      "horse": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "pear": {
+       "n": 5,
+       "recall_hits": 1,
+       "recall_s": 0.2,
+       "top1": 0.0,
+       "top1_hits": 0
+      },
+      "tomato": {
+       "n": 5,
+       "recall_hits": 5,
+       "recall_s": 1.0,
+       "top1": 0.2,
+       "top1_hits": 1
+      }
+     },
+     "chance_recall": 0.1,
+     "chance_top1": 0.0125,
+     "n": 40,
+     "rank_mean": 18.55,
+     "rank_median": 4.0,
+     "recall_hits": 23,
+     "recall_s": 0.575,
+     "top1": 0.15,
+     "top1_hits": 6
+    }
+   },
+   "view": "045-180"
+  }
+ },
+ "gallery": 80,
+ "records": "Topology.m26_records",
+ "ref_view": "000-000",
+ "views": [
+  "035-045",
+  "045-180"
+ ]
+}

@@ -90,6 +90,11 @@ class PlacementBundle:
     reference_views: List[str] = field(default_factory=list)
     reserved: List[str] = field(default_factory=list)
     references: Dict[str, Any] = field(default_factory=dict)
+    door_kind: str = "counted"                 # "counted" (M22-M25) or "graded" (M26)
+    door_params: Dict[str, Any] = field(default_factory=dict)
+    shortlist_rule: str = "fixed"              # "fixed" (M22-M25) or "adaptive" (M26 item 6D)
+    shortlist_wide: int = 16
+    margin_tau: float = 0.0
     provenance: Dict[str, Any] = field(default_factory=dict)
     code_digest: str = ""
     file_digest: str = ""
@@ -115,6 +120,13 @@ class PlacementBundle:
         if missing:
             raise BundleRefusal("bundle at %s is missing %s -- refusing rather than guessing"
                                 % (p, ", ".join(missing)))
+        if str(d.get("shortlist_rule", "fixed")) not in ("fixed", "adaptive"):
+            raise BundleRefusal("bundle at %s names a shortlist rule %r this tree does not "
+                                "implement (have: fixed, adaptive)"
+                                % (p, d.get("shortlist_rule")))
+        if str(d["door"].get("kind", "counted")) not in ("counted", "graded"):
+            raise BundleRefusal("bundle at %s names a door kind %r this tree does not implement "
+                                "(have: counted, graded)" % (p, d["door"].get("kind")))
         have = str(d["code_digest"])
         want = compute_code_digest()
         if have != want:
@@ -130,6 +142,11 @@ class PlacementBundle:
                 rrf_k=int(d["rrf_k"]),
                 rerank=str(d["rerank"]),
                 door_n_hits=int(d["door"]["n_hits"]),
+                door_kind=str(d["door"].get("kind", "counted")),
+                door_params=dict(d["door"].get("params") or {}),
+                shortlist_rule=str(d.get("shortlist_rule", "fixed")),
+                shortlist_wide=int(d.get("shortlist_wide", 16)),
+                margin_tau=float(d.get("margin_tau", 0.0)),
                 appearance=str(d["appearance"]),
                 matcher_weight=float(d["matcher"]["weight"]),
                 recipe=dict(d["frontend"]["recipe"]),
@@ -150,7 +167,10 @@ class PlacementBundle:
 
 
 def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any],
-           k: Optional[int] = None, reserved: Sequence[str] = ("035-045", "045-180")
+           k: Optional[int] = None, reserved: Sequence[str] = ("035-045", "045-180"),
+           door_kind: str = "counted", door_params: Optional[Dict[str, Any]] = None,
+           shortlist_rule: str = "fixed", shortlist_wide: int = 16,
+           margin_tau: float = 0.0
            ) -> Dict[str, Any]:
     """Write the bundle for THIS tree.  Operator action; prints the digest it froze.
 
@@ -171,9 +191,12 @@ def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any],
         "mission": "M24",
         "date": date,
         "shortlist": 8,
+        "shortlist_rule": str(shortlist_rule),
+        "shortlist_wide": int(shortlist_wide),
+        "margin_tau": float(margin_tau),
         "rrf_k": 60,
         "rerank": "plain",
-        "door": {"n_hits": 8,
+        "door": {"n_hits": 8, "kind": str(door_kind), "params": dict(door_params or {}),
                  "note": "the counted door: each query place counts its n_hits nearest pool "
                          "places by the frozen configuration ruler, one vote per object; the "
                          "object score is count / sqrt(n_query_places * n_object_places)"},

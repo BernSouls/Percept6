@@ -133,6 +133,7 @@ class PlaceIndex:
     def __init__(self, entries: Sequence[Dict[str, Any]], obj_keys: Sequence[str],
                  keyfn: Optional[Callable[[Dict[str, Any]], Any]] = None):
         self.obj_keys = list(obj_keys)
+        self.entries = list(entries)          # M26: the graded door re-reads them by lens
         self.by_key: Dict[Any, List[Tuple[int, Dict[str, Any]]]] = {}
         self.n_places: List[int] = []
         self.units: List[float] = []
@@ -210,6 +211,140 @@ class PlaceIndex:
             scores[obj] = float(c) / denom
         return {"scores": scores, "places_used": used, "votes": hits_total,
                 "bins": len(buckets_no_rot) + len(buckets_rot)}
+
+
+# --------------------------------------------------------------------------- the graded door
+#: Mission 26, fixed before any number: a query place covers an object when its best place in that
+#: object scores at least TAU, and the configuration factor is exp(-d2 / 2) -- one half, no fit.
+GRADED_TAU = 0.5
+GRADED_CONFIG_HALF = 0.5
+
+
+def _array_key(entries: Sequence[Dict[str, Any]], lens_gate: bool = True) -> Dict[str, Any]:
+    """Per lens: quantised tuples, the configuration rows and their mask, and the object segments.
+
+    Pool rows are kept in OBJECT order (entry 0's places, then entry 1's, ...), so the "best place
+    per object" is a ``reduceat`` over segments rather than a scatter-maximum.
+    """
+    groups: Dict[str, Dict[str, List[Any]]] = {}
+    for obj, entry in enumerate(entries):
+        for r in place_rows(entry):
+            g = groups.setdefault(str(r["lens"]) if lens_gate else "",
+                                  {"Q": [], "D": [], "M": [], "obj": []})
+            g["Q"].append(tuple(float(x) for x in r["key"][1]))
+            g["D"].append(r["Dz"])
+            g["M"].append(r["Mz"])
+            g["obj"].append(obj)
+    out: Dict[str, Dict[str, Any]] = {}
+    for lens, g in groups.items():
+        obj = np.asarray(g["obj"], dtype=np.int64)
+        starts = np.flatnonzero(np.r_[True, obj[1:] != obj[:-1]]) if obj.size else np.zeros(0, int)
+        out[lens] = {"Q": np.asarray(g["Q"], dtype=np.float64),
+                     "D": np.asarray(g["D"], dtype=np.float64),
+                     "M": np.asarray(g["M"], dtype=np.float64),
+                     "starts": starts, "seg_obj": obj[starts] if obj.size else obj}
+        
+    return out
+
+
+def _config_factor(dq: np.ndarray, mq: np.ndarray, dp: np.ndarray, mp: np.ndarray) -> np.ndarray:
+    """exp(-d2 / 2) for every (query place, pool place), with the frozen ruler's mask rule.
+
+    ``d2 = sum_i m_i (a_i - b_i)^2 / sum_i m_i`` with ``m_i = ma_i * mb_i``; expanded so the whole
+    block is four matrix products instead of a (nq, np, slots) temporary.
+    """
+    den = mq @ mp.T
+    num = (mq * dq * dq) @ mp.T + mq @ (mp * dp * dp).T - 2.0 * ((mq * dq) @ (mp * dp).T)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        d2 = np.where(den >= 2.0, num / np.where(den >= 2.0, den, 1.0), np.inf)
+    return np.exp(-GRADED_CONFIG_HALF * d2)
+
+
+def graded_scores(index: "PlaceIndex", query_entries: Sequence[Dict[str, Any]],
+                  tau: float = GRADED_TAU, idf: bool = True, config: bool = True,
+                  signature: bool = True, pooled_top: Optional[int] = None,
+                  lens_gate: bool = True, chunk: int = 128
+                  ) -> Tuple[np.ndarray, List[Dict[str, Any]]]:
+    """THE GRADED DOOR -- the same pooled index, graded comparison instead of an exact key.
+
+    For one query place and one pool place of the same lens::
+
+        s = kernel(lens, q.quantised, p.quantised) x exp(-d2 / 2)
+
+    (either factor can be switched off, which is what variants (d) and (e) measure).  Then, per
+    query place, the BEST pool place per object ``s(q, o) = max_p s(q, p)``; an object is COVERED
+    by ``q`` when ``s(q, o) >= tau``; ``df(q)`` is how many objects ``q`` covers and
+    ``w(q) = log((N + 1) / (df(q) + 1))``; and the object's score is the weighted share of the
+    query's votable places that cover it::
+
+        score(o) = sum_{q covers o} w(q) / sum_q w(q)
+
+    ``pooled_top=k`` replaces "best per object" with the counted door's pooling: the query place
+    covers the objects of its k best pool places over ALL objects.  ``lens_gate=False`` compares
+    every query place with every pool place (variant (e), configuration only).  No constant is
+    fitted here: ``tau`` = 0.5 and the half in the exponent are fixed in Mission 26's registration.
+    """
+    from matching import placement_kernel as K
+    n_obj = len(index.obj_keys)
+    out = np.zeros((len(query_entries), n_obj), dtype=np.float64)
+    diag: List[Dict[str, Any]] = []
+    key = "graded" if lens_gate else "graded_any"
+    cache = getattr(index, "_graded_cache", None)
+    if cache is None:
+        cache = {}
+        index._graded_cache = cache
+    if key not in cache:
+        cache[key] = _array_key(index.entries, lens_gate=lens_gate)
+    pool = cache[key]
+    for i, qe in enumerate(query_entries):
+        rows = [r for r in place_rows(qe) if _live(r)]
+        used = len(rows)
+        if not used:
+            diag.append({"places_used": 0, "objects_covered": 0, "mean_df": None})
+            continue
+        qg: Dict[str, Dict[str, List[Any]]] = {}
+        for qi, r in enumerate(rows):
+            g = qg.setdefault(str(r["lens"]) if lens_gate else "",
+                              {"Q": [], "D": [], "M": [], "row": []})
+            g["Q"].append(tuple(float(x) for x in r["key"][1]))
+            g["D"].append(r["Dz"])
+            g["M"].append(r["Mz"])
+            g["row"].append(qi)
+        best = np.full((used, n_obj), -1.0, dtype=np.float64)
+        for lens, q in qg.items():
+            P = pool.get(lens)
+            if P is None:
+                continue
+            Q = np.asarray(q["Q"], dtype=np.float64)
+            DQ = np.asarray(q["D"], dtype=np.float64)
+            MQ = np.asarray(q["M"], dtype=np.float64)
+            rowidx = np.asarray(q["row"], dtype=np.int64)
+            for s0 in range(0, Q.shape[0], chunk):
+                sl = slice(s0, min(s0 + chunk, Q.shape[0]))
+                block = np.ones((Q[sl].shape[0], P["Q"].shape[0]), dtype=np.float64)
+                if signature:
+                    block *= K.similarity_block(lens, Q[sl], P["Q"])
+                if config:
+                    block *= _config_factor(DQ[sl], MQ[sl], P["D"], P["M"])
+                if pooled_top:
+                    k = min(int(pooled_top), block.shape[1])
+                    take = np.argpartition(-block, k - 1, axis=1)[:, :k]
+                    keep = np.zeros_like(block, dtype=bool)
+                    np.put_along_axis(keep, take, True, axis=1)
+                    block = np.where(keep, block, -1.0)
+                seg = np.maximum.reduceat(block, P["starts"], axis=1)
+                seg_obj = P["seg_obj"]
+                cur = best[rowidx[sl][:, None], seg_obj[None, :]]
+                best[rowidx[sl][:, None], seg_obj[None, :]] = np.maximum(cur, seg)
+        covered = best >= tau
+        df = covered.sum(axis=1).astype(np.float64)
+        w = (np.log((n_obj + 1.0) / (df + 1.0)) if idf else np.ones_like(df))
+        denom = float(w.sum())
+        if denom > 0:
+            out[i] = (covered.T @ w) / denom
+        diag.append({"places_used": int(used), "objects_covered": int((out[i] > 0).sum()),
+                     "mean_df": float(df.mean())})
+    return out, diag
 
 
 def _live(row: Dict[str, Any]) -> bool:
