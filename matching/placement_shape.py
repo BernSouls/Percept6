@@ -222,7 +222,8 @@ def attach(record: Dict[str, Any], image: Any, detections: Optional[Sequence[Any
 
 
 # --------------------------------------------------------------------------- similarity
-def graded_matrix(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+def graded_matrix(A: np.ndarray, B: np.ndarray,
+                  weights: Optional[Sequence[float]] = None) -> np.ndarray:
     """The shape similarity the gauge reads: a graded cosine over the five axes.
 
     Each axis is standardised to [0, 1] by its own physical span, centred, and compared as a
@@ -232,7 +233,7 @@ def graded_matrix(A: np.ndarray, B: np.ndarray) -> np.ndarray:
     """
     A = np.atleast_2d(np.asarray(A, dtype=np.float64))
     B = np.atleast_2d(np.asarray(B, dtype=np.float64))
-    w = np.asarray(WEIGHTS, dtype=np.float64)
+    w = np.asarray(WEIGHTS if weights is None else weights, dtype=np.float64)
     w = w / w.sum()
     out = np.zeros((A.shape[0], B.shape[0]), dtype=np.float64)
     for j, name in enumerate(FIELDS):

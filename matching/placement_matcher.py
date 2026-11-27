@@ -160,7 +160,17 @@ def apply_node_colour(matrix: Sequence[Sequence[float]],
     ww = float(getattr(P, "PLACEMENT_NODE_COLOUR_W", 0.10) if w is None else w)
     if ww <= 0.0:
         return matrix
-    wc = float(getattr(P, "PLACEMENT_NODE_DESC_W", 0.5) if w_cfg is None else w_cfg)
+    # [M31] the COMPOSITION fix.  M30 read `PLACEMENT_NODE_DESC_W` (default 0.5) as `w_cfg` even
+    # when the configuration term was OFF, so at w_col = 0.10 the code computed
+    # 0.4 * sim + 0.1 * colour -- a 80/20 mixture that rescales the incumbent -- while the stated
+    # equation was a 90/10 supplement.  `w_cfg` is now what it says: the weight of a term that is
+    # actually in the matrix, zero when that term is not.  The supplement form is then
+    #     sim' = (1 - w_col) * matrix + w_col * colour
+    # which is the stated equation when the descriptor term is on (matrix already carries it) and
+    # reduces to the deployed score exactly at w_col = 0 either way.
+    desc_on = bool(getattr(P, "PLACEMENT_NODE_DESC", False))
+    wc = float((getattr(P, "PLACEMENT_NODE_DESC_W", 0.25) if w_cfg is None else w_cfg)
+               if desc_on else 0.0)
     if ww + wc > 1.0:
         FAILURES["colour_weight_refused"] = FAILURES.get("colour_weight_refused", 0) + 1
         raise ValueError("PLACEMENT_NODE_COLOUR_W %r + descriptor weight %r exceeds 1.0"
@@ -180,7 +190,7 @@ def apply_node_colour(matrix: Sequence[Sequence[float]],
             if cb is None or float(row[j]) <= 0.0:
                 continue
             cos = float(np.dot(ca, cb))
-            row[j] = (1.0 - wc - ww) * float(row[j]) + ww * cos
+            row[j] = (1.0 - ww) * float(row[j]) + ww * cos
             used += 1
     FAILURES["colour_cells"] = FAILURES.get("colour_cells", 0) + used
     return out

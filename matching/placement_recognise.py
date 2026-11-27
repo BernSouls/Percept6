@@ -127,6 +127,24 @@ def _validate(bundle: PlacementBundle) -> None:
     if bundle.rerank != "plain":
         raise PB.BundleRefusal("the shipped order is the matcher's plain re-order; this code does "
                                "not implement %r" % (bundle.rerank))
+    if str(getattr(bundle, "door_kind", "counted")) == "fused3":
+        if not bundle.colour_rings:
+            raise PB.BundleRefusal(
+                "the bundle ships door.kind = fused3 but content.kind = %r: the colour channel "
+                "reads the place content, so fused3 requires colour_rings"
+                % (bundle.content_kind,))
+        wcol = float(bundle.fusion_weight)
+        if not (0.0 <= wcol <= 1.0):
+            raise PB.BundleRefusal("fused3 colour weight %r is not a vote in [0, 1] -- a negative "
+                                   "or unbounded rank weight is not a fusion (M30 shipped 0.5; 0 "
+                                   "is the two-channel shipped door, pinned by test)" % (wcol,))
+    blend = dict(getattr(bundle, "matcher_blend", {}) or {})
+    if blend:
+        wc = float(blend.get("w_cfg", 0.0))
+        wl = float(blend.get("w_col", 0.0))
+        if wl < 0.0 or wc < 0.0 or wc + wl > 1.0:
+            raise PB.BundleRefusal("matcher blend w_cfg %r + w_col %r is not a convex blend"
+                                   % (wc, wl))
     if int(bundle.shortlist) < 1 or int(bundle.rrf_k) < 1:
         raise PB.BundleRefusal("bundle shortlist/rrf_k are not usable: %r / %r"
                                % (bundle.shortlist, bundle.rrf_k))
@@ -177,6 +195,10 @@ def _bundle_flags(bundle: PlacementBundle) -> Dict[str, Any]:
     vals.update(bundle.recipe)
     vals.update(bundle.recipe_extra)
     vals.update(FE.matcher_flags(bundle.matcher_weight))
+    blend = dict(getattr(bundle, "matcher_blend", {}) or {})       # M31 item 1c
+    if blend:
+        vals["PLACEMENT_NODE_COLOUR"] = float(blend.get("w_col", 0.0)) > 0.0
+        vals["PLACEMENT_NODE_COLOUR_W"] = float(blend.get("w_col", 0.0))
     return vals
 
 
@@ -420,8 +442,15 @@ def _argmax_over_views(flat: np.ndarray, n_obj: int, n_views: int) -> List[int]:
 
 def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle] = None,
               workers: int = 2, s: Optional[int] = None, matcher: bool = True,
-              use_pair_cache: bool = True) -> Result:
+              use_pair_cache: bool = True, record: Optional[Dict[str, Any]] = None,
+              appearance: Optional[np.ndarray] = None) -> Result:
     """Rank ``gallery``'s OBJECTS for ``query``.  ``query`` is a path or a (key, path) pair.
+
+    [M31] ``record`` and ``appearance`` let a caller hand in the query's own place record and
+    appearance vector instead of rebuilding them from ``query``.  That is what makes the door's
+    output reproducible from the committed records -- the whole 80 x 2 equality is then a
+    records-only computation -- and it changes nothing else: the record is the same object
+    ``place_record`` returns, read from the npz rather than from a graph.
 
     ``matcher=False`` stops after the door: the result carries the door's object ranking and the
     shortlist, and ``unscored`` is the whole shortlist (nothing was scored, nothing is claimed).
@@ -435,23 +464,47 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
     t_all = time.time()
     with _FlagScope(_bundle_flags(b)):
         t0 = time.time()
-        q_app = FD.appearance_feature(qpath)
+        q_app = (np.asarray(appearance, dtype=np.float64) if appearance is not None
+                 else FD.appearance_feature(qpath))
         app_flat = np.asarray([q_app], dtype=np.float64) @ gallery.appearance.T
         t_app = time.time() - t0
         t0 = time.time()
-        qrec = FE.place_record(qpath, tag="query")     # the query's own graph, built once
+        ckind = "colour_rings" if b.colour_rings else None
+        qrec = (dict(record) if record is not None
+                else FE.place_record(qpath, tag="query", content=ckind))   # built once
+        if ckind is not None and str(gallery.content_kind) != ckind:
+            raise PB.BundleRefusal(
+                "the bundle reads content.kind = %r but the gallery was built with %r: rebuild the "
+                "gallery through build_gallery(content=...), because a colour door over keypoint "
+                "records has no colour to read" % (ckind, gallery.content_kind))
         t_rec = time.time() - t0
         t0 = time.time()
-        if str(getattr(b, "door_kind", "counted")) == "graded":
+        dkind = str(getattr(b, "door_kind", "counted"))
+        if dkind == "graded":
             cnt_flat, _diag = FD.graded_scores(gallery.index, [qrec],
                                                **dict(getattr(b, "door_params", {}) or {}))
         else:
             cnt_flat, _diag = FD.count_scores(gallery.index, [qrec], n_hits=int(b.door_n_hits))
+        colour_flat = None
+        if dkind == "fused3":
+            from matching import placement_fuse as FU
+            colour_flat = np.asarray(FU.colour_channel(gallery.flat_records(), [qrec]),
+                                     dtype=np.float64)
+            if colour_flat.shape != (1, n_obj * n_views):
+                raise PB.BundleRefusal("the colour channel returned %r for %d cells"
+                                       % (colour_flat.shape, n_obj * n_views))
         t_door = time.time() - t0
     app = _max_over_views(app_flat, n_obj, n_views)
     cnt = _max_over_views(cnt_flat, n_obj, n_views)
     which = _argmax_over_views(cnt_flat, n_obj, n_views)
-    fused = FD.rank_fuse(app, cnt, k=int(b.rrf_k))
+    if str(getattr(b, "door_kind", "counted")) == "fused3":
+        from matching import placement_fuse as FU
+        colour = _max_over_views(colour_flat, n_obj, n_views)
+        fused = np.asarray(FU.fuse(cnt, app, colour,
+                                   weights={"colour": float(b.fusion_weight)},
+                                   k=int(b.rrf_k)), dtype=np.float64)
+    else:
+        fused = FD.rank_fuse(app, cnt, k=int(b.rrf_k))
     door_order = [j for j in sorted(range(n_obj), key=lambda j: (-fused[0, j], j))]
     s_used = _shortlist_size(fused[0], door_order, b, s_eff)
     short = door_order[:s_used]

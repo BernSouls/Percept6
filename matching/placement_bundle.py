@@ -66,6 +66,16 @@ def compute_code_digest() -> str:
     return h.hexdigest()
 
 
+def _content_digest(kind: str) -> str:
+    """The content class's own digest, or "" when the kind has no registered class."""
+    try:
+        from matching import placement_content as PC
+        d = getattr(PC, "digest", None)
+        return str(d() if callable(d) else "")[:16]
+    except Exception:                                   # pragma: no cover - defensive
+        return ""
+
+
 def shipped_weight() -> float:
     """The M19 weight (``w = 0.375``), read from that record and never hard-coded."""
     with open(SCORE_PARAMS) as fh:
@@ -97,6 +107,8 @@ class PlacementBundle:
     shortlist_wide: int = 16
     margin_tau: float = 0.0
     content: Dict[str, Any] = field(default_factory=dict)   # M28: {"kind": "keypoint"|"colour_rings"}
+    fusion: Dict[str, float] = field(default_factory=dict)  # M31: {"colour": 0.5} (RRF weights)
+    matcher_blend: Dict[str, float] = field(default_factory=dict)  # M31: {"w_cfg":0.25,"w_col":0.10}
     provenance: Dict[str, Any] = field(default_factory=dict)
     code_digest: str = ""
     file_digest: str = ""
@@ -112,6 +124,17 @@ class PlacementBundle:
         raw = self.content or {}
         k = raw.get("kind", PC.DEFAULT_KIND) if isinstance(raw, dict) else raw
         return PC.kind(str(k))
+
+    # ---- fusion (M31)
+    @property
+    def fusion_weight(self) -> float:
+        """The colour channel's RRF weight: `door.params.colour_weight`, else 0 (no colour)."""
+        raw = dict(self.door_params or {})
+        return float(raw.get("colour_weight", self.fusion.get("colour", 0.0)))
+
+    @property
+    def colour_rings(self) -> bool:
+        return self.content_kind == "colour_rings"
 
     # ---- io
     @classmethod
@@ -138,9 +161,9 @@ class PlacementBundle:
             raise BundleRefusal("bundle at %s names a shortlist rule %r this tree does not "
                                 "implement (have: fixed, adaptive)"
                                 % (p, d.get("shortlist_rule")))
-        if str(d["door"].get("kind", "counted")) not in ("counted", "graded"):
+        if str(d["door"].get("kind", "counted")) not in ("counted", "graded", "fused3"):
             raise BundleRefusal("bundle at %s names a door kind %r this tree does not implement "
-                                "(have: counted, graded)" % (p, d["door"].get("kind")))
+                                "(have: counted, graded, fused3)" % (p, d["door"].get("kind")))
         have = str(d["code_digest"])
         want = compute_code_digest()
         if have != want:
@@ -170,6 +193,8 @@ class PlacementBundle:
                 reserved=[str(v) for v in (d["references"].get("reserved") or [])],
                 references=dict(d["references"]),
                 content=dict(d.get("content") or {}),
+                fusion=dict(d.get("fusion") or {}),
+                matcher_blend=dict(d["matcher"].get("blend") or {}),
                 provenance=dict(d.get("provenance") or {}),
                 code_digest=have,
                 file_digest=hashlib.sha256(raw_bytes).hexdigest())
@@ -185,7 +210,10 @@ def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any],
            k: Optional[int] = None, reserved: Sequence[str] = ("035-045", "045-180"),
            door_kind: str = "counted", door_params: Optional[Dict[str, Any]] = None,
            shortlist: int = 8, shortlist_rule: str = "fixed", shortlist_wide: int = 16,
-           margin_tau: float = 0.0
+           margin_tau: float = 0.0,
+           content_kind: str = "keypoint", fusion: Optional[Dict[str, float]] = None,
+           matcher_blend: Optional[Dict[str, float]] = None,
+           mission: str = "M24"
            ) -> Dict[str, Any]:
     """Write the bundle for THIS tree.  Operator action; prints the digest it froze.
 
@@ -203,7 +231,7 @@ def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any],
         w = float(_json.load(fh)["w"])
     d = {
         "name": "placement-shipped-v1",
-        "mission": "M24",
+        "mission": str(mission),
         "date": date,
         "shortlist": int(shortlist),
         "shortlist_rule": str(shortlist_rule),
@@ -219,7 +247,15 @@ def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any],
                       "(matching/placement_frontdoor.appearance_feature)",
         "matcher": {"bundle": "matching/placement_score_params.json", "weight": w,
                     "entry": "matching.joint_mcs.joint_mcs -> score_shipped",
-                    "flags": FE.MATCHER_FLAGS},
+                    "flags": FE.MATCHER_FLAGS,
+                    "blend": dict(matcher_blend or {})},
+        "content": {"kind": str(content_kind), "digest": _content_digest(str(content_kind)),
+                    "kinds": ["keypoint", "colour_rings"],
+                    "note": "what a place carries beyond its keypoint signature.  'colour_rings' "
+                            "is six CIELAB ring means at the place's own scale "
+                            "(matching/placement_content.py); every record and read that uses a "
+                            "non-default kind names it in its manifest."},
+        "fusion": dict(fusion or {}),
         "frontend": {"recipe": dict(FE.RECIPE), "extra_pre": dict(FE.RECIPE_EXTRA),
                      "keypoint_class": FE.RECIPE_KEYPOINT_CLASS,
                      "params": "matching/placement_prefilter_params.json",

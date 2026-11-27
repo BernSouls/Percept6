@@ -1,0 +1,27 @@
+{
+ "S": 8,
+ "bundle": {
+  "blend": {
+   "w_cfg": 0.25,
+   "w_col": 0.1
+  },
+  "code_digest": "344be36f8976bb4a",
+  "colour_weight": 0.5,
+  "content": "colour_rings",
+  "door": "fused3",
+  "rrf_k": 60,
+  "shortlist": 8
+ },
+ "cells": 6,
+ "fused_identical": true,
+ "fused_matches": 6,
+ "mismatches": [],
+ "objects": 3,
+ "seconds": 15.8,
+ "shipped_identical": true,
+ "shipped_matches": 6,
+ "views": [
+  "035-045",
+  "045-180"
+ ]
+}

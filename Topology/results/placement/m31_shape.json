@@ -1,0 +1,192 @@
+{
+ "anisotropy": {
+  "G_any": 0.5779226023868209,
+  "G_same": 0.5084123135699068,
+  "chance": 0.5,
+  "fields": [
+   "eigr",
+   "rel",
+   "coherence",
+   "aniso_along"
+  ],
+  "key_baseline_same": 0.494,
+  "n": 4537,
+  "weights": [
+   2.0,
+   3.0,
+   2.0,
+   2.0
+  ]
+ },
+ "columns": {
+  "objects": 80,
+  "views": {
+   "000-000": {
+    "parabola_note": "var = 1/(2|den|) clipped to [1e-3, 1]; a column at the cap means |den| <= 0.5 for every place",
+    "resp": {
+     "distinct": 36604,
+     "max": 0.502202033996582,
+     "min": 3.317071617381373e-11,
+     "places": 43854,
+     "top_values": {
+      "0.0": 2307,
+      "1e-06": 2438,
+      "2e-06": 190,
+      "3e-06": 92,
+      "4e-06": 55,
+      "5e-06": 43
+     }
+    },
+    "var_x": {
+     "distinct": 4,
+     "max": 1.0,
+     "min": 0.898594145178091,
+     "places": 43854,
+     "top_values": {
+      "0.898594": 1,
+      "0.991381": 1,
+      "0.991627": 1,
+      "1.0": 43851
+     }
+    },
+    "var_y": {
+     "distinct": 8,
+     "max": 1.0,
+     "min": 0.8182830076090756,
+     "places": 43854,
+     "top_values": {
+      "0.818283": 1,
+      "0.880666": 1,
+      "0.928156": 1,
+      "0.939672": 1,
+      "0.953318": 1,
+      "0.983806": 1
+     }
+    }
+   },
+   "035-045": {
+    "parabola_note": "var = 1/(2|den|) clipped to [1e-3, 1]; a column at the cap means |den| <= 0.5 for every place",
+    "resp": {
+     "distinct": 39014,
+     "max": 0.42037394642829895,
+     "min": 3.1182303961152513e-10,
+     "places": 46059,
+     "top_values": {
+      "0.0": 1507,
+      "1e-06": 1629,
+      "2e-06": 182,
+      "3e-06": 89,
+      "4e-06": 64,
+      "5e-06": 59
+     }
+    },
+    "var_x": {
+     "distinct": 1,
+     "max": 1.0,
+     "min": 1.0,
+     "places": 46059,
+     "top_values": {
+      "1.0": 46059
+     }
+    },
+    "var_y": {
+     "distinct": 2,
+     "max": 1.0,
+     "min": 0.9708953460253055,
+     "places": 46059,
+     "top_values": {
+      "0.970895": 1,
+      "1.0": 46058
+     }
+    }
+   }
+  }
+ },
+ "decision": "shape ceiling named; 4c runs once",
+ "gauge2": {
+  "bar": {
+   "baseline_key_same": 0.49403465089739595,
+   "both_same": 0.5389822595704948,
+   "gain_required": 0.1,
+   "measured": 0.04494760867309888,
+   "passes": false
+  },
+  "both_all_five": {
+   "G_any": 0.5943837224391567,
+   "G_same": 0.5393323996265172,
+   "chance": 0.5,
+   "extra": "",
+   "kind": "both",
+   "n": 4284,
+   "weights": [
+    2.0,
+    1.0,
+    1.0,
+    2.0,
+    3.0
+   ]
+  },
+  "both_pinned_zero": {
+   "G_any": 0.5938558047353333,
+   "G_same": 0.5389822595704948,
+   "chance": 0.5,
+   "extra": "",
+   "kind": "both",
+   "n": 4284,
+   "weights": [
+    2.0,
+    0.0,
+    0.0,
+    2.0,
+    3.0
+   ]
+  },
+  "key": {
+   "G_any": 0.5080812915883652,
+   "G_same": 0.49403465089739595,
+   "chance": 0.5,
+   "extra": "",
+   "kind": "key",
+   "n": 4284,
+   "weights": [
+    2.0,
+    1.0,
+    1.0,
+    2.0,
+    3.0
+   ]
+  },
+  "live_only": {
+   "G_any": 0.6611885260433287,
+   "G_same": 0.5710395269218798,
+   "chance": 0.5,
+   "extra": "",
+   "kind": "shape",
+   "n": 4284,
+   "weights": [
+    2.0,
+    0.0,
+    0.0,
+    2.0,
+    3.0
+   ]
+  },
+  "query_places": 4284,
+  "seconds": 42.3,
+  "weights_pinned_zero": [
+   2.0,
+   0.0,
+   0.0,
+   2.0,
+   3.0
+  ],
+  "weights_shipped": [
+   2.0,
+   1.0,
+   1.0,
+   2.0,
+   3.0
+  ]
+ },
+ "seconds": 0
+}

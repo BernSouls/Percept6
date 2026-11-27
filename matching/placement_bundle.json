@@ -1,21 +1,24 @@
 {
  "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
- "code_digest": "73b9a7e1b9e288f7647c2136443f168cc04c8bbec1538be09e5ed3b517910474",
+ "code_digest": "344be36f8976bb4af0fb1b8900168a4be83236b2f8c49614794d67334049b2e4",
  "content": {
   "digest": "26b1d1a2292034e5",
-  "kind": "keypoint",
+  "kind": "colour_rings",
   "kinds": [
    "keypoint",
    "colour_rings"
   ],
-  "note": "M28 item 6.  What a place carries beyond its keypoint signature.  'keypoint' is the shipped default and is what every record before M28 carries; 'colour_rings' adds six CIELAB ring means at the place's own scale (matching/placement_content.py).  Records and reads that use a non-default kind name it in their manifest."
+  "note": "what a place carries beyond its keypoint signature.  'colour_rings' is six CIELAB ring means at the place's own scale (matching/placement_content.py); every record and read that uses a non-default kind names it in its manifest."
  },
  "date": "2026-11-27",
  "door": {
-  "kind": "counted",
+  "kind": "fused3",
   "n_hits": 8,
   "note": "the counted door: each query place counts its n_hits nearest pool places by the frozen configuration ruler, one vote per object; the object score is count / sqrt(n_query_places * n_object_places)",
-  "params": {}
+  "params": {
+   "colour_weight": 0.5,
+   "n_hits": 8
+  }
  },
  "frontend": {
   "extra_pre": {
@@ -36,8 +39,17 @@
    "PLACEMENT_M15_PLACES": true
   }
  },
+ "fusion": {
+  "appearance": 1.0,
+  "colour": 0.5,
+  "counted": 1.0
+ },
  "margin_tau": 0.0,
  "matcher": {
+  "blend": {
+   "w_cfg": 0.25,
+   "w_col": 0.1
+  },
   "bundle": "matching/placement_score_params.json",
   "entry": "matching.joint_mcs.joint_mcs -> score_shipped",
   "flags": {
@@ -270,12 +282,12 @@
   },
   "note": "documentation only: this block is not part of code_digest and freeze() overwrites it"
  },
- "mission": "M24",
+ "mission": "M31",
  "name": "placement-shipped-v1",
  "provenance": {
   "entry_point": "matching/placement_recognise.py",
-  "measured_by": "MISSION23_REPORT.md section 5 (the read); MISSION25_REPORT.md section 4 (the k = 1 vs k = 4 read)",
-  "note": "frozen from the configuration Mission 25 shipped"
+  "measured_by": "MISSION30_REPORT.md (A1 door: FIT recall@8 0.550 -> 0.675 / 0.650, CONF 0.550 -> 0.650, 0.475 -> 0.600 at colour weight 0.5)",
+  "note": "M31 item 1: fused door (counted + appearance + colour@0.5), colour-ring content, shortlist 8"
  },
  "references": {
   "covering_deg": 90.0,
@@ -303,7 +315,7 @@
  },
  "rerank": "plain",
  "rrf_k": 60,
- "shortlist": 16,
+ "shortlist": 8,
  "shortlist_rule": "fixed",
  "shortlist_wide": 16
 }
