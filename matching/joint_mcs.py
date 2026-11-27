@@ -378,7 +378,8 @@ def _directional_joint_mcs(a, b, sigs_a, sigs_b, addrs_a=None, addrs_b=None,
         # caller supplied the images; otherwise both stay None and the aligner's
         # new block never runs.
         placement_side_a=_side_a,
-        placement_side_b=_side_b)
+        placement_side_b=_side_b,
+        placement_images=(_img_a, _img_b) if _side_a is not None else None)
     assert len(set(al.mapping.values()))==len(al.mapping)
     b_und={(min(x,y),max(x,y),et) for x,y,et in b.edges if et in UNDIRECTED_EDGE_TYPES}
     b_dir={(x,y,et) for x,y,et in b.edges if et not in UNDIRECTED_EDGE_TYPES}

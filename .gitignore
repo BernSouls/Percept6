@@ -17,6 +17,8 @@ Topology/cache/
 # 40 MB): it is what makes a fresh sandbox ready in 0.4 s instead of rebuilding records for 1,824 s.
 !data/placement_records_m27.npz
 !data/placement_records_m28.npz
+# ... and M30's, which adds the five graded shape columns (v29, 37.4 MB, budget 40 MB).
+!data/placement_records_m30.npz
 Topology/results/placement/_graphcache/
 
 # M16: the candidate-level bank is 138 MB (GitHub refused it at the pre-receive

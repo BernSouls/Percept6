@@ -1,0 +1,326 @@
+{
+ "corners": {
+  "chosen": 90.0,
+  "chosen_by": "I_total_bits (total identity carried, FIT only)",
+  "fit_objects": 40,
+  "rows": [
+   {
+    "H_key_bits": 8.726,
+    "I_per_place_bits": 1.263,
+    "I_total_bits": 39851.5,
+    "by_class": {
+     "Blob": 13082,
+     "BoundaryArc": 7706,
+     "CornerPoint": 10775
+    },
+    "corner_frac": 0.3414,
+    "corner_places": 10775,
+    "corner_quantile": 90.0,
+    "places": 31563
+   },
+   {
+    "H_key_bits": 8.708,
+    "I_per_place_bits": 1.471,
+    "I_total_bits": 38322.5,
+    "by_class": {
+     "Blob": 13082,
+     "BoundaryArc": 7706,
+     "CornerPoint": 5264
+    },
+    "corner_frac": 0.2021,
+    "corner_places": 5264,
+    "corner_quantile": 95.0,
+    "places": 26052
+   },
+   {
+    "H_key_bits": 8.703,
+    "I_per_place_bits": 1.631,
+    "I_total_bits": 38793.1,
+    "by_class": {
+     "Blob": 13082,
+     "BoundaryArc": 7706,
+     "CornerPoint": 3001
+    },
+    "corner_frac": 0.1262,
+    "corner_places": 3001,
+    "corner_quantile": 97.0,
+    "places": 23789
+   },
+   {
+    "H_key_bits": 8.647,
+    "I_per_place_bits": 1.744,
+    "I_total_bits": 38649.2,
+    "by_class": {
+     "Blob": 13082,
+     "BoundaryArc": 7706,
+     "CornerPoint": 1367
+    },
+    "corner_frac": 0.0617,
+    "corner_places": 1367,
+    "corner_quantile": 98.5,
+    "places": 22155
+   }
+  ],
+  "seconds": 20.8,
+  "shipped": 98.5,
+  "view": "000-000"
+ },
+ "fields": {
+  "eigratio": {
+   "G_any": 0.6153216560885958,
+   "G_same": 0.5444548189646229,
+   "chance": 0.5,
+   "field": "eigratio",
+   "n": 4284
+  },
+  "rel_angle": {
+   "G_any": 0.5697532177427934,
+   "G_same": 0.5209824670608985,
+   "chance": 0.5,
+   "field": "rel_angle",
+   "n": 4284
+  },
+  "resp": {
+   "G_any": 0.6014416315049226,
+   "G_same": 0.544999481273991,
+   "chance": 0.5,
+   "field": "resp",
+   "n": 4284
+  },
+  "var_x": {
+   "G_any": 0.5,
+   "G_same": 0.5,
+   "chance": 0.5,
+   "field": "var_x",
+   "n": 4284
+  },
+  "var_y": {
+   "G_any": 0.5,
+   "G_same": 0.5,
+   "chance": 0.5,
+   "field": "var_y",
+   "n": 4284
+  }
+ },
+ "gauge": {
+  "bar": {
+   "baseline_key_same_class": 0.49577238302728494,
+   "both_gain": 0.0765380226164541,
+   "gain_required": 0.1,
+   "shape_gain": 0.07526714389459482
+  },
+  "both": {
+   "G_any": 0.6382299755345175,
+   "G_same": 0.572310405643739,
+   "chance": 0.5,
+   "kind": "both",
+   "object_level_G_any": 0.6281645569620253,
+   "object_level_G_same": 0.5138888888888888,
+   "queries": [
+    "apple/1",
+    "car/1",
+    "cow/1",
+    "cup/1",
+    "dog/1",
+    "horse/1",
+    "pear/1",
+    "tomato/1"
+   ],
+   "query_places": 4284
+  },
+  "key": {
+   "G_any": 0.5147531586474252,
+   "G_same": 0.49577238302728494,
+   "chance": 0.5,
+   "kind": "key",
+   "object_level_G_any": null,
+   "object_level_G_same": null,
+   "queries": [
+    "apple/1",
+    "car/1",
+    "cow/1",
+    "cup/1",
+    "dog/1",
+    "horse/1",
+    "pear/1",
+    "tomato/1"
+   ],
+   "query_places": 4284
+  },
+  "passes": false,
+  "shape": {
+   "G_any": 0.6611885260433287,
+   "G_same": 0.5710395269218798,
+   "chance": 0.5,
+   "kind": "shape",
+   "object_level_G_any": null,
+   "object_level_G_same": null,
+   "queries": [
+    "apple/1",
+    "car/1",
+    "cow/1",
+    "cup/1",
+    "dog/1",
+    "horse/1",
+    "pear/1",
+    "tomato/1"
+   ],
+   "query_places": 4284
+  }
+ },
+ "information": {
+  "H_object_bits": 6.32,
+  "n_objects": 80,
+  "seconds": 13.4,
+  "views": {
+   "000-000": {
+    "by_lens": {
+     "Blob": {
+      "H_key_bits": 6.755,
+      "H_key_plus_shape_bits": 11.645,
+      "I_key_object_bits": 0.833,
+      "I_key_plus_shape_object_bits": 4.046,
+      "distinct_key_plus_shape": 8197,
+      "distinct_keys": 192,
+      "grid_cells": 192,
+      "grid_filled_frac": 1.0,
+      "identity_gain_bits": 3.213,
+      "max_places_in_one_cell": 813,
+      "places": 23220,
+      "places_per_occupied_cell": 120.9
+     },
+     "BoundaryArc": {
+      "H_key_bits": 6.038,
+      "H_key_plus_shape_bits": 10.021,
+      "I_key_object_bits": 0.741,
+      "I_key_plus_shape_object_bits": 3.216,
+      "distinct_key_plus_shape": 2874,
+      "distinct_keys": 182,
+      "grid_cells": 192,
+      "grid_filled_frac": 0.9479,
+      "identity_gain_bits": 2.475,
+      "max_places_in_one_cell": 864,
+      "places": 15055,
+      "places_per_occupied_cell": 82.7
+     },
+     "CornerPoint": {
+      "H_key_bits": 6.92,
+      "H_key_plus_shape_bits": 9.871,
+      "I_key_object_bits": 2.444,
+      "I_key_plus_shape_object_bits": 5.073,
+      "distinct_key_plus_shape": 1267,
+      "distinct_keys": 185,
+      "grid_cells": 192,
+      "grid_filled_frac": 0.9635,
+      "identity_gain_bits": 2.629,
+      "max_places_in_one_cell": 58,
+      "places": 2124,
+      "places_per_occupied_cell": 11.5
+     }
+    },
+    "pooled_places_weighted_I_key": 0.883,
+    "pooled_places_weighted_I_key_plus_shape": 3.791
+   },
+   "035-045": {
+    "by_lens": {
+     "Blob": {
+      "H_key_bits": 6.789,
+      "H_key_plus_shape_bits": 11.456,
+      "I_key_object_bits": 0.792,
+      "I_key_plus_shape_object_bits": 3.874,
+      "distinct_key_plus_shape": 8014,
+      "distinct_keys": 192,
+      "grid_cells": 192,
+      "grid_filled_frac": 1.0,
+      "identity_gain_bits": 3.082,
+      "max_places_in_one_cell": 991,
+      "places": 23958,
+      "places_per_occupied_cell": 124.8
+     },
+     "BoundaryArc": {
+      "H_key_bits": 6.008,
+      "H_key_plus_shape_bits": 9.719,
+      "I_key_object_bits": 0.694,
+      "I_key_plus_shape_object_bits": 2.913,
+      "distinct_key_plus_shape": 2711,
+      "distinct_keys": 186,
+      "grid_cells": 192,
+      "grid_filled_frac": 0.9688,
+      "identity_gain_bits": 2.219,
+      "max_places_in_one_cell": 955,
+      "places": 17513,
+      "places_per_occupied_cell": 94.2
+     },
+     "CornerPoint": {
+      "H_key_bits": 6.951,
+      "H_key_plus_shape_bits": 9.707,
+      "I_key_object_bits": 2.86,
+      "I_key_plus_shape_object_bits": 5.393,
+      "distinct_key_plus_shape": 1026,
+      "distinct_keys": 175,
+      "grid_cells": 192,
+      "grid_filled_frac": 0.9115,
+      "identity_gain_bits": 2.533,
+      "max_places_in_one_cell": 39,
+      "places": 1549,
+      "places_per_occupied_cell": 8.9
+     }
+    },
+    "pooled_places_weighted_I_key": 0.827,
+    "pooled_places_weighted_I_key_plus_shape": 3.537
+   }
+  }
+ },
+ "manifest": {
+  "environment": {
+   "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+   "logical_cores": 2,
+   "numpy": "2.4.6",
+   "pair_env": "a563a5c210508e9e",
+   "physical_cores": 1,
+   "pil": "13.0.0",
+   "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+   "python": "3.11.2",
+   "scipy": "1.17.1"
+  },
+  "records": "placement_records_m30.npz",
+  "records_bytes": 37391603
+ },
+ "registration": {
+  "axes": [
+   "resp",
+   "var_x",
+   "var_y",
+   "eigratio",
+   "rel_angle"
+  ],
+  "class": "PLACE_SHAPE",
+  "cycle": {
+   "4": 12
+  },
+  "digest": "db4871bb2514a736",
+  "fields": [
+   "resp",
+   "var_x",
+   "var_y",
+   "eigratio",
+   "rel_angle"
+  ],
+  "missing": [],
+  "ranges": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   6.0
+  ],
+  "weights": [
+   2.0,
+   1.0,
+   1.0,
+   2.0,
+   3.0
+  ]
+ },
+ "seconds": 44.2
+}

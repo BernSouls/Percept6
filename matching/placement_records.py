@@ -30,12 +30,19 @@ import numpy as np
 #: The lens classes a keypoint record can carry, in fixed order (stored as an int8 code).
 LENSES: Tuple[str, ...] = ("Blob", "BoundaryArc", "CornerPoint")
 DROP_REASONS: Tuple[str, ...] = ("no_sig", "no_config", "no_position", "no_scale")
+
+#: The graded shape fields a record may carry (M30), in fixed order.
+SHAPE_FIELDS: Tuple[str, ...] = ("resp", "var_x", "var_y", "eigratio", "rel_angle")
 SLOTS = 5
 
 #: The record format.  28 adds the optional CONTENT block (`content.kind` != "keypoint"):
 #: `N_CONTENT` float columns per place, and the same number of bin-ints when counted.
-FORMAT_VERSION = 28
+FORMAT_VERSION = 29
 N_CONTENT = 6
+
+#: M30: the graded SHAPE columns (resp, var_x, var_y, eigratio, rel_angle).  Same discipline as
+#: content: columns on the record, never new key slots, so every key stays byte-identical.
+N_SHAPE = 5
 
 #: The stored float width.  float64, because the door MATCHES ON EXACT KEY EQUALITY: a quantised
 #: value stored as float32 (1.6 -> 1.6000000238) lands in a different bucket, and the loader's
@@ -60,6 +67,9 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
         "keys": np.asarray(list(keys), dtype=object),
         "views": np.asarray(list(views), dtype=object),
         "meta": np.asarray(json.dumps({"version": FORMAT_VERSION, "slots": SLOTS,
+                                       "shape": N_SHAPE if any(
+                                           r.get("eigratio") is not None for _o, _v, rec in cells
+                                           for r in rec["places"]) else 0,
                                        "content": N_CONTENT if any(
                                            r.get("content") for _o, _v, rec in cells
                                            for r in rec["places"]) else 0,
@@ -72,6 +82,7 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
         v: {"rows": [], "dz": [], "mz": [], "obj": [], "idx": [], "drop": [], "pay": [],
             "nodes": [], "lens": []} for v in views}
     content: Dict[str, List[Any]] = {v: [] for v in views}
+    shape: Dict[str, List[Any]] = {v: [] for v in views}
     for obj_key, view, rec in cells:
         b = buckets[view]
         width = widths.get(view, 0)
@@ -92,6 +103,8 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
             if c is not None:
                 cc = list(c)
                 content[view].append(cc + [0.0] * (N_CONTENT - len(cc)))
+            if r.get("eigratio") is not None:
+                shape[view].append([float(r.get(k, 0.0) or 0.0) for k in SHAPE_FIELDS])
         d = rec.get("dropped") or {}
         b["drop"].append([int(d.get(k, 0)) for k in DROP_REASONS])
         b["pay"].append(int(rec.get("n_payload") or 0))
@@ -115,6 +128,8 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
         out["nodes_%s" % v] = np.asarray(b["nodes"], dtype=np.int32)
         if content[v]:
             out["content_%s" % v] = np.asarray(content[v], dtype=DTYPE)
+        if shape[v]:
+            out["shape_%s" % v] = np.asarray(shape[v], dtype=DTYPE)
     return out
 
 
@@ -164,6 +179,7 @@ def _cell_from(z: Any, obj_key: str, view: str) -> Dict[str, Any]:
     idx = z["idx_%s" % view]
     lens = z["lens_%s" % view]
     content_all = z["content_%s" % view] if ("content_%s" % view) in z.files else None
+    shape_all = z["shape_%s" % view] if ("shape_%s" % view) in z.files else None
     sel = np.flatnonzero(obj == i)
     places: List[Dict[str, Any]] = []
     for j in sel:
@@ -183,6 +199,9 @@ def _cell_from(z: Any, obj_key: str, view: str) -> Dict[str, Any]:
                        "theta": (None if not np.isfinite(th) else th)})
         if content_all is not None:
             places[-1]["content"] = [float(v) for v in content_all[j]]
+        if shape_all is not None:
+            for _f, _v in zip(SHAPE_FIELDS, shape_all[j]):
+                places[-1][_f] = float(_v)
     drop = {name: int(z["drop_%s" % view][i][d]) for d, name in enumerate(DROP_REASONS)}
     return {"path": None, "obj": obj_key, "view": view, "places": places,
             "dropped": drop, "n_payload": int(z["pay_%s" % view][i]),

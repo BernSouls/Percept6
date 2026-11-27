@@ -4445,6 +4445,14 @@ PLACEMENT_NODE_DESC_W: float = float(os.environ.get("PLACEMENT_NODE_DESC_W", "0.
 PLACEMENT_NODE_DESC_MAXCELLS: int = int(
     os.environ.get("PLACEMENT_NODE_DESC_MAXCELLS", "0"))
 
+
+# [MISSION 30 / A2] THE COLOUR TERM IN THE MATCHER.  The node similarity of a candidate pair is
+# ``(1 - w_cfg - w_col)*sim + w_cfg*config + w_col*colour``: the shipped configuration term keeps
+# its weight and colour enters BELOW it, at 0.10 (the mission's ceiling is 0.15).  OFF by default,
+# so the deployed score is the two-term blend it always was.  `PLACEMENT_NODE_COLOUR_W` is the
+# weight`, fixed before any read.
+PLACEMENT_NODE_COLOUR: bool = os.environ.get("PLACEMENT_NODE_COLOUR", "0") != "0"
+PLACEMENT_NODE_COLOUR_W: float = float(os.environ.get("PLACEMENT_NODE_COLOUR_W", "0.10"))
 #: [M19 / O2] THE ADAPTIVE CAP.  A dense row (grass: median 586 places) is unreachable at a
 #: fixed cap of 24.  On, each row's cap is `clamp(round(k * row_size), base, cap_max)`.
 PLACEMENT_CAP_ADAPTIVE: bool = os.environ.get("PLACEMENT_CAP_ADAPTIVE", "0") != "0"

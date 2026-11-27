@@ -139,6 +139,11 @@ _FRONTEND_SWITCHES = (
                       "PLACEMENT_NODE_DESC_K",
                       "PLACEMENT_NODE_DESC_W",
                       "PLACEMENT_NODE_DESC_MAXCELLS",
+                      # [MISSION 30] the colour supplement: the matcher's three-term blend
+                      # (weight) and its switch.  Declared BEFORE any graph or match is built
+                      # under them; the pair cache and the graph cache key move with them.
+                      "PLACEMENT_NODE_COLOUR",
+                      "PLACEMENT_NODE_COLOUR_W",
                       "PLACEMENT_CAP_ADAPTIVE",
                       "PLACEMENT_CAP_DEDUP",
                       "PLACEMENT_M19",

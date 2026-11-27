@@ -808,6 +808,7 @@ def global_consistency_alignment(
     placement_tolerance: Optional[float] = None,
     placement_side_a: Optional[Any] = None,
     placement_side_b: Optional[Any] = None,
+    placement_images: Optional[Sequence[Any]] = None,
 ) -> Alignment:
     """Global-consistency alignment seeded from the approximate Hungarian.
 
@@ -970,7 +971,8 @@ def global_consistency_alignment(
             PM.frozen()          # refuses to run with drifted caps
             matrix = PM.rescore_matrix(matrix, nodes_a, nodes_b,
                                        placement_side_a, placement_side_b,
-                                       use_geometry=_geom, stats=_stats)
+                                       use_geometry=_geom, stats=_stats,
+                                       images=placement_images)
             PM.FAILURES["rescored"] += 1
             _placement_stats = _stats
         except Exception as _exc:      # pragma: no cover - loud in test mode

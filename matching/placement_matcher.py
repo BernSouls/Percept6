@@ -31,6 +31,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 import numpy as np
+from collections import OrderedDict
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 FROZEN_PATH = os.path.join(_HERE, "placement_frozen_params.json")
@@ -129,6 +130,161 @@ def apply_node_descriptor(matrix: Sequence[Sequence[float]],
             c = Ctx.config_similarity(dq, desc_r.get(int(nodes_b[j])))
             row[j] = (1.0 - ww) * s + ww * c
     return out
+
+
+def apply_node_colour(matrix: Sequence[Sequence[float]],
+                      nodes_a: Sequence[int], nodes_b: Sequence[int],
+                      side_a: Any, side_b: Any, img_a: Any, img_b: Any,
+                      w: Optional[float] = None,
+                      w_cfg: Optional[float] = None) -> List[List[float]]:
+    """[M30 / A2] THE COLOUR TERM.  Three terms, exactly as committed before the read:
+
+        sim' = (1 - w_cfg - w_col) * sim  +  w_cfg * config  +  w_col * colour
+
+    `w_cfg` is the shipped configuration weight (PLACEMENT_NODE_DESC_W, 0.25 in the bundle) and is
+    HELD; `w_col` is PLACEMENT_NODE_COLOUR_W (0.10), which the mission caps at 0.15.  The colour of
+    a node is the M28 place content: six CIELAB ring means at the node's own frame (position from
+    the anchor, scale from the side), compared by cosine.  A node without a frame or a side scale
+    has no colour; on those cells the weight stays with the two-term blend (the mask is reported,
+    never assumed).
+
+    Applied at the SAME point as the configuration term -- inside `rescore_matrix`, before
+    `top_candidates` -- so the candidate cap and the context see the same population as before.
+
+    Flag OFF (the default) returns the matrix object it was given, untouched; `w = 0` is the same
+    as off.  Both are tested to be byte-identical to the deployed score.
+    """
+    import parameters as P
+    if not bool(getattr(P, "PLACEMENT_NODE_COLOUR", False)):
+        return matrix
+    ww = float(getattr(P, "PLACEMENT_NODE_COLOUR_W", 0.10) if w is None else w)
+    if ww <= 0.0:
+        return matrix
+    wc = float(getattr(P, "PLACEMENT_NODE_DESC_W", 0.5) if w_cfg is None else w_cfg)
+    if ww + wc > 1.0:
+        FAILURES["colour_weight_refused"] = FAILURES.get("colour_weight_refused", 0) + 1
+        raise ValueError("PLACEMENT_NODE_COLOUR_W %r + descriptor weight %r exceeds 1.0"
+                         % (ww, wc))
+    from matching import placement_content as PC
+    fa = _node_colour(img_a, nodes_a, side_a)
+    fb = _node_colour(img_b, nodes_b, side_b)
+    out: List[List[float]] = [list(r) for r in matrix]
+    used = 0
+    for i, u in enumerate(nodes_a):
+        ca = fa.get(int(u))
+        if ca is None:
+            continue
+        row = out[i]
+        for j, v in enumerate(nodes_b):
+            cb = fb.get(int(v))
+            if cb is None or float(row[j]) <= 0.0:
+                continue
+            cos = float(np.dot(ca, cb))
+            row[j] = (1.0 - wc - ww) * float(row[j]) + ww * cos
+            used += 1
+    FAILURES["colour_cells"] = FAILURES.get("colour_cells", 0) + used
+    return out
+
+
+#: [M30] one colour vector per (side, node).  The vectors depend on the side alone, but the
+#: blend is asked for them once per PAIR -- that is the same 1,600 ring evaluations redone for
+#: every candidate.  Measured on the A3 cell: a blended pair cost 58 s against 25 s for the
+#: shipped score, i.e. 57 % of the read was this recomputation.  Cached per side (the LRU holds
+#: the side itself, so `id()` cannot be reused while an entry lives).
+_COLOUR_CACHE: "OrderedDict[int, Tuple[Any, Dict[int, np.ndarray]]]" = OrderedDict()
+_COLOUR_CACHE_MAX = 6
+_COLOUR_STATS = {"hits": 0, "misses": 0}
+
+
+def _side_colour(img: Any, side: Any) -> Dict[int, np.ndarray]:
+    """Every node of ``side`` that has a frame and a scale -> its unit CIELAB-ring vector."""
+    from matching import placement_content as PC
+    if img is None:
+        return {}
+    key = id(side)
+    hit = _COLOUR_CACHE.get(key)
+    if hit is not None and hit[0] is side:
+        _COLOUR_CACHE.move_to_end(key)
+        _COLOUR_STATS["hits"] += 1
+        return hit[1]
+    sp = getattr(side, "spacing_by_node", None) or {}
+    frames = getattr(side, "places", ()) or ()
+    ids_all = list(getattr(side, "nodes", ()) or ())
+    places: List[Dict[str, Any]] = []
+    ids: List[int] = []
+    for i, u in enumerate(ids_all):
+        if i >= len(frames):
+            continue
+        v = frames[i]
+        s = sp.get(int(u)) if hasattr(sp, "get") else None
+        if v is None or len(v) < 2 or s is None:
+            continue
+        if not np.isfinite(float(s)) or float(s) <= 0.0:
+            continue
+        ids.append(int(u))
+        places.append({"x": float(v[0]), "y": float(v[1]), "s": float(s), "theta": None})
+    if not places:
+        _COLOUR_CACHE[key] = (side, {})
+        _COLOUR_STATS["misses"] += 1
+        return {}
+    f = PC.features(img, places)
+    feats = {u: f[i] for i, u in enumerate(ids)}
+    _COLOUR_CACHE[key] = (side, feats)
+    _COLOUR_STATS["misses"] += 1
+    while len(_COLOUR_CACHE) > _COLOUR_CACHE_MAX:
+        _COLOUR_CACHE.popitem(last=False)
+    return feats
+
+
+def _node_colour(img: Any, nodes: Sequence[int], side: Any) -> Dict[int, np.ndarray]:
+    """The unit CIELAB-ring vector of every requested node (one pass per side, cached)."""
+    if img is None:
+        return {}
+    feats = _side_colour(img, side)
+    if not feats:
+        return {}
+    return {int(u): feats[int(u)] for u in nodes if int(u) in feats}
+
+
+def _legacy_node_colour(img: Any, nodes: Sequence[int], side: Any) -> Dict[int, np.ndarray]:
+    """The uncached computation, kept for the identity test that pins the cache to it."""
+    from matching import placement_content as PC
+    if img is None:
+        return {}
+    sp = getattr(side, "spacing_by_node", None) or {}
+    # `Side.places` is a tuple of (x, y) ALIGNED WITH `Side.nodes`; the scale is per node.
+    frames = getattr(side, "places", ()) or ()
+    ids_all = list(getattr(side, "nodes", ()) or ())
+    xy: Dict[int, Tuple[float, float]] = {}
+    for i, u in enumerate(ids_all):
+        if i < len(frames):
+            v = frames[i]
+            if v is not None and len(v) >= 2:
+                xy[int(u)] = (float(v[0]), float(v[1]))
+    places: List[Dict[str, Any]] = []
+    ids: List[int] = []
+    for u in nodes:
+        p = xy.get(int(u))
+        s = sp.get(int(u)) if hasattr(sp, "get") else None
+        if p is None or s is None or not np.isfinite(float(s)) or float(s) <= 0.0:
+            continue
+        ids.append(int(u))
+        places.append({"x": float(p[0]), "y": float(p[1]), "s": float(s), "theta": None})
+    if not places:
+        return {}
+    f = PC.features(img, places)
+    return {u: f[i] for i, u in enumerate(ids)}
+
+
+def _frame_of(side: Any, u: int):
+    """The node's (x, y), from whatever the side carries."""
+    for name in ("anchor_of_node", "anchors", "positions", "pos_of_node"):
+        d = getattr(side, name, None)
+        if isinstance(d, dict) and u in d:
+            v = d[u]
+            if v is not None and len(v) >= 2:
+                return float(v[0]), float(v[1])
+    return None
 
 
 def adaptive_cap(base: int, row_size: int, k: Optional[float] = None,
@@ -567,7 +723,8 @@ def rescore_matrix(matrix: Sequence[Sequence[float]],
                    nodes_a: Sequence[int], nodes_b: Sequence[int],
                    side_a: Side, side_b: Side, *,
                    use_geometry: bool = True,
-                   stats: Optional[Dict[str, Any]] = None
+                   stats: Optional[Dict[str, Any]] = None,
+                   images: Optional[Sequence[Any]] = None
                    ) -> List[List[float]]:
     """The candidate-level re-scoring the mission asks the matcher to apply."""
     from matching import placement_llr as L
@@ -587,6 +744,12 @@ def rescore_matrix(matrix: Sequence[Sequence[float]],
     # applies it too; with the bundle off (or `PLACEMENT_NODE_DESC` off) this is the same
     # line it always was, and `apply_node_descriptor` returns the matrix untouched.
     matrix = apply_node_descriptor(matrix, nodes_a, nodes_b, side_a, side_b)
+    # [M30 / A2] the colour term rides at the SAME point (before the cap), so the context and the
+    # cap see the population the descriptor left.  Without images, or with the flag off, this is
+    # the matrix the two-term blend produced.
+    if images is not None and len(images) == 2:
+        matrix = apply_node_colour(matrix, nodes_a, nodes_b, side_a, side_b,
+                                   images[0], images[1])
     if stats is not None:
         # [M20 / item 1] WHAT THE MATCHER ACTUALLY USED, at call time.  The values come from
         # `m15_manifest.effective_flags()` -- the module-level switches AS DERIVED -- so this
