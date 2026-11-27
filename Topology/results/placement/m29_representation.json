@@ -1,0 +1,4361 @@
+{
+ "edge_term": {
+  "edge_share_mean": 0.156,
+  "pairs": [
+   {
+    "edge_share": 0.16512984723604274,
+    "edge_weight": 0.5,
+    "q": "apple1-035-045.png",
+    "r": "apple1-000-000.png",
+    "score": 0.3499972914131868,
+    "score_edge_weight_0": 0.29220229214909854
+   },
+   {
+    "edge_share": 0.17842360196055662,
+    "edge_weight": 0.5,
+    "q": "apple1-035-045.png",
+    "r": "apple10-000-000.png",
+    "score": 0.31390608197446657,
+    "score_edge_weight_0": 0.2578978281512565
+   },
+   {
+    "edge_share": 0.1404421292833099,
+    "edge_weight": 0.5,
+    "q": "apple1-035-045.png",
+    "r": "apple3-000-000.png",
+    "score": 0.3676549198900832,
+    "score_edge_weight_0": 0.3160206800992352
+   },
+   {
+    "edge_share": 0.14093920841347918,
+    "edge_weight": 0.5,
+    "q": "apple1-035-045.png",
+    "r": "apple4-000-000.png",
+    "score": 0.37838887417478273,
+    "score_edge_weight_0": 0.32505904577612127
+   },
+   {
+    "edge_share": 0.17441366677259196,
+    "edge_weight": 0.5,
+    "q": "apple1-035-045.png",
+    "r": "apple5-000-000.png",
+    "score": 0.3646661689621957,
+    "score_edge_weight_0": 0.3010634052855856
+   },
+   {
+    "edge_share": 0.1530201452203026,
+    "edge_weight": 0.5,
+    "q": "apple1-035-045.png",
+    "r": "apple6-000-000.png",
+    "score": 0.32994721985699577,
+    "score_edge_weight_0": 0.2794586483594432
+   },
+   {
+    "edge_share": 0.14990534538508582,
+    "edge_weight": 0.5,
+    "q": "apple1-035-045.png",
+    "r": "apple7-000-000.png",
+    "score": 0.32293415250473884,
+    "score_edge_weight_0": 0.27452459683687597
+   },
+   {
+    "edge_share": 0.1468929091315384,
+    "edge_weight": 0.5,
+    "q": "apple1-035-045.png",
+    "r": "apple9-000-000.png",
+    "score": 0.3606675344632629,
+    "score_edge_weight_0": 0.3076880310966548
+   }
+  ]
+ },
+ "graphs": {
+  "degree": {
+   "frac_isolated": 0.534,
+   "max": 77,
+   "mean": 3.49,
+   "median": 0.0
+  },
+  "edge_type_mean_per_image": {
+   "AMODAL_LINK": {
+    "H_params_bits": 3.88,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 8.2,
+    "mean_confidence": 1.0,
+    "param_tuples_distinct": 18,
+    "slots_measured_frac": 1.0
+   },
+   "BORDER_OWNERSHIP_EDGE": {
+    "H_params_bits": 7.3,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 311.5,
+    "mean_confidence": 0.935,
+    "param_tuples_distinct": 236,
+    "slots_measured_frac": 1.0
+   },
+   "COCIRCULAR": {
+    "H_params_bits": 4.8,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 20.8,
+    "mean_confidence": 0.803,
+    "param_tuples_distinct": 33,
+    "slots_measured_frac": 1.0
+   },
+   "COLOR_OPPONENT_BORDER": {
+    "H_params_bits": 8.81,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 183.5,
+    "mean_confidence": 0.686,
+    "param_tuples_distinct": 566,
+    "slots_measured_frac": 1.0
+   },
+   "CONCENTRICITY": {
+    "H_params_bits": 1.37,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 3.3,
+    "mean_confidence": 1.0,
+    "param_tuples_distinct": 3,
+    "slots_measured_frac": 1.0
+   },
+   "CONTACT": {
+    "H_params_bits": 3.97,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 2.8,
+    "mean_confidence": 0.997,
+    "param_tuples_distinct": 16,
+    "slots_measured_frac": 1.0
+   },
+   "CONTOUR_CONTINUITY": {
+    "H_params_bits": 5.03,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 40.0,
+    "mean_confidence": 0.751,
+    "param_tuples_distinct": 46,
+    "slots_measured_frac": 1.0
+   },
+   "CONTOUR_ORIENTATION": {
+    "H_params_bits": -0.0,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 124.2,
+    "mean_confidence": 1.0,
+    "param_tuples_distinct": 1,
+    "slots_measured_frac": 1.0
+   },
+   "CO_LOCATED": {
+    "H_params_bits": 2.14,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 252.3,
+    "mean_confidence": 0.995,
+    "param_tuples_distinct": 7,
+    "slots_measured_frac": 1.0
+   },
+   "CURVATURE": {
+    "H_params_bits": 1.0,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 0.7,
+    "mean_confidence": 1.0,
+    "param_tuples_distinct": 2,
+    "slots_measured_frac": 1.0
+   },
+   "CURVATURE_SIGN_CONTINUITY": {
+    "H_params_bits": 2.3,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 23.5,
+    "mean_confidence": 0.904,
+    "param_tuples_distinct": 6,
+    "slots_measured_frac": 1.0
+   },
+   "CURVE_CONTAINMENT": {
+    "H_params_bits": -0.0,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 8.5,
+    "mean_confidence": 1.0,
+    "param_tuples_distinct": 1,
+    "slots_measured_frac": 1.0
+   },
+   "DEGREE": {
+    "H_params_bits": null,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 0.2,
+    "mean_confidence": null,
+    "param_tuples_distinct": 0,
+    "slots_measured_frac": null
+   },
+   "JUNCTION_CONTOUR": {
+    "H_params_bits": 5.82,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 11.7,
+    "mean_confidence": 1.0,
+    "param_tuples_distinct": 60,
+    "slots_measured_frac": 1.0
+   },
+   "JUNCTION_ORIENTATION": {
+    "H_params_bits": -0.0,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 6.2,
+    "mean_confidence": 1.0,
+    "param_tuples_distinct": 1,
+    "slots_measured_frac": 1.0
+   },
+   "LINE_TERMINATION": {
+    "H_params_bits": 3.93,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 20.2,
+    "mean_confidence": 0.884,
+    "param_tuples_distinct": 31,
+    "slots_measured_frac": 1.0
+   },
+   "ORIENTATION_BEND": {
+    "H_params_bits": 6.15,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 15.2,
+    "mean_confidence": 0.758,
+    "param_tuples_distinct": 76,
+    "slots_measured_frac": 1.0
+   },
+   "ORIENTATION_CONTINUITY": {
+    "H_params_bits": 7.1,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 39.7,
+    "mean_confidence": 0.811,
+    "param_tuples_distinct": 181,
+    "slots_measured_frac": 1.0
+   },
+   "ORIENTATION_JUNCTION": {
+    "H_params_bits": 5.87,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 14.2,
+    "mean_confidence": 0.781,
+    "param_tuples_distinct": 63,
+    "slots_measured_frac": 1.0
+   },
+   "PARALLEL": {
+    "H_params_bits": 4.47,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 7.3,
+    "mean_confidence": 0.965,
+    "param_tuples_distinct": 27,
+    "slots_measured_frac": 1.0
+   },
+   "PART_CONTAINMENT": {
+    "H_params_bits": 4.53,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 4.5,
+    "mean_confidence": 1.0,
+    "param_tuples_distinct": 24,
+    "slots_measured_frac": 1.0
+   },
+   "RADIALITY": {
+    "H_params_bits": 5.8,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 16.2,
+    "mean_confidence": 1.0,
+    "param_tuples_distinct": 63,
+    "slots_measured_frac": 1.0
+   },
+   "REGION_CONTENT": {
+    "H_params_bits": -0.0,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 163.7,
+    "mean_confidence": 0.96,
+    "param_tuples_distinct": 1,
+    "slots_measured_frac": 1.0
+   },
+   "SHARED_BOUNDARY": {
+    "H_params_bits": 2.59,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 10.7,
+    "mean_confidence": 1.0,
+    "param_tuples_distinct": 8,
+    "slots_measured_frac": 1.0
+   },
+   "SPIRALITY": {
+    "H_params_bits": 4.21,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 4.3,
+    "mean_confidence": 0.999,
+    "param_tuples_distinct": 20,
+    "slots_measured_frac": 1.0
+   },
+   "SYMMETRY": {
+    "H_params_bits": 4.58,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 7.7,
+    "mean_confidence": 0.956,
+    "param_tuples_distinct": 31,
+    "slots_measured_frac": 1.0
+   },
+   "TEXTURE_BOUNDARY_EDGE": {
+    "H_params_bits": 6.39,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 1418.7,
+    "mean_confidence": 0.765,
+    "param_tuples_distinct": 265,
+    "slots_measured_frac": 1.0
+   },
+   "TOPOLOGY": {
+    "H_params_bits": null,
+    "all_absent_frac": 0.0,
+    "edges_per_image": 11.0,
+    "mean_confidence": null,
+    "param_tuples_distinct": 0,
+    "slots_measured_frac": null
+   }
+  },
+  "edge_type_share": {
+   "AMODAL_LINK": 0.003,
+   "BORDER_OWNERSHIP_EDGE": 0.114,
+   "COCIRCULAR": 0.008,
+   "COLOR_OPPONENT_BORDER": 0.067,
+   "CONCENTRICITY": 0.001,
+   "CONTACT": 0.001,
+   "CONTOUR_CONTINUITY": 0.015,
+   "CONTOUR_ORIENTATION": 0.045,
+   "CO_LOCATED": 0.092,
+   "CURVATURE": 0.0,
+   "CURVATURE_SIGN_CONTINUITY": 0.009,
+   "CURVE_CONTAINMENT": 0.003,
+   "DEGREE": 0.0,
+   "JUNCTION_CONTOUR": 0.004,
+   "JUNCTION_ORIENTATION": 0.002,
+   "LINE_TERMINATION": 0.007,
+   "ORIENTATION_BEND": 0.006,
+   "ORIENTATION_CONTINUITY": 0.015,
+   "ORIENTATION_JUNCTION": 0.005,
+   "PARALLEL": 0.003,
+   "PART_CONTAINMENT": 0.002,
+   "RADIALITY": 0.006,
+   "REGION_CONTENT": 0.06,
+   "SHARED_BOUNDARY": 0.004,
+   "SPIRALITY": 0.002,
+   "SYMMETRY": 0.003,
+   "TEXTURE_BOUNDARY_EDGE": 0.52,
+   "TOPOLOGY": 0.004
+  },
+  "edge_types_emitted": 28,
+  "edges_per_image": 2730.5,
+  "edges_per_node": 1.75,
+  "images": 6,
+  "node_class_share": {
+   "Blob": 0.198,
+   "BorderOwnership": 0.054,
+   "Boundary": 0.08,
+   "BoundaryArc": 0.138,
+   "CONTOUR_PEAK": 0.083,
+   "Color": 0.073,
+   "Contour": 0.009,
+   "ContourFragment": 0.038,
+   "Corner": 0.01,
+   "CornerPoint": 0.029,
+   "CurveComplex": 0.005,
+   "EndStopped": 0.022,
+   "IllusoryContour": 0.001,
+   "Junction": 0.0,
+   "Onset": 0.001,
+   "Orientation": 0.026,
+   "PEAK_CHAIN": 0.015,
+   "Polarity": 0.002,
+   "Position": 0.053,
+   "RegionShape": 0.011,
+   "Surface": 0.01,
+   "T": 0.0,
+   "Texture": 0.075,
+   "TextureBoundary": 0.067
+  },
+  "node_classes_emitted": 24,
+  "node_classes_table": {
+   "Blob": {
+    "H_signature_bits": 6.67,
+    "distinct_signatures": 172,
+    "nodes_per_image": 309.3,
+    "payload_frac": 1.0,
+    "slots_measured": 5.0
+   },
+   "BorderOwnership": {
+    "H_signature_bits": 7.67,
+    "distinct_signatures": 246,
+    "nodes_per_image": 84.7,
+    "payload_frac": 1.0,
+    "slots_measured": 4.0
+   },
+   "Boundary": {
+    "H_signature_bits": 6.42,
+    "distinct_signatures": 162,
+    "nodes_per_image": 125.5,
+    "payload_frac": 0.0,
+    "slots_measured": 3.0
+   },
+   "BoundaryArc": {
+    "H_signature_bits": 5.67,
+    "distinct_signatures": 103,
+    "nodes_per_image": 216.0,
+    "payload_frac": 1.0,
+    "slots_measured": 5.0
+   },
+   "CONTOUR_PEAK": {
+    "H_signature_bits": 9.21,
+    "distinct_signatures": 636,
+    "nodes_per_image": 130.0,
+    "payload_frac": 1.0,
+    "slots_measured": 8.0
+   },
+   "Color": {
+    "H_signature_bits": 6.16,
+    "distinct_signatures": 146,
+    "nodes_per_image": 113.5,
+    "payload_frac": 0.0,
+    "slots_measured": 3.0
+   },
+   "Contour": {
+    "H_signature_bits": 5.69,
+    "distinct_signatures": 59,
+    "nodes_per_image": 13.5,
+    "payload_frac": 1.0,
+    "slots_measured": 27.0
+   },
+   "ContourFragment": {
+    "H_signature_bits": 8.28,
+    "distinct_signatures": 321,
+    "nodes_per_image": 58.7,
+    "payload_frac": 1.0,
+    "slots_measured": 4.0
+   },
+   "Corner": {
+    "H_signature_bits": 6.17,
+    "distinct_signatures": 77,
+    "nodes_per_image": 15.5,
+    "payload_frac": 1.0,
+    "slots_measured": 5.4
+   },
+   "CornerPoint": {
+    "H_signature_bits": 6.36,
+    "distinct_signatures": 105,
+    "nodes_per_image": 45.8,
+    "payload_frac": 1.0,
+    "slots_measured": 5.0
+   },
+   "CurveComplex": {
+    "H_signature_bits": 5.1,
+    "distinct_signatures": 40,
+    "nodes_per_image": 8.5,
+    "payload_frac": 1.0,
+    "slots_measured": 44.0
+   },
+   "EndStopped": {
+    "H_signature_bits": 6.25,
+    "distinct_signatures": 90,
+    "nodes_per_image": 34.5,
+    "payload_frac": 1.0,
+    "slots_measured": 4.0
+   },
+   "IllusoryContour": {
+    "H_signature_bits": 2.32,
+    "distinct_signatures": 5,
+    "nodes_per_image": 0.8,
+    "payload_frac": 1.0,
+    "slots_measured": 3.0
+   },
+   "Junction": {
+    "H_signature_bits": 2.0,
+    "distinct_signatures": 4,
+    "nodes_per_image": 0.7,
+    "payload_frac": 1.0,
+    "slots_measured": 19.0
+   },
+   "Onset": {
+    "H_signature_bits": -0.0,
+    "distinct_signatures": 1,
+    "nodes_per_image": 1.0,
+    "payload_frac": 0.0,
+    "slots_measured": 0.0
+   },
+   "Orientation": {
+    "H_signature_bits": 7.48,
+    "distinct_signatures": 194,
+    "nodes_per_image": 41.3,
+    "payload_frac": 0.0,
+    "slots_measured": 3.0
+   },
+   "PEAK_CHAIN": {
+    "H_signature_bits": 6.66,
+    "distinct_signatures": 111,
+    "nodes_per_image": 23.8,
+    "payload_frac": 1.0,
+    "slots_measured": 6.0
+   },
+   "Polarity": {
+    "H_signature_bits": 1.58,
+    "distinct_signatures": 3,
+    "nodes_per_image": 3.0,
+    "payload_frac": 1.0,
+    "slots_measured": 1.0
+   },
+   "Position": {
+    "H_signature_bits": 7.25,
+    "distinct_signatures": 185,
+    "nodes_per_image": 82.7,
+    "payload_frac": 0.0,
+    "slots_measured": 2.0
+   },
+   "RegionShape": {
+    "H_signature_bits": 6.64,
+    "distinct_signatures": 100,
+    "nodes_per_image": 16.7,
+    "payload_frac": 1.0,
+    "slots_measured": 21.0
+   },
+   "Surface": {
+    "H_signature_bits": 6.22,
+    "distinct_signatures": 78,
+    "nodes_per_image": 15.0,
+    "payload_frac": 1.0,
+    "slots_measured": 7.0
+   },
+   "T": {
+    "H_signature_bits": 1.0,
+    "distinct_signatures": 2,
+    "nodes_per_image": 0.3,
+    "payload_frac": 1.0,
+    "slots_measured": 19.0
+   },
+   "Texture": {
+    "H_signature_bits": 4.36,
+    "distinct_signatures": 51,
+    "nodes_per_image": 117.7,
+    "payload_frac": 0.0,
+    "slots_measured": 2.0
+   },
+   "TextureBoundary": {
+    "H_signature_bits": 8.99,
+    "distinct_signatures": 540,
+    "nodes_per_image": 104.5,
+    "payload_frac": 1.0,
+    "slots_measured": 8.0
+   }
+  },
+  "nodes_per_image": 1563.0,
+  "per_image": [
+   {
+    "edges": 2839,
+    "edges_by_type": {
+     "AMODAL_LINK": 6,
+     "BORDER_OWNERSHIP_EDGE": 377,
+     "COCIRCULAR": 9,
+     "COLOR_OPPONENT_BORDER": 174,
+     "CONTACT": 9,
+     "CONTOUR_CONTINUITY": 26,
+     "CONTOUR_ORIENTATION": 127,
+     "CO_LOCATED": 294,
+     "CURVATURE_SIGN_CONTINUITY": 14,
+     "CURVE_CONTAINMENT": 6,
+     "JUNCTION_CONTOUR": 17,
+     "JUNCTION_ORIENTATION": 9,
+     "LINE_TERMINATION": 12,
+     "ORIENTATION_BEND": 18,
+     "ORIENTATION_CONTINUITY": 44,
+     "ORIENTATION_JUNCTION": 14,
+     "PARALLEL": 7,
+     "PART_CONTAINMENT": 1,
+     "RADIALITY": 7,
+     "REGION_CONTENT": 248,
+     "SHARED_BOUNDARY": 9,
+     "SPIRALITY": 3,
+     "SYMMETRY": 3,
+     "TEXTURE_BOUNDARY_EDGE": 1377,
+     "TOPOLOGY": 28
+    },
+    "edges_with_params": 2811,
+    "nodes": 1625,
+    "nodes_by_class": {
+     "Blob": 321,
+     "BorderOwnership": 88,
+     "Boundary": 131,
+     "BoundaryArc": 197,
+     "CONTOUR_PEAK": 130,
+     "Color": 114,
+     "Contour": 14,
+     "ContourFragment": 87,
+     "Corner": 24,
+     "CornerPoint": 48,
+     "CurveComplex": 6,
+     "EndStopped": 33,
+     "Onset": 1,
+     "Orientation": 54,
+     "PEAK_CHAIN": 30,
+     "Polarity": 3,
+     "Position": 77,
+     "RegionShape": 23,
+     "Surface": 17,
+     "T": 1,
+     "Texture": 116,
+     "TextureBoundary": 110
+    },
+    "object": "apple/1"
+   },
+   {
+    "edges": 2850,
+    "edges_by_type": {
+     "AMODAL_LINK": 2,
+     "BORDER_OWNERSHIP_EDGE": 294,
+     "COCIRCULAR": 2,
+     "COLOR_OPPONENT_BORDER": 231,
+     "CONTACT": 1,
+     "CONTOUR_CONTINUITY": 16,
+     "CONTOUR_ORIENTATION": 112,
+     "CO_LOCATED": 305,
+     "CURVATURE_SIGN_CONTINUITY": 6,
+     "CURVE_CONTAINMENT": 10,
+     "DEGREE": 1,
+     "JUNCTION_CONTOUR": 29,
+     "JUNCTION_ORIENTATION": 14,
+     "LINE_TERMINATION": 31,
+     "ORIENTATION_BEND": 22,
+     "ORIENTATION_CONTINUITY": 50,
+     "ORIENTATION_JUNCTION": 42,
+     "PARALLEL": 3,
+     "PART_CONTAINMENT": 7,
+     "RADIALITY": 4,
+     "REGION_CONTENT": 165,
+     "SHARED_BOUNDARY": 9,
+     "SYMMETRY": 5,
+     "TEXTURE_BOUNDARY_EDGE": 1487,
+     "TOPOLOGY": 2
+    },
+    "edges_with_params": 2847,
+    "nodes": 1566,
+    "nodes_by_class": {
+     "Blob": 305,
+     "BorderOwnership": 86,
+     "Boundary": 133,
+     "BoundaryArc": 251,
+     "CONTOUR_PEAK": 119,
+     "Color": 124,
+     "Contour": 13,
+     "ContourFragment": 52,
+     "Corner": 12,
+     "CornerPoint": 11,
+     "CurveComplex": 10,
+     "EndStopped": 38,
+     "IllusoryContour": 2,
+     "Junction": 1,
+     "Onset": 1,
+     "Orientation": 53,
+     "PEAK_CHAIN": 15,
+     "Polarity": 3,
+     "Position": 86,
+     "RegionShape": 13,
+     "Surface": 15,
+     "T": 1,
+     "Texture": 118,
+     "TextureBoundary": 104
+    },
+    "object": "car/1"
+   },
+   {
+    "edges": 2760,
+    "edges_by_type": {
+     "AMODAL_LINK": 1,
+     "BORDER_OWNERSHIP_EDGE": 384,
+     "COCIRCULAR": 2,
+     "COLOR_OPPONENT_BORDER": 154,
+     "CONTACT": 1,
+     "CONTOUR_CONTINUITY": 7,
+     "CONTOUR_ORIENTATION": 132,
+     "CO_LOCATED": 164,
+     "CURVATURE_SIGN_CONTINUITY": 4,
+     "CURVE_CONTAINMENT": 5,
+     "JUNCTION_CONTOUR": 8,
+     "JUNCTION_ORIENTATION": 5,
+     "LINE_TERMINATION": 35,
+     "ORIENTATION_BEND": 15,
+     "ORIENTATION_CONTINUITY": 19,
+     "ORIENTATION_JUNCTION": 8,
+     "PARALLEL": 2,
+     "PART_CONTAINMENT": 7,
+     "RADIALITY": 4,
+     "REGION_CONTENT": 93,
+     "SHARED_BOUNDARY": 14,
+     "SPIRALITY": 1,
+     "SYMMETRY": 3,
+     "TEXTURE_BOUNDARY_EDGE": 1690,
+     "TOPOLOGY": 2
+    },
+    "edges_with_params": 2758,
+    "nodes": 1482,
+    "nodes_by_class": {
+     "Blob": 256,
+     "BorderOwnership": 99,
+     "Boundary": 112,
+     "BoundaryArc": 232,
+     "CONTOUR_PEAK": 164,
+     "Color": 103,
+     "Contour": 6,
+     "ContourFragment": 54,
+     "Corner": 12,
+     "CornerPoint": 10,
+     "CurveComplex": 5,
+     "EndStopped": 38,
+     "Junction": 1,
+     "Onset": 1,
+     "Orientation": 19,
+     "PEAK_CHAIN": 29,
+     "Polarity": 3,
+     "Position": 82,
+     "RegionShape": 19,
+     "Surface": 16,
+     "Texture": 104,
+     "TextureBoundary": 117
+    },
+    "object": "cow/1"
+   },
+   {
+    "edges": 2005,
+    "edges_by_type": {
+     "AMODAL_LINK": 39,
+     "BORDER_OWNERSHIP_EDGE": 115,
+     "COCIRCULAR": 110,
+     "COLOR_OPPONENT_BORDER": 220,
+     "CONCENTRICITY": 20,
+     "CONTACT": 2,
+     "CONTOUR_CONTINUITY": 175,
+     "CONTOUR_ORIENTATION": 130,
+     "CO_LOCATED": 302,
+     "CURVATURE_SIGN_CONTINUITY": 108,
+     "CURVE_CONTAINMENT": 18,
+     "JUNCTION_CONTOUR": 9,
+     "JUNCTION_ORIENTATION": 3,
+     "LINE_TERMINATION": 3,
+     "ORIENTATION_BEND": 6,
+     "ORIENTATION_CONTINUITY": 58,
+     "ORIENTATION_JUNCTION": 9,
+     "PARALLEL": 29,
+     "PART_CONTAINMENT": 9,
+     "RADIALITY": 78,
+     "REGION_CONTENT": 226,
+     "SHARED_BOUNDARY": 1,
+     "SPIRALITY": 19,
+     "SYMMETRY": 27,
+     "TEXTURE_BOUNDARY_EDGE": 277,
+     "TOPOLOGY": 12
+    },
+    "edges_with_params": 1993,
+    "nodes": 1692,
+    "nodes_by_class": {
+     "Blob": 388,
+     "BorderOwnership": 53,
+     "Boundary": 141,
+     "BoundaryArc": 302,
+     "CONTOUR_PEAK": 64,
+     "Color": 123,
+     "Contour": 33,
+     "ContourFragment": 55,
+     "Corner": 5,
+     "CornerPoint": 126,
+     "CurveComplex": 18,
+     "EndStopped": 29,
+     "Junction": 1,
+     "Onset": 1,
+     "Orientation": 43,
+     "PEAK_CHAIN": 11,
+     "Polarity": 3,
+     "Position": 87,
+     "RegionShape": 10,
+     "Surface": 7,
+     "Texture": 145,
+     "TextureBoundary": 47
+    },
+    "object": "cup/1"
+   },
+   {
+    "edges": 2833,
+    "edges_by_type": {
+     "AMODAL_LINK": 1,
+     "BORDER_OWNERSHIP_EDGE": 291,
+     "COCIRCULAR": 1,
+     "COLOR_OPPONENT_BORDER": 116,
+     "CONTOUR_CONTINUITY": 1,
+     "CONTOUR_ORIENTATION": 106,
+     "CO_LOCATED": 166,
+     "CURVATURE": 4,
+     "CURVATURE_SIGN_CONTINUITY": 1,
+     "CURVE_CONTAINMENT": 3,
+     "LINE_TERMINATION": 26,
+     "ORIENTATION_BEND": 2,
+     "ORIENTATION_CONTINUITY": 17,
+     "PARALLEL": 1,
+     "PART_CONTAINMENT": 3,
+     "REGION_CONTENT": 80,
+     "SHARED_BOUNDARY": 10,
+     "SPIRALITY": 1,
+     "SYMMETRY": 1,
+     "TEXTURE_BOUNDARY_EDGE": 2000,
+     "TOPOLOGY": 2
+    },
+    "edges_with_params": 2831,
+    "nodes": 1449,
+    "nodes_by_class": {
+     "Blob": 302,
+     "BorderOwnership": 94,
+     "Boundary": 105,
+     "BoundaryArc": 170,
+     "CONTOUR_PEAK": 161,
+     "Color": 101,
+     "Contour": 3,
+     "ContourFragment": 28,
+     "Corner": 19,
+     "CornerPoint": 31,
+     "CurveComplex": 3,
+     "EndStopped": 37,
+     "IllusoryContour": 3,
+     "Onset": 1,
+     "Orientation": 20,
+     "PEAK_CHAIN": 26,
+     "Polarity": 3,
+     "Position": 85,
+     "RegionShape": 16,
+     "Surface": 13,
+     "Texture": 99,
+     "TextureBoundary": 129
+    },
+    "object": "dog/1"
+   },
+   {
+    "edges": 3096,
+    "edges_by_type": {
+     "BORDER_OWNERSHIP_EDGE": 408,
+     "COCIRCULAR": 1,
+     "COLOR_OPPONENT_BORDER": 206,
+     "CONTACT": 4,
+     "CONTOUR_CONTINUITY": 15,
+     "CONTOUR_ORIENTATION": 138,
+     "CO_LOCATED": 283,
+     "CURVATURE_SIGN_CONTINUITY": 8,
+     "CURVE_CONTAINMENT": 9,
+     "JUNCTION_CONTOUR": 7,
+     "JUNCTION_ORIENTATION": 6,
+     "LINE_TERMINATION": 14,
+     "ORIENTATION_BEND": 28,
+     "ORIENTATION_CONTINUITY": 50,
+     "ORIENTATION_JUNCTION": 12,
+     "PARALLEL": 2,
+     "RADIALITY": 4,
+     "REGION_CONTENT": 170,
+     "SHARED_BOUNDARY": 21,
+     "SPIRALITY": 2,
+     "SYMMETRY": 7,
+     "TEXTURE_BOUNDARY_EDGE": 1681,
+     "TOPOLOGY": 20
+    },
+    "edges_with_params": 3076,
+    "nodes": 1564,
+    "nodes_by_class": {
+     "Blob": 284,
+     "BorderOwnership": 88,
+     "Boundary": 131,
+     "BoundaryArc": 144,
+     "CONTOUR_PEAK": 142,
+     "Color": 116,
+     "Contour": 12,
+     "ContourFragment": 76,
+     "Corner": 21,
+     "CornerPoint": 49,
+     "CurveComplex": 9,
+     "EndStopped": 32,
+     "Junction": 1,
+     "Onset": 1,
+     "Orientation": 59,
+     "PEAK_CHAIN": 32,
+     "Polarity": 3,
+     "Position": 79,
+     "RegionShape": 19,
+     "Surface": 22,
+     "Texture": 124,
+     "TextureBoundary": 120
+    },
+    "object": "apple/2"
+   }
+  ],
+  "sample": [
+   "apple/1",
+   "car/1",
+   "cow/1",
+   "cup/1",
+   "dog/1",
+   "apple/2"
+  ],
+  "seconds": 2.6,
+  "view": "000-000"
+ },
+ "info": {
+  "H_object_bits": 6.32,
+  "n_objects": 80,
+  "seconds": 13.8,
+  "views": {
+   "000-000": {
+    "H_key_bits": 7.71,
+    "H_key_given_object_bits": 6.811,
+    "H_key_within_object_bits": {
+     "mean": 6.827,
+     "median": 6.791
+    },
+    "I_key_object_bits": 0.898,
+    "by_lens": {
+     "Blob": {
+      "H_key_bits": 6.755,
+      "H_key_given_object_bits": 5.922,
+      "I_key_object_bits": 0.833,
+      "distinct_keys": 192,
+      "places": 23220
+     },
+     "BoundaryArc": {
+      "H_key_bits": 6.038,
+      "H_key_given_object_bits": 5.297,
+      "I_key_object_bits": 0.741,
+      "distinct_keys": 182,
+      "places": 15055
+     },
+     "CornerPoint": {
+      "H_key_bits": 6.92,
+      "H_key_given_object_bits": 4.475,
+      "I_key_object_bits": 2.444,
+      "distinct_keys": 185,
+      "places": 2124
+     }
+    },
+    "distinct_keys": 559,
+    "distinct_keys_per_object": {
+     "mean": 169.9,
+     "median": 165.0
+    },
+    "pixel_ceiling": {
+     "H_bits": 6.322,
+     "H_given_object_bits": 0.0,
+     "I_key_object_bits": 6.322,
+     "appearance_key_distinct": 77
+    },
+    "places": 40399
+   },
+   "035-045": {
+    "H_key_bits": 7.648,
+    "H_key_given_object_bits": 6.807,
+    "H_key_within_object_bits": {
+     "mean": 6.837,
+     "median": 6.836
+    },
+    "I_key_object_bits": 0.841,
+    "by_lens": {
+     "Blob": {
+      "H_key_bits": 6.789,
+      "H_key_given_object_bits": 5.997,
+      "I_key_object_bits": 0.792,
+      "distinct_keys": 192,
+      "places": 23958
+     },
+     "BoundaryArc": {
+      "H_key_bits": 6.008,
+      "H_key_given_object_bits": 5.314,
+      "I_key_object_bits": 0.694,
+      "distinct_keys": 186,
+      "places": 17513
+     },
+     "CornerPoint": {
+      "H_key_bits": 6.951,
+      "H_key_given_object_bits": 4.091,
+      "I_key_object_bits": 2.86,
+      "distinct_keys": 175,
+      "places": 1549
+     }
+    },
+    "distinct_keys": 553,
+    "distinct_keys_per_object": {
+     "mean": 172.8,
+     "median": 172.5
+    },
+    "pixel_ceiling": {
+     "H_bits": 6.322,
+     "H_given_object_bits": 0.0,
+     "I_key_object_bits": 6.322,
+     "appearance_key_distinct": 77
+    },
+    "places": 43020
+   }
+  }
+ },
+ "manifest": {
+  "environment": {
+   "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+   "logical_cores": 2,
+   "numpy": "2.4.6",
+   "pair_env": "9f98cfa1ec647f7d",
+   "physical_cores": 1,
+   "pil": "13.0.0",
+   "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+   "python": "3.11.2",
+   "scipy": "1.17.1"
+  },
+  "query_view": "035-045",
+  "sample": [
+   "apple/1",
+   "car/1",
+   "cow/1",
+   "cup/1",
+   "dog/1",
+   "apple/2"
+  ],
+  "view": "000-000"
+ },
+ "registry": {
+  "edge_arity": {
+   "max": 7,
+   "mean": 3.11,
+   "min": 1
+  },
+  "edge_bits": {
+   "max": 22.75,
+   "mean": 12.35,
+   "total_over_classes": 444.6
+  },
+  "edge_classes": 36,
+  "edge_rows": [
+   {
+    "arity": 2,
+    "bins": [
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_AMODAL_LINK",
+    "nominal_bits": 8.0
+   },
+   {
+    "arity": 4,
+    "bins": [
+     16,
+     16,
+     8,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_BINOCULAR_DISPARITY",
+    "nominal_bits": 15.0
+   },
+   {
+    "arity": 3,
+    "bins": [
+     16,
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_BORDER_OWNERSHIP",
+    "nominal_bits": 12.0
+   },
+   {
+    "arity": 3,
+    "bins": [
+     16,
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_BOUNDARY_ATTACHMENT",
+    "nominal_bits": 12.0
+   },
+   {
+    "arity": 2,
+    "bins": [
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_BOUNDARY_SUCCESSOR",
+    "nominal_bits": 8.0
+   },
+   {
+    "arity": 2,
+    "bins": [
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_COCIRCULAR",
+    "nominal_bits": 8.0
+   },
+   {
+    "arity": 4,
+    "bins": [
+     24,
+     16,
+     16,
+     16
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "EDGE_COLOR_OPPONENT_BORDER",
+    "nominal_bits": 16.584962500721154
+   },
+   {
+    "arity": 4,
+    "bins": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_CONCENTRICITY",
+    "nominal_bits": 16.0
+   },
+   {
+    "arity": 3,
+    "bins": [
+     24,
+     18,
+     18
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "EDGE_CONTACT",
+    "nominal_bits": 12.92481250360578
+   },
+   {
+    "arity": 3,
+    "bins": [
+     16,
+     8,
+     16
+    ],
+    "circular": {
+     "1": 8
+    },
+    "class": "EDGE_CONTOUR_CONTINUITY",
+    "nominal_bits": 11.0
+   },
+   {
+    "arity": 1,
+    "bins": [
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_CONTOUR_ORIENTATION",
+    "nominal_bits": 4.0
+   },
+   {
+    "arity": 2,
+    "bins": [
+     18,
+     18
+    ],
+    "circular": {},
+    "class": "EDGE_CO_LOCATED",
+    "nominal_bits": 8.339850002884624
+   },
+   {
+    "arity": 4,
+    "bins": [
+     16,
+     24,
+     16,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "EDGE_CO_MOTION",
+    "nominal_bits": 16.584962500721154
+   },
+   {
+    "arity": 4,
+    "bins": [
+     16,
+     24,
+     16,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "EDGE_CROSS_SCALE_IDENTITY",
+    "nominal_bits": 16.584962500721154
+   },
+   {
+    "arity": 3,
+    "bins": [
+     8,
+     16,
+     16
+    ],
+    "circular": {
+     "0": 8
+    },
+    "class": "EDGE_CURVATURE",
+    "nominal_bits": 11.0
+   },
+   {
+    "arity": 2,
+    "bins": [
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_CURVATURE_SIGN_CONTINUITY",
+    "nominal_bits": 8.0
+   },
+   {
+    "arity": 3,
+    "bins": [
+     16,
+     24,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "EDGE_CURVE_CONTAINMENT",
+    "nominal_bits": 12.584962500721156
+   },
+   {
+    "arity": 2,
+    "bins": [
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_ILLUSORY_INDUCER",
+    "nominal_bits": 8.0
+   },
+   {
+    "arity": 3,
+    "bins": [
+     16,
+     24,
+     14
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "EDGE_JUNCTION_CONTOUR",
+    "nominal_bits": 12.39231742277876
+   },
+   {
+    "arity": 1,
+    "bins": [
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_JUNCTION_ORIENTATION",
+    "nominal_bits": 4.0
+   },
+   {
+    "arity": 4,
+    "bins": [
+     10,
+     16,
+     16,
+     12
+    ],
+    "circular": {
+     "3": 12
+    },
+    "class": "EDGE_LINE_TERMINATION",
+    "nominal_bits": 14.906890595608518
+   },
+   {
+    "arity": 4,
+    "bins": [
+     24,
+     16,
+     24,
+     16
+    ],
+    "circular": {
+     "0": 24,
+     "2": 24
+    },
+    "class": "EDGE_MOTION_OPPOSITION",
+    "nominal_bits": 17.169925001442312
+   },
+   {
+    "arity": 4,
+    "bins": [
+     16,
+     18,
+     4,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_OCCLUSION",
+    "nominal_bits": 14.169925001442312
+   },
+   {
+    "arity": 3,
+    "bins": [
+     16,
+     24,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "EDGE_ORIENTATION_BEND",
+    "nominal_bits": 12.584962500721156
+   },
+   {
+    "arity": 7,
+    "bins": [
+     16,
+     16,
+     16,
+     8,
+     6,
+     6,
+     6
+    ],
+    "circular": {
+     "3": 8
+    },
+    "class": "EDGE_ORIENTATION_CONTINUITY",
+    "nominal_bits": 22.754887502163463
+   },
+   {
+    "arity": 3,
+    "bins": [
+     16,
+     24,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "EDGE_ORIENTATION_JUNCTION",
+    "nominal_bits": 12.584962500721156
+   },
+   {
+    "arity": 3,
+    "bins": [
+     18,
+     18,
+     18
+    ],
+    "circular": {},
+    "class": "EDGE_PARALLEL",
+    "nominal_bits": 12.509775004326936
+   },
+   {
+    "arity": 3,
+    "bins": [
+     16,
+     24,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "EDGE_PART_CONTAINMENT",
+    "nominal_bits": 12.584962500721156
+   },
+   {
+    "arity": 4,
+    "bins": [
+     24,
+     16,
+     16,
+     24
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "EDGE_RADIALITY",
+    "nominal_bits": 17.169925001442312
+   },
+   {
+    "arity": 1,
+    "bins": [
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_REGION_CONTENT",
+    "nominal_bits": 4.0
+   },
+   {
+    "arity": 2,
+    "bins": [
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_SHARED_BOUNDARY",
+    "nominal_bits": 8.0
+   },
+   {
+    "arity": 4,
+    "bins": [
+     24,
+     16,
+     6,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_SPIRALITY",
+    "nominal_bits": 15.169925001442312
+   },
+   {
+    "arity": 4,
+    "bins": [
+     24,
+     12,
+     6,
+     16
+    ],
+    "circular": {
+     "1": 12
+    },
+    "class": "EDGE_SURFACE_FOLD",
+    "nominal_bits": 14.754887502163468
+   },
+   {
+    "arity": 4,
+    "bins": [
+     18,
+     18,
+     18,
+     18
+    ],
+    "circular": {},
+    "class": "EDGE_SURFACE_GROUPING",
+    "nominal_bits": 16.67970000576925
+   },
+   {
+    "arity": 3,
+    "bins": [
+     16,
+     24,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "EDGE_SYMMETRY",
+    "nominal_bits": 12.584962500721156
+   },
+   {
+    "arity": 4,
+    "bins": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "EDGE_TEXTURE_BOUNDARY",
+    "nominal_bits": 16.0
+   }
+  ],
+  "lenses_declared": [
+   "Peak",
+   "Chain",
+   "BorderOwnership",
+   "Surface",
+   "Contour",
+   "Junction",
+   "Corner",
+   "EndStopped",
+   "RegionShape",
+   "Polarity",
+   "TextureBoundary",
+   "IllusoryContour",
+   "CurveComplex"
+  ],
+  "node_arity": {
+   "max": 433,
+   "mean": 16.94,
+   "min": 1
+  },
+  "node_bits": {
+   "max": 533.32,
+   "mean": 34.86,
+   "total_over_classes": 2335.8
+  },
+  "node_classes": 67,
+  "node_rows": [
+   {
+    "arity": 4,
+    "bins": [
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "BORDER_OWNERSHIP",
+    "nominal_bits": 16.0,
+    "population": [
+     {
+      "axes": [
+       "arc",
+       "signed_dir",
+       "curvature",
+       "strength"
+      ],
+      "bins": [
+       8,
+       8,
+       8,
+       8
+      ],
+      "pop_bits": 12.0,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 2,
+    "bins": [
+     20,
+     20
+    ],
+    "circular": {},
+    "class": "BOUNDARY",
+    "nominal_bits": 8.643856189774725,
+    "population": []
+   },
+   {
+    "arity": 3,
+    "bins": [
+     20,
+     20,
+     1
+    ],
+    "circular": {},
+    "class": "BOUNDARY_ANCHORED",
+    "nominal_bits": 9.643856189774725,
+    "population": []
+   },
+   {
+    "arity": 2,
+    "bins": [
+     20,
+     20
+    ],
+    "circular": {},
+    "class": "BOUNDARY_CONTENT",
+    "nominal_bits": 8.643856189774725,
+    "population": []
+   },
+   {
+    "arity": 5,
+    "bins": [
+     16,
+     32,
+     24,
+     16,
+     16
+    ],
+    "circular": {
+     "4": 16
+    },
+    "class": "COLOR",
+    "nominal_bits": 21.584962500721154,
+    "population": [
+     {
+      "axes": [
+       "lum",
+       "rg",
+       "by",
+       "sat",
+       "hue"
+      ],
+      "bins": [
+       8,
+       16,
+       12,
+       8,
+       16
+      ],
+      "pop_bits": 17.584962500721154,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 2,
+    "bins": [
+     16,
+     16
+    ],
+    "circular": {
+     "0": 16
+    },
+    "class": "COLOR_CONTENT",
+    "nominal_bits": 8.0,
+    "population": [
+     {
+      "axes": [
+       "hue",
+       "sat"
+      ],
+      "bins": [
+       16,
+       8
+      ],
+      "pop_bits": 7.0,
+      "weights": [
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 3,
+    "bins": [
+     24,
+     24,
+     24
+    ],
+    "circular": {},
+    "class": "COLOR_LEGACY",
+    "nominal_bits": 13.754887502163468,
+    "population": []
+   },
+   {
+    "arity": 2,
+    "bins": [
+     16,
+     16
+    ],
+    "circular": {
+     "0": 16
+    },
+    "class": "COLOR_LEGACY_CONTENT",
+    "nominal_bits": 8.0,
+    "population": [
+     {
+      "axes": [
+       "hue",
+       "sat"
+      ],
+      "bins": [
+       16,
+       8
+      ],
+      "pop_bits": 7.0,
+      "weights": [
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 1,
+    "bins": [
+     20
+    ],
+    "circular": {},
+    "class": "CONTACT",
+    "nominal_bits": 4.321928094887363,
+    "population": []
+   },
+   {
+    "arity": 27,
+    "bins": [
+     16,
+     24,
+     16,
+     4,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "CONTOUR",
+    "nominal_bits": 106.58496250072116,
+    "population": [
+     {
+      "axes": [
+       "length",
+       "mean_theta",
+       "circ_var",
+       "closure",
+       "total_turn",
+       "corner_count",
+       "chirality",
+       "curv0",
+       "curv1",
+       "curv2",
+       "curv3",
+       "curv4",
+       "curv5",
+       "curv6",
+       "curv7",
+       "curv8",
+       "curv9",
+       "curv10",
+       "curv11",
+       "curv12",
+       "curv13",
+       "curv14",
+       "curv15",
+       "curv16",
+       "curv17",
+       "curv18",
+       "curv19"
+      ],
+      "bins": [
+       8,
+       24,
+       8,
+       2,
+       8,
+       8,
+       8,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9
+      ],
+      "pop_bits": 83.98346252956735,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 5,
+    "bins": [
+     16,
+     4,
+     16,
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "CONTOUR_CONTENT",
+    "nominal_bits": 18.0,
+    "population": []
+   },
+   {
+    "arity": 4,
+    "bins": [
+     18,
+     24,
+     16,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "CONTOUR_FRAGMENT",
+    "nominal_bits": 16.75488750216347,
+    "population": [
+     {
+      "axes": [
+       "kappa",
+       "theta",
+       "r",
+       "tangent_vs_radial"
+      ],
+      "bins": [
+       9,
+       24,
+       8,
+       8
+      ],
+      "pop_bits": 13.754887502163468,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 8,
+    "bins": [
+     12,
+     8,
+     14,
+     14,
+     4,
+     2,
+     14,
+     14
+    ],
+    "circular": {
+     "0": 12,
+     "4": 4
+    },
+    "class": "CONTOUR_PEAK",
+    "nominal_bits": 24.814382188951576,
+    "population": [
+     {
+      "axes": [
+       "theta",
+       "sf",
+       "curvature",
+       "bend",
+       "phase",
+       "strength",
+       "coherence",
+       "endstop"
+      ],
+      "bins": [
+       12,
+       5,
+       8,
+       8,
+       4,
+       8,
+       8,
+       8
+      ],
+      "pop_bits": 22.906890595608516,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 1,
+    "bins": [
+     20
+    ],
+    "circular": {},
+    "class": "CONTRAST",
+    "nominal_bits": 4.321928094887363,
+    "population": []
+   },
+   {
+    "arity": 4,
+    "bins": [
+     16,
+     12,
+     16,
+     16
+    ],
+    "circular": {
+     "1": 12
+    },
+    "class": "CORNER",
+    "nominal_bits": 15.584962500721156,
+    "population": [
+     {
+      "axes": [
+       "turn",
+       "orient",
+       "prominence",
+       "arm"
+      ],
+      "bins": [
+       8,
+       12,
+       8,
+       8
+      ],
+      "pop_bits": 12.584962500721156,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 3,
+    "bins": [
+     16,
+     12,
+     16
+    ],
+    "circular": {
+     "1": 12
+    },
+    "class": "CORNER_CONTENT",
+    "nominal_bits": 11.584962500721156,
+    "population": []
+   },
+   {
+    "arity": 1,
+    "bins": [
+     20
+    ],
+    "circular": {},
+    "class": "CO_MOTION",
+    "nominal_bits": 4.321928094887363,
+    "population": []
+   },
+   {
+    "arity": 44,
+    "bins": [
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "CURVE_COMPLEX",
+    "nominal_bits": 176.0,
+    "population": [
+     {
+      "axes": [
+       "n_contours",
+       "n_junctions",
+       "extent",
+       "closure",
+       "template0",
+       "template1",
+       "template2",
+       "template3",
+       "template4",
+       "template5",
+       "template6",
+       "template7",
+       "shape0",
+       "shape1",
+       "shape2",
+       "shape3",
+       "shape4",
+       "shape5",
+       "shape6",
+       "shape7",
+       "shape8",
+       "shape9",
+       "shape10",
+       "shape11",
+       "arc_curv0",
+       "arc_curv1",
+       "arc_curv2",
+       "arc_curv3",
+       "arc_curv4",
+       "arc_curv5",
+       "arc_curv6",
+       "arc_curv7",
+       "arc_curv8",
+       "arc_curv9",
+       "arc_curv10",
+       "arc_curv11",
+       "arc_curv12",
+       "arc_curv13",
+       "arc_curv14",
+       "arc_curv15",
+       "arc_curv16",
+       "arc_curv17",
+       "arc_curv18",
+       "arc_curv19"
+      ],
+      "bins": [
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9,
+       9
+      ],
+      "pop_bits": 135.3985000288462,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 42,
+    "bins": [
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "CURVE_COMPLEX_CONTENT",
+    "nominal_bits": 168.0,
+    "population": []
+   },
+   {
+    "arity": 1,
+    "bins": [
+     20
+    ],
+    "circular": {},
+    "class": "DEGREE",
+    "nominal_bits": 4.321928094887363,
+    "population": []
+   },
+   {
+    "arity": 1,
+    "bins": [
+     20
+    ],
+    "circular": {},
+    "class": "EDGE",
+    "nominal_bits": 4.321928094887363,
+    "population": []
+   },
+   {
+    "arity": 5,
+    "bins": [
+     10,
+     24,
+     8,
+     2,
+     4
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "EDGE_CONTAINMENT",
+    "nominal_bits": 13.906890595608518,
+    "population": [
+     {
+      "axes": [
+       "rel_dist",
+       "polar_angle",
+       "scale_ratio",
+       "ownership_strength",
+       "side"
+      ],
+      "bins": [
+       8,
+       24,
+       8,
+       8,
+       2
+      ],
+      "pop_bits": 14.584962500721156,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 4,
+    "bins": [
+     8,
+     12,
+     6,
+     4
+    ],
+    "circular": {
+     "1": 12
+    },
+    "class": "EDGE_CONTINUITY",
+    "nominal_bits": 11.169925001442312,
+    "population": [
+     {
+      "axes": [
+       "gap",
+       "turn_angle",
+       "perp_offset",
+       "curv_agree"
+      ],
+      "bins": [
+       8,
+       12,
+       8,
+       8
+      ],
+      "pop_bits": 12.584962500721156,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 3,
+    "bins": [
+     3,
+     12,
+     10
+    ],
+    "circular": {},
+    "class": "EDGE_JUNCTION",
+    "nominal_bits": 8.491853096329674,
+    "population": [
+     {
+      "axes": [
+       "angle_delta",
+       "topo_class",
+       "arm_count"
+      ],
+      "bins": [
+       12,
+       7,
+       6
+      ],
+      "pop_bits": 8.977279923499916,
+      "weights": [
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 3,
+    "bins": [
+     2,
+     2,
+     2
+    ],
+    "circular": {},
+    "class": "EDGE_MATERIAL",
+    "nominal_bits": 3.0,
+    "population": [
+     {
+      "axes": [
+       "chrom_diff",
+       "lum_diff",
+       "tex_diff"
+      ],
+      "bins": [
+       8,
+       8,
+       8
+      ],
+      "pop_bits": 9.0,
+      "weights": [
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 4,
+    "bins": [
+     8,
+     8,
+     2,
+     4
+    ],
+    "circular": {},
+    "class": "EDGE_OCCLUSION",
+    "nominal_bits": 9.0,
+    "population": [
+     {
+      "axes": [
+       "depth_diff",
+       "source_cue",
+       "strength",
+       "relation"
+      ],
+      "bins": [
+       8,
+       4,
+       8,
+       2
+      ],
+      "pop_bits": 9.0,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 3,
+    "bins": [
+     12,
+     12,
+     8
+    ],
+    "circular": {
+     "1": 12
+    },
+    "class": "EDGE_PROXIMITY",
+    "nominal_bits": 10.169925001442312,
+    "population": [
+     {
+      "axes": [
+       "distance",
+       "bearing",
+       "scale_ratio"
+      ],
+      "bins": [
+       8,
+       12,
+       8
+      ],
+      "pop_bits": 9.584962500721156,
+      "weights": [
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 3,
+    "bins": [
+     2,
+     8,
+     4
+    ],
+    "circular": {},
+    "class": "EDGE_SHAPE",
+    "nominal_bits": 6.0,
+    "population": [
+     {
+      "axes": [
+       "sym_score",
+       "radial_ratio",
+       "curvature"
+      ],
+      "bins": [
+       8,
+       8,
+       9
+      ],
+      "pop_bits": 9.169925001442312,
+      "weights": [
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 4,
+    "bins": [
+     6,
+     2,
+     3,
+     2
+    ],
+    "circular": {},
+    "class": "EDGE_SURFACE",
+    "nominal_bits": 6.169925001442312,
+    "population": [
+     {
+      "axes": [
+       "normal_angle",
+       "material_diff",
+       "slant_diff",
+       "motion_kin"
+      ],
+      "bins": [
+       12,
+       8,
+       8,
+       8
+      ],
+      "pop_bits": 12.584962500721156,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 4,
+    "bins": [
+     24,
+     16,
+     6,
+     16
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "ENDSTOPPED",
+    "nominal_bits": 15.169925001442312,
+    "population": [
+     {
+      "axes": [
+       "theta",
+       "sf",
+       "ends",
+       "strength"
+      ],
+      "bins": [
+       24,
+       8,
+       3,
+       8
+      ],
+      "pop_bits": 12.169925001442312,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 2,
+    "bins": [
+     24,
+     16
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "ENDSTOPPED_CONTENT",
+    "nominal_bits": 8.584962500721156,
+    "population": [
+     {
+      "axes": [
+       "theta",
+       "sf"
+      ],
+      "bins": [
+       24,
+       8
+      ],
+      "pop_bits": 7.584962500721156,
+      "weights": [
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 3,
+    "bins": [
+     24,
+     16,
+     16
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "ILLUSORY_CONTOUR",
+    "nominal_bits": 12.584962500721156,
+    "population": [
+     {
+      "axes": [
+       "theta",
+       "length",
+       "strength"
+      ],
+      "bins": [
+       24,
+       8,
+       8
+      ],
+      "pop_bits": 10.584962500721156,
+      "weights": [
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 1,
+    "bins": [
+     24
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "ILLUSORY_CONTOUR_CONTENT",
+    "nominal_bits": 4.584962500721156,
+    "population": []
+   },
+   {
+    "arity": 19,
+    "bins": [
+     12,
+     24,
+     14,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "JUNCTION",
+    "nominal_bits": 75.9772799234999,
+    "population": [
+     {
+      "axes": [
+       "degree",
+       "ref_theta",
+       "topo",
+       "spread",
+       "gap0",
+       "gap1",
+       "gap2",
+       "gap3",
+       "arm_support",
+       "arm_sharp_mean",
+       "arm_sharp_min",
+       "arm_angle0",
+       "arm_angle1",
+       "arm_angle2",
+       "arm_angle3",
+       "arm_angle4",
+       "arm_angle5",
+       "arm_angle6",
+       "arm_angle7"
+      ],
+      "bins": [
+       6,
+       24,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8
+      ],
+      "pop_bits": 58.16992500144231,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 12,
+    "bins": [
+     12,
+     14,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "JUNCTION_CONTENT",
+    "nominal_bits": 47.39231742277876,
+    "population": [
+     {
+      "axes": [
+       "degree",
+       "topo",
+       "spread",
+       "arm_sharp_mean",
+       "arm_angle0",
+       "arm_angle1",
+       "arm_angle2",
+       "arm_angle3",
+       "arm_angle4",
+       "arm_angle5",
+       "arm_angle6",
+       "arm_angle7"
+      ],
+      "bins": [
+       6,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8
+      ],
+      "pop_bits": 35.584962500721154,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 4,
+    "bins": [
+     40,
+     16,
+     16,
+     16
+    ],
+    "circular": {},
+    "class": "MOTION",
+    "nominal_bits": 17.32192809488736,
+    "population": []
+   },
+   {
+    "arity": 3,
+    "bins": [
+     8,
+     8,
+     16
+    ],
+    "circular": {
+     "0": 8,
+     "1": 8
+    },
+    "class": "MOTION_CONTENT",
+    "nominal_bits": 10.0,
+    "population": []
+   },
+   {
+    "arity": 16,
+    "bins": [
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     8,
+     8,
+     16,
+     16,
+     16
+    ],
+    "circular": {
+     "11": 8,
+     "12": 8
+    },
+    "class": "MOTION_POPULATION",
+    "nominal_bits": 62.0,
+    "population": []
+   },
+   {
+    "arity": 1,
+    "bins": [
+     40
+    ],
+    "circular": {},
+    "class": "ONSET",
+    "nominal_bits": 5.321928094887363,
+    "population": []
+   },
+   {
+    "arity": 3,
+    "bins": [
+     24,
+     8,
+     1
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "ORIENTATION",
+    "nominal_bits": 8.584962500721156,
+    "population": []
+   },
+   {
+    "arity": 2,
+    "bins": [
+     24,
+     10
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "ORIENTATION_CONTENT",
+    "nominal_bits": 7.906890595608518,
+    "population": []
+   },
+   {
+    "arity": 7,
+    "bins": [
+     12,
+     8,
+     24,
+     30,
+     8,
+     2,
+     16
+    ],
+    "circular": {
+     "0": 12,
+     "2": 24
+    },
+    "class": "ORIENTATION_GABOR",
+    "nominal_bits": 24.07681559705083,
+    "population": []
+   },
+   {
+    "arity": 2,
+    "bins": [
+     12,
+     8
+    ],
+    "circular": {
+     "0": 12
+    },
+    "class": "ORIENTATION_GABOR_CONTENT",
+    "nominal_bits": 6.584962500721156,
+    "population": []
+   },
+   {
+    "arity": 4,
+    "bins": [
+     48,
+     8,
+     32,
+     6
+    ],
+    "circular": {},
+    "class": "ORIENTATION_POL",
+    "nominal_bits": 16.169925001442312,
+    "population": [
+     {
+      "axes": [
+       "theta",
+       "elong",
+       "anchor",
+       "polarity"
+      ],
+      "bins": [
+       24,
+       5,
+       16,
+       8
+      ],
+      "pop_bits": 13.906890595608518,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 433,
+    "bins": [
+     2,
+     2,
+     4,
+     2,
+     2,
+     2,
+     2,
+     4,
+     2,
+     2,
+     2,
+     2,
+     13,
+     6,
+     4,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     13,
+     13,
+     13,
+     13,
+     13,
+     6,
+     2,
+     10,
+     4,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     6,
+     2,
+     2,
+     6,
+     4,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     6,
+     2,
+     2,
+     6,
+     4,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     6,
+     2,
+     2,
+     6,
+     4,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     6,
+     2,
+     2,
+     6,
+     4,
+     13,
+     13,
+     13,
+     13,
+     6,
+     6,
+     6,
+     4,
+     6,
+     4,
+     4
+    ],
+    "circular": {
+     "12": 6.283185307179586,
+     "13": 3.141592653589793,
+     "197": 6.283185307179586,
+     "198": 6.283185307179586,
+     "199": 6.283185307179586,
+     "200": 6.283185307179586,
+     "201": 6.283185307179586,
+     "202": 6.283185307179586,
+     "203": 6.283185307179586,
+     "204": 6.283185307179586,
+     "205": 6.283185307179586,
+     "206": 6.283185307179586,
+     "207": 6.283185307179586,
+     "208": 6.283185307179586,
+     "209": 6.283185307179586,
+     "210": 6.283185307179586,
+     "223": 6.283185307179586,
+     "224": 6.283185307179586,
+     "225": 6.283185307179586,
+     "226": 6.283185307179586,
+     "227": 6.283185307179586,
+     "228": 3.141592653589793,
+     "294": 3.141592653589793,
+     "297": 3.141592653589793,
+     "335": 3.141592653589793,
+     "338": 3.141592653589793,
+     "376": 3.141592653589793,
+     "379": 3.141592653589793,
+     "417": 3.141592653589793,
+     "420": 3.141592653589793,
+     "422": 6.283185307179586,
+     "423": 6.283185307179586,
+     "424": 6.283185307179586,
+     "425": 6.283185307179586,
+     "426": 3.141592653589793,
+     "427": 3.141592653589793,
+     "428": 3.141592653589793,
+     "430": 3.141592653589793
+    },
+    "class": "ORIENTATION_RICH_12_5",
+    "nominal_bits": 533.3219563403696,
+    "population": []
+   },
+   {
+    "arity": 60,
+    "bins": [
+     2,
+     2,
+     4,
+     2,
+     2,
+     2,
+     2,
+     4,
+     2,
+     2,
+     2,
+     2,
+     13,
+     6,
+     4,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "circular": {},
+    "class": "ORIENTATION_RICH_CONTENT",
+    "nominal_bits": 67.28540221886225,
+    "population": []
+   },
+   {
+    "arity": 4,
+    "bins": [
+     24,
+     14,
+     1,
+     14
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "ORIENTATION_SEGMENT",
+    "nominal_bits": 13.199672344836364,
+    "population": []
+   },
+   {
+    "arity": 6,
+    "bins": [
+     30,
+     12,
+     14,
+     2,
+     14,
+     14
+    ],
+    "circular": {
+     "1": 12
+    },
+    "class": "PEAK_CHAIN",
+    "nominal_bits": 20.913917862502487,
+    "population": [
+     {
+      "axes": [
+       "theta_dist",
+       "curvature",
+       "length",
+       "closure"
+      ],
+      "bins": [
+       12,
+       8,
+       8,
+       2
+      ],
+      "pop_bits": 10.584962500721156,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 2,
+    "bins": [
+     40,
+     40
+    ],
+    "circular": {},
+    "class": "PERIODICITY",
+    "nominal_bits": 10.643856189774725,
+    "population": []
+   },
+   {
+    "arity": 1,
+    "bins": [
+     20
+    ],
+    "circular": {},
+    "class": "PERSISTENCE",
+    "nominal_bits": 4.321928094887363,
+    "population": []
+   },
+   {
+    "arity": 1,
+    "bins": [
+     6
+    ],
+    "circular": {},
+    "class": "POLARITY",
+    "nominal_bits": 2.584962500721156,
+    "population": [
+     {
+      "axes": [
+       "signed"
+      ],
+      "bins": [
+       8
+      ],
+      "pop_bits": 3.0,
+      "weights": [
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 3,
+    "bins": [
+     32,
+     32,
+     32
+    ],
+    "circular": {},
+    "class": "POSITION",
+    "nominal_bits": 15.0,
+    "population": []
+   },
+   {
+    "arity": 21,
+    "bins": [
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     12,
+     12
+    ],
+    "circular": {
+     "19": 12
+    },
+    "class": "REGION_SHAPE",
+    "nominal_bits": 83.16992500144232,
+    "population": [
+     {
+      "axes": [
+       "curv0",
+       "curv1",
+       "curv2",
+       "curv3",
+       "curv4",
+       "curv5",
+       "curv6",
+       "curv7",
+       "curv8",
+       "curv9",
+       "curv10",
+       "curv11",
+       "curv12",
+       "curv13",
+       "curv14",
+       "curv15",
+       "area",
+       "elong",
+       "sym",
+       "axis",
+       "fold"
+      ],
+      "bins": [
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8,
+       12,
+       6
+      ],
+      "pop_bits": 63.16992500144231,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 19,
+    "bins": [
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     12
+    ],
+    "circular": {},
+    "class": "REGION_SHAPE_CONTENT",
+    "nominal_bits": 75.58496250072116,
+    "population": []
+   },
+   {
+    "arity": 2,
+    "bins": [
+     32,
+     32
+    ],
+    "circular": {},
+    "class": "RELATIVE_POSITION",
+    "nominal_bits": 10.0,
+    "population": []
+   },
+   {
+    "arity": 9,
+    "bins": [
+     40,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "circular": {},
+    "class": "SEQUENCE",
+    "nominal_bits": 13.321928094887362,
+    "population": []
+   },
+   {
+    "arity": 2,
+    "bins": [
+     20,
+     20
+    ],
+    "circular": {},
+    "class": "SIZE",
+    "nominal_bits": 8.643856189774725,
+    "population": []
+   },
+   {
+    "arity": 8,
+    "bins": [
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8
+    ],
+    "circular": {},
+    "class": "STRUCTURE",
+    "nominal_bits": 24.0,
+    "population": []
+   },
+   {
+    "arity": 4,
+    "bins": [
+     36,
+     24,
+     6,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "SURFACE_FRAGMENT",
+    "nominal_bits": 16.339850002884624,
+    "population": [
+     {
+      "axes": [
+       "slant",
+       "tilt",
+       "curvature",
+       "confidence"
+      ],
+      "bins": [
+       18,
+       24,
+       3,
+       8
+      ],
+      "pop_bits": 13.339850002884624,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 7,
+    "bins": [
+     16,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {
+     "2": 16
+    },
+    "class": "SURFACE_PATCH",
+    "nominal_bits": 28.0,
+    "population": [
+     {
+      "axes": [
+       "shape",
+       "lum",
+       "hue",
+       "sat",
+       "tex",
+       "grad_mag",
+       "grad_side"
+      ],
+      "bins": [
+       8,
+       8,
+       16,
+       8,
+       8,
+       8,
+       8
+      ],
+      "pop_bits": 22.0,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 6,
+    "bins": [
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {
+     "2": 16
+    },
+    "class": "SURFACE_PATCH_CONTENT",
+    "nominal_bits": 24.0,
+    "population": [
+     {
+      "axes": [
+       "shape",
+       "lum",
+       "hue",
+       "sat",
+       "tex",
+       "grad_mag"
+      ],
+      "bins": [
+       8,
+       8,
+       16,
+       8,
+       8,
+       8
+      ],
+      "pop_bits": 19.0,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 2,
+    "bins": [
+     20,
+     20
+    ],
+    "circular": {},
+    "class": "TEXTURE",
+    "nominal_bits": 8.643856189774725,
+    "population": []
+   },
+   {
+    "arity": 8,
+    "bins": [
+     16,
+     24,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {
+     "1": 24
+    },
+    "class": "TEXTURE_BOUNDARY",
+    "nominal_bits": 32.584962500721154,
+    "population": [
+     {
+      "axes": [
+       "arc_pos",
+       "dtheta",
+       "dlogsf",
+       "d_contrast",
+       "d_ori",
+       "lum_dist",
+       "conc_a",
+       "conc_b"
+      ],
+      "bins": [
+       8,
+       24,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8
+      ],
+      "pop_bits": 25.584962500721154,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 7,
+    "bins": [
+     24,
+     16,
+     16,
+     16,
+     16,
+     16,
+     16
+    ],
+    "circular": {
+     "0": 24
+    },
+    "class": "TEXTURE_BOUNDARY_CONTENT",
+    "nominal_bits": 28.584962500721154,
+    "population": [
+     {
+      "axes": [
+       "dtheta",
+       "dlogsf",
+       "d_contrast",
+       "d_ori",
+       "lum_dist",
+       "conc_a",
+       "conc_b"
+      ],
+      "bins": [
+       24,
+       8,
+       8,
+       8,
+       8,
+       8,
+       8
+      ],
+      "pop_bits": 22.584962500721154,
+      "weights": [
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "arity": 244,
+    "bins": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "circular": {},
+    "class": "TEXTURE_RICH_12_5",
+    "nominal_bits": 244.0,
+    "population": []
+   },
+   {
+    "arity": 4,
+    "bins": [
+     2,
+     2,
+     2,
+     2
+    ],
+    "circular": {},
+    "class": "TEXTURE_RICH_CONTENT",
+    "nominal_bits": 4.0,
+    "population": []
+   },
+   {
+    "arity": 5,
+    "bins": [
+     8,
+     40,
+     40,
+     40,
+     40
+    ],
+    "circular": {},
+    "class": "TOPOLOGY",
+    "nominal_bits": 24.287712379549447,
+    "population": []
+   }
+  ],
+  "with_population": [
+   "BORDER_OWNERSHIP",
+   "COLOR",
+   "COLOR_CONTENT",
+   "COLOR_LEGACY_CONTENT",
+   "CONTOUR",
+   "CONTOUR_FRAGMENT",
+   "CONTOUR_PEAK",
+   "CORNER",
+   "CURVE_COMPLEX",
+   "EDGE_CONTAINMENT",
+   "EDGE_CONTINUITY",
+   "EDGE_JUNCTION",
+   "EDGE_MATERIAL",
+   "EDGE_OCCLUSION",
+   "EDGE_PROXIMITY",
+   "EDGE_SHAPE",
+   "EDGE_SURFACE",
+   "ENDSTOPPED",
+   "ENDSTOPPED_CONTENT",
+   "ILLUSORY_CONTOUR",
+   "JUNCTION",
+   "JUNCTION_CONTENT",
+   "ORIENTATION_POL",
+   "PEAK_CHAIN",
+   "POLARITY",
+   "REGION_SHAPE",
+   "SURFACE_FRAGMENT",
+   "SURFACE_PATCH",
+   "SURFACE_PATCH_CONTENT",
+   "TEXTURE_BOUNDARY",
+   "TEXTURE_BOUNDARY_CONTENT"
+  ]
+ }
+}
