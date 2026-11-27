@@ -281,7 +281,10 @@ would be measuring a configuration nobody is proposing.)
 * `requirements.txt` (new), `matching/placement_records.environment()` merged into
   `m15_manifest.manifest()`.
 * `--check` (`Topology/placement_m12_perf.py --check`): **28 pairs, 0 diffs**, 578.5 s
-  (8.59 / 9.47 s per pair), on the tree that ships.
+  (8.59 / 9.47 s per pair), run on the code that ships.  The only edits after it are documentation
+  and the bundle's `measured.M28` block, neither of which enters `code_digest` (it hashes
+  `CODE_MODULES` + the two frozen parameter files); the bundle was reloaded after the edit and its
+  digest and `content.kind` are unchanged.
 * Tests: 21 files, **195 tests, all OK** (m26's 3 skips are its registered skips).
 * Legend: `Topology/m28_determinism.py`, `m28_gauge.py`, `m28_records.py`, `m28_door.py`,
   `m28_speed.py`,
