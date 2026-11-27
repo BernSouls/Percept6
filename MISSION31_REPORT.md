@@ -79,6 +79,14 @@ TestComposition` pins the arithmetic cell by cell. **Consequence for M30's A2 ab
 entirely under the old arithmetic (one arm, consistent within itself), and no number is claimed from
 either.
 
+### 1c-bis — the production path, on graphs
+
+Not only records: `build_gallery(items, content="colour_rings")` built three graph-based records
+(37 s), `recognise(q, gallery, bundle=b, matcher=False)` returned the door's shortlist (17 s), and
+`recognise(..., matcher=True, s=2)` scored it (0.3 s, pair cache) — top-1 correct
+(`apple/1` → itself). The colour content is therefore computed on the graph path too, through
+`placement_content.features`, exactly as the bundle says.
+
 ### 1d — the two equalities (the door only, cached records)
 
 `Topology/m31_wire.py --equalities`, `Topology/results/placement/m31_wire.json`. 80 objects × 2 read

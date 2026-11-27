@@ -1,9 +1,9 @@
 {
  "failed": 0,
  "of": 21,
- "pairs": 16,
- "queries_done": 2,
- "seconds": 480.8,
- "seconds_per_query": 240.4,
+ "pairs": 32,
+ "queries_done": 4,
+ "seconds": 826.5,
+ "seconds_per_query": 206.6,
  "stage": "score"
 }
