@@ -98,7 +98,8 @@ def cell(path: str, tag: str = "core") -> Tuple[Any, Any, Any]:
     return ent
 
 
-def place_record(path: str, tag: str = "core") -> Dict[str, Any]:
+def place_record(path: str, tag: str = "core",
+                 content: Optional[str] = None) -> Dict[str, Any]:
     """One image -> the record every later stage reads.
 
     The body is ``Topology.placement_m23_eth80.image_job`` moved verbatim: same drops, same
@@ -147,13 +148,19 @@ def place_record(path: str, tag: str = "core") -> Dict[str, Any]:
                      "Mz": [float(x) for x in std["M"][r]],
                      "x": float(anchor[0]), "y": float(anchor[1]), "s": float(sp),
                      "theta": (None if n not in frames else float(frames[n]))})
-    return {"path": path, "places": rows, "dropped": dropped,
+    rec: Dict[str, Any] = {"path": path, "places": rows, "dropped": dropped,
             "n_payload": len(pay), "n_all_nodes": len(all_nodes),
             # every channel `standardize` produces: `score_bags_v2` differences D, C and S
             "std_all": {k: np.asarray(std_all[k], dtype=np.float32)
                         for k in ("D", "C", "S", "M")}
             | {"ids": np.asarray(std_all["ids"], dtype=np.int64)},
             "sec": time.time() - t0}
+    if content and content != "keypoint":
+        # M28 item 6: the place's content beyond the keypoint signature, at the place's own
+        # scale, behind the bundle value `content.kind`.  Default builds are untouched.
+        from matching import placement_content as PC
+        PC.attach(rec, img, content)
+    return rec
 
 
 def matcher_flags(weight: float) -> Dict[str, Any]:

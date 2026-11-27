@@ -4,6 +4,11 @@ Mission 24 put the working system in core (`matching/placement_recognise.py`) an
 shipped path does not need here.  **Nothing was deleted**: every entry below was moved with
 `git mv`, so its history is intact and `git log --follow` still works.
 
+**Mission 28 moved nothing here.**  Its five new harnesses (`m28_determinism.py`, `m28_gauge.py`,
+`m28_records.py`, `m28_door.py`, `m28_speed.py`) are live in `Topology/` and are listed in
+`KEEP_MAP.md`; the mission added no file to the archive and deleted none (it did add
+`data/placement_records_m28.npz`, the M27 record file plus its six content columns).
+
 The archive is not part of the product.  Nothing in `matching/`, `core/`, `parameters/`,
 `perception/`, `lenses/` or a kept test imports anything from here, and nothing here is imported by
 the legacy parity check (`Topology/placement_m12_perf.py --check`) or the item-4 verification

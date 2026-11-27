@@ -64,6 +64,11 @@ walks the AST of every core package and fails on either.
 | `Topology/m27_read.py` (M27 items 2/3) | m26_records, placement_frontdoor, placement_recognise -- the S read and the loss table |
 | `Topology/m27_door.py` (M27 item 4) | m26_records, placement_frontdoor, placement_kernel, core/keypoint_classes -- the two door variants |
 | `scripts/bootstrap_cache.py` (M27 item 1d) | the whole environment restore, with per-step seconds |
+| `Topology/m28_determinism.py` (M28 item 1b) | placement_frontend -- the same 10 pairs at 1, 2, 4 workers and threads = 1 |
+| `Topology/m28_gauge.py` (M28 items 4/5) | m26_records, placement_kernel, placement_content -- the G gauge and the four candidates |
+| `Topology/m28_records.py` (M28 item 6) | matching/placement_records, placement_content -- the content record file and its equivalence check |
+| `Topology/m28_door.py` (M28 item 6) | m26_records, placement_records, placement_content -- the two content door variants |
+| `Topology/m28_speed.py` (M28 item 2) | placement_frontend, m27_profile -- the cProfile and the parity gate |
 | the report-producing M20-M23 harnesses | placement_m20_eth80, m22_eth80, m23_eth80, m23_stages, m21_* , m20_fit, m22_power, m12_realphotos |
 | the test suite (`tests/`) | 20 Topology modules, all inside the two lists above |
 | result files cited by the README / the reports | `m12_perf_baseline.json`, `m20_splits.json`, `m22_*.json`, `m23_*.json`, `m23_read_rows.jsonl`, `m23_read_pairs.jsonl`, MISSION14..23 `.md` |

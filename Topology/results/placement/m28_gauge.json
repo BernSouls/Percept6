@@ -1,0 +1,322 @@
+{
+ "baseline": {
+  "all_objects": {
+   "G_any": 0.5283931818583055,
+   "G_same": 0.5102006818534015,
+   "chance": 0.5,
+   "feature": "baseline",
+   "n_same_pairs": 43020,
+   "places_by_lens": {
+    "Blob": 23958,
+    "BoundaryArc": 17513,
+    "CornerPoint": 1549
+   },
+   "pool": 80,
+   "queries": [
+    "apple/1",
+    "apple/10",
+    "apple/2",
+    "apple/3",
+    "apple/4",
+    "apple/5",
+    "apple/6",
+    "apple/7",
+    "apple/8",
+    "apple/9",
+    "car/1",
+    "car/10",
+    "car/2",
+    "car/3",
+    "car/4",
+    "car/5",
+    "car/6",
+    "car/7",
+    "car/8",
+    "car/9",
+    "cow/1",
+    "cow/10",
+    "cow/2",
+    "cow/3",
+    "cow/4",
+    "cow/5",
+    "cow/6",
+    "cow/7",
+    "cow/8",
+    "cow/9",
+    "cup/1",
+    "cup/10",
+    "cup/2",
+    "cup/3",
+    "cup/4",
+    "cup/5",
+    "cup/6",
+    "cup/7",
+    "cup/8",
+    "cup/9",
+    "dog/1",
+    "dog/10",
+    "dog/2",
+    "dog/3",
+    "dog/4",
+    "dog/5",
+    "dog/6",
+    "dog/7",
+    "dog/8",
+    "dog/9",
+    "horse/1",
+    "horse/10",
+    "horse/2",
+    "horse/3",
+    "horse/4",
+    "horse/5",
+    "horse/6",
+    "horse/7",
+    "horse/8",
+    "horse/9",
+    "pear/1",
+    "pear/10",
+    "pear/2",
+    "pear/3",
+    "pear/4",
+    "pear/5",
+    "pear/6",
+    "pear/7",
+    "pear/8",
+    "pear/9",
+    "tomato/1",
+    "tomato/10",
+    "tomato/2",
+    "tomato/3",
+    "tomato/4",
+    "tomato/5",
+    "tomato/6",
+    "tomato/7",
+    "tomato/8",
+    "tomato/9"
+   ],
+   "query_places": 43020
+  },
+  "item": 4,
+  "manifest": {
+   "environment": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+    "logical_cores": 2,
+    "numpy": "2.4.6",
+    "pair_env": "63fada9514714026",
+    "physical_cores": 1,
+    "pil": "13.0.0",
+    "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+    "python": "3.11.2",
+    "scipy": "1.17.1"
+   }
+  },
+  "sample_of_8": {
+   "G_any": 0.5147531586474252,
+   "G_same": 0.49577238302728494,
+   "chance": 0.5,
+   "feature": "baseline",
+   "n_same_pairs": 4284,
+   "places_by_lens": {
+    "Blob": 2344,
+    "BoundaryArc": 1805,
+    "CornerPoint": 135
+   },
+   "pool": 80,
+   "queries": [
+    "apple/1",
+    "car/1",
+    "cow/1",
+    "cup/1",
+    "dog/1",
+    "horse/1",
+    "pear/1",
+    "tomato/1"
+   ],
+   "query_places": 4284
+  },
+  "seconds": 92.2
+ },
+ "candidates": {
+  "any_proceeds": true,
+  "baseline_same_class": 0.49577238302728494,
+  "build_seconds": 42.3,
+  "constants": {
+   "orient_n": 8,
+   "orient_sf_index": [
+    1,
+    3
+   ],
+   "ring_samples": 12,
+   "rings": [
+    0.5,
+    1.5
+   ],
+   "window_radius": 2.0
+  },
+  "item": 5,
+  "manifest": {
+   "environment": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+    "logical_cores": 2,
+    "numpy": "2.4.6",
+    "pair_env": "63fada9514714026",
+    "physical_cores": 1,
+    "pil": "13.0.0",
+    "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+    "python": "3.11.2",
+    "scipy": "1.17.1"
+   }
+  },
+  "results": {
+   "C1": {
+    "G_any": 0.8516292592986561,
+    "G_same": 0.7445015043054258,
+    "chance": 0.5,
+    "feature": "C1",
+    "n_same_pairs": 4284,
+    "places_by_lens": {
+     "Blob": 2344,
+     "BoundaryArc": 1805,
+     "CornerPoint": 135
+    },
+    "pool": 80,
+    "queries": [
+     "apple/1",
+     "car/1",
+     "cow/1",
+     "cup/1",
+     "dog/1",
+     "horse/1",
+     "pear/1",
+     "tomato/1"
+    ],
+    "query_places": 4284
+   },
+   "C2": {
+    "G_any": 0.6448693401411197,
+    "G_same": 0.5628436559809109,
+    "chance": 0.5,
+    "feature": "C2",
+    "n_same_pairs": 4284,
+    "places_by_lens": {
+     "Blob": 2344,
+     "BoundaryArc": 1805,
+     "CornerPoint": 135
+    },
+    "pool": 80,
+    "queries": [
+     "apple/1",
+     "car/1",
+     "cow/1",
+     "cup/1",
+     "dog/1",
+     "horse/1",
+     "pear/1",
+     "tomato/1"
+    ],
+    "query_places": 4284
+   },
+   "C3": {
+    "G_any": 0.6202073656466807,
+    "G_same": 0.531590413943355,
+    "chance": 0.5,
+    "feature": "C3",
+    "n_same_pairs": 4284,
+    "places_by_lens": {
+     "Blob": 2344,
+     "BoundaryArc": 1805,
+     "CornerPoint": 135
+    },
+    "pool": 80,
+    "queries": [
+     "apple/1",
+     "car/1",
+     "cow/1",
+     "cup/1",
+     "dog/1",
+     "horse/1",
+     "pear/1",
+     "tomato/1"
+    ],
+    "query_places": 4284
+   },
+   "C4": {
+    "G_any": 0.7409790920587644,
+    "G_same": 0.6161946259985475,
+    "chance": 0.5,
+    "feature": "C4",
+    "n_same_pairs": 4284,
+    "places_by_lens": {
+     "Blob": 2344,
+     "BoundaryArc": 1805,
+     "CornerPoint": 135
+    },
+    "pool": 80,
+    "queries": [
+     "apple/1",
+     "car/1",
+     "cow/1",
+     "cup/1",
+     "dog/1",
+     "horse/1",
+     "pear/1",
+     "tomato/1"
+    ],
+    "query_places": 4284
+   },
+   "baseline": {
+    "G_any": 0.5147531586474252,
+    "G_same": 0.49577238302728494,
+    "chance": 0.5,
+    "feature": "baseline",
+    "n_same_pairs": 4284,
+    "places_by_lens": {
+     "Blob": 2344,
+     "BoundaryArc": 1805,
+     "CornerPoint": 135
+    },
+    "pool": 80,
+    "queries": [
+     "apple/1",
+     "car/1",
+     "cow/1",
+     "cup/1",
+     "dog/1",
+     "horse/1",
+     "pear/1",
+     "tomato/1"
+    ],
+    "query_places": 4284
+   }
+  },
+  "sample": [
+   "apple/1",
+   "car/1",
+   "cow/1",
+   "cup/1",
+   "dog/1",
+   "horse/1",
+   "pear/1",
+   "tomato/1"
+  ],
+  "seconds": 78.6,
+  "verdict": {
+   "C1": {
+    "delta_same_class": 0.2487291212781409,
+    "proceeds": true
+   },
+   "C2": {
+    "delta_same_class": 0.06707127295362597,
+    "proceeds": false
+   },
+   "C3": {
+    "delta_same_class": 0.03581803091607011,
+    "proceeds": false
+   },
+   "C4": {
+    "delta_same_class": 0.12042224297126253,
+    "proceeds": true
+   }
+  }
+ }
+}

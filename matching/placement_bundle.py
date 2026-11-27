@@ -44,7 +44,8 @@ PREFILTER_PARAMS = os.path.join(ROOT, "matching", "placement_prefilter_params.js
 #: NOT in this list: it holds the digest, and a file cannot contain its own hash.
 CODE_MODULES = ("matching/placement_frontend.py", "matching/placement_cache.py",
                 "matching/placement_frontdoor.py", "matching/placement_gallery.py",
-                "matching/placement_recognise.py", "matching/placement_views.py")
+                "matching/placement_recognise.py", "matching/placement_views.py",
+                "matching/placement_content.py")
 
 #: Data files whose bytes define the shipped behaviour (frozen parameters, not code).
 CODE_DATA = ("matching/placement_score_params.json", "matching/placement_prefilter_params.json")
@@ -95,9 +96,22 @@ class PlacementBundle:
     shortlist_rule: str = "fixed"              # "fixed" (M22-M25) or "adaptive" (M26 item 6D)
     shortlist_wide: int = 16
     margin_tau: float = 0.0
+    content: Dict[str, Any] = field(default_factory=dict)   # M28: {"kind": "keypoint"|"colour_rings"}
     provenance: Dict[str, Any] = field(default_factory=dict)
     code_digest: str = ""
     file_digest: str = ""
+
+    # ---- content (M28 item 6)
+    @property
+    def content_kind(self) -> str:
+        """`content.kind`: what a place's content is beyond the keypoint signature.
+
+        Absent -> "keypoint", which is what every record before M28 carries (no fallback: an
+        unknown value is refused by ``matching.placement_content.kind``)."""
+        from matching import placement_content as PC
+        raw = self.content or {}
+        k = raw.get("kind", PC.DEFAULT_KIND) if isinstance(raw, dict) else raw
+        return PC.kind(str(k))
 
     # ---- io
     @classmethod
@@ -155,6 +169,7 @@ class PlacementBundle:
                 reference_views=[str(v) for v in (d["references"].get("views") or [])],
                 reserved=[str(v) for v in (d["references"].get("reserved") or [])],
                 references=dict(d["references"]),
+                content=dict(d.get("content") or {}),
                 provenance=dict(d.get("provenance") or {}),
                 code_digest=have,
                 file_digest=hashlib.sha256(raw_bytes).hexdigest())

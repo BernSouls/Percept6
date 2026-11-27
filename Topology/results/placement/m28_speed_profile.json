@@ -1,0 +1,67 @@
+{
+ "score": 0.3499972914131868,
+ "wall_s": 69.91,
+ "top10_cumulative": [
+  {
+   "ncalls": "1",
+   "tottime": 0.0,
+   "cumtime": 69.908,
+   "what": "/home/user/Percept6/matching/placement_frontend.py:173(pair_score)"
+  },
+  {
+   "ncalls": "1",
+   "tottime": 0.088,
+   "cumtime": 69.894,
+   "what": "/home/user/Percept6/matching/joint_mcs.py:640(joint_mcs)"
+  },
+  {
+   "ncalls": "2",
+   "tottime": 0.053,
+   "cumtime": 69.806,
+   "what": "/home/user/Percept6/matching/joint_mcs.py:206(_directional_joint_mcs)"
+  },
+  {
+   "ncalls": "2",
+   "tottime": 4.532,
+   "cumtime": 68.073,
+   "what": "/home/user/Percept6/matching/alignment.py:783(global_consistency_alignment)"
+  },
+  {
+   "ncalls": "4894500",
+   "tottime": 2.647,
+   "cumtime": 26.687,
+   "what": "/home/user/Percept6/matching/joint_mcs.py:311(node_sim)"
+  },
+  {
+   "ncalls": "447652",
+   "tottime": 0.454,
+   "cumtime": 22.651,
+   "what": "/home/user/Percept6/memory/cores.py:790(_sig_similarity)"
+  },
+  {
+   "ncalls": "447652",
+   "tottime": 0.955,
+   "cumtime": 20.438,
+   "what": "/home/user/Percept6/core/types.py:408(similarity)"
+  },
+  {
+   "ncalls": "2",
+   "tottime": 0.764,
+   "cumtime": 19.225,
+   "what": "/home/user/Percept6/matching/placement_matcher.py:566(rescore_matrix)"
+  },
+  {
+   "ncalls": "447652",
+   "tottime": 2.385,
+   "cumtime": 17.252,
+   "what": "/home/user/Percept6/core/types.py:476(_similarity_gaussian)"
+  },
+  {
+   "ncalls": "531537",
+   "tottime": 0.474,
+   "cumtime": 16.081,
+   "what": "/home/user/Percept6/matching/placement_llr.py:542(plus_score)"
+  }
+ ],
+ "total_calls": ""
+}

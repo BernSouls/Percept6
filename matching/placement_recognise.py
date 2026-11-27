@@ -204,13 +204,26 @@ def pair_env() -> str:
     not cover the code that turns pixels into graphs and the switches that code reads, and a pair
     score depends on both.  Mission 27 measured the consequence: three of M23's committed pairs
     recomputed at +0.0052, +0.0016 and +0.0099 on scores near 0.35, while the place RECORDS of the
-    same cells are byte-identical to the committed census.  So a score is only reusable by a run
-    whose pipeline digest equals the one that wrote it, and every row now carries this digest.
+    same cells are identical.
+
+    The digest folds the front end's live switch values (that is what its own cache key does), so it
+    must be taken under the SHIPPED recipe and the caller's values restored afterwards --
+    otherwise the same environment fingerprints differently depending on what ran before it, which
+    is a cache that misses when it should hit.  Mission 28 item 1b fixed exactly that.
     """
     import hashlib
+    import parameters as P
     from matching import placement_cache as GC
+    from matching import placement_frontend as FE
+    saved = {k: getattr(P, k) for k in list(FE.RECIPE) + list(FE.RECIPE_EXTRA) if hasattr(P, k)}
+    try:
+        FE.apply_recipe()
+        parts = (GC._source_digest(), GC._switch_digest())
+    finally:
+        for k, v in saved.items():
+            setattr(P, k, v)
     h = hashlib.sha256()
-    for part in (GC._source_digest(), GC._switch_digest()):
+    for part in parts:
         h.update(str(part).encode())
     for mod in ("numpy", "scipy"):
         try:

@@ -32,6 +32,11 @@ LENSES: Tuple[str, ...] = ("Blob", "BoundaryArc", "CornerPoint")
 DROP_REASONS: Tuple[str, ...] = ("no_sig", "no_config", "no_position", "no_scale")
 SLOTS = 5
 
+#: The record format.  28 adds the optional CONTENT block (`content.kind` != "keypoint"):
+#: `N_CONTENT` float columns per place, and the same number of bin-ints when counted.
+FORMAT_VERSION = 28
+N_CONTENT = 6
+
 #: The stored float width.  float64, because the door MATCHES ON EXACT KEY EQUALITY: a quantised
 #: value stored as float32 (1.6 -> 1.6000000238) lands in a different bucket, and the loader's
 #: shortlists stop matching the live ones.  Measured: 12.8 MB in float64, well inside the budget.
@@ -54,7 +59,11 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
     out: Dict[str, np.ndarray] = {
         "keys": np.asarray(list(keys), dtype=object),
         "views": np.asarray(list(views), dtype=object),
-        "meta": np.asarray(json.dumps({"slots": SLOTS, "lenses": list(LENSES),
+        "meta": np.asarray(json.dumps({"version": FORMAT_VERSION, "slots": SLOTS,
+                                       "content": N_CONTENT if any(
+                                           r.get("content") for _o, _v, rec in cells
+                                           for r in rec["places"]) else 0,
+                                       "lenses": list(LENSES),
                                        "drop_reasons": list(DROP_REASONS),
                                        "n_cells": len(cells),
                                        "complete": len(cells) == len(keys) * len(views)})),
@@ -62,6 +71,7 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
     buckets: Dict[str, Dict[str, List[Any]]] = {
         v: {"rows": [], "dz": [], "mz": [], "obj": [], "idx": [], "drop": [], "pay": [],
             "nodes": [], "lens": []} for v in views}
+    content: Dict[str, List[Any]] = {v: [] for v in views}
     for obj_key, view, rec in cells:
         b = buckets[view]
         width = widths.get(view, 0)
@@ -78,6 +88,10 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
             b["obj"].append(key_index[obj_key])
             b["idx"].append(int(r["n"]))
             b["lens"].append(LENSES.index(r["lens"]) if r["lens"] in LENSES else -1)
+            c = r.get("content")
+            if c is not None:
+                cc = list(c)
+                content[view].append(cc + [0.0] * (N_CONTENT - len(cc)))
         d = rec.get("dropped") or {}
         b["drop"].append([int(d.get(k, 0)) for k in DROP_REASONS])
         b["pay"].append(int(rec.get("n_payload") or 0))
@@ -99,6 +113,8 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
                                                                           len(DROP_REASONS))
         out["pay_%s" % v] = np.asarray(b["pay"], dtype=np.int32)
         out["nodes_%s" % v] = np.asarray(b["nodes"], dtype=np.int32)
+        if content[v]:
+            out["content_%s" % v] = np.asarray(content[v], dtype=DTYPE)
     return out
 
 
@@ -147,6 +163,7 @@ def _cell_from(z: Any, obj_key: str, view: str) -> Dict[str, Any]:
     obj = z["obj_%s" % view]
     idx = z["idx_%s" % view]
     lens = z["lens_%s" % view]
+    content_all = z["content_%s" % view] if ("content_%s" % view) in z.files else None
     sel = np.flatnonzero(obj == i)
     places: List[Dict[str, Any]] = []
     for j in sel:
@@ -164,11 +181,54 @@ def _cell_from(z: Any, obj_key: str, view: str) -> Dict[str, Any]:
                        "key": (lens_name, q), "Dz": dz, "Mz": mz,
                        "x": x, "y": y, "s": s,
                        "theta": (None if not np.isfinite(th) else th)})
+        if content_all is not None:
+            places[-1]["content"] = [float(v) for v in content_all[j]]
     drop = {name: int(z["drop_%s" % view][i][d]) for d, name in enumerate(DROP_REASONS)}
     return {"path": None, "obj": obj_key, "view": view, "places": places,
             "dropped": drop, "n_payload": int(z["pay_%s" % view][i]),
             "n_all_nodes": int(z["nodes_%s" % view][i]), "sec": 0.0,
             "from_npz": True}
+
+
+# --------------------------------------------------------------------------- the environment
+def environment() -> Dict[str, Any]:
+    """What produced a number: CPU, cores, interpreter, and the numeric stack, to the version.
+
+    Mission 27 measured that a pair score is NOT invariant across environments (+0.004 mean,
+    max +0.010 on scores near 0.35, while the place records were identical).  A result file that
+    does not say which environment produced it is therefore not readable, so every manifest carries
+    this block (see ``matching/m15_manifest.manifest``).
+    """
+    import platform
+    import sys
+    model = ""
+    try:
+        with open("/proc/cpuinfo", encoding="utf-8", errors="replace") as fh:
+            for line in fh:
+                if line.lower().startswith("model name"):
+                    model = line.split(":", 1)[1].strip()
+                    break
+    except OSError:
+        model = platform.processor()
+    out: Dict[str, Any] = {
+        "cpu": model,
+        "physical_cores": physical_cores(limit=1024),
+        "logical_cores": int(os.cpu_count() or 1),
+        "python": sys.version.split()[0],
+        "platform": platform.platform(),
+    }
+    for mod in ("numpy", "scipy", "PIL"):
+        try:
+            m = __import__(mod)
+            out[mod.lower().rstrip(".")] = str(getattr(m, "__version__", "?"))
+        except Exception:
+            out[mod.lower()] = "missing"
+    try:
+        from matching.placement_recognise import pair_env
+        out["pair_env"] = pair_env()
+    except Exception:
+        out["pair_env"] = "unavailable"
+    return out
 
 
 # --------------------------------------------------------------------------- how many workers

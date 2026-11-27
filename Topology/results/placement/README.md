@@ -132,6 +132,12 @@ digest test both name them -- see `archive/ARCHIVE_INDEX.md`.
 | graded door, **narrow** constitution, tau 0.5 and 0.7 (M27) | 0.275 / 0.325 (11/40, 13/40) | 40 | 0.100 |
 | relaxed partition (exact OR theta-neighbour) alone (M27) | 0.350 (14/40) | 40 | 0.100 |
 | RRF(relaxed, shipped door) (M27) | 0.475 (19/40) | 40 | 0.100 |
+| **place content gauge: the signature's same-class G (M28)** | **0.496**, any-object 0.515 | 4,284 query places | 0.500 |
+| place content gauge: local colour rings, same-class G (M28) | **0.745** (any-object 0.852) | 4,284 | 0.500 |
+| gauge, orientation population / texture (M28) | 0.563 / 0.532 | 4,284 | 0.500 |
+| gauge, C1+C2+C3 equal weights (M28) | 0.616 | 4,284 | 0.500 |
+| content door, counted over quantised colour (M28) | FIT 0.550 / 0.500 (22/40, 20/40) | 40 | 0.100 |
+| content door, graded cosine colour (M28) | FIT 0.675 / 0.600 (27/40, 24/40) | 40 | 0.100 |
 
 **Settling the shortlist and the door (M27, `MISSION27_REPORT.md`).**  The full read runs all 80
 queries with a flat 16-candidate shortlist and scores all **1,280 pairs** in one environment.
@@ -147,6 +153,25 @@ against 0.550).  Three sweeps of the door's geometry have now failed; the descri
 is what is left.  **Where the matcher loses:** of 56 queries whose shortlist holds the truth, it
 returns it first 22 times, loses **22 to another instance of the same class** and 12 to a different
 class (cups 8 of 9, tomatoes 5 of 6; cars 4 of 4 lose to other classes).
+
+**What the place carries (M28, `MISSION28_REPORT.md`).**  Today's place content is the keypoint's
+own five-number signature: **7.71 bits** over the whole corpus (559 distinct keys for 40,399
+places; 6.83 bits per object), and it buys a **same-class cross-view AUC of 0.496 against a chance
+of 0.500**.  The pipeline already computes colour, orientation populations, texture and M15's
+attribute lenses *at* the place and attaches none of it, because a place was defined as the
+keypoint's signature.  Adding six CIELAB ring means at the place's own scale ("colour rings") moves
+the same-class gauge to **0.745 (+0.249)**; orientation population (+0.067) and texture (+0.036)
+fail the registered +0.10 bar.  The content is now in the pipeline (`matching/placement_content.py`,
+record format 28, bundle value `content.kind`, **off by default**) and
+`data/placement_records_m28.npz` (31.9 MB) carries it, but the door built on it **did not clear the
+door rule**: graded cosine content reaches FIT recall@8 **0.675** at `-035-045` (+0.125) and
+**0.600** at `-045-180` (**+0.050**, short of the +0.075 required), the counted-over-quantised
+version 0.550 / 0.500.  So the content does **not** ship as the door's key, no matcher read was run
+on it, and the next lever is a second information source at the place: local colour that survives
+the view change without the background.  Determinism was closed in the same mission: scores are
+identical to **1e-12** across 1, 2 and 4 workers and with BLAS threads = 1 (in fact bitwise), so
+the cross-sandbox drift is environment, and `requirements.txt`, `pair_env` and every manifest's
+`environment` now pin and name the machine.
 
 **The confirmatory read** (`MISSION23_REPORT.md` §5): on view `-035-045`, which no earlier mission
 had read, the assembled system beats the deployed one by **+0.175 (20 against 6 of 80, 95 % CI

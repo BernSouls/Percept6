@@ -119,13 +119,84 @@ same pair scores. Rule as registered: S chosen on the 40 FIT objects, the 40 DEV
 report; S = 16 ships only if FIT gains ≥ +0.05 AND confirmation gains ≥ 0; the adaptive rule ships
 only if it beats both on FIT.
 
-<!-- FILL: the S table, CIs, per class, unscored list, and the rule applied -->
+All 1,280 pairs were scored in this environment in two resumable stages (`--only-split FIT`, then
+`--only-split CONFIRMATION`), 2 workers, 114 + 115 minutes; **80 of 80 queries are fully scored and
+0 are unscored** (`m27_read.json`: `pairs asked 1280, cached 1280, missing 0`). Chance: top-1
+1/80 = **0.0125**, recall@8 0.100, recall@16 0.200. Intervals are object-clustered bootstrap over
+the 40 objects of each split (10,000 resamples, seed 20261118).
+
+| arm | FIT (n = 40) | DEV + FRESH (n = 40) | ALL (n = 80) | door ceiling, ALL |
+|---|---|---|---|---|
+| **S = 8** | 0.250 (10/40) [0.125, 0.400] | 0.225 (9/40) [0.100, 0.350] | **0.2375 (19/80)** [0.150, 0.338] | 0.550 |
+| **S = 16 (flat)** | **0.325 (13/40)** [0.175, 0.475] | 0.225 (9/40) [0.100, 0.375] | **0.275 (22/80)** [0.175, 0.375] | 0.700 |
+| adaptive (M26 rule) | 0.275 (11/40) [0.150, 0.425] | 0.175 (7/40) [0.075, 0.300] | 0.225 (18/80) [0.138, 0.312] | 0.613 |
+
+Paired, same objects:
+
+| comparison | split | difference | 95 % CI | p |
+|---|---|---|---|---|
+| S = 16 − S = 8 | FIT | **+0.075** (10 → 13) | [-0.025, +0.175] | 0.58 |
+| S = 16 − S = 8 | DEV + FRESH | **0.000** (9 → 9) | [-0.100, +0.100] | 1.00 |
+| adaptive − S = 8 | FIT | +0.025 (10 → 11) | [-0.050, +0.125] | 0.79 |
+| adaptive − S = 8 | DEV + FRESH | -0.050 (9 → 7) | [-0.125, 0.000] | 0.60 |
+
+**The rule, applied.** FIT gain of S = 16 over S = 8 is **+0.075 ≥ +0.05** and the confirmation gain is
+**0.000 ≥ 0**, so **flat S = 16 ships** (`rule.s16_ships = true`). The adaptive rule gains +0.025 over
+S = 8 on FIT, loses **-0.050 against S = 16 on FIT** and **-0.050 on the confirmation objects**, so it
+does not beat both: it leaves the bundle default (code stays behind `shortlist_rule`) and its margin
+predictor is recorded as poor -- it widened 44 of 80 queries and gained nothing on DEV + FRESH. Its
+shortlists ask for **992 pairs**, the same 992 M26 asked for (a cross-check that the rule is the one
+M26 measured). The bundle therefore carries `shortlist = 16, shortlist_rule = "fixed"`.
+
+**S = 8 and S = 16 are not distinguishable.** The FIT difference is one rule-width above its
+threshold and its interval crosses zero; the confirmation difference is exactly zero; at n = 80 the
+two arms differ by 3 queries. Nothing in this read supports a claim that 16 is better than 8 -- the
+rule shipped 16 only because it was fixed in advance, and every read from Mission 28 onwards uses
+**S = 8** (the same arm, half the pairs).
+
+Per class, top-1 (n = 10 per class, chance 0.0125), S = 16 with the door's ceiling beside it: apple
+**0.7** (ceiling 0.9), cow 0.3 (0.4), dog 0.3 (0.7), tomato 0.3 (0.9), car 0.2 (0.6), horse 0.2
+(0.6), cup 0.1 (1.0), pear 0.1 (0.5). At S = 8: apple 0.5, tomato 0.5, cow 0.2, cup 0.2, dog 0.2,
+car 0.1, horse 0.1, pear 0.1. Cups and tomatoes have the best doors and among the worst assembled
+rates: the shortlist finds them and the matcher puts the wrong instance first (item 3).
+
+The number the next mission keys on: **the door offers the truth in 56 of 80 shortlists and the
+matcher returns it 22 times** (0.275). The shortlist is not the loss.
 
 ---
 
 ## 3. Where the matcher loses (item 3)
 
-<!-- FILL: the loss table -->
+No new scoring: the same 1,280 pair scores. For every query whose truth is in its S = 16 shortlist
+(56 of 80), who won instead.
+
+| | count | n |
+|---|---|---|
+| truth first | **22** | 56 |
+| loses to a **different instance of the same class** | **22** | 56 |
+| loses to a **different class** | **12** | 56 |
+| median score gap (truth − winner) over the 34 losses | **-0.0124** | 34 |
+| median same-class candidates in the shortlist over the 34 losses | **5.0** | 34 |
+
+Per class (same-class losses / different-class losses / truth first / reachable):
+
+| class | same | different | truth first | reachable |
+|---|---|---|---|---|
+| cup | **8** | 1 | 1 | 10 |
+| tomato | **5** | 1 | 4 | 10 |
+| pear | **3** | 1 | 1 | 5 |
+| dog | **3** | 1 | 3 | 7 |
+| apple | 2 | 0 | 7 | 9 |
+| horse | 1 | **3** | 2 | 6 |
+| cow | 0 | 1 | 3 | 4 |
+| car | 0 | **4** | 1 | 6 |
+
+**22 of the 34 losses are to another instance of the same class**, 12 to a different class: the
+auditor's one-view measurement (15 of 18 same-class) reproduces at full scale. The exceptions are
+informative, not contradictory -- cars lose almost entirely to other classes (4 of 4) and cups and
+tomatoes almost entirely to their own instances (8 of 9, 5 of 6), i.e. two different failure causes:
+a car's place signature is not discriminative enough (ceiling 0.6), a cup's is discriminative but not
+*instance*-specific (ceiling 1.0, and the matcher still fails 9 of 10).
 
 ---
 

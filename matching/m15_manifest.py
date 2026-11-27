@@ -115,10 +115,17 @@ def endpoints() -> Dict[str, Any]:
                        else "matching/placement_frozen_params.json:endpoint_lenses")}
 
 
+def environment() -> Dict[str, Any]:
+    """M28 item 1b: the machine that produced a number -- CPU model, cores, interpreter and the
+    pinned libraries.  One source of truth: ``matching.placement_records.environment()``."""
+    from matching.placement_records import environment as _env
+    return _env()
+
+
 def manifest() -> Dict[str, Any]:
     return {"flags": effective_flags(), "frame": frame_provider(),
             "weight": weight_source(), "endpoints": endpoints(),
-            "code": code_digest()}
+            "code": code_digest(), "environment": environment()}
 
 
 def check(payload: Dict[str, Any], where: str = "<memory>") -> None:

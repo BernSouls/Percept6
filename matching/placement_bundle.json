@@ -1,6 +1,15 @@
 {
  "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
- "code_digest": "3bb069122845f7e339652c330ab77ec92de4da259c0c79459a305abb6c4ae77b",
+ "code_digest": "73b9a7e1b9e288f7647c2136443f168cc04c8bbec1538be09e5ed3b517910474",
+ "content": {
+  "digest": "26b1d1a2292034e5",
+  "kind": "keypoint",
+  "kinds": [
+   "keypoint",
+   "colour_rings"
+  ],
+  "note": "M28 item 6.  What a place carries beyond its keypoint signature.  'keypoint' is the shipped default and is what every record before M28 carries; 'colour_rings' adds six CIELAB ring means at the place's own scale (matching/placement_content.py).  Records and reads that use a non-default kind name it in their manifest."
+ },
  "date": "2026-11-27",
  "door": {
   "kind": "counted",
@@ -145,14 +154,122 @@
     "shipped": "flat S = 16"
    }
   },
+  "M28": {
+   "content": {
+    "kind_available": "colour_rings",
+    "kind_shipped": "keypoint",
+    "module_digest": "26b1d1a2292034e5",
+    "note": "off by default; record format 28; built by enrichment in 36.9 s against 1,824.5 s of full re-derivation, and proven equal to the pipeline's own place_record(content=...) on a live cell (max |difference| 0.0)",
+    "records": "data/placement_records_m28.npz",
+    "records_bytes": 33478046
+   },
+   "content_door": {
+    "chance": 0.1,
+    "counted_over_quantised": {
+     "fit": [
+      0.55,
+      0.5
+     ],
+     "gain": [
+      0.0,
+      -0.05
+     ]
+    },
+    "decision": "no variant passes -> the content does not ship as the door's key, and the S = 8 matcher read (item 7) was not run",
+    "graded_cosine": {
+     "conf_delta": [
+      0.2,
+      0.125
+     ],
+     "fit": [
+      0.675,
+      0.6
+     ],
+     "gain": [
+      0.125,
+      0.05
+     ]
+    },
+    "n": 40,
+    "rule": "FIT gain >= 0.075 at BOTH views and conf not below -0.025",
+    "shipped_reference": {
+     "conf": [
+      0.55,
+      0.475
+     ],
+     "fit": [
+      0.55,
+      0.55
+     ]
+    }
+   },
+   "determinism": {
+    "blas_threads_1": true,
+    "identical_1e-12": true,
+    "max_abs_diff": 0.0,
+    "pairs": 10,
+    "verdict": "deterministic within one environment (bitwise); the cross-sandbox drift is environment, now pinned by requirements.txt and named in every manifest's environment key",
+    "worker_counts": [
+     1,
+     2,
+     4
+    ]
+   },
+   "gates": {
+    "check_28_pairs_0_diffs": true,
+    "check_wall_s": 578.5,
+    "tests": 195
+   },
+   "gauge": {
+    "C1_colour_rings": {
+     "any": 0.852,
+     "same_class": 0.745
+    },
+    "C2_orientation_population": {
+     "any": 0.645,
+     "same_class": 0.563
+    },
+    "C3_texture": {
+     "any": 0.62,
+     "same_class": 0.532
+    },
+    "C4_equal_weights": {
+     "any": 0.741,
+     "same_class": 0.616
+    },
+    "chance": 0.5,
+    "query_places": 4284,
+    "rule": "+0.10 same-class over the signature; C1 and C4 passed, local colour is the one that ships in the pipeline as content",
+    "signature": {
+     "any": 0.515,
+     "same_class": 0.496
+    }
+   },
+   "key_information": {
+    "distinct_keys": 559,
+    "entropy_bits": 7.71,
+    "per_object_entropy_bits": 6.83,
+    "places": 40399,
+    "view": "000-000"
+   },
+   "speed": {
+    "change_shipped": false,
+    "largest": "global_consistency_alignment (98 %)",
+    "profile_pair_wall_s": 69.91,
+    "s_per_pair": {
+     "serial": 22.32,
+     "workers_2": 9.18
+    }
+   }
+  },
   "note": "documentation only: this block is not part of code_digest and freeze() overwrites it"
  },
  "mission": "M24",
  "name": "placement-shipped-v1",
  "provenance": {
   "entry_point": "matching/placement_recognise.py",
-  "measured_by": "MISSION23_REPORT.md section 5 (the read); MISSION25_REPORT.md section 4 (k = 1 vs k = 4); MISSION27_REPORT.md sections 2-4 (S, losses, door)",
-  "note": "frozen from the configuration Mission 27 shipped: flat S = 16, counted door, k = 1"
+  "measured_by": "MISSION23_REPORT.md section 5 (the read); MISSION25_REPORT.md section 4 (the k = 1 vs k = 4 read)",
+  "note": "frozen from the configuration Mission 25 shipped"
  },
  "references": {
   "covering_deg": 90.0,

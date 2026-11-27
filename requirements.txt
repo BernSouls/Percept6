@@ -1,0 +1,8 @@
+# Mission 28, item 1b: the numeric stack is PINNED, because a pair score is not invariant across it.
+# Mission 27 measured the drift between sandboxes (+0.004 mean, max +0.010 on scores near 0.35) and
+# could not name its cause; pinning removes the ambiguity for every read from here on.
+# The CPU model is NOT pinnable and is recorded in every manifest instead (matching/m15_manifest.py,
+# "environment"), together with these versions and the graph pipeline's own digest.
+numpy==2.4.6
+scipy==1.17.1
+pillow==13.0.0

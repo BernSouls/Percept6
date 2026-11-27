@@ -1,0 +1,412 @@
+{
+ "comparison": {
+  "serial": {
+   "identical_1e12": true,
+   "max_abs_diff_vs_serial": 0.0
+  },
+  "serial_threads1": {
+   "identical_1e12": true,
+   "max_abs_diff_vs_serial": 0.0
+  },
+  "w1": {
+   "identical_1e12": true,
+   "max_abs_diff_vs_serial": 0.0
+  },
+  "w2": {
+   "identical_1e12": true,
+   "max_abs_diff_vs_serial": 0.0
+  },
+  "w4": {
+   "identical_1e12": true,
+   "max_abs_diff_vs_serial": 0.0
+  }
+ },
+ "configs": {
+  "serial": {
+   "config": "serial",
+   "environment": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+    "logical_cores": 2,
+    "numpy": "2.4.6",
+    "pair_env": "63fada9514714026",
+    "physical_cores": 1,
+    "pil": "13.0.0",
+    "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+    "python": "3.11.2",
+    "scipy": "1.17.1"
+   },
+   "scores": [
+    {
+     "B": 0.3499972914131868,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-000-000.png"
+    },
+    {
+     "B": 0.31390608197446657,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/10/apple10-000-000.png"
+    },
+    {
+     "B": 0.3676549198900832,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/3/apple3-000-000.png"
+    },
+    {
+     "B": 0.37838887417478273,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/4/apple4-000-000.png"
+    },
+    {
+     "B": 0.3646661689621957,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/5/apple5-000-000.png"
+    },
+    {
+     "B": 0.32994721985699577,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/6/apple6-000-000.png"
+    },
+    {
+     "B": 0.32293415250473884,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/7/apple7-000-000.png"
+    },
+    {
+     "B": 0.3606675344632629,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/9/apple9-000-000.png"
+    },
+    {
+     "B": 0.31325848341112117,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/2/1/car1-000-000.png"
+    },
+    {
+     "B": 0.29845675888749346,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/4/3/cup3-000-000.png"
+    }
+   ],
+   "seconds": 223.2,
+   "seconds_per_pair": 22.32,
+   "threads": {
+    "MKL_NUM_THREADS": null,
+    "OMP_NUM_THREADS": null,
+    "OPENBLAS_NUM_THREADS": null
+   },
+   "warm_seconds": 161.5
+  },
+  "serial_threads1": {
+   "config": "serial",
+   "environment": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+    "logical_cores": 2,
+    "numpy": "2.4.6",
+    "pair_env": "63fada9514714026",
+    "physical_cores": 1,
+    "pil": "13.0.0",
+    "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+    "python": "3.11.2",
+    "scipy": "1.17.1"
+   },
+   "scores": [
+    {
+     "B": 0.3499972914131868,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-000-000.png"
+    },
+    {
+     "B": 0.31390608197446657,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/10/apple10-000-000.png"
+    },
+    {
+     "B": 0.3676549198900832,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/3/apple3-000-000.png"
+    },
+    {
+     "B": 0.37838887417478273,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/4/apple4-000-000.png"
+    },
+    {
+     "B": 0.3646661689621957,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/5/apple5-000-000.png"
+    },
+    {
+     "B": 0.32994721985699577,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/6/apple6-000-000.png"
+    },
+    {
+     "B": 0.32293415250473884,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/7/apple7-000-000.png"
+    },
+    {
+     "B": 0.3606675344632629,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/9/apple9-000-000.png"
+    },
+    {
+     "B": 0.31325848341112117,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/2/1/car1-000-000.png"
+    },
+    {
+     "B": 0.29845675888749346,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/4/3/cup3-000-000.png"
+    }
+   ],
+   "seconds": 226.7,
+   "seconds_per_pair": 22.67,
+   "threads": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+   },
+   "warm_seconds": 2.9
+  },
+  "w1": {
+   "config": "w1",
+   "environment": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+    "logical_cores": 2,
+    "numpy": "2.4.6",
+    "pair_env": "63fada9514714026",
+    "physical_cores": 1,
+    "pil": "13.0.0",
+    "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+    "python": "3.11.2",
+    "scipy": "1.17.1"
+   },
+   "scores": [
+    {
+     "B": 0.3499972914131868,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-000-000.png"
+    },
+    {
+     "B": 0.31390608197446657,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/10/apple10-000-000.png"
+    },
+    {
+     "B": 0.3676549198900832,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/3/apple3-000-000.png"
+    },
+    {
+     "B": 0.37838887417478273,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/4/apple4-000-000.png"
+    },
+    {
+     "B": 0.3646661689621957,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/5/apple5-000-000.png"
+    },
+    {
+     "B": 0.32994721985699577,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/6/apple6-000-000.png"
+    },
+    {
+     "B": 0.32293415250473884,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/7/apple7-000-000.png"
+    },
+    {
+     "B": 0.3606675344632629,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/9/apple9-000-000.png"
+    },
+    {
+     "B": 0.31325848341112117,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/2/1/car1-000-000.png"
+    },
+    {
+     "B": 0.29845675888749346,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/4/3/cup3-000-000.png"
+    }
+   ],
+   "seconds": 223.4,
+   "seconds_per_pair": 22.34,
+   "threads": {
+    "MKL_NUM_THREADS": null,
+    "OMP_NUM_THREADS": null,
+    "OPENBLAS_NUM_THREADS": null
+   },
+   "warm_seconds": 2.8
+  },
+  "w2": {
+   "config": "w2",
+   "environment": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+    "logical_cores": 2,
+    "numpy": "2.4.6",
+    "pair_env": "63fada9514714026",
+    "physical_cores": 1,
+    "pil": "13.0.0",
+    "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+    "python": "3.11.2",
+    "scipy": "1.17.1"
+   },
+   "scores": [
+    {
+     "B": 0.3499972914131868,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-000-000.png"
+    },
+    {
+     "B": 0.31390608197446657,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/10/apple10-000-000.png"
+    },
+    {
+     "B": 0.3676549198900832,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/3/apple3-000-000.png"
+    },
+    {
+     "B": 0.37838887417478273,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/4/apple4-000-000.png"
+    },
+    {
+     "B": 0.3646661689621957,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/5/apple5-000-000.png"
+    },
+    {
+     "B": 0.32994721985699577,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/6/apple6-000-000.png"
+    },
+    {
+     "B": 0.32293415250473884,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/7/apple7-000-000.png"
+    },
+    {
+     "B": 0.3606675344632629,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/9/apple9-000-000.png"
+    },
+    {
+     "B": 0.31325848341112117,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/2/1/car1-000-000.png"
+    },
+    {
+     "B": 0.29845675888749346,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/4/3/cup3-000-000.png"
+    }
+   ],
+   "seconds": 116.3,
+   "seconds_per_pair": 11.63,
+   "threads": {
+    "MKL_NUM_THREADS": null,
+    "OMP_NUM_THREADS": null,
+    "OPENBLAS_NUM_THREADS": null
+   },
+   "warm_seconds": 2.9
+  },
+  "w4": {
+   "config": "w4",
+   "environment": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+    "logical_cores": 2,
+    "numpy": "2.4.6",
+    "pair_env": "63fada9514714026",
+    "physical_cores": 1,
+    "pil": "13.0.0",
+    "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+    "python": "3.11.2",
+    "scipy": "1.17.1"
+   },
+   "scores": [
+    {
+     "B": 0.3499972914131868,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-000-000.png"
+    },
+    {
+     "B": 0.31390608197446657,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/10/apple10-000-000.png"
+    },
+    {
+     "B": 0.3676549198900832,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/3/apple3-000-000.png"
+    },
+    {
+     "B": 0.37838887417478273,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/4/apple4-000-000.png"
+    },
+    {
+     "B": 0.3646661689621957,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/5/apple5-000-000.png"
+    },
+    {
+     "B": 0.32994721985699577,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/6/apple6-000-000.png"
+    },
+    {
+     "B": 0.32293415250473884,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/7/apple7-000-000.png"
+    },
+    {
+     "B": 0.3606675344632629,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/1/9/apple9-000-000.png"
+    },
+    {
+     "B": 0.31325848341112117,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/2/1/car1-000-000.png"
+    },
+    {
+     "B": 0.29845675888749346,
+     "q": "/home/user/Percept6/data/ETH-80-master/1/1/apple1-035-045.png",
+     "r": "/home/user/Percept6/data/ETH-80-master/4/3/cup3-000-000.png"
+    }
+   ],
+   "seconds": 123.2,
+   "seconds_per_pair": 12.32,
+   "threads": {
+    "MKL_NUM_THREADS": null,
+    "OMP_NUM_THREADS": null,
+    "OPENBLAS_NUM_THREADS": null
+   },
+   "warm_seconds": 2.9
+  }
+ },
+ "deterministic_within_environment": true,
+ "manifest": {
+  "environment": {
+   "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+   "logical_cores": 2,
+   "numpy": "2.4.6",
+   "pair_env": "63fada9514714026",
+   "physical_cores": 1,
+   "pil": "13.0.0",
+   "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+   "python": "3.11.2",
+   "scipy": "1.17.1"
+  }
+ },
+ "max_abs_diff": 0.0,
+ "pairs": 10
+}
