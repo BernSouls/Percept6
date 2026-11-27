@@ -63,14 +63,14 @@ side so `id()` cannot be reused): a blended pair is 25.3 s against 23.2 s shippe
 `tests/test_m30_content.py::TestColourCache` pins the cached vectors to be *equal* to the
 uncached ones (`_legacy_node_colour` is kept for exactly that test).
 
-## A3 — one read at S = 8 (FIT complete, 40/40; 46 of 80 queries overall)
+## A3 — one read at S = 8 (FIT complete, 40/40; 59 of 80 queries overall)
 
 Arms: **A1's fused door** (RRF counted + appearance + colour@0.5) and **A2's blend on in the
 matcher** (`w_col = 0.10`, `w_cfg` held). Cell: query `-035-045`, gallery `-000-000`, S = 8,
 80 gallery objects, chance top-1 0.0125, chance recall@8 0.100. Runner
 `Topology/m30_read.py --run --split FIT` (resumable: `m30_read_pairs.jsonl` + progress file;
 partial results only on fully scored queries — a query with any unscored pair is reported as
-`lacking`, never scored against a constant, and 34 queries are).
+`lacking`, never scored against a constant, and 21 queries are).
 
 **MDE, stated before the read:** 80 paired queries with an expected discordance of ~0.15 gives
 SE = sqrt(0.15/80) = 0.043 and MDE(80 % power) = 2.80 × 0.043 = **0.121** against a planning effect
@@ -79,14 +79,14 @@ of **+0.075**. At n = 40 (the completed split) MDE = 2.80 × sqrt(0.15/40) = **0
 | split | n | hits | top-1 | 95 % CI | M27 shipped, same split | chance |
 |---|---|---|---|---|---|---|
 | **FIT** (complete) | **40** | **14** | **0.350** | **[0.200, 0.500]** | 0.250 (10/40, [0.125, 0.400]) | 0.0125 |
-| DEV (partial) | 4 | 1 | 0.250 | [0.000, 0.750] | — | 0.0125 |
+| DEV (partial, 17 of 40) | 17 | 3 | 0.176 | [0.000, 0.353] | — | 0.0125 |
 | FRESH (partial) | 2 | 2 | 1.000 | [1.000, 1.000] | — | 0.0125 |
-| all scored | 46 | 17 | 0.370 | [0.239, 0.500] | — | 0.0125 |
+| all scored | 59 | 19 | 0.322 | [0.203, 0.441] | — | 0.0125 |
 
-Per class (n = 5 each, apple n = 10, car n = 6): apple 6/10, car 3/6, cow 1/5, cup 1/5, dog 1/5,
-horse 1/5, pear 1/5, tomato 3/5. Door ceiling (truth inside the shortlist): 31 of 46 = 0.674 —
-apple 8, car 5, cow 1, cup 5, dog 2, horse 3, pear 3, tomato 4. The matcher converts **17 of 31**
-admitted queries (54.8 % of the door's ceiling).
+Per class (partial where the split is partial): apple 6/10, car 4/8, cow 2/8, cup 1/8, dog 1/8,
+horse 1/7, pear 1/5, tomato 3/5. Door ceiling (truth inside the shortlist): 40 of 59 = 0.678 —
+apple 8, car 7, cow 2, cup 8, dog 4, horse 4, pear 3, tomato 4. The matcher converts **19 of 40**
+admitted queries (47.5 % of the door's ceiling).
 
 **Estimate, not a claim.** On the completed FIT split the arm reads +0.100 (4 hits) over M27's
 shipped read on the same 40 objects and the same cell — *below* the 0.171 MDE at that n, and
@@ -95,23 +95,23 @@ intervals are wide and overlap. What the read does establish is the *shape* of t
 (table below) and that nothing regressed: no class reads zero, no query is scored against a
 constant, and 0 of 368 scored pairs failed.
 
-**Why 46 and not 80 — the mechanism, with the number:** one pair costs **~25 s of CPU (21 s of wall
+**Why 59 and not 80 — the mechanism, with the number:** one pair costs **~25 s of CPU (21 s of wall
 time in the 2-worker pool)**, so 640 pairs is 3.7 h on this box's single physical core; two budgeted
-runs (62 min + 40 min) scored 368 pairs. The 57 %-per-pair overhead the colour term introduced
+runs (62 min + 40 min + 26 min) scored 472 pairs. The 57 %-per-pair overhead the colour term introduced
 (per-pair ring recomputation, see A2) is fixed; what remains is the matcher's own cost, untouched
 by M30, and the runner resumes byte-identically where it stopped.
 
-Loss table, re-made (29 failures among the 46 scored queries):
+Loss table, re-made (40 failures among the 59 scored queries):
 
 | | losses | share of scored queries |
 |---|---|---|
-| same-class winner | 16 | 34.8 % |
-| other-class winner | 13 | 28.3 % |
-| truth outside the shortlist (door ceiling) | 15 | 32.6 % |
-| median score gap to the truth | 0.0145 | |
+| same-class winner | 22 | 37.3 % |
+| other-class winner | 18 | 30.5 % |
+| truth outside the shortlist (door ceiling) | 19 | 32.2 % |
+| median score gap to the truth | 0.0141 | |
 
 When the door admits the truth, the matcher's remaining error is *mostly* a same-class sibling
-(16 vs 13) on a median gap of 0.0145; when it does not, nothing downstream can help (15 cases, a
+(22 vs 18) on a median gap of 0.014; when it does not, nothing downstream can help (19 cases, a
 third of the queries). Those are the two levers the earlier missions named, and colour has not
 moved either of them.
 
@@ -247,7 +247,7 @@ numbers, rather than shipped.
 
 ## Deviations, stated
 
-1. **A3 is partial (46 of 80 queries; the FIT split is complete).** The runner, its progress file and its pair log are
+1. **A3 is partial (59 of 80 queries; the FIT split is complete).** The runner, its progress file and its pair log are
    committed; the read resumes exactly where it stopped. Mechanism in the A3 section: 21 s of wall
    time per pair in the pool, 640 pairs, one physical core.
 2. **B4's threshold was not lowered** although `corner_quantile = 90` is the FIT winner on *total*
@@ -271,9 +271,9 @@ fused into the door at a stated discount, which is what moved recall@8 from 0.55
 on FIT and 0.650 / 0.600 on CONF (top-1 0.125 → 0.250, 0.250 → 0.275), with no query losing a hit.
 **Shipped: the colour door (A1) and the record format v29 with five graded shape columns (B2).**
 The FIT split of the S = 8 read is complete: **top-1 0.350 (14/40, CI [0.200, 0.500])** against
-M27's shipped 0.250 (10/40) on the same objects, with the truth inside the door's shortlist for 31
-of the 46 queries scored — a difference (+0.100) that is smaller than the MDE at that n (0.171) and
-that therefore claims nothing. 46 of the 80 queries are scored; the runner resumes.
+M27's shipped 0.250 (10/40) on the same objects, with the truth inside the door's shortlist for 40
+of the 59 queries scored (0.678) — a difference (+0.100) that is smaller than the MDE at that n
+(0.171) and that therefore claims nothing. 59 of the 80 queries are scored; the runner resumes.
 Not shipped: the matcher's colour blend (A2 — measured at Δ −0.0026 on a pair score, and its 57 %
 cost overhead fixed rather than paid) and the shape term (B5 — its cross-view transfer is +0.077
 against a +0.10 bar and its object-level aggregate is 0.514, at chance, because two of its five

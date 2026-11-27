@@ -8,34 +8,34 @@
     "top1": 0.6
    },
    "car": {
-    "ceiling_hits": 5,
-    "hits": 3,
-    "n": 6,
+    "ceiling_hits": 7,
+    "hits": 4,
+    "n": 8,
     "top1": 0.5
    },
    "cow": {
-    "ceiling_hits": 1,
-    "hits": 1,
-    "n": 5,
-    "top1": 0.2
+    "ceiling_hits": 2,
+    "hits": 2,
+    "n": 8,
+    "top1": 0.25
    },
    "cup": {
-    "ceiling_hits": 5,
+    "ceiling_hits": 8,
     "hits": 1,
-    "n": 5,
-    "top1": 0.2
+    "n": 8,
+    "top1": 0.125
    },
    "dog": {
-    "ceiling_hits": 2,
+    "ceiling_hits": 4,
     "hits": 1,
-    "n": 5,
-    "top1": 0.2
+    "n": 8,
+    "top1": 0.125
    },
    "horse": {
-    "ceiling_hits": 3,
+    "ceiling_hits": 4,
     "hits": 1,
-    "n": 5,
-    "top1": 0.2
+    "n": 7,
+    "top1": 0.14285714285714285
    },
    "pear": {
     "ceiling_hits": 3,
@@ -54,13 +54,13 @@
    "DEV": {
     "ci95": [
      0.0,
-     0.75
+     0.35294117647058826
     ],
-    "hits": 1,
-    "n": 4,
+    "hits": 3,
+    "n": 17,
     "resamples": 10000,
     "seed": 20261118,
-    "top1": 0.25
+    "top1": 0.17647058823529413
    },
    "FIT": {
     "ci95": [
@@ -89,14 +89,14 @@
   "matcher": "shipped + colour blend w_col=0.10 (w_cfg held)",
   "top1": {
    "ci95": [
-    0.2391304347826087,
-    0.5
+    0.2033898305084746,
+    0.4406779661016949
    ],
-   "hits": 17,
-   "n": 46,
+   "hits": 19,
+   "n": 59,
    "resamples": 10000,
    "seed": 20261118,
-   "top1": 0.3695652173913043
+   "top1": 0.3220338983050847
   }
  },
  "cell": {
@@ -105,11 +105,11 @@
   "chance_top1": 0.0125,
   "gallery": 80,
   "queries": 80,
-  "scored": 46,
+  "scored": 59,
   "view": "035-045"
  },
  "estimate_vs_m27": {
-  "diff": 0.13206521739130433,
+  "diff": 0.08453389830508473,
   "note": "M27's per-object vector is not in its json, so this difference is unpaired and is not a test",
   "unpaired": true
  },
@@ -119,15 +119,7 @@
    "unscored": 8
   },
   {
-   "object": "car/3",
-   "unscored": 8
-  },
-  {
    "object": "car/4",
-   "unscored": 8
-  },
-  {
-   "object": "car/9",
    "unscored": 8
   },
   {
@@ -135,35 +127,11 @@
    "unscored": 8
   },
   {
-   "object": "cow/10",
-   "unscored": 8
-  },
-  {
-   "object": "cow/4",
-   "unscored": 8
-  },
-  {
    "object": "cow/5",
    "unscored": 8
   },
   {
-   "object": "cow/9",
-   "unscored": 8
-  },
-  {
-   "object": "cup/10",
-   "unscored": 8
-  },
-  {
    "object": "cup/3",
-   "unscored": 8
-  },
-  {
-   "object": "cup/4",
-   "unscored": 8
-  },
-  {
-   "object": "cup/5",
    "unscored": 8
   },
   {
@@ -175,31 +143,11 @@
    "unscored": 8
   },
   {
-   "object": "dog/5",
-   "unscored": 8
-  },
-  {
    "object": "dog/6",
    "unscored": 8
   },
   {
-   "object": "dog/8",
-   "unscored": 8
-  },
-  {
-   "object": "dog/9",
-   "unscored": 8
-  },
-  {
    "object": "horse/1",
-   "unscored": 8
-  },
-  {
-   "object": "horse/10",
-   "unscored": 8
-  },
-  {
-   "object": "horse/5",
    "unscored": 8
   },
   {
@@ -258,24 +206,24 @@
     "same": 3
    },
    "car": {
-    "other": 3,
+    "other": 4,
     "same": 0
    },
    "cow": {
-    "other": 1,
+    "other": 3,
     "same": 3
    },
    "cup": {
     "other": 0,
-    "same": 4
+    "same": 7
    },
    "dog": {
-    "other": 2,
-    "same": 2
+    "other": 3,
+    "same": 4
    },
    "horse": {
-    "other": 3,
-    "same": 1
+    "other": 4,
+    "same": 2
    },
    "pear": {
     "other": 3,
@@ -286,11 +234,11 @@
     "same": 2
    }
   },
-  "median_gap": 0.01449326517639457,
-  "n": 29,
-  "other_class": 13,
-  "out_of_shortlist": 15,
-  "same_class": 16
+  "median_gap": 0.0141336541865279,
+  "n": 40,
+  "other_class": 18,
+  "out_of_shortlist": 19,
+  "same_class": 22
  },
  "m27_s8": {
   "ci95": [
