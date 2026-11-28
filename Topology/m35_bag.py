@@ -496,10 +496,6 @@ def matcher_report() -> Dict[str, Any]:
             mat_order = [j for j, _ in sorted(have, key=lambda t: (-t[1], order.index(t[0])))]
             rest = [j for j in range(80) if j not in mat_order]
             mat_full = mat_order + rest
-            sc = dict(have)
-            A = np.zeros((1, 80)); Bm = np.zeros((1, 80))
-            for j in range(80):
-                A[0, j] = -float(([k for k in range(80)].index(j)))
             # RRF(equal) over the door's own rank and the matcher's rank, on these candidates
             door_rank_map = {j: r for r, j in enumerate(order)}
             mat_rank_map = {j: r for r, j in enumerate(mat_order)}

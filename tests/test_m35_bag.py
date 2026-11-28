@@ -145,9 +145,8 @@ def test_door_is_the_item1_colour_ranking(objs, cells, edges) -> None:
     from matching import placement_recognise as R
     keys = [o["key"] for o in objs]
     gal = GL.from_records(RECORDS, objs, REF, content="colour_rings")
-    gal = R.build_gallery([(k, []) for k in keys]) if False else gal
     gal.bag_features = None
-    b = PB_load()
+    b = _bundle()
     bag_feats = [BAG.describe(cells[(k, REF)], edges) for k in keys]
     gal.bag_features = bag_feats
     for v in ("035-045", "045-180"):
@@ -168,7 +167,7 @@ def test_recognise_class_excludes_the_query_object(objs, cells, edges) -> None:
     keys = [o["key"] for o in objs]
     gal = GL.from_records(RECORDS, objs, REF, content="colour_rings")
     gal.bag_features = [BAG.describe(cells[(k, REF)], edges) for k in keys]
-    b = PB_load()
+    b = _bundle()
     k = objs[5]["key"]
     out = R.recognise_class((k, ""), gal, bundle=b, record=cells[(k, REF)])
     cls = [kk.split("/")[0] for kk in keys]
@@ -182,6 +181,6 @@ def test_recognise_class_excludes_the_query_object(objs, cells, edges) -> None:
     assert out["top"] == want[0][0]
 
 
-def PB_load():
+def _bundle():
     from matching import placement_bundle as PB
     return PB.PlacementBundle.load()

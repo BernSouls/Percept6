@@ -137,6 +137,12 @@ resamples.
 | ALL | 0.806 [0.771, 0.837] | 0.600 | 0.791 [0.755, 0.824] | 0.588 | 0.783 [0.749, 0.814] | 0.500 |
 | G4 | 0.802 [0.768, 0.833] | 0.637 | 0.788 [0.753, 0.820] | 0.575 | 0.782 [0.748, 0.812] | 0.537 |
 
+**FIT and confirmation separately** (the mission asks for both, and the arms are not fitted, so they
+should agree): at `-035-045` COLOUR 0.745 / 0.730, GEOMETRY 0.695 / 0.662, ALL 0.788 / 0.794; at
+`-045-180` COLOUR 0.724 / 0.732, GEOMETRY 0.627 / 0.618, ALL 0.778 / 0.789; at `-022-000` COLOUR
+0.729 / 0.726, GEOMETRY 0.731 / 0.732, ALL 0.801 / 0.811.  Every FIT/confirmation pair agrees within
+0.012 — nothing here is fitted, so there is nothing to over-fit.
+
 **Claim 1 — "geometry clusters by class"** (registered as: GEOMETRY AUC CI lower bound > 0.55 at BOTH
 hard views): **HOLDS.**  0.641 at `-035-045`, 0.583 at `-045-180`.  It holds with the least margin at
 the view where the object has turned furthest, which is the shape of a real but viewpoint-fragile
@@ -268,9 +274,10 @@ progress file is the artifact.
 
 **The rule, and its verdict.**  The matcher stays FINAL only if its order (or an equal-weight RRF of
 its order and the door's) beats the door by **≥ +0.075 FIT top-1** with confirmation not below by more
-than 0.025.  **The comparison could not be completed inside the mission's compute window** (progress at
-the end of the session is in `Topology/results/placement/m35_pairs.jsonl`; `--matcher-report` prints
-the verdict for whatever is complete, and refuses to call a partially-covered view a measurement).
+than 0.025.  **The comparison could not be completed inside the mission's compute window**: 198 of 640 pairs are
+scored at the close of the session (`Topology/results/placement/m35_pairs.jsonl`, resumable;
+`--matcher-report` prints whatever is complete and does not call a partially-covered view a
+measurement).
 **Therefore the door's order is final and the matcher ships as flag `verify`.**
 
 **What the matcher is proven for, and what it does not add here.**  It is proven for place
@@ -335,7 +342,7 @@ A generated list of the flags nothing reads (225 named nowhere, from the M34 cen
 | full suite | **272 passed, 6 skipped, 4 subtests** (3:30-5:40, one core, two background jobs running) |
 | suite after each archive batch | green (272 / 272 / 272) |
 | records `--check` (`m32_records.py --check --cells 6`) | 24 cells, keys + frames identical, cosine max Δ 1.0e-15, `ok: true` |
-| anchors `--check` (`m34_anchors.py`) | 640 cells, 0 diffs (see `Topology/results/placement/m34_anchors.json`) |
+| anchors `--check` (`m34_anchors.py`) | **640 cells, 0 diffs, digest `94107835a6558887`** (identical to M34's) |
 | determinism, 1 / 2 / 4 workers | door order identical; matcher scores **max abs diff 0.0** |
 | bundle | re-frozen, `code_digest` matches the tree, `door.kind = "bag"`, `fusion.fragment = 0.0` |
 | new tests | `tests/test_m35_bag.py` (9 tests): arity, Hellinger, exclusions, both refusals, edges provenance, bundle, door == item-1 ranking on all 160 cells, class output |
