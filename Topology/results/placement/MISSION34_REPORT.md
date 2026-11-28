@@ -202,7 +202,7 @@ head of a short list.  Contrast with the fragment channel, Spearman **0.363** an
 | the shipped door == the measured door | `m34_wire.py --verify`: **6/6 orders identical, 6/6 resolved from the path** |
 | determinism, 1 / 2 / 4 workers | **max abs diff 0.0** (`m31_determinism.py --pairs 2`) |
 | `m33_records.py --check`, both views | **80/80 shortlists identical, 0 differences, cosine delta 0.0, top-8 orders changed 0** |
-| anchors re-derivable | `Topology/m34_anchors.py --check` (320 cells; the export is the same function) |
+| anchors re-derivable | `Topology/m34_anchors.py --check`: **640 cells, 0 diffs** (digest `94107835a6558887`) |
 | bundle | re-frozen, `code_digest 27c6a3b756e4ef8f`, door `fused3`, colour 0.5 + **fragment 0.5** |
 | records loadable from a fresh checkout | unchanged, 38.03 MB, `--check` above |
 | `-check` cost | 219.7 s (`-035-045`) + 245.5 s (`-045-180`) |
