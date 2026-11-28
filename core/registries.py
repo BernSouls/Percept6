@@ -1537,6 +1537,55 @@ if _B1_CYCLES:
     CIRCULAR_CYCLE_LENGTHS[b1_class_name(_GABOR_NT, _GABOR_NSF)] = _B1_CYCLES
 
 
+# ---------------------------------------------------------------------------
+# [MISSION 36 / PART B] DENSE_FIELD -- the local-difference field's node class.
+#
+# ONE NODE WHEREVER THE LOCAL CONTENT DIFFERS (perception/local_difference.py),
+# carrying the local content at that location and scale.  Registered here so the
+# tree's own kernel compares it: `_similarity_gaussian` returns 0.0 for a class
+# with no CONSTITUTIONAL_RANGES entry, which is the "unregistered class returns
+# 0.0, not a small number" contract, and `slot_axes` pairs every slot with a
+# same-named axis so a reordered table cannot move a measurement.
+#
+# Slots, in order (core.slots.SLOT_NAMES reads them from POPULATION_AXES):
+#   0 theta   dominant orientation, AXIAL (pi cycle) -> 12 bins, range 6.0 (N/2)
+#   1 coh     orientation coherence (vector strength of the marginal) -> 8
+#   2 energy  the Weber-normalised local difference that minted the node -> 8
+#   3 lum     local mean luminance -> 8
+#   4 rg      local mean red-green opponent -> 8
+#   5 by      local mean blue-yellow opponent -> 8
+#   6 sigma   the scale, log2(sigma_px)/5 -> 6
+# The theta slot is circular: CIRCULAR_CYCLE_LENGTHS below declares its 12-cycle
+# (the N/2 convention makes an adjacent bin score 1 apart, an opposite one 6).
+POPULATION_SLOTS["DENSE_FIELD"] = (
+    _slot("theta", "radians", 0.0, math.pi, 12, circular=True),
+    _slot("coh", "fraction", 0.0, 1.0, 8),
+    _slot("energy", "weber_contrast", 0.0, 1.0, 8),
+    _slot("lum", "luminance_0_1", 0.0, 1.0, 8),
+    _slot("rg", "opponent_rg", -1.0, 1.0, 8),
+    _slot("by", "opponent_by", -1.0, 1.0, 8),
+    _slot("sigma", "log2_sigma_px_over_5", 0.0, 1.0, 6),
+)
+
+POPULATION_AXES["DENSE_FIELD"] = (
+    PopAxis("theta", 12, circular=True,
+            sigma_bins=float(P.POP_ORIENTATION_SIGMA_BINS)),
+    PopAxis("coh", 8, circular=False),
+    PopAxis("energy", 8, circular=False),
+    PopAxis("lum", 8, circular=False),
+    PopAxis("rg", 8, circular=False),
+    PopAxis("by", 8, circular=False),
+    PopAxis("sigma", 6, circular=False),
+)
+
+#: The sum-form similarity's per-slot ranges.  The axial theta slot uses the N/2
+#: convention (a 12-cycle is range 6.0, so two ADJACENT bins are 1 apart and two
+#: OPPOSITE ones 6), exactly as CONTOUR_PEAK's theta slot does.
+CONSTITUTIONAL_RANGES["DENSE_FIELD"] = (6.0, 8.0, 8.0, 8.0, 8.0, 8.0, 6.0)
+
+CIRCULAR_CYCLE_LENGTHS["DENSE_FIELD"] = {0: 12}
+
+
 def get_similarity_ranges(class_name: str) -> tuple[int, ...] | None:
     """Return the constitutional R_j tuple for a CANONICAL signature class,
     or None if unregistered (which forces sim = 0.0)."""

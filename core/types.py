@@ -146,6 +146,21 @@ class EdgeType(Enum):
     # (which is frozen this mission) never consumes it.
     SOURCE_FRAME_PLACEMENT = 55
 
+    # [MISSION 36 / PART C] THE DENSE LAYER, JOINED TO THE SPARSE PLACES.
+    #
+    # `DENSE_IN_PLACE` is place -> dense node: the place OWNS the dense content it
+    # covers, and the payload is that dense node's position in the PLACE's own
+    # axial frame.  This is the edge that gives a place a degree: before the join
+    # every one of a cell's 518 places sat at degree 0 because the placement vector
+    # was written into the matcher payload only, never into the graph.
+    #
+    # `DENSE_PROXIMITY` is dense -> dense, between two dense nodes that share a
+    # place, carrying the TARGET's position in the SOURCE's own frame (the same
+    # convention as SOURCE_FRAME_PLACEMENT: the frame belongs to the source).
+    # Both are new values at the end of the enum so no shipped ordering changes.
+    DENSE_IN_PLACE = 56
+    DENSE_PROXIMITY = 57
+
 
 # --- from binder.py: edge-type registries ---
 _UNDIRECTED_EDGE_TYPES_BASE: FrozenSet[EdgeType] = frozenset(

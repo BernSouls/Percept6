@@ -40,12 +40,25 @@ SHAPE_FIELDS: Tuple[str, ...] = ("resp", "var_x", "var_y", "eigratio", "rel_angl
                                  "sharp_x", "sharp_y", "curv_x", "curv_y")
 SLOTS = 5
 
+#: [M36/D2] The dense block's columns, in fixed order.  `n` is the node's graph id
+#: (>= `matching.placement_join.DENSE_ID_BASE`), `place` the sparse place that owns it
+#: (-1 when it was refused), `s` its support radius in px, then the seven registered
+#: slots in `core.registries.POPULATION_SLOTS["DENSE_FIELD"]` order.
+DENSE_FIELDS: Tuple[str, ...] = ("n", "place", "x", "y", "s",
+                                 "theta", "coh", "energy", "lum", "rg", "by", "sigma")
+
 #: The record format.  28 adds the optional CONTENT block (`content.kind` != "keypoint"):
 #: `N_CONTENT` float columns per place, and the same number of bin-ints when counted.
+#: 31 [M36/D2] adds the OPTIONAL dense block (`dense_<view>` / `denseobj_<view>`): one
+#: row per dense local-difference node, so a records-only read can see the dense layer.
+#: The block is ABSENT from a file whose cells carry no `dense` key, so a flag-OFF
+#: export is the same file it was before this version and every shipped array is
+#: byte-identical.  NO existing key changes meaning: `n_all_nodes` still counts the
+#: PATTERN nodes (`nodes_<view>`), and dense nodes are counted in their own block.
 #: 30 adds the four M32 curvature columns (SHAPE_FIELDS 5 -> 9) and stores the content's ring
 #: vectors RAW (scaled Lab units) instead of unit-normalised; the shipped cosine normalises
 #: internally, so its scores are unchanged and every key stays byte-identical.
-FORMAT_VERSION = 30
+FORMAT_VERSION = 31
 
 #: [M32] The corpus's class folders, and the ONE way to name an object: class + INSTANCE FOLDER.
 #: The filename is not the instance (``car12-*.png`` lives in folder ``8``), and an absolute path
@@ -131,12 +144,16 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
                                            for r in rec["places"]) else 0,
                                        "lenses": list(LENSES),
                                        "drop_reasons": list(DROP_REASONS),
+                                       "dense": (len(DENSE_FIELDS) if any(
+                                           rec.get("dense") for _o, _v, rec in cells) else 0),
                                        "n_cells": len(cells),
                                        "complete": len(cells) == len(keys) * len(views)})),
     }
     buckets: Dict[str, Dict[str, List[Any]]] = {
         v: {"rows": [], "dz": [], "mz": [], "obj": [], "idx": [], "drop": [], "pay": [],
             "nodes": [], "lens": []} for v in views}
+    dense: Dict[str, List[Any]] = {v: [] for v in views}
+    dense_obj: Dict[str, List[Any]] = {v: [] for v in views}
     content: Dict[str, List[Any]] = {v: [] for v in views}
     shape: Dict[str, List[Any]] = {v: [] for v in views}
     for obj_key, view, rec in cells:
@@ -161,6 +178,9 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
                 content[view].append(cc + [0.0] * (N_CONTENT - len(cc)))
             if r.get("eigratio") is not None:
                 shape[view].append([float(r.get(k, 0.0) or 0.0) for k in SHAPE_FIELDS])
+        for row in (rec.get("dense") or ()):
+            dense[view].append([float(row.get(k, 0.0) or 0.0) for k in DENSE_FIELDS])
+            dense_obj[view].append(key_index[obj_key])
         d = rec.get("dropped") or {}
         b["drop"].append([int(d.get(k, 0)) for k in DROP_REASONS])
         b["pay"].append(int(rec.get("n_payload") or 0))
@@ -186,6 +206,9 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
             out["content_%s" % v] = np.asarray(content[v], dtype=DTYPE)
         if shape[v]:
             out["shape_%s" % v] = np.asarray(shape[v], dtype=DTYPE)
+        if dense[v]:
+            out["dense_%s" % v] = np.asarray(dense[v], dtype=DTYPE)
+            out["denseobj_%s" % v] = np.asarray(dense_obj[v], dtype=np.int16)
     return out
 
 
@@ -275,10 +298,20 @@ def _cell_from(z: Any, obj_key: str, view: str) -> Dict[str, Any]:
             for _f, _v in zip(SHAPE_FIELDS, shape_all[j]):
                 places[-1][_f] = float(_v)
     drop = {name: int(z["drop_%s" % view][i][d]) for d, name in enumerate(DROP_REASONS)}
-    return {"path": None, "obj": obj_key, "view": view, "places": places,
+    dense_rows: List[Dict[str, Any]] = []
+    dkey = "dense_%s" % view
+    if dkey in z.files:
+        dobj = z["denseobj_%s" % view]
+        for j in np.flatnonzero(dobj == i):
+            dense_rows.append({k: float(v) for k, v in zip(DENSE_FIELDS, z[dkey][j])})
+    rec_out = {"path": None, "obj": obj_key, "view": view, "places": places,
             "dropped": drop, "n_payload": int(z["pay_%s" % view][i]),
             "n_all_nodes": int(z["nodes_%s" % view][i]), "sec": 0.0,
             "from_npz": True}
+    if dense_rows:
+        rec_out["dense"] = dense_rows
+    return rec_out
+
 
 
 # --------------------------------------------------------------------------- the environment

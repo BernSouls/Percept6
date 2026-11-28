@@ -81,21 +81,72 @@ def clear_cells() -> None:
     PM._SIDE_CACHE.clear()
 
 
+def _dense_flags() -> Tuple[bool, bool]:
+    """(field in the record, dense nodes in the graph) as the parameters declare them."""
+    from matching import placement_join as PJ
+    return (bool(PJ.field_on()), bool(PJ.join_on()))
+
+
 def cell(path: str, tag: str = "core") -> Tuple[Any, Any, Any]:
-    """(image, graph, side) for one image, memoised per process."""
+    """(image, graph, side) for one image, memoised per process.
+
+    [M36/D1] With `PLACEMENT_DENSE_FIELD` set, the cell also measures the dense
+    local-difference field once and keeps it; with `PLACEMENT_DENSE_JOIN` set as
+    well, the graph this function returns is the JOINED one.  Both flags default
+    to False, and the memo is keyed by the flag state, so a process that runs the
+    shipped configuration and then the joined one cannot serve one the other's cell.
+    The cached graph object itself is never mutated: the joined graph is a shallow
+    copy, because `placement_cache` hands out one graph object per content hash.
+    """
+    want = _dense_flags()
     ent = _CELLS.get(path)
-    if ent is not None:
-        return ent
+    if ent is not None and ent[3] == want:
+        return ent[0], ent[1], ent[2]
     from matching import placement_matcher as PM
     from matching import placement_cache as GC
+    from matching import placement_join as PJ
     apply_recipe()
     img = load_image(path)
     g = GC.get_or_build(img, tag + "|" + path)
-    ent = (img, g, PM.build_side_cached(g, img))
+    side = PM.build_side_cached(g, img)
+    extra: Dict[str, Any] = {}
+    if want[0] or want[1]:
+        import perception.local_difference as LD
+        f = LD.dense_field(img)
+        extra["field"] = f
+        if want[1]:
+            # the places a dense node may be attached to are the PAYLOAD places: the
+            # ones the record carries and the matcher reads, not every place-lens node.
+            pay_places = sorted({int(k[0]) for k in side.payload}
+                                | {int(k[1]) for k in side.payload})
+            sub, stats = PJ.join(g.subgraph, img, g.sigs, field_=f, places=pay_places)
+            import copy as _copy
+            g2 = _copy.copy(g)
+            try:
+                g2.subgraph = sub
+            except Exception:             # pragma: no cover
+                pass
+            if getattr(sub, "sigs", None):
+                sigs = dict(g.sigs)
+                sigs.update(sub.sigs)
+                try:
+                    g2.sigs = sigs
+                except Exception:         # pragma: no cover
+                    pass
+            g = g2
+            extra["join"] = stats
+    ent = (img, g, side, want, extra)
     if len(_CELLS) >= _CELLS_MAX:
         clear_cells()
     _CELLS[path] = ent
-    return ent
+    return img, g, side
+
+
+def cell_extra(path: str, tag: str = "core") -> Dict[str, Any]:
+    """The dense field / join stats of a cell (empty when the flags are off)."""
+    cell(path, tag)
+    ent = _CELLS.get(path)
+    return dict(ent[4]) if ent is not None and len(ent) > 4 else {}
 
 
 def place_record(path: str, tag: str = "core",
@@ -114,7 +165,11 @@ def place_record(path: str, tag: str = "core",
     t0 = time.time()
     img, g, side = cell(path, tag)
     params = PF.load_params()
-    all_nodes = sorted(int(n) for n in g.subgraph.nodes)
+    # [M36/D1] PATTERN nodes only: `n_all_nodes` is the shipped count of the cell's own
+    # nodes and stays byte-identical with the dense layer on or off.  Dense ids start at
+    # `DENSE_ID_BASE`, so the filter is exact rather than a guess.
+    from matching.placement_join import DENSE_ID_BASE as _DENSE_ID_BASE
+    all_nodes = sorted(int(n) for n in g.subgraph.nodes if int(n) < int(_DENSE_ID_BASE))
     pay = sorted({int(k[0]) for k in side.payload} | {int(k[1]) for k in side.payload})
     bag_all = PF.bag_v2(side, all_nodes, params["K"])
     std_all = PF.standardize(bag_all, params)
@@ -160,6 +215,20 @@ def place_record(path: str, tag: str = "core",
         # scale, behind the bundle value `content.kind`.  Default builds are untouched.
         from matching import placement_content as PC
         PC.attach(rec, img, content)
+    # [M36/D1] THE DENSE LAYER IN THE RECORD.  `rec["dense"]` holds one row per dense
+    # node -- its graph id, the place that OWNS it, its position, its support, its
+    # activity and its seven registered slots -- so a records-only read sees the dense
+    # content without a field being rebuilt.  Absent unless `PLACEMENT_DENSE_FIELD` is
+    # set, so every shipped record keeps exactly its shipped shape.
+    from matching import placement_join as PJ
+    if PJ.field_on():
+        f = cell_extra(path, tag).get("field")
+        if f is not None:
+            keep = {int(r["n"]) for r in rows}
+            rec["dense"] = PJ.dense_rows(f, g.subgraph, keep=keep)
+            rec["dense_owner_dropped"] = int(sum(1 for r in rec["dense"] if r["place"] < 0))
+            rec["dense_census"] = PJ.census(g.subgraph, g.sigs) if PJ.join_on() else None
+            rec["join"] = cell_extra(path, tag).get("join")
     return rec
 
 

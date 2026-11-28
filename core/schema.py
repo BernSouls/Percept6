@@ -224,6 +224,17 @@ EDGE_SCHEMAS: Dict[str, Tuple[Slot, ...]] = {
         Slot("dist",            "linear",      9.0, "same"),
         Slot("depth_step",      "ordinal",     9.0, "reflect_linear"),
     ),
+    # [M36 / PART C] THE DENSE LAYER'S RELATION, registered so the tree's own kernel
+    # COMPARES it instead of returning 0.0 for an unknown class (`EdgeParams.similarity`
+    # returns 0.0 for a class that is not in this table, which is the "unregistered
+    # returns 0.0, not a small number" contract).
+    # 3 slots: the target's bearing in the SOURCE's own axial frame (12-cycle over pi),
+    # its distance in source-scale units, and the log2 scale ratio.
+    "EDGE_DENSE_PLACEMENT": (
+        Slot("bearing",         "circular",   12.0, "reflect_circular"),
+        Slot("distance",        "linear",      8.0, "same"),
+        Slot("log_scale",       "linear",      8.0, "same"),
+    ),
     # 4 slots: color_dist, tex_dist, contrast_step, spatial_dist
     "EDGE_SURFACE_GROUPING": (
         Slot("color_dist",      "linear",      9.0, "same"),
