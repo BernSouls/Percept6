@@ -25,7 +25,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
-ROOT = "/home/user/Percept6"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path[:0] = [ROOT, os.path.join(ROOT, "Topology")]
 OUT = os.path.join(ROOT, "Topology", "results", "placement")
 LAMBDAS = (0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0)

@@ -1,11 +1,6 @@
 {
- "colour": true,
- "colour_w": 0.1,
- "failed": 0,
- "of": 21,
- "pairs": 168,
- "queries_done": 21,
- "seconds": 2887.9,
- "stage": "done",
- "workers": 2
+ "done": 80,
+ "of": 160,
+ "seconds": 866.1,
+ "stage": "warm"
 }

@@ -170,7 +170,9 @@ class TestShapeRegistration(unittest.TestCase):
 
     def test_unknown_field_is_refused(self):
         from matching import placement_shape as PS
-        self.assertEqual(len(PS.FIELDS), 5)
+        # [M32] the shipped five are the prefix; M32 appends the four curvature columns
+        self.assertEqual(PS.FIELDS[:5], ("resp", "var_x", "var_y", "eigratio", "rel_angle"))
+        self.assertEqual(PS.FIELDS[5:], ("sharp_x", "sharp_y", "curv_x", "curv_y"))
         self.assertEqual(len(PS.RANGES), len(PS.FIELDS))
         self.assertEqual(len(PS.BINS), len(PS.FIELDS))
         self.assertEqual(len(PS.GRADED if hasattr(PS, "GRADED") else PS.FIELDS), len(PS.FIELDS))
@@ -180,7 +182,7 @@ class TestRecordFormat(unittest.TestCase):
     def test_record_carries_shape_and_version(self):
         from matching import placement_records as PR
         self.assertGreaterEqual(PR.FORMAT_VERSION, 29)
-        self.assertEqual(PR.N_SHAPE, 5)
+        self.assertEqual(PR.N_SHAPE, len(PR.SHAPE_FIELDS))
         place = {"n": 1, "lens": "Blob", "key": ("Blob", (1.0, 2.0, 3.0, 4.0, 5.0)),
                  "Dz": [0.0, 1.0], "Mz": [1.0, 1.0], "x": 1.0, "y": 2.0, "s": 3.0,
                  "theta": 0.5, "content": [0.1] * 6,

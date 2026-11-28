@@ -28,7 +28,7 @@ import json
 import os
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-ROOT = "/home/user/Percept6"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _SKIP_DIRS = {".git", ".venv", "__pycache__", ".cache", "node_modules", "build",
               "dist", "results", ".mypy_cache", ".pytest_cache", ".ruff_cache"}
 

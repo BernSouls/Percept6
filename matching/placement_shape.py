@@ -42,16 +42,23 @@ import numpy as np
 CLASS = "PLACE_SHAPE"
 
 #: The five graded fields, in fixed order.  The names are the record's own field names.
-FIELDS: Tuple[str, ...] = ("resp", "var_x", "var_y", "eigratio", "rel_angle")
+FIELDS: Tuple[str, ...] = ("resp", "var_x", "var_y", "eigratio", "rel_angle",
+                           # [M32] the curvature the clip destroyed.  `sharp_*` is |den|, the
+                           # second difference of the response at the peak; `curv_*` is |den|/|c0|,
+                           # the same measurement made tolerant to the response's own size.  They
+                           # are GRADED COLUMNS: the keypoint key does not read them, so every key
+                           # stays byte-identical and the enrichment path applies.
+                           "sharp_x", "sharp_y", "curv_x", "curv_y")
 
 #: Say what the similarity reads, in the tree's own vocabulary.
 #: ranges: the axis span in the field's own unit; weights: >1 where shape lives (angle,
 #: corner-ness); cycle: the angle slot is circular on 12 bins (mod pi, the tree's convention).
-RANGES: Tuple[float, ...] = (1.0, 1.0, 1.0, 1.0, 6.0)
-WEIGHTS: Tuple[float, ...] = (2.0, 1.0, 1.0, 2.0, 3.0)
+#: physical spans, measured (M32: 99th percentiles over 6 objects x 2 views for the new four)
+RANGES: Tuple[float, ...] = (1.0, 1.0, 1.0, 1.0, 6.0, 0.12, 0.13, 1.4, 1.5)
+WEIGHTS: Tuple[float, ...] = (2.0, 1.0, 1.0, 2.0, 3.0, 2.0, 2.0, 2.0, 2.0)
 CYCLE: Dict[int, int] = {4: 12}
-BINS: Tuple[int, ...] = (8, 6, 6, 8, 12)
-SIGMAS: Tuple[float, ...] = (1.0, 1.0, 1.0, 1.0, 1.0)
+BINS: Tuple[int, ...] = (8, 6, 6, 8, 12, 8, 8, 8, 8)
+SIGMAS: Tuple[float, ...] = (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
 
 #: Structure-tensor window, in units of the place's own scale.
 TENSOR_RADIUS = 1.5
@@ -165,9 +172,18 @@ def _sample(a: np.ndarray, x: float, y: float) -> float:
     return float(a[yi, xi])
 
 
+def _finite(v: Any) -> float:
+    """A graded value as a finite float; a missing or non-finite one reads 0.0."""
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return 0.0
+    return f if math.isfinite(f) else 0.0
+
+
 def features(image: Any, places: Sequence[Dict[str, Any]],
              detections: Optional[Sequence[Any]] = None) -> np.ndarray:
-    """The (n, 5) graded shape of every place, rows in ``places`` order.
+    """The (n, len(FIELDS)) graded shape of every place, rows in ``places`` order.
 
     `detections` are the keypoint layer's own `Keypoint` objects for this image (whatever the
     record was built from); a place with no matching detection keeps `resp` = var = 0 and is
@@ -203,10 +219,14 @@ def features(image: Any, places: Sequence[Dict[str, Any]],
         ang = 0.5 * math.atan2(2.0 * c, a - b)
         theta = 0.0 if p.get("theta") is None else float(p["theta"])
         rel = (ang - theta) % math.pi
-        out[i] = (min(2.0, max(0.0, float(p.get("resp", 0.0)) / resp_ref)),
-                  float(p.get("var_x", 0.0)) if p.get("var_x") is not None else 0.0,
-                  float(p.get("var_y", 0.0)) if p.get("var_y") is not None else 0.0,
-                  min(1.0, max(0.0, eig)), rel)
+        out[i, 0] = min(2.0, max(0.0, float(p.get("resp", 0.0)) / resp_ref))
+        out[i, 1] = float(p.get("var_x") or 0.0)
+        out[i, 2] = float(p.get("var_y") or 0.0)
+        out[i, 3] = min(1.0, max(0.0, eig))
+        out[i, 4] = rel
+        # [M32] the curvature the clip threw away, as carried by the detection that made the place
+        for j, name in enumerate(FIELDS[5:], start=5):
+            out[i, j] = _finite(p.get(name))
     return out
 
 
@@ -250,6 +270,40 @@ def graded_matrix(A: np.ndarray, B: np.ndarray,
             v = 1.0 - np.abs(a01[:, None] - b01[None, :])
         out += w[j] * v
     return out
+
+
+def scales(pool: np.ndarray, floor: float = 1e-9) -> np.ndarray:
+    """Per-column spread of the POOL, the sigma every distance is divided by (M32)."""
+    P = np.atleast_2d(np.asarray(pool, dtype=np.float64))
+    s = P.std(axis=0)
+    return np.maximum(s, floor)
+
+
+def kernel_matrix(A: np.ndarray, B: np.ndarray, sig: Sequence[float],
+                  weights: Optional[Sequence[float]] = None) -> np.ndarray:
+    """The SAME distance form as the colour channel (M32 item 4b), not a cosine.
+
+    ``d^2 = sum_j w_j * ((a_j - b_j) / sigma_j)^2`` and ``s = exp(-d^2 / 2)``, with ``sigma_j`` the
+    pooled column spread.  The shipped graded form (`graded_matrix`) divides by an arbitrary
+    physical span on a one-sided range, so every pair of places sits within a thousandth of 1.0 --
+    M32 item 2 measured a truth/impostor gap of 0.000062 on exactly that form.  Standardising by
+    the pool's own spread sets the scale to the data's, which is the fix for that mechanism.
+    """
+    A = np.atleast_2d(np.asarray(A, dtype=np.float64))
+    B = np.atleast_2d(np.asarray(B, dtype=np.float64))
+    w = np.asarray(WEIGHTS if weights is None else weights, dtype=np.float64)
+    w = w / max(w.sum(), 1e-12)
+    sg = np.maximum(np.abs(np.asarray(sig, dtype=np.float64)), 1e-9)
+    out = np.zeros((A.shape[0], B.shape[0]), dtype=np.float64)
+    for j, name in enumerate(FIELDS):
+        if w[j] == 0.0:
+            continue
+        d = np.abs(A[:, j][:, None] - B[:, j][None, :])
+        if j in CYCLE:
+            # a circular axis: the smallest angular difference, mod the cycle's half-period
+            d = np.minimum(d, 0.5 * CYCLE[j] - d)
+        out += w[j] * (d / sg[j]) ** 2
+    return np.exp(-0.5 * out)
 
 
 # Register on import.  A class that is not in the registries returns 0.0 -- not a small number --

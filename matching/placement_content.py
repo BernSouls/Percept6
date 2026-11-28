@@ -98,7 +98,16 @@ def bilinear(a: np.ndarray, x: np.ndarray, y: np.ndarray) -> np.ndarray:
 
 
 def features(image_u8: np.ndarray, places: Sequence[Dict[str, Any]]) -> np.ndarray:
-    """The (n, 6) content of every place of one image, rows in ``places`` order."""
+    """The (n, 6) content of every place of one image, rows in ``places`` order.
+
+    [M32] The six numbers are the two rings' CIELAB means in SCALED LAB UNITS -- (L/100, a/128,
+    b/128) per ring -- and they are returned RAW.  Until M32 this function returned the unit
+    normalisation of the same six numbers, and the ring vector's norm then swallowed the distance:
+    the L component is between 0.4 and 1.0 while a and b sit near 0.05, so every pair of places
+    scores >= 0.998 on the cosine and the channel ranks on the fourth decimal.  The shipped cosine
+    path (`similarity`) normalises internally and is therefore unchanged byte-for-byte; the real
+    distance (`d2`) reads the raw numbers, which is what carries the signal.
+    """
     lab_img = lab(image_u8)
     n = len(places)
     out = np.zeros((n, N_VALUES), dtype=np.float64)
@@ -110,12 +119,105 @@ def features(image_u8: np.ndarray, places: Sequence[Dict[str, Any]]) -> np.ndarr
             v = bilinear(lab_img, float(p["x"]) + r * s * ca,
                          float(p["y"]) + r * s * sa).mean(axis=0)
             out[i, 3 * r_i:3 * r_i + 3] = (v[0] / 100.0, v[1] / 128.0, v[2] / 128.0)
-    return unit(out)
+    return out
 
 
 def unit(a: np.ndarray) -> np.ndarray:
     a = np.asarray(a, dtype=np.float64)
     return a / np.maximum(np.linalg.norm(a, axis=-1, keepdims=True), _EPS)
+
+
+#: [M32] the lightness weight of the real distance.  LIGHTNESS IS NOT COLOUR: it moves with the
+#: light, not with the object, and the ring vector's norm let it dominate.  Fixed in writing, 0.25.
+LAMBDA_L: float = 0.25
+#: [M32] the sigma the Gaussian kernel divides by is the median pairwise distance over a fixed
+#: label-free sample of pool places (seed stated, stored in the bundle).  Nothing is fitted.
+SIGMA_SEED: int = 20261118
+SIGMA_SAMPLE: int = 4096
+
+
+def d2(a: np.ndarray, b: np.ndarray, lam_L: float = LAMBDA_L) -> np.ndarray:
+    """Squared real distance between ring vectors: ``sum_rings[(dL)^2 lam_L + (da)^2 + (db)^2]``.
+
+    ``a`` is (n, 6) and ``b`` is (m, 6), rows laid out (ring0 L,a,b, ring1 L,a,b) in scaled Lab
+    units -- the same numbers `features` returns.  This is the distance the channel should always
+    have used: the cosine it ships compares DIRECTIONS of a vector whose direction is almost
+    entirely lightness, which is why 97.8 % of door colour scores sit at or above 0.999.
+    """
+    A = np.atleast_2d(np.asarray(a, dtype=np.float64))
+    B = np.atleast_2d(np.asarray(b, dtype=np.float64))
+    if A.shape[1] != B.shape[1] or A.shape[1] % 3:
+        raise ValueError("content vectors are (n, 6) ring triples, got %s vs %s"
+                         % (A.shape, B.shape))
+    total = np.zeros((A.shape[0], B.shape[0]), dtype=np.float64)
+    for r in range(A.shape[1] // 3):
+        dL = (A[:, 3 * r][:, None] - B[:, 3 * r][None, :]) ** 2
+        da = (A[:, 3 * r + 1][:, None] - B[:, 3 * r + 1][None, :]) ** 2
+        db = (A[:, 3 * r + 2][:, None] - B[:, 3 * r + 2][None, :]) ** 2
+        total += float(lam_L) * dL + da + db
+    return total
+
+
+def sigma(pool: np.ndarray, seed: int = SIGMA_SEED, n: int = SIGMA_SAMPLE,
+          lam_L: float = LAMBDA_L) -> float:
+    """Median pairwise distance over a fixed, label-free sample of pool places (the kernel's sigma).
+
+    The sample is drawn by ``np.random.default_rng(seed)`` from the pool rows in their given order;
+    the pool is every place of the gallery images and carries no labels.  Deterministic.
+    """
+    P = np.atleast_2d(np.asarray(pool, dtype=np.float64))
+    if P.shape[0] < 4:
+        raise ValueError("sigma needs a pool of at least 4 places, got %d" % P.shape[0])
+    rng = np.random.default_rng(int(seed))
+    idx = rng.choice(P.shape[0], size=min(int(n), P.shape[0]), replace=False)
+    Q = P[idx]
+    d = np.sqrt(d2(Q, Q, lam_L))
+    iu = np.triu_indices(Q.shape[0], k=1)
+    return float(np.median(d[iu]))
+
+
+def similarity_lab(a: np.ndarray, b: np.ndarray, sig: float,
+                   lam_L: float = LAMBDA_L) -> np.ndarray:
+    """``exp(-d^2 / (2 sigma^2))``: the real distance read as a similarity."""
+    return np.exp(-d2(a, b, lam_L) / (2.0 * float(sig) ** 2))
+
+
+def aggregate(Q: Dict[str, np.ndarray], G: Dict[str, np.ndarray], sig: float,
+              how: str = "max", lam_L: float = LAMBDA_L) -> float:
+    """One score for a query object against a gallery object, from their place sets.
+
+    ``Q``/``G`` map lens name -> (n, 6) raw ring rows.  Pairs are only made inside a lens: a blob
+    is not a boundary arc.  Three aggregators, fixed in writing before any score is looked at:
+
+    ``max``        V1, the shipped one: the single best place pair of the object.
+    ``coverage``   V2: the mean over the QUERY's places of the best gallery match, so an object
+                   whose places do not all land somewhere in the candidate scores low.
+    ``chamfer``    V3: the symmetric mean of both directions (0.5 * (coverage + predcision)).
+
+    A place with no place of the same lens in the other object contributes nothing to the mean
+    rather than a zero; an object pair sharing no lens at all scores 0.0.
+    """
+    if how not in ("max", "coverage", "chamfer"):
+        raise ValueError("aggregate %r is not one of max, coverage, chamfer" % (how,))
+    best = -1.0
+    fwd: List[float] = []
+    bwd: List[float] = []
+    for lens in sorted(set(Q) & set(G)):
+        A, B = np.atleast_2d(Q[lens]), np.atleast_2d(G[lens])
+        if A.size == 0 or B.size == 0:
+            continue
+        S = similarity_lab(A, B, sig, lam_L)
+        best = max(best, float(S.max()))
+        fwd.extend(S.max(axis=1).tolist())
+        bwd.extend(S.max(axis=0).tolist())
+    if how == "max":
+        return max(best, 0.0)
+    if not fwd:
+        return 0.0
+    cov = float(np.mean(fwd))
+    if how == "coverage":
+        return cov
+    return 0.5 * (cov + float(np.mean(bwd)))
 
 
 def similarity(a: np.ndarray, b: np.ndarray) -> np.ndarray:

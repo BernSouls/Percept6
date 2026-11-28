@@ -48,6 +48,14 @@ class GradedKeypointTests(unittest.TestCase):
         self._saved = {c: CONSTITUTIONAL_RANGES.get(c) for c in KPC.KEYPOINT_CLASSES}
         self._saved_cycle = {c: CIRCULAR_CYCLE_LENGTHS.get(c)
                              for c in KPC.KEYPOINT_CLASSES}
+        # [M32] isolate: another test module (test_m15_manifest) imports the shipped path, which
+        # registers the keypoint classes; without this the "off" arm reads a graded kernel and the
+        # defect test measures the fix.  Pre-existing at M31's tip; the leak is the test's, not
+        # the code's -- the suite must be order-independent.
+        KPC.REGISTRATIONS.clear()
+        for _c in KPC.KEYPOINT_CLASSES:
+            CONSTITUTIONAL_RANGES.pop(_c, None)
+            CIRCULAR_CYCLE_LENGTHS.pop(_c, None)
 
     def tearDown(self):
         P.KP_GRADED_SIMILARITY = self._flag

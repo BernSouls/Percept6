@@ -32,17 +32,63 @@ LENSES: Tuple[str, ...] = ("Blob", "BoundaryArc", "CornerPoint")
 DROP_REASONS: Tuple[str, ...] = ("no_sig", "no_config", "no_position", "no_scale")
 
 #: The graded shape fields a record may carry (M30), in fixed order.
-SHAPE_FIELDS: Tuple[str, ...] = ("resp", "var_x", "var_y", "eigratio", "rel_angle")
+SHAPE_FIELDS: Tuple[str, ...] = ("resp", "var_x", "var_y", "eigratio", "rel_angle",
+                                 # [M32] the peak curvature the clip destroyed.  GRADED COLUMNS:
+                                 # no key reads them (keys are the quantised
+                                 # theta/coherence/scale/kind/dim tuple), so every node key stays
+                                 # byte-identical and the 37 s enrichment path applies.
+                                 "sharp_x", "sharp_y", "curv_x", "curv_y")
 SLOTS = 5
 
 #: The record format.  28 adds the optional CONTENT block (`content.kind` != "keypoint"):
 #: `N_CONTENT` float columns per place, and the same number of bin-ints when counted.
-FORMAT_VERSION = 29
+#: 30 adds the four M32 curvature columns (SHAPE_FIELDS 5 -> 9) and stores the content's ring
+#: vectors RAW (scaled Lab units) instead of unit-normalised; the shipped cosine normalises
+#: internally, so its scores are unchanged and every key stays byte-identical.
+FORMAT_VERSION = 30
+
+#: [M32] The corpus's class folders, and the ONE way to name an object: class + INSTANCE FOLDER.
+#: The filename is not the instance (``car12-*.png`` lives in folder ``8``), and an absolute path
+#: is not an identity -- so every pair file, cache row and stored result names an object here.
+CLASS_DIR: Dict[str, str] = {"1": "apple", "2": "car", "3": "cow", "4": "cup",
+                             "5": "dog", "6": "horse", "7": "pear", "8": "tomato"}
+DIR_CLASS: Dict[str, str] = {v: k for k, v in CLASS_DIR.items()}
+
+
+def object_id(value: str) -> str:
+    """An object id from an id OR a path.  Pair files may hold either; ids are what ship."""
+    v = str(value)
+    head, _, tail = v.replace(os.sep, "/").rpartition("/")
+    if head in DIR_CLASS and tail.isdigit():
+        return v.replace(os.sep, "/")                    # already "car/8"
+    return object_id_from_path(v)
+
+
+def object_id_from_path(path: str) -> str:
+    """``.../<class_dir>/<instance_dir>/<name>-<az>-<el>.png`` -> ``"<class>/<instance>"``.
+
+    Reads the two FOLDERS, never the file name: the mirror's names carry the instance number of a
+    different numbering than the folder (``car12-000-000.png`` with class folder ``2`` and instance
+    folder ``8`` is object ``car/8``).  A path that does not have that shape is refused, because a
+    silent fallback here would key a pair on a path again.
+    """
+    parts = str(path).replace(os.sep, "/").rstrip("/").split("/")
+    if len(parts) < 3:
+        raise ValueError("path %r is too short to name an object" % (path,))
+    cls_dir, inst_dir = parts[-3], parts[-2]
+    cls = CLASS_DIR.get(cls_dir)
+    if cls is None:
+        raise ValueError("path %r has class folder %r, which is not one of the eight corpus "
+                         "classes %r" % (path, cls_dir, sorted(CLASS_DIR)))
+    if not inst_dir.isdigit():
+        raise ValueError("path %r has instance folder %r, which is not a number"
+                         % (path, inst_dir))
+    return "%s/%s" % (cls, inst_dir)
 N_CONTENT = 6
 
 #: M30: the graded SHAPE columns (resp, var_x, var_y, eigratio, rel_angle).  Same discipline as
 #: content: columns on the record, never new key slots, so every key stays byte-identical.
-N_SHAPE = 5
+N_SHAPE = len(SHAPE_FIELDS)          # M32: 9 (5 shipped + the four curvature columns)
 
 #: The stored float width.  float64, because the door MATCHES ON EXACT KEY EQUALITY: a quantised
 #: value stored as float32 (1.6 -> 1.6000000238) lands in a different bucket, and the loader's

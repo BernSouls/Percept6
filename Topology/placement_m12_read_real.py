@@ -48,7 +48,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
-ROOT = "/home/user/Percept6"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path[:0] = [ROOT, os.path.join(ROOT, "Topology")]
 OUT = os.path.join(ROOT, "Topology", "results", "placement")
 PARAMS = os.path.join(ROOT, "matching", "placement_score_params.json")

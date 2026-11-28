@@ -290,6 +290,43 @@ def freeze(path: Optional[str] = None, *, date: str, provenance: Dict[str, Any],
     return d
 
 
+def refreeze_from_current(path: Optional[str] = None) -> Dict[str, Any]:
+    """Re-freeze THIS tree, keeping the configuration the bundle already ships.
+
+    ``freeze()`` writes whatever configuration it is given and its defaults are the M24 ones
+    (counted door, keypoint content).  Re-freezing after a code edit must NOT silently revert the
+    shipped configuration to those defaults -- M32 hit exactly that, and the door kind fell back
+    from "fused3" to "counted" while the digest said the tree had changed.  This reads the
+    current file's own configuration (the digest is not consulted, that is the point) and hands it
+    back to ``freeze()``, so the only thing that moves is ``code_digest``.
+    """
+    import json as _json
+    p = path or BUNDLE_PATH
+    with open(p) as fh:
+        prior = _json.load(fh)
+    door = dict(prior.get("door") or {})
+    content = dict(prior.get("content") or {})
+    matcher = dict(prior.get("matcher") or {})
+    refs = dict(prior.get("references") or {})
+    return freeze(
+        p,
+        date=str(prior.get("date") or ""),
+        provenance=dict(prior.get("provenance") or {}),
+        k=int(refs.get("k") or 4),
+        reserved=tuple(refs.get("reserved") or ("035-045", "045-180")),
+        door_kind=str(door.get("kind") or "counted"),
+        door_params=dict(door.get("params") or {}),
+        shortlist=int(prior.get("shortlist") or 8),
+        shortlist_rule=str(prior.get("shortlist_rule") or "fixed"),
+        shortlist_wide=int(prior.get("shortlist_wide") or 16),
+        margin_tau=float(prior.get("margin_tau") or 0.0),
+        content_kind=str(content.get("kind") or "keypoint"),
+        fusion=dict(prior.get("fusion") or {}),
+        matcher_blend=dict(matcher.get("blend") or {}),
+        mission=str(prior.get("mission") or "M24"),
+    )
+
+
 def load(path: Optional[str] = None) -> PlacementBundle:
     """Convenience alias for ``PlacementBundle.load``."""
     return PlacementBundle.load(path)

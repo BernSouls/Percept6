@@ -16,12 +16,16 @@ that is the standing rule, and this file is how the rule gets applied instead of
 """
 from __future__ import annotations
 
+import os
+
 import json
 import math
 import sys
 from typing import Dict, List, Tuple
 
-OUT = "/home/user/Percept6/Topology/results/placement/m22_power.json"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+OUT = os.path.join(ROOT, 'Topology', 'results', 'placement', 'm22_power.json')
 
 
 def _pmf(n: int, p: float) -> List[float]:

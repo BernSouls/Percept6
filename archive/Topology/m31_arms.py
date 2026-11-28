@@ -31,6 +31,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path[:0] = [ROOT]
 
 from Topology import m26_records as REC                       # noqa: E402
+from matching.placement_records import object_id as PR_ID           # noqa: E402
 from Topology.m27_read import RESAMPLES, SEED                  # noqa: E402
 
 PAIRS = os.path.join(ROOT, "Topology", "results", "placement", "m30_read_pairs.jsonl")
@@ -74,7 +75,7 @@ def _load_pairs() -> Dict[str, Dict[str, float]]:
         r = json.loads(line)
         if r.get("score") is None:
             continue
-        k = os.path.dirname(os.path.basename(r["r"]))
+        k = PR_ID(r["r"])
         by_q.setdefault(r["object"], {})[str(r["r"])] = float(r["score"])
     return by_q
 
@@ -156,7 +157,7 @@ def arms(ch: Dict[str, Any], pairs: Dict[str, Dict[str, float]]) -> Dict[str, An
     keys, objs = ch["keys"], ch["objs"]
     gi = {k: j for j, k in enumerate(keys)}
     split_of = {o["key"]: o["split"] for o in objs}
-    rpath_key = {REC.path_of(o, REF): o["key"] for o in objs}
+    rpath_key = {REC.path_of(o, REF): o["key"] for o in objs}          # path -> object id
     rows: Dict[str, Dict[str, List[int]]] = {}
     hits_by_obj: Dict[str, Dict[str, int]] = {}
     used = 0

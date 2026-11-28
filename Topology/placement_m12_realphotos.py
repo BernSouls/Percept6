@@ -26,7 +26,7 @@ from typing import Any, Dict, List, Tuple
 
 import numpy as np
 
-ROOT = "/home/user/Percept6"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path[:0] = [ROOT, os.path.join(ROOT, "Topology")]
 OUT = os.path.join(ROOT, "Topology", "results", "placement")
 MANIFEST = os.path.join(OUT, "m12_real_photos.json")

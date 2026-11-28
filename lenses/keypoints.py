@@ -33,7 +33,7 @@ The layer is DARK (`parameters.FE_KEYPOINTS` is False), and the flag is in
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -67,6 +67,15 @@ class Keypoint:
     var_x: float
     var_y: float
     dim: int
+    #: [M32] the peak curvature the clip destroys: |den| is the second difference of the response
+    #: at the peak (``den = cm + cp - 2 c0``), i.e. HOW SHARP the corner/blob is, and
+    #: ``curv = |den| / |c0|`` is the same measurement made scale-tolerant by the response itself.
+    #: `var_x`/`var_y` are ``1/(2|den|)`` clipped to [1e-3, 1], which pins at the cap for every
+    #: place of a normalised response; these four carry the quantity the clip threw away.
+    sharp_x: Optional[float] = None
+    sharp_y: Optional[float] = None
+    curv_x: Optional[float] = None
+    curv_y: Optional[float] = None
 
     @property
     def lens(self) -> str:
@@ -77,6 +86,8 @@ class Keypoint:
                 "scale": self.scale, "theta": self.theta,
                 "coherence": self.coherence, "resp": self.resp,
                 "var_x": self.var_x, "var_y": self.var_y, "dim": self.dim,
+                "sharp_x": self.sharp_x, "sharp_y": self.sharp_y,
+                "curv_x": self.curv_x, "curv_y": self.curv_y,
                 "lens": self.lens}
 
 
@@ -108,6 +119,26 @@ def _parabola(c0: float, cm: float, cp: float) -> Tuple[float, float]:
     off = max(-0.5, min(0.5, float(off)))
     var = 1.0 / (2.0 * abs(den))
     return off, float(max(1e-3, min(1.0, var)))
+
+
+def _rel(den: float, c0: float) -> float:
+    """``|den| / |c0|``: the relative curvature, tolerant to how large the response is."""
+    d = float(abs(den))
+    a = float(abs(c0))
+    return float(d / a) if a > 0.0 else 0.0
+
+
+def _parabola_curv(c0: float, cm: float, cp: float) -> Tuple[float, float, float]:
+    """``(offset, clipped variance, |den|)`` -- the variance's own denominator, exposed (M32).
+
+    ``_parabola`` returns ``1 / (2|den|)`` clipped to [1e-3, 1]; on a normalised response ``|den|``
+    is far below 0.5 for every place, so the returned variance is the CAP for all of them and the
+    column is constant (M31 measured one distinct value over 46,059 places).  ``|den|`` is the
+    measurement the clip discarded; ``|den|/|c0|`` is the same thing made scale-tolerant.
+    """
+    off, var = _parabola(c0, cm, cp)
+    den = cm + cp - 2.0 * c0
+    return off, var, float(abs(den))
 
 
 def _local_maxima(resp: np.ndarray, thr: float, cap: int) -> List[Tuple[float, int, int]]:
@@ -185,14 +216,17 @@ def detect(image: Any, sigmas: Sequence[float] = DEFAULT_SIGMAS,
             if not np.isfinite(thr) or thr <= 0.0:
                 thr = float(np.max(finite)) * 0.5
             for val, y, x in _local_maxima(har, thr, max_per_kind):
-                ox, vx = _parabola(float(har[y, x]), float(har[y, x - 1]),
-                                   float(har[y, x + 1])) if 0 < x < g.shape[1] - 1 else (0.0, 1.0)
-                oy, vy = _parabola(float(har[y, x]), float(har[y - 1, x]),
-                                   float(har[y + 1, x])) if 0 < y < g.shape[0] - 1 else (0.0, 1.0)
+                ox, vx, sx = _parabola_curv(float(har[y, x]), float(har[y, x - 1]),
+                                           float(har[y, x + 1])) if 0 < x < g.shape[1] - 1 \
+                    else (0.0, 1.0, 0.0)
+                oy, vy, sy = _parabola_curv(float(har[y, x]), float(har[y - 1, x]),
+                                           float(har[y + 1, x])) if 0 < y < g.shape[0] - 1 \
+                    else (0.0, 1.0, 0.0)
                 theta, coh = _orientation(float(jxx[y, x]), float(jyy[y, x]),
                                           float(jxy[y, x]))
                 out.append(Keypoint("corner", x + ox, y + oy, float(sigma),
-                                    theta, coh, float(val), vx, vy, 2))
+                                    theta, coh, float(val), vx, vy, 2,
+                                    sx, sy, _rel(sx, val), _rel(sy, val)))
 
         # --- blobs: LoG, sub-pixel from the LoG response
         log = -float(sigma) ** 2 * gaussian_laplace(g, float(sigma),
@@ -202,14 +236,17 @@ def detect(image: Any, sigmas: Sequence[float] = DEFAULT_SIGMAS,
         if finite.size:
             thr = float(np.percentile(finite, blob_quantile))
             for val, y, x in _local_maxima(alog, thr, max_per_kind):
-                ox, vx = _parabola(float(alog[y, x]), float(alog[y, x - 1]),
-                                   float(alog[y, x + 1])) if 0 < x < g.shape[1] - 1 else (0.0, 1.0)
-                oy, vy = _parabola(float(alog[y, x]), float(alog[y - 1, x]),
-                                   float(alog[y + 1, x])) if 0 < y < g.shape[0] - 1 else (0.0, 1.0)
+                ox, vx, sx = _parabola_curv(float(alog[y, x]), float(alog[y, x - 1]),
+                                           float(alog[y, x + 1])) if 0 < x < g.shape[1] - 1 \
+                    else (0.0, 1.0, 0.0)
+                oy, vy, sy = _parabola_curv(float(alog[y, x]), float(alog[y - 1, x]),
+                                           float(alog[y + 1, x])) if 0 < y < g.shape[0] - 1 \
+                    else (0.0, 1.0, 0.0)
                 theta, coh = _orientation(float(jxx[y, x]), float(jyy[y, x]),
                                           float(jxy[y, x]))
                 out.append(Keypoint("blob", x + ox, y + oy, float(sigma),
-                                    theta, coh, float(val), vx, vy, 2))
+                                    theta, coh, float(val), vx, vy, 2,
+                                    sx, sy, _rel(sx, val), _rel(sy, val)))
 
         # --- boundary arc points: gradient-magnitude ridge, flagged 1-D
         mag = np.hypot(gx, gy)
@@ -219,10 +256,10 @@ def detect(image: Any, sigmas: Sequence[float] = DEFAULT_SIGMAS,
             for val, y, x in _local_maxima(mag, thr, max_per_kind):
                 if not (0 < x < g.shape[1] - 1 and 0 < y < g.shape[0] - 1):
                     continue
-                ox, vx = _parabola(float(mag[y, x]), float(mag[y, x - 1]),
-                                   float(mag[y, x + 1]))
-                oy, vy = _parabola(float(mag[y, x]), float(mag[y - 1, x]),
-                                   float(mag[y + 1, x]))
+                ox, vx, sx = _parabola_curv(float(mag[y, x]), float(mag[y, x - 1]),
+                                            float(mag[y, x + 1]))
+                oy, vy, sy = _parabola_curv(float(mag[y, x]), float(mag[y - 1, x]),
+                                            float(mag[y + 1, x]))
                 theta, coh = _orientation(float(jxx[y, x]), float(jyy[y, x]),
                                           float(jxy[y, x]))
                 # ACROSS the boundary is reliable, ALONG it is not: the
@@ -231,7 +268,8 @@ def detect(image: Any, sigmas: Sequence[float] = DEFAULT_SIGMAS,
                 along = min(1.0, across + 4.0)
                 out.append(Keypoint("edge", x + ox, y + oy, float(sigma),
                                     theta + np.pi / 2.0, coh, float(val),
-                                    across, along, 1))
+                                    across, along, 1,
+                                    sx, sy, _rel(sx, val), _rel(sy, val)))
 
     return _nms(out, float(min_sep))
 

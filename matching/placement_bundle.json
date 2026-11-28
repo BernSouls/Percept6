@@ -1,8 +1,8 @@
 {
  "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
- "code_digest": "bcd290e526b7152fe1d9bd70823b7c3f6fd51d678ce61a3fa884385e24abee53",
+ "code_digest": "3b9f3d44eb76732b1b20b305dc34cd7114e27611c767bb5899c8c0f7d8200abe",
  "content": {
-  "digest": "26b1d1a2292034e5",
+  "digest": "3c730dbbe84ef43c",
   "kind": "colour_rings",
   "kinds": [
    "keypoint",
