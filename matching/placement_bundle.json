@@ -1,6 +1,26 @@
 {
  "appearance": "colour 4x4x4 + gradient-orientation 12 bins, L2, cosine (matching/placement_frontdoor.appearance_feature)",
- "code_digest": "3b9f3d44eb76732b1b20b305dc34cd7114e27611c767bb5899c8c0f7d8200abe",
+ "channels": {
+  "arithmetic": "sim' = (1 - w_shape - w_colour) * matrix + w_shape * shape + w_colour * colour; the configuration term keeps its shipped 0.25 and is part of `matrix` (matching/placement_blend.py)",
+  "max_w_colour": 0.15,
+  "measured": {
+   "colour_fit_recall8_gain_best_aggregator": -0.0225,
+   "colour_share_ge_0.99_after_max_aggregator": 0.416,
+   "colour_share_ge_0.99_before": 1.0,
+   "colour_truth_impostor_gap_after": 0.01201,
+   "colour_truth_impostor_gap_before": 2.6e-05,
+   "shape_bar": 0.1,
+   "shape_gain": 0.0909,
+   "shape_same_class_gauge_baseline": 0.505,
+   "shape_same_class_gauge_unclipped": 0.596
+  },
+  "note": "M32 shipped NOTHING into the blend: the colour distance removed the flattening (share >= 0.99 fell from 1.000 to 0.416, the truth-impostor gap grew 460x) but lost rank to lightness, and the unclipped shape columns gained +0.091 of a pre-registered +0.10.  Both weights are zero, so the deployed score is reproduced exactly (test_m32_blend.py::test_zero_weights_is_the_deployed_matrix).",
+  "weights": {
+   "w_colour": 0.0,
+   "w_shape": 0.0
+  }
+ },
+ "code_digest": "f15eabde22d313a4128881e97782a29536ab4d9606b199e3fbe2f9d078ff34b3",
  "content": {
   "digest": "3c730dbbe84ef43c",
   "kind": "colour_rings",

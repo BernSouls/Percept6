@@ -33,6 +33,36 @@ Columns: file -> mission -> one line on why it is here -> where its result is re
 grouped by mission; within a group the reason is the same shape because the rule is the same shape.
 
 
+
+## Mission 32 -- 16 files
+
+**Mission 32 moved 16 scripts here and nothing else.**  The rule is unchanged (`KEEP_MAP.md` §4):
+a `Topology/` file stays if the parity check, the item-4 verification, a report-producing harness or
+a kept test needs it.  M32 applied the rule to the M26-M31 range by AST closure and kept exactly the
+scripts its own gates or the records/read chain use — `m26_records.py`, `m26_oracle.py`,
+`m27_read.py`, `m27_export_records.py`, `m30_read.py`, `m30_records.py`, `m30_parity.py`,
+`m31_determinism.py` — and moved the rest.  It also moved `MISSION30_REPORT.md` and
+`MISSION31_REPORT.md` from the repository root to `Topology/results/placement/`, next to M14-M29.
+
+| file | mission | why it is here | where its result is reported |
+|---|---|---|---|
+| `m26_census.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION26_REPORT.md` |
+| `m26_matcher.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION26_REPORT.md` |
+| `m27_door.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION27_REPORT.md` |
+| `m27_drift.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION27_REPORT.md` |
+| `m27_profile.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION27_REPORT.md` |
+| `m28_determinism.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION28_REPORT.md` |
+| `m28_door.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION28_REPORT.md` |
+| `m28_gauge.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION28_REPORT.md` |
+| `m28_records.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION28_REPORT.md` |
+| `m28_speed.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION28_REPORT.md` |
+| `m29_representation.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION29_REPORT.md` |
+| `m30_door.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION30_REPORT.md` |
+| `m30_shape.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION30_REPORT.md` |
+| `m31_arms.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION31_REPORT.md` |
+| `m31_shape.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION31_REPORT.md` |
+| `m31_wire.py` | M32 | in the M26-M31 one-off range, and nothing kept imports it (checked by AST closure over `tests/`, `scripts/`, `_bootstrap.py`, `matching/` and the live `Topology/` scripts); M32's own harnesses and the records/read chain it needs stayed | `archive/../Topology/results/placement/MISSION31_REPORT.md` |
+
 ## At a glance
 
 | | files | what |

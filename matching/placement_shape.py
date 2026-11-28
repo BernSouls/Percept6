@@ -254,9 +254,13 @@ def graded_matrix(A: np.ndarray, B: np.ndarray,
     A = np.atleast_2d(np.asarray(A, dtype=np.float64))
     B = np.atleast_2d(np.asarray(B, dtype=np.float64))
     w = np.asarray(WEIGHTS if weights is None else weights, dtype=np.float64)
-    w = w / w.sum()
+    # [M32] a caller may hand in a SUBSET of the columns (the four unclipped ones, say); the
+    # constitution's weights still apply, restricted to the columns present.
+    width = int(A.shape[1])
+    w = w[:width]
+    w = w / max(w.sum(), 1e-12)
     out = np.zeros((A.shape[0], B.shape[0]), dtype=np.float64)
-    for j, name in enumerate(FIELDS):
+    for j, name in enumerate(FIELDS[:width]):
         a = A[:, j]
         b = B[:, j]
         if j in CYCLE:
@@ -291,19 +295,66 @@ def kernel_matrix(A: np.ndarray, B: np.ndarray, sig: Sequence[float],
     """
     A = np.atleast_2d(np.asarray(A, dtype=np.float64))
     B = np.atleast_2d(np.asarray(B, dtype=np.float64))
-    w = np.asarray(WEIGHTS if weights is None else weights, dtype=np.float64)
+    width = int(A.shape[1])
+    w = np.asarray(WEIGHTS if weights is None else weights, dtype=np.float64)[:width]
     w = w / max(w.sum(), 1e-12)
-    sg = np.maximum(np.abs(np.asarray(sig, dtype=np.float64)), 1e-9)
+    sg = np.maximum(np.abs(np.asarray(sig, dtype=np.float64))[:width], 1e-9)
     out = np.zeros((A.shape[0], B.shape[0]), dtype=np.float64)
-    for j, name in enumerate(FIELDS):
+    for j, name in enumerate(FIELDS[:width]):
         if w[j] == 0.0:
             continue
         d = np.abs(A[:, j][:, None] - B[:, j][None, :])
         if j in CYCLE:
-            # a circular axis: the smallest angular difference, mod the cycle's half-period
-            d = np.minimum(d, 0.5 * CYCLE[j] - d)
+            # a circular axis of period L: compared ON THE CIRCLE, as `2 - 2cos(dphi)` scaled to
+            # the same units as the linear axes, so that `12` and `0` are one place.  `embed`
+            # computes exactly this value with two columns, hence the agreement to 1e-12.
+            L = float(CYCLE[j])
+            dc = np.minimum(d, np.abs(L - d))
+            d = (L / (2.0 * math.pi)) * 2.0 * np.sin(math.pi * dc / L)
         out += w[j] * (d / sg[j]) ** 2
     return np.exp(-0.5 * out)
+
+
+def embed(A: np.ndarray, sig: Sequence[float],
+          weights: Optional[Sequence[float]] = None) -> np.ndarray:
+    """The kernel's own embedding: ``s(a, b) = exp(-0.5 * (|x_a|^2 + |x_b|^2 - 2 x_a . x_b))``.
+
+    Same numbers as `kernel_matrix`, computed as one Gram matrix instead of a (rows_a x rows_b x
+    fields) difference -- which is what makes the 4,284-place gauge and the 80 x 80 colour cell
+    affordable.  Linear axes contribute ``sqrt(w)/sigma`` times the value; the circular axis
+    contributes its two components at ``1 / (2 sigma)`` because ``2 - 2cos(2d) = 4 sin^2(d)``.
+    """
+    A = np.atleast_2d(np.asarray(A, dtype=np.float64))
+    width = int(A.shape[1])
+    w = np.asarray(WEIGHTS if weights is None else weights, dtype=np.float64)[:width]
+    w = w / max(w.sum(), 1e-12)
+    sg = np.maximum(np.abs(np.asarray(sig, dtype=np.float64))[:width], 1e-9)
+    cols: List[np.ndarray] = []
+    for j, name in enumerate(FIELDS[:width]):
+        if w[j] == 0.0:
+            continue
+        if j in CYCLE:
+            # period L: the smallest way round, mapped to a unit circle; `2 - 2cos(dphi)`
+            # equals `4 sin^2(dphi / 2)`, which is `(2 pi d / L)^2` near zero -- hence the
+            # `L / (2 pi)` factor that makes the embedded distance agree with `kernel_matrix`
+            L = float(CYCLE[j])
+            k = (L / (2.0 * math.pi)) * (float(np.sqrt(w[j])) / sg[j])
+            phi = 2.0 * math.pi * A[:, j] / L
+            cols.append(k * np.cos(phi))
+            cols.append(k * np.sin(phi))
+        else:
+            cols.append((float(np.sqrt(w[j])) / sg[j]) * A[:, j])
+        del name
+    return np.stack(cols, axis=1) if cols else np.zeros((A.shape[0], 0))
+
+
+def kernel_block(A: np.ndarray, B: np.ndarray, sig: Sequence[float],
+                 weights: Optional[Sequence[float]] = None) -> np.ndarray:
+    """`kernel_matrix` through `embed`: one Gram matrix, the same values to 1e-12."""
+    X = embed(A, sig, weights)
+    Y = embed(B, sig, weights)
+    d2 = ((X ** 2).sum(axis=1)[:, None] + (Y ** 2).sum(axis=1)[None, :] - 2.0 * (X @ Y.T))
+    return np.exp(-0.5 * np.maximum(d2, 0.0))
 
 
 # Register on import.  A class that is not in the registries returns 0.0 -- not a small number --

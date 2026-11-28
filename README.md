@@ -28,7 +28,21 @@ refused at load time if this tree cannot honour it; nothing falls back silently.
 
 Measured (`MISSION30_REPORT.md`, A1; 80 objects, chance 0.100): the fused door reads **0.675 /
 0.650** recall@8 on the FIT split at the two read views, against **0.550 / 0.550** for the
-two-channel door it replaces, with no query losing a hit.
+two-channel door it replaces, with no query losing a hit.  The all-80 read is **23/80 = 0.2875
+[0.188, 0.388]** (`MISSION31_REPORT.md` §2b; M27 shipped 19/80 = 0.2375, MDE 0.121, so it is an
+estimate).  Chance is 0.0125 top-1 and 0.100 recall@8.
+
+**M32 measured both channels and shipped neither** (`MISSION32_REPORT.md`).  Colour and shape were
+both read through a transform that removed their variation: the colour term is a cosine on a
+unit-normalised ring vector dominated by lightness (100 % of pairs ≥ 0.99, truth−impostor gap
+0.000026) and `var_x` is pinned at `_parabola`'s clip (one distinct value over 46,059 places).
+Replacing the cosine with a real ring distance (`matching/placement_content.d2`, `λ_L = 0.25`,
+`σ` = 0.3505 from a seeded label-free pool sample) removed the flattening — 41.6 % ≥ 0.99, gap
+0.01201 — but cost rank, because the shipped "colour" channel was ranking on lightness; and the
+unclipped curvature (`sharp_*`, `curv_*`, now graded columns on the record, keys byte-identical)
+lifted the same-class shape gauge from 0.505 to 0.596, short of the +0.10 bar.  The channel blend
+(`matching/placement_blend.py`) therefore ships at **w_shape = w_colour = 0**, which reproduces the
+deployed score exactly, and the bundle records why (`channels` block).
 
 ## Layout
 

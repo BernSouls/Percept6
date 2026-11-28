@@ -109,9 +109,10 @@ class TestBundleRefusal(unittest.TestCase):
     def test_bundle_is_frozen_for_this_code(self) -> None:
         b = PB.PlacementBundle.load()
         self.assertEqual(b.code_digest, PB.compute_code_digest())
-        # M27 item 2: the full read chose flat S = 16 (FIT +0.075 over S = 8, confirmation +0.000),
-        # fixed rather than adaptive; the fingerprint moves with the shipped configuration.
-        self.assertEqual(int(b.shortlist), 16)
+        # [M32] the shipped shortlist is 8: M27's read chose S = 8 (0.2375), M30/M31 re-read the
+        # same S with the fused colour door and shipped it.  This test pins the CONFIGURATION the
+        # bundle ships, not an older mission's; the fingerprint moves with it.
+        self.assertEqual(int(b.shortlist), 8)
         self.assertEqual(str(b.shortlist_rule), "fixed")
         self.assertEqual(int(b.rrf_k), 60)
         self.assertEqual(b.rerank, "plain")

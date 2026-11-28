@@ -92,26 +92,41 @@ def pool_rows(keys: Sequence[str]) -> np.ndarray:
                        if p.get("content") is not None], dtype=np.float64)
 
 
-def colour_matrix(view: str, how: str, sig: float, keys: Sequence[str]) -> np.ndarray:
-    """(80, 80) colour scores: query object under ``view`` against every base-view object."""
+def colour_matrices(view: str, sig: float, keys: Sequence[str]) -> Dict[str, np.ndarray]:
+    """(80, 80) colour scores for all three aggregators at once, one lens block at a time.
+
+    Vectorised, because the honest version (one `aggregate` call per object pair) is 12,800 calls
+    of a 500 x 500 kernel and would take longer than the read.  Per lens the gallery places are
+    already in object order, so the reductions are `maximum.reduceat` / `add.reduceat` over the
+    object boundaries: exactly the numbers `aggregate` returns on one pair, summed over pairs.
+    """
     from matching import placement_content as PC
     from matching import placement_records as PR
     cells = PR.load_cells(RECORDS, [REF, view])
-    def packs(k: str, v: str) -> Dict[str, np.ndarray]:
-        out: Dict[str, np.ndarray] = {}
-        for p in cells[(k, v)]["places"]:
-            if p.get("content") is None:
-                continue
-            out.setdefault(str(p.get("lens")), []).append(p["content"])
-        return {k2: np.asarray(v2, dtype=np.float64) for k2, v2 in out.items()}
-    G = [packs(k, REF) for k in keys]
-    Q = [packs(k, view) for k in keys]
     n = len(keys)
-    M = np.zeros((n, n), dtype=np.float64)
-    for i in range(n):
-        for j in range(n):
-            M[i, j] = PC.aggregate(Q[i], G[j], sig, how)
-    return M
+    out = {h: np.zeros((n, n), dtype=np.float64) for h in AGG}
+    for lens in ("Blob", "BoundaryArc", "CornerPoint"):
+        G = np.asarray([p["content"] for k in keys for p in cells[(k, REF)]["places"]
+                        if p.get("content") is not None and str(p.get("lens")) == lens],
+                       dtype=np.float64)
+        if G.size == 0:
+            continue
+        gof = np.asarray([j for j, k in enumerate(keys) for p in cells[(k, REF)]["places"]
+                          if p.get("content") is not None and str(p.get("lens")) == lens])
+        bounds = np.searchsorted(gof, np.arange(n + 1))
+        for i, k in enumerate(keys):
+            Q = np.asarray([p["content"] for p in cells[(k, view)]["places"]
+                            if p.get("content") is not None and str(p.get("lens")) == lens],
+                           dtype=np.float64)
+            if Q.size == 0:
+                continue
+            S = PC.similarity_lab(Q, G, sig)                  # (n_q, n_g)
+            per_obj = np.maximum.reduceat(S, bounds[:-1], axis=1)      # (n_q, 80)
+            out["max"][i] = per_obj.max(axis=0)                        # V1: best pair per object
+            out["coverage"][i] = per_obj.max(axis=1).mean()            # V2: query places covered
+            out["chamfer"][i] = 0.5 * (per_obj.max(axis=1).mean()
+                                       + per_obj.max(axis=0).mean())    # V3: both directions
+    return out
 
 
 def metrics(M: np.ndarray, label: str) -> Dict[str, Any]:
@@ -177,8 +192,9 @@ def variants() -> Dict[str, Any]:
         cellout: Dict[str, Any] = {"view": view,
                                    "base_fused3": metrics(base_fused, "fused3 shipped colour"),
                                    "base_colour": metrics(old, "colour shipped cosine")}
+        mats = colour_matrices(view, sig, keys)
         for how in AGG:
-            M = colour_matrix(view, how, sig, keys)
+            M = mats[how]
             fused = np.asarray(FU.fuse(counted, app, M, weights={"colour": 0.5}, k=K),
                                dtype=np.float64)
             cellout[how] = {"colour": metrics(M, "colour %s" % how),

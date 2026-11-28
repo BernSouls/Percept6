@@ -186,11 +186,12 @@ class TestRecordFormat(unittest.TestCase):
         place = {"n": 1, "lens": "Blob", "key": ("Blob", (1.0, 2.0, 3.0, 4.0, 5.0)),
                  "Dz": [0.0, 1.0], "Mz": [1.0, 1.0], "x": 1.0, "y": 2.0, "s": 3.0,
                  "theta": 0.5, "content": [0.1] * 6,
-                 "resp": 0.4, "var_x": 0.2, "var_y": 0.1, "eigratio": 0.7, "rel_angle": 1.1}
+                 "resp": 0.4, "var_x": 0.2, "var_y": 0.1, "eigratio": 0.7, "rel_angle": 1.1,
+                 "sharp_x": 0.02, "sharp_y": 0.03, "curv_x": 0.4, "curv_y": 0.5}
         arrays = PR.export([("a/1", "000-000", {"places": [place]})], ["a/1"], ["000-000"])
         import json
         meta = json.loads(str(arrays["meta"]))
-        self.assertEqual(meta["shape"], 5)
+        self.assertEqual(meta["shape"], len(PR.SHAPE_FIELDS))
         self.assertGreaterEqual(meta["version"], 29)
         PR.save("/tmp/_m30_test.npz", arrays)
         back = PR.load_cell("/tmp/_m30_test.npz", "a/1", "000-000")

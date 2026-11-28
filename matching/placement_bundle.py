@@ -45,7 +45,14 @@ PREFILTER_PARAMS = os.path.join(ROOT, "matching", "placement_prefilter_params.js
 CODE_MODULES = ("matching/placement_frontend.py", "matching/placement_cache.py",
                 "matching/placement_frontdoor.py", "matching/placement_gallery.py",
                 "matching/placement_recognise.py", "matching/placement_views.py",
-                "matching/placement_content.py")
+                "matching/placement_content.py",
+                # [M32] the digest is supposed to cover every module whose bytes can move a
+                # shipped score.  The fuse, the matcher, the graded kernel, the shape similarity,
+                # the record loader and the channel blend all could, and none of them was in the
+                # tuple: a change to any of them froze a bundle that still said "this tree".
+                "matching/placement_fuse.py", "matching/placement_matcher.py",
+                "matching/placement_kernel.py", "matching/placement_shape.py",
+                "matching/placement_records.py", "matching/placement_blend.py")
 
 #: Data files whose bytes define the shipped behaviour (frozen parameters, not code).
 CODE_DATA = ("matching/placement_score_params.json", "matching/placement_prefilter_params.json")
@@ -330,3 +337,18 @@ def refreeze_from_current(path: Optional[str] = None) -> Dict[str, Any]:
 def load(path: Optional[str] = None) -> PlacementBundle:
     """Convenience alias for ``PlacementBundle.load``."""
     return PlacementBundle.load(path)
+
+
+if __name__ == "__main__":                       # pragma: no cover - operator entry point
+    import argparse as _ap
+    _p = _ap.ArgumentParser(description="re-freeze the shipped bundle for THIS tree")
+    #: the shipped configuration is kept; only the code digest moves
+    _p.add_argument("--refreeze", action="store_true")
+    _a = _p.parse_args()
+    if _a.refreeze:
+        _d = refreeze_from_current()
+        print("re-frozen: door %s, content %s, shortlist %s, code_digest %s"
+              % (_d["door"]["kind"], _d["content"]["kind"], _d["shortlist"],
+                 _d["code_digest"][:16]))
+    else:
+        _p.print_help()

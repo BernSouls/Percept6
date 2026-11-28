@@ -284,7 +284,9 @@ class TestDoorKindAndCore(unittest.TestCase):
     def test_bundle_kind_is_one_the_tree_implements(self) -> None:
         from matching import placement_bundle as PB
         b = PB.PlacementBundle.load()
-        self.assertIn(b.door_kind, ("counted", "graded"))
+        # [M32] M31 shipped the fused three-channel door; every kind the loader accepts is one the
+        # tree implements, which is the claim this test makes.
+        self.assertIn(b.door_kind, ("counted", "graded", "fused3"))
         if b.door_kind == "counted":
             self.assertEqual(b.door_params, {})
 

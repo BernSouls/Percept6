@@ -393,8 +393,13 @@ def build_gallery(items: Iterable[Any], *, bundle: Optional[PlacementBundle] = N
     _validate(b)
     vs = list(b.reference_views if views is None else views)
     with _FlagScope(_bundle_flags(b)):
+        # [M32] the content kind is part of the shipped CONFIGURATION: a gallery built with the
+        # default keypoint records under a bundle that promises colour_rings is refused later
+        # ("the colour door over keypoint records has no colour to read"), so the entry point has
+        # to carry the bundle's kind, not the library's default.
         return GL.build_gallery(items, code_digest=b.code_digest, views=vs, workers=workers,
-                                use_cache=use_cache, cache_dir=cache_dir)
+                                use_cache=use_cache, cache_dir=cache_dir,
+                                content=getattr(b, "content_kind", None))
 
 
 def _score_one(job: Tuple[str, str, float]) -> Optional[float]:
