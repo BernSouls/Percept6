@@ -193,8 +193,20 @@ class TestProductDoor(unittest.TestCase):
                 ref_app = np.asarray([app], dtype=np.float64) @ self.gal.appearance.T
                 colour = np.asarray(FU.colour_channel(self.gal.flat_records(), [qrec]),
                                     dtype=np.float64)
-                fused = FU.fuse(cnt, ref_app, colour,
-                                weights={"colour": float(b.fusion_weight)}, k=int(b.rrf_k))
+                # [M34] the shipped door fuses a FIFTH channel; the hand-built arithmetic here has
+                # to name it or this test would be checking a door the bundle no longer describes.
+                frag = None
+                if float(b.fragment_weight) != 0.0:
+                    from matching import placement_anchors as PA
+                    from matching import placement_fragment as PFM
+                    frag = PFM.channel(
+                        [{"places": r["places"]} for r in self.gal.flat_records()],
+                        qrec["places"],
+                        [PA.for_path(p) for p in self.gal.flat_paths()],
+                        PA.for_path(qpath))
+                fused = FU.fuse(cnt, ref_app, colour, fragment=frag,
+                                weights={"colour": float(b.fusion_weight),
+                                         "fragment": float(b.fragment_weight)}, k=int(b.rrf_k))
                 order = sorted(range(self.gal.n), key=lambda j: (-fused[0, j], j))[:8]
                 self.assertEqual(list(r.shortlist), order,
                                  "fused door mismatch on %s at %s" % (o["key"], view))
@@ -215,7 +227,22 @@ class TestProductDoor(unittest.TestCase):
                                   appearance=app, s=8, use_pair_cache=False)
                 cnt, _d = FD.count_scores(self.gal.index, [qrec], n_hits=int(b.door_n_hits))
                 ref_app = np.asarray([app], dtype=np.float64) @ self.gal.appearance.T
-                shipped = FD.rank_fuse(ref_app, cnt, k=int(b.rrf_k))
+                # [M34] colour at zero removes COLOUR and nothing else: the fragment channel the
+                # bundle also fuses stays, so the comparison is the four-term door, not rank_fuse.
+                from matching import placement_fuse as FU2
+                from matching import placement_anchors as PA2
+                from matching import placement_fragment as PFM2
+                frag2 = None
+                if float(b.fragment_weight) != 0.0:
+                    frag2 = PFM2.channel(
+                        [{"places": r["places"]} for r in self.gal.flat_records()],
+                        qrec["places"],
+                        [PA2.for_path(p) for p in self.gal.flat_paths()],
+                        PA2.for_path(qpath))
+                shipped = FU2.fuse(cnt, ref_app, None, fragment=frag2,
+                                   weights={"colour": 0.0,
+                                            "fragment": float(b.fragment_weight)},
+                                   k=int(b.rrf_k))
                 order = sorted(range(self.gal.n), key=lambda j: (-shipped[0, j], j))[:8]
                 self.assertEqual(list(r.shortlist), order,
                                  "shipped door mismatch on %s at %s" % (o["key"], view))

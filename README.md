@@ -55,6 +55,33 @@ float32, everything the door buckets on exact), which turns a fresh checkout's e
 into **21 s** of loading with 80/80 shortlists identical at both read views and a cosine delta of
 0.0 (`MISSION33_REPORT.md`).
 
+**M34 composed places into FRAGMENTS and shipped the channel** (`MISSION34_REPORT.md`).  The
+mission's grouping rule does not exist: on a real graph the front end emits two disjoint node
+universes and **0 of 2,686 edges touch a place node** — all 474 places are isolated — so the four
+edge classes it named group places zero times.  The substitution is registered in writing: a place
+joins the fragment of its nearest `ContourFragment` anchor, which *wires the region machinery to the
+places* for the first time.  The descriptor (`matching/placement_fragment.py`) is twenty-two
+frame-relative numbers — size, aspect, member arrangement measured from the fragment's own principal
+axis, pooled curvature and the six CIELAB rings — in a class registered in ranges, weights and
+population axes, and it answers **0.0** when that class is absent.  Measured: **0.725 / 0.637**
+channel-alone recall@8 on the two FIT views (mean 0.681, bar 0.675, chance 0.100) and **18/31** on
+M31's same-class losses (bar 15/31, colour 22/30).  Fused into the door as a **fifth channel at the
+stated discount 0.5** it reads **+0.125 at `-035-045` (5 objects up, 0 down), 0.000 at `-045-180`**,
+pooled **+0.0625 with an object-clustered CI [0.0125, 0.1125]**, and re-ranking inside the cached
+eight it fixes **5, breaks 0** (all five were same-class impostors).  The anchors a fragment needs
+are not on the place record, so they ship as data (`data/placement_anchors_m34.npz`, 588 KB) and the
+door resolves them from the image path — an image outside the file is computed, never zeroed.
+`Topology/m34_wire.py` proves the shipped door returns the measured order (6/6, with the anchors resolved from the image path), and the shape
+channel as a re-ranker is a **named ceiling**: FIT top-1 **−0.125, CI [−0.225, −0.025]** against a
++0.075 bar, because its order inside the eight is uncorrelated with the matcher's (Spearman 0.016).
+
+`Topology/m34_audit.py` also answers, with counts, whether the tree's machinery is wired: **83.1 % of
+78,587 lines are reachable** from a shipped entry point, **13.1 % (19 modules, 10,291 lines) is
+orphan** — including 3,185 lines of fragment machinery nobody had wired — and of the 24 edge types
+the front end emits, **16 reach no module that turns a graph into a number** while **474 places reach
+no edge at all**.  That verdict is in `MISSION34_REPORT.md` §7, and it is the reason the fragment
+channel ships wired rather than measured and shelved.
+
 ## Layout
 
 * `matching/` — the shipped mechanisms: door, places, matcher, bundle, records.

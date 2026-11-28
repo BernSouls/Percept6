@@ -1,0 +1,143 @@
+{
+ "all_edge_types": {
+  "AMODAL_LINK": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 18
+  },
+  "BORDER_OWNERSHIP_EDGE": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 292
+  },
+  "COCIRCULAR": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 29
+  },
+  "COLOR_OPPONENT_BORDER": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 255
+  },
+  "CONTACT": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 7
+  },
+  "CONTOUR_CONTINUITY": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 45
+  },
+  "CONTOUR_ORIENTATION": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 115
+  },
+  "CO_LOCATED": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 285
+  },
+  "CURVATURE": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 1
+  },
+  "CURVATURE_SIGN_CONTINUITY": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 31
+  },
+  "CURVE_CONTAINMENT": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 7
+  },
+  "DEGREE": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 3
+  },
+  "LINE_TERMINATION": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 23
+  },
+  "ORIENTATION_BEND": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 11
+  },
+  "ORIENTATION_CONTINUITY": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 46
+  },
+  "ORIENTATION_JUNCTION": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 1
+  },
+  "PARALLEL": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 8
+  },
+  "PART_CONTAINMENT": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 1
+  },
+  "RADIALITY": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 26
+  },
+  "REGION_CONTENT": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 302
+  },
+  "SHARED_BOUNDARY": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 13
+  },
+  "SYMMETRY": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 2
+  },
+  "TEXTURE_BOUNDARY_EDGE": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 1133
+  },
+  "TOPOLOGY": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 32
+  }
+ },
+ "edges": 2686,
+ "named_edge_classes_present": {
+  "BORDER_OWNERSHIP_EDGE": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 292
+  },
+  "COCIRCULAR": {
+   "both_place": 0,
+   "one_place": 0,
+   "total": 29
+  }
+ },
+ "nodes": 1506,
+ "object": "apple/1",
+ "place_endpoint_edges_total": 0,
+ "place_nodes": 474,
+ "place_nodes_isolated": 474,
+ "view": "035-045"
+}

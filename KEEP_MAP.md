@@ -78,12 +78,21 @@ walks the AST of every core package and fails on either.
 | `Topology/m32_colour.py` (M32 item 3) | placement_content, placement_fuse, placement_frontdoor -- the distance, the three aggregators, the FIT/confirm cells |
 | `Topology/m33_records.py` (M33 item 1) | matching/placement_records, m27_export_records -- the mixed-precision record file, its size, and the door's proof at both views |
 | `Topology/m33_curvature.py` (M33 items 2/3) | matching/placement_shape, placement_fuse, placement_records -- the registered arm, the bootstrap, the mechanism |
+| `Topology/m34_fragments.py` (M34 item 1/3) | matching/placement_fragment, placement_records -- the premise probe, the 240-cell build, the grouping report and the two screens |
+| `Topology/m34_door.py` (M34 item 4) | placement_fuse, placement_records, placement_content -- the five-channel door read and its object-clustered CI |
+| `Topology/m34_rerank.py` (M34 items 3b/5) | placement_shape, placement_fragment, placement_fuse -- a channel as a re-ranker inside the cached eight |
+| `Topology/m34_audit.py` (M34, the user's charge) | the AST import closure, the edge/flag/class censuses and the emitted vocabulary of a real image |
+| `Topology/m34_anchors.py` (M34 item 6) | matching/placement_anchors, placement_frontend -- export/check the committed fragment anchors |
+| `Topology/m34_wire.py` (M34 item 6) | placement_recognise, placement_gallery, placement_anchors -- proves the shipped door returns the measured order |
 | `Topology/m32_shape.py` (M32 item 4) | m26_records, placement_kernel, placement_shape -- the M28 gauge through the unclipped columns |
 | the report-producing M20-M23 harnesses | placement_m20_eth80, m22_eth80, m23_eth80, m23_stages, m21_* , m20_fit, m22_power, m12_realphotos |
 | the test suite (`tests/`) | 20 Topology modules, all inside the two lists above |
 | M32's archived one-offs | `m26_census`, `m26_matcher`, `m27_door`, `m27_drift`, `m27_profile`, `m28_*`, `m29_representation`, `m30_door`, `m30_shape`, `m31_arms`, `m31_shape`, `m31_wire` -- in `archive/Topology/`, see `archive/ARCHIVE_INDEX.md` "Mission 32" |
+| the committed anchor file | `data/placement_anchors_m34.npz` (616 KB, 320 cells x 2 groupings) -- the fragment anchors the shipped door reads; exempted from `.gitignore` on purpose, because the record does not carry them and a fresh checkout would rebuild 320 graphs |
 | the committed record file | `data/placement_records_m32.npz` (38.03 MB, v30, graded columns float32) -- exempted from `.gitignore` on purpose; `tests/test_m33_records.py` fails if it is not in git or stops reproducing the door |
 | result files cited by the README / the reports | `m12_perf_baseline.json`, `m20_splits.json`, `m22_*.json`, `m23_*.json`, `m23_read_rows.jsonl`, `m23_read_pairs.jsonl`, MISSION14..23 `.md` |
+
+| M34's archived one-offs | none -- M34 deleted nothing and archived nothing |
 
 ## 4. The rule that decides the archive
 

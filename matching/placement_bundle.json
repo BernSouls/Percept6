@@ -70,7 +70,7 @@
    "w_shape": 0.0
   }
  },
- "code_digest": "3cf30de6f1189bb32a509206c7a3e1757771ad5ed1f74e55a01a249bef6c5ec0",
+ "code_digest": "27c6a3b756e4ef8f5ecafc3ed8a05fb8228e2f9e6121a4b9be548be31cad9466",
  "content": {
   "digest": "3c730dbbe84ef43c",
   "kind": "colour_rings",
@@ -112,7 +112,8 @@
  "fusion": {
   "appearance": 1.0,
   "colour": 0.5,
-  "counted": 1.0
+  "counted": 1.0,
+  "fragment": 0.5
  },
  "margin_tau": 0.0,
  "matcher": {
@@ -348,6 +349,66 @@
      "serial": 22.32,
      "workers_2": 9.18
     }
+   }
+  },
+  "M34": {
+   "anchors": {
+    "file": "data/placement_anchors_m34.npz",
+    "why": "the record does not carry the contour part anchors the grouping needs"
+   },
+   "channel_alone_recall8": {
+    "chance": 0.1,
+    "contour_fragment": {
+     "fit_a": 0.725,
+     "fit_b": 0.637
+    }
+   },
+   "decision": "the fragment channel enters the frozen door as a FIFTH channel at the stated discount 0.5",
+   "door_recall8": {
+    "fit_a_035-045": {
+     "baseline": 0.675,
+     "broke": 0,
+     "fixed": 5,
+     "fused": 0.8
+    },
+    "fit_b_045-180": {
+     "baseline": 0.65,
+     "broke": 0,
+     "fixed": 0,
+     "fused": 0.65
+    },
+    "pooled_mean_fit": {
+     "baseline": 0.6625,
+     "ci95_object_clustered": [
+      0.0125,
+      0.1125
+     ],
+     "fused": 0.725,
+     "gain": 0.0625,
+     "n": 80
+    }
+   },
+   "file": "Topology/results/placement/MISSION34_REPORT.md",
+   "matcher_rerank_inside_eight": {
+    "all80_top1": {
+     "after": 0.35,
+     "before": 0.2875
+    },
+    "broke": 0,
+    "fit_top1": {
+     "after": 0.4,
+     "before": 0.35
+    },
+    "fixed": 5,
+    "note": "all five fixes were same-class impostors"
+   },
+   "not_shipped": {
+    "shape_reranker": "FIT top-1 -0.125, CI [-0.225, -0.025] against a +0.075 bar; the channel's order inside the eight is uncorrelated with the matcher's (Spearman 0.016)"
+   },
+   "oracle_same_class_losses": {
+    "bar": ">= 15/31",
+    "colour_reference": "22/30",
+    "contour_fragment": "18/31"
    }
   },
   "note": "documentation only: this block is not part of code_digest and freeze() overwrites it"

@@ -34,6 +34,15 @@ grouped by mission; within a group the reason is the same shape because the rule
 
 
 
+**Mission 34 moved nothing here.**  Its six harnesses (`m34_fragments.py`, `m34_door.py`,
+`m34_rerank.py`, `m34_audit.py`, `m34_anchors.py`, `m34_wire.py`) are live in `Topology/` and listed
+in `KEEP_MAP.md` §3.  It archived nothing and deleted nothing -- but it did find 19 orphan modules
+(10,291 lines) that no shipped path can reach, including 3,185 lines of `surface_fragments` machinery;
+they are LEFT IN PLACE because the census that names them (`Topology/m34_audit.py --run`) is the point,
+and moving them here would hide the finding.  It also commits one new data file,
+`data/placement_anchors_m34.npz` (616 KB), because the place record does not carry the fragment
+anchors the shipped door reads.
+
 **Mission 33 moved nothing here.**  Its three harnesses (`m33_records.py`, `m33_curvature.py`, and
 the M32 ones it reuses) are live in `Topology/` and listed in `KEEP_MAP.md` §3; the mission archived
 no file and deleted none.  It did add something to the repository that is not a script:

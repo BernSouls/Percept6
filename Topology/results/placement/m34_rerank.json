@@ -1,0 +1,780 @@
+{
+ "fragment": {
+  "DEV": {
+   "ci95": [
+    0.0,
+    0.125
+   ],
+   "gain": 0.041666666666666664,
+   "mde": 0.1166666666666667,
+   "n": 24,
+   "top1_after": 0.25,
+   "top1_before": 0.20833333333333334
+  },
+  "FIT": {
+   "ci95": [
+    0.0,
+    0.125
+   ],
+   "gain": 0.05,
+   "mde": 0.09771754166329577,
+   "n": 40,
+   "top1_after": 0.4,
+   "top1_before": 0.35
+  },
+  "FRESH": {
+   "ci95": [
+    0.0,
+    0.3125
+   ],
+   "gain": 0.125,
+   "mde": 0.23909551787239058,
+   "n": 16,
+   "top1_after": 0.375,
+   "top1_before": 0.25
+  },
+  "all": {
+   "ci95": [
+    0.0125,
+    0.1125
+   ],
+   "gain": 0.0625,
+   "mde": 0.07625531730785413,
+   "n": 80,
+   "top1_after": 0.35,
+   "top1_before": 0.2875
+  },
+  "bar": {
+   "confirmation_tolerance": -0.025,
+   "fit_top1_gain": 0.075
+  },
+  "channel": "fragment",
+  "channel_top1_equals_matcher_top1": 17,
+  "fixes_breaks": {
+   "broke_other_class": 0,
+   "broke_same_class": 0,
+   "fixed_other_class": 0,
+   "fixed_same_class": 5
+  },
+  "fusion": {
+   "k": 60,
+   "rule": "rrf",
+   "w_channel": 0.5,
+   "w_matcher": 1.0
+  },
+  "objects": 80,
+  "order_agreement_spearman": 0.3629829290206649,
+  "per_object": {
+   "apple/1": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 5,
+    "truth_rank_before": 4
+   },
+   "apple/10": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "apple/3": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "apple/4": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "apple/6": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "apple/7": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 4,
+    "truth_rank_before": 4
+   },
+   "apple/8": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "apple/9": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "car/1": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "car/10": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "car/3": {
+    "matcher_top1": false,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 1
+   },
+   "car/6": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "car/7": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 2
+   },
+   "car/8": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "car/9": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "cow/1": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "cow/5": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 4,
+    "truth_rank_before": 5
+   },
+   "cow/7": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "cow/9": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "cup/1": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 2
+   },
+   "cup/10": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 5,
+    "truth_rank_before": 5
+   },
+   "cup/2": {
+    "matcher_top1": false,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 1
+   },
+   "cup/3": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 6,
+    "truth_rank_before": 6
+   },
+   "cup/4": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 1
+   },
+   "cup/5": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 4
+   },
+   "cup/6": {
+    "matcher_top1": false,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 1
+   },
+   "cup/7": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 7,
+    "truth_rank_before": 7
+   },
+   "cup/8": {
+    "matcher_top1": false,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 1
+   },
+   "cup/9": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "dog/10": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "dog/4": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 4,
+    "truth_rank_before": 4
+   },
+   "dog/6": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "dog/7": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "dog/8": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 3
+   },
+   "dog/9": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 2
+   },
+   "horse/1": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 3
+   },
+   "horse/10": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 3
+   },
+   "horse/2": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "horse/3": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 3
+   },
+   "horse/8": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "horse/9": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "pear/1": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "pear/10": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "pear/2": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 3
+   },
+   "pear/6": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 4
+   },
+   "tomato/1": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "tomato/10": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "tomato/2": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "tomato/3": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "tomato/4": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 3
+   },
+   "tomato/6": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "tomato/7": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "tomato/9": {
+    "matcher_top1": false,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 1
+   }
+  },
+  "truth_in_shortlist": 53,
+  "truth_outside_shortlist": 27,
+  "view": "035-045"
+ },
+ "shape": {
+  "DEV": {
+   "ci95": [
+    -0.08333333333333333,
+    0.16666666666666666
+   ],
+   "gain": 0.041666666666666664,
+   "mde": 0.20498026298295255,
+   "n": 24,
+   "top1_after": 0.25,
+   "top1_before": 0.20833333333333334
+  },
+  "FIT": {
+   "ci95": [
+    -0.225,
+    -0.025
+   ],
+   "gain": -0.125,
+   "mde": 0.14828074550385656,
+   "n": 40,
+   "top1_after": 0.225,
+   "top1_before": 0.35
+  },
+  "FRESH": {
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "gain": 0.0,
+   "mde": 0.0,
+   "n": 16,
+   "top1_after": 0.25,
+   "top1_before": 0.25
+  },
+  "all": {
+   "ci95": [
+    -0.125,
+    0.0125
+   ],
+   "gain": -0.05,
+   "mde": 0.09836640365027381,
+   "n": 80,
+   "top1_after": 0.2375,
+   "top1_before": 0.2875
+  },
+  "bar": {
+   "confirmation_tolerance": -0.025,
+   "fit_top1_gain": 0.075
+  },
+  "channel": "shape",
+  "channel_top1_equals_matcher_top1": 3,
+  "fixes_breaks": {
+   "broke_other_class": 3,
+   "broke_same_class": 3,
+   "fixed_other_class": 0,
+   "fixed_same_class": 2
+  },
+  "fusion": {
+   "k": 60,
+   "rule": "rrf",
+   "w_channel": 0.5,
+   "w_matcher": 1.0
+  },
+  "objects": 80,
+  "order_agreement_spearman": 0.01572327044025157,
+  "per_object": {
+   "apple/1": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 5,
+    "truth_rank_before": 4
+   },
+   "apple/10": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "apple/3": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "apple/4": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "apple/6": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "apple/7": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 4,
+    "truth_rank_before": 4
+   },
+   "apple/8": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "apple/9": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "car/1": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "car/10": {
+    "matcher_top1": false,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 1
+   },
+   "car/3": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "car/6": {
+    "matcher_top1": true,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 0
+   },
+   "car/7": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 2
+   },
+   "car/8": {
+    "matcher_top1": true,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 0
+   },
+   "car/9": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "cow/1": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "cow/5": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 5
+   },
+   "cow/7": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "cow/9": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "cup/1": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 2
+   },
+   "cup/10": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 6,
+    "truth_rank_before": 5
+   },
+   "cup/2": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 1
+   },
+   "cup/3": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 4,
+    "truth_rank_before": 6
+   },
+   "cup/4": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "cup/5": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 4,
+    "truth_rank_before": 4
+   },
+   "cup/6": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "cup/7": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 7,
+    "truth_rank_before": 7
+   },
+   "cup/8": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "cup/9": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "dog/10": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "dog/4": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 5,
+    "truth_rank_before": 4
+   },
+   "dog/6": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 1
+   },
+   "dog/7": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "dog/8": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 3
+   },
+   "dog/9": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 2
+   },
+   "horse/1": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 3
+   },
+   "horse/10": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 3
+   },
+   "horse/2": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "horse/3": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 3
+   },
+   "horse/8": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "horse/9": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 2,
+    "truth_rank_before": 1
+   },
+   "pear/1": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "pear/10": {
+    "matcher_top1": true,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 0
+   },
+   "pear/2": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 3
+   },
+   "pear/6": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 4
+   },
+   "tomato/1": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   },
+   "tomato/10": {
+    "matcher_top1": true,
+    "reranked_top1": false,
+    "truth_rank_after": 3,
+    "truth_rank_before": 0
+   },
+   "tomato/2": {
+    "matcher_top1": false,
+    "reranked_top1": true,
+    "truth_rank_after": 0,
+    "truth_rank_before": 1
+   },
+   "tomato/3": {
+    "matcher_top1": true,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 0
+   },
+   "tomato/4": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 6,
+    "truth_rank_before": 3
+   },
+   "tomato/6": {
+    "matcher_top1": true,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 0
+   },
+   "tomato/7": {
+    "matcher_top1": true,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 0
+   },
+   "tomato/9": {
+    "matcher_top1": false,
+    "reranked_top1": false,
+    "truth_rank_after": 1,
+    "truth_rank_before": 1
+   }
+  },
+  "truth_in_shortlist": 53,
+  "truth_outside_shortlist": 27,
+  "view": "035-045"
+ }
+}

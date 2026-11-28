@@ -1,0 +1,141 @@
+{
+ "chance": {
+  "recall@8": 0.1,
+  "top1": 0.0125
+ },
+ "groupings": {
+  "contour": {
+   "fit_a": {
+    "fit_recall8": 0.6,
+    "per_class": {
+     "apple": 0.6,
+     "car": 1.0,
+     "cow": 0.5,
+     "cup": 0.6,
+     "dog": 0.5,
+     "horse": 0.6,
+     "pear": 0.8,
+     "tomato": 0.8
+    },
+    "recall@8": 0.675,
+    "share_ge_0.99": 0.0,
+    "top1": 0.25,
+    "truth_rank_median": 3.0
+   },
+   "fit_b": {
+    "fit_recall8": 0.5,
+    "per_class": {
+     "apple": 0.5,
+     "car": 0.9,
+     "cow": 0.4,
+     "cup": 0.3,
+     "dog": 0.4,
+     "horse": 0.7,
+     "pear": 0.4,
+     "tomato": 0.7
+    },
+    "recall@8": 0.5375,
+    "share_ge_0.99": 0.0,
+    "top1": 0.2125,
+    "truth_rank_median": 7.0
+   },
+   "sigma_columns": 22
+  },
+  "contour_fragment": {
+   "fit_a": {
+    "fit_recall8": 0.7,
+    "per_class": {
+     "apple": 0.8,
+     "car": 1.0,
+     "cow": 0.6,
+     "cup": 0.4,
+     "dog": 0.9,
+     "horse": 0.6,
+     "pear": 0.6,
+     "tomato": 0.9
+    },
+    "recall@8": 0.725,
+    "share_ge_0.99": 0.0,
+    "top1": 0.2875,
+    "truth_rank_median": 2.0
+   },
+   "fit_b": {
+    "fit_recall8": 0.625,
+    "per_class": {
+     "apple": 0.7,
+     "car": 1.0,
+     "cow": 0.4,
+     "cup": 0.4,
+     "dog": 0.6,
+     "horse": 0.7,
+     "pear": 0.5,
+     "tomato": 0.8
+    },
+    "recall@8": 0.6375,
+    "share_ge_0.99": 0.0,
+    "top1": 0.25,
+    "truth_rank_median": 3.0
+   },
+   "sigma_columns": 22
+  },
+  "proximity": {
+   "fit_a": {
+    "fit_recall8": 0.675,
+    "per_class": {
+     "apple": 0.8,
+     "car": 1.0,
+     "cow": 0.4,
+     "cup": 0.3,
+     "dog": 0.6,
+     "horse": 0.5,
+     "pear": 0.4,
+     "tomato": 0.7
+    },
+    "recall@8": 0.5875,
+    "share_ge_0.99": 0.0,
+    "top1": 0.2,
+    "truth_rank_median": 5.0
+   },
+   "fit_b": {
+    "fit_recall8": 0.625,
+    "per_class": {
+     "apple": 0.7,
+     "car": 0.9,
+     "cow": 0.4,
+     "cup": 0.4,
+     "dog": 0.3,
+     "horse": 0.9,
+     "pear": 0.3,
+     "tomato": 0.8
+    },
+    "recall@8": 0.5875,
+    "share_ge_0.99": 0.0,
+    "top1": 0.175,
+    "truth_rank_median": 5.0
+   },
+   "sigma_columns": 22
+  }
+ },
+ "objects": 80,
+ "objects_with_fragments": 80,
+ "oracle": {
+  "contour": {
+   "bar": ">= 15/31",
+   "colour_reference": "22/30",
+   "same_class_losses": 31,
+   "truth_above_winner": 23
+  },
+  "contour_fragment": {
+   "bar": ">= 15/31",
+   "colour_reference": "22/30",
+   "same_class_losses": 31,
+   "truth_above_winner": 18
+  },
+  "proximity": {
+   "bar": ">= 15/31",
+   "colour_reference": "22/30",
+   "same_class_losses": 31,
+   "truth_above_winner": 17
+  }
+ }
+}

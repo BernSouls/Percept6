@@ -1,0 +1,110 @@
+{
+ "cells": 240,
+ "groupings": {
+  "contour": {
+   "000-000": {
+    "fragment_size_p95": 180.0,
+    "fragments_per_object_mean": 6.6,
+    "objects": 80,
+    "places_per_fragment_mean": 64.65530303030303,
+    "places_per_fragment_median": 52.0,
+    "ungrouped_share": 0.15497908364068413
+   },
+   "035-045": {
+    "fragment_size_p95": 154.60000000000002,
+    "fragments_per_object_mean": 7.3625,
+    "objects": 80,
+    "places_per_fragment_mean": 61.59083191850594,
+    "places_per_fragment_median": 52.0,
+    "ungrouped_share": 0.15674105067410504
+   },
+   "045-180": {
+    "fragment_size_p95": 145.30000000000007,
+    "fragments_per_object_mean": 7.7375,
+    "objects": 80,
+    "places_per_fragment_mean": 60.23101777059774,
+    "places_per_fragment_median": 51.0,
+    "ungrouped_share": 0.1538897966594045
+   },
+   "stability": {
+    "note": "the same object's fragment-size spectrum in the two views: Spearman over its (sorted) sizes, matched by rank, plus the pooled 10-bin L1 count difference",
+    "per_object_size_spearman": 0.896751624189987,
+    "size_hist_l1_units": 60.0,
+    "views": [
+     "035-045",
+     "045-180"
+    ]
+   }
+  },
+  "contour_fragment": {
+   "000-000": {
+    "fragment_size_p95": 95.44999999999993,
+    "fragments_per_object_mean": 13.15,
+    "objects": 80,
+    "places_per_fragment_mean": 38.049429657794676,
+    "places_per_fragment_median": 32.0,
+    "ungrouped_share": 0.009183395628604707
+   },
+   "035-045": {
+    "fragment_size_p95": 91.0,
+    "fragments_per_object_mean": 14.65,
+    "objects": 80,
+    "places_per_fragment_mean": 36.13139931740614,
+    "places_per_fragment_median": 31.0,
+    "ungrouped_share": 0.015667131566713177
+   },
+   "045-180": {
+    "fragment_size_p95": 84.0,
+    "fragments_per_object_mean": 16.5375,
+    "objects": 80,
+    "places_per_fragment_mean": 32.868480725623584,
+    "places_per_fragment_median": 27.0,
+    "ungrouped_share": 0.013139978213507653
+   },
+   "stability": {
+    "note": "the same object's fragment-size spectrum in the two views: Spearman over its (sorted) sizes, matched by rank, plus the pooled 10-bin L1 count difference",
+    "per_object_size_spearman": 0.9331378668398432,
+    "size_hist_l1_units": 187.0,
+    "views": [
+     "035-045",
+     "045-180"
+    ]
+   }
+  },
+  "proximity": {
+   "000-000": {
+    "fragment_size_p95": 563.7999999999997,
+    "fragments_per_object_mean": 3.7875,
+    "objects": 80,
+    "places_per_fragment_mean": 133.33003300330034,
+    "places_per_fragment_median": 10.0,
+    "ungrouped_share": 0.0
+   },
+   "035-045": {
+    "fragment_size_p95": 586.0999999999997,
+    "fragments_per_object_mean": 3.975,
+    "objects": 80,
+    "places_per_fragment_mean": 135.28301886792454,
+    "places_per_fragment_median": 24.5,
+    "ungrouped_share": 0.0
+   },
+   "045-180": {
+    "fragment_size_p95": 598.4,
+    "fragments_per_object_mean": 3.6625,
+    "objects": 80,
+    "places_per_fragment_mean": 150.38907849829351,
+    "places_per_fragment_median": 20.0,
+    "ungrouped_share": 0.0
+   },
+   "stability": {
+    "note": "the same object's fragment-size spectrum in the two views: Spearman over its (sorted) sizes, matched by rank, plus the pooled 10-bin L1 count difference",
+    "per_object_size_spearman": NaN,
+    "size_hist_l1_units": 42.0,
+    "views": [
+     "035-045",
+     "045-180"
+    ]
+   }
+  }
+ }
+}

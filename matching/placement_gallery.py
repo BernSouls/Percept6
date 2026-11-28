@@ -120,6 +120,10 @@ class Gallery:
     digest: str
     seconds: Dict[str, float] = field(default_factory=dict)
     content_kind: str = "keypoint"                      # M31: what each place carries
+    #: [M34] per stored cell, that cell's `(n, 2)` fragment anchors, object-major like
+    #: `flat_records()`.  None means "this gallery carries no anchors", and a bundle that fuses the
+    #: fragment channel then refuses rather than scoring the channel as 0.
+    fragment_anchors: Optional[List[Any]] = None
 
     @property
     def n(self) -> int:
@@ -185,9 +189,38 @@ def _assemble(items: Sequence[Tuple[str, List[Tuple[str, str]]]],
                 "%d of %d gallery cells carry no colour content (e.g. %s) while the bundle names "
                 "content.kind = colour_rings: refusing rather than scoring the channel as 0.0"
                 % (len(lacking), len(items) * len(views), ", ".join(lacking[:3])))
-    return Gallery(keys=keys, views=views, paths=paths, records=[list(r) for r in records],
-                   index=index, appearance=appear, digest=digest, seconds=seconds,
-                   content_kind=str(content_kind))
+    gal = Gallery(keys=keys, views=views, paths=paths, records=[list(r) for r in records],
+                  index=index, appearance=appear, digest=digest, seconds=seconds,
+                  content_kind=str(content_kind))
+    # [M34] a gallery that can find its cells' fragment anchors carries them: the channel is part of
+    # the frozen door now, and a gallery without them forces the door to refuse.  A file that does
+    # not cover a cell leaves that cell None -- refused later, never invented as an empty list.
+    try:
+        from matching import placement_anchors as PA
+        attach_fragment_anchors(gal, PA.load())
+    except (OSError, KeyError):                       # pragma: no cover - file absent
+        pass
+    return gal
+
+
+def attach_fragment_anchors(gallery: "Gallery", table: Dict[str, Any],
+                            grouping: str = "contour_fragment") -> "Gallery":
+    """[M34] Hand a built gallery its fragment anchors, from `matching.placement_anchors`.
+
+    Kept separate from `_assemble` on purpose: the graph of a stored view is not rebuilt for a
+    records-only read, and the anchors are the ONE thing a fragment needs that the record does not
+    carry.  A cell with no anchors stays None -- refused by the door, never invented as [].
+    """
+    from matching import placement_anchors as PA
+    out: List[Any] = []
+    for k in gallery.keys:
+        for v in gallery.views:
+            try:
+                out.append(PA.anchors_of(table, k, v, grouping))
+            except KeyError:
+                out.append(None)
+    gallery.fragment_anchors = out
+    return gallery
 
 
 def from_records(records_path: str, objects: Sequence[Dict[str, Any]], view: str,

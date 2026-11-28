@@ -397,9 +397,15 @@ def build_gallery(items: Iterable[Any], *, bundle: Optional[PlacementBundle] = N
         # default keypoint records under a bundle that promises colour_rings is refused later
         # ("the colour door over keypoint records has no colour to read"), so the entry point has
         # to carry the bundle's kind, not the library's default.
-        return GL.build_gallery(items, code_digest=b.code_digest, views=vs, workers=workers,
-                                use_cache=use_cache, cache_dir=cache_dir,
-                                content=getattr(b, "content_kind", None))
+        gal = GL.build_gallery(items, code_digest=b.code_digest, views=vs, workers=workers,
+                               use_cache=use_cache, cache_dir=cache_dir,
+                               content=getattr(b, "content_kind", None))
+    # [M34] the fragment channel is part of the frozen door: a gallery that can carry its cells'
+    # anchors carries them (a cache hit returns the same Gallery object, so attach AFTER the call).
+    if float(b.fragment_weight) != 0.0:
+        from matching import placement_anchors as PA
+        GL.attach_fragment_anchors(gal, PA.load())
+    return gal
 
 
 def _score_one(job: Tuple[str, str, float]) -> Optional[float]:
@@ -448,7 +454,8 @@ def _argmax_over_views(flat: np.ndarray, n_obj: int, n_views: int) -> List[int]:
 def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle] = None,
               workers: int = 2, s: Optional[int] = None, matcher: bool = True,
               use_pair_cache: bool = True, record: Optional[Dict[str, Any]] = None,
-              appearance: Optional[np.ndarray] = None) -> Result:
+              appearance: Optional[np.ndarray] = None,
+              anchors: Optional[np.ndarray] = None) -> Result:
     """Rank ``gallery``'s OBJECTS for ``query``.  ``query`` is a path or a (key, path) pair.
 
     [M31] ``record`` and ``appearance`` let a caller hand in the query's own place record and
@@ -459,6 +466,11 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
 
     ``matcher=False`` stops after the door: the result carries the door's object ranking and the
     shortlist, and ``unscored`` is the whole shortlist (nothing was scored, nothing is claimed).
+
+    [M34] ``anchors`` is the QUERY cell's `(n, 2)` fragment anchors (`matching/placement_anchors`).
+    A bundle whose `fusion.fragment` is non-zero needs them, and needs the gallery's, and is REFUSED
+    without them: the fragment channel is part of the arithmetic the bundle froze, so a run that
+    cannot compute it is not the shipped configuration.
     """
     FE, FD, _GL = _library()
     b = bundle or PB.PlacementBundle.load()
@@ -491,6 +503,7 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
         else:
             cnt_flat, _diag = FD.count_scores(gallery.index, [qrec], n_hits=int(b.door_n_hits))
         colour_flat = None
+        fragment_flat = None
         if dkind == "fused3":
             from matching import placement_fuse as FU
             colour_flat = np.asarray(FU.colour_channel(gallery.flat_records(), [qrec]),
@@ -498,6 +511,35 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
             if colour_flat.shape != (1, n_obj * n_views):
                 raise PB.BundleRefusal("the colour channel returned %r for %d cells"
                                        % (colour_flat.shape, n_obj * n_views))
+            if float(b.fragment_weight) != 0.0:
+                from matching import placement_fragment as PF
+                if anchors is None:                    # the shipped query is a PATH: resolve it
+                    from matching import placement_anchors as PA
+                    anchors = PA.for_path(qpath)
+                    if anchors is None:                # an image the file does not cover: compute it
+                        anchors = PA.anchors_from_image(qpath)
+                gal_anch = getattr(gallery, "fragment_anchors", None)
+                if gal_anch is None:
+                    from matching import placement_anchors as PA2
+                    gal_anch = [PA2.for_path(p) for p in gallery.flat_paths()]
+                    gallery.fragment_anchors = gal_anch
+                if any(a is None for a in gal_anch):
+                    from matching import placement_anchors as PA3
+                    gal_anch = [(a if a is not None else PA3.anchors_from_image(p))
+                                for a, p in zip(gal_anch, gallery.flat_paths())]
+                    gallery.fragment_anchors = gal_anch
+                if anchors is None:
+                    raise PB.BundleRefusal(
+                        "the bundle fuses the fragment channel at weight %.3f but %s anchors were "
+                        "supplied: pass the query's anchors and build the gallery with "
+                        "`placement_anchors` (the channel cannot be recomputed from the records "
+                        "alone)" % (float(b.fragment_weight),
+                                    "no query" if anchors is None else "no gallery"))
+                fragment_flat = PF.channel([{"places": r["places"]} for r in gallery.flat_records()],
+                                           qrec["places"], list(gal_anch), anchors)
+                if fragment_flat.shape != (1, n_obj * n_views):
+                    raise PB.BundleRefusal("the fragment channel returned %r for %d cells"
+                                           % (fragment_flat.shape, n_obj * n_views))
         t_door = time.time() - t0
     app = _max_over_views(app_flat, n_obj, n_views)
     cnt = _max_over_views(cnt_flat, n_obj, n_views)
@@ -505,8 +547,11 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
     if str(getattr(b, "door_kind", "counted")) == "fused3":
         from matching import placement_fuse as FU
         colour = _max_over_views(colour_flat, n_obj, n_views)
-        fused = np.asarray(FU.fuse(cnt, app, colour,
-                                   weights={"colour": float(b.fusion_weight)},
+        frag = (_max_over_views(fragment_flat, n_obj, n_views)
+                if fragment_flat is not None else None)
+        fused = np.asarray(FU.fuse(cnt, app, colour, fragment=frag,
+                                   weights={"colour": float(b.fusion_weight),
+                                            "fragment": float(b.fragment_weight)},
                                    k=int(b.rrf_k)), dtype=np.float64)
     else:
         fused = FD.rank_fuse(app, cnt, k=int(b.rrf_k))

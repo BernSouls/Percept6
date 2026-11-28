@@ -52,7 +52,9 @@ CODE_MODULES = ("matching/placement_frontend.py", "matching/placement_cache.py",
                 # tuple: a change to any of them froze a bundle that still said "this tree".
                 "matching/placement_fuse.py", "matching/placement_matcher.py",
                 "matching/placement_kernel.py", "matching/placement_shape.py",
-                "matching/placement_records.py", "matching/placement_blend.py")
+                "matching/placement_records.py", "matching/placement_blend.py",
+                # [M34] the fragment channel and the anchors it reads
+                "matching/placement_fragment.py", "matching/placement_anchors.py")
 
 #: Data files whose bytes define the shipped behaviour (frozen parameters, not code).
 CODE_DATA = ("matching/placement_score_params.json", "matching/placement_prefilter_params.json")
@@ -138,6 +140,17 @@ class PlacementBundle:
         """The colour channel's RRF weight: `door.params.colour_weight`, else 0 (no colour)."""
         raw = dict(self.door_params or {})
         return float(raw.get("colour_weight", self.fusion.get("colour", 0.0)))
+
+    @property
+    def fragment_weight(self) -> float:
+        """[M34] the fragment channel's RRF weight: `fusion.fragment`, else 0 (no fragments).
+
+        A bundle that names a non-zero weight is a bundle that asks the door for the channel; the
+        recogniser refuses to run it without anchors rather than quietly computing the four-channel
+        door its bundle does not describe.
+        """
+        raw = dict(self.fusion or {})
+        return float(raw.get("fragment", 0.0))
 
     @property
     def colour_rings(self) -> bool:

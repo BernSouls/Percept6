@@ -1,0 +1,2324 @@
+{
+ "all_flags": {
+  "flags": 612,
+  "named_nowhere_examples": [
+   "ABSORPTION_MIN_SIM",
+   "ADAPTER_ALPHA_P",
+   "ADAPTER_ANCHOR_PRIOR_MARGIN",
+   "ADAPTER_BETA_T",
+   "ADAPTER_CYCLE_THRESH_PX",
+   "ADAPTER_DEPTH_GRID_H",
+   "ADAPTER_DEPTH_GRID_W",
+   "ADAPTER_EPS_GATE",
+   "ADAPTER_EPS_VEL",
+   "ADAPTER_LK_EPS",
+   "ADAPTER_LK_LEVELS",
+   "ADAPTER_LK_MAX_ITER",
+   "ADAPTER_LK_WIN",
+   "ADAPTER_MIN_CLUSTER_SIZE",
+   "ADAPTER_M_KEYPOINTS",
+   "ADAPTER_RGB_WINDOW_RADIUS",
+   "ADAPTER_R_CLUSTER",
+   "ADAPTER_R_MAX_OBJ",
+   "ADAPTER_R_MIN",
+   "ADAPTER_R_MIN_SEP",
+   "ADAPTER_ST_BLOCK",
+   "ADAPTER_ST_MIN_DIST",
+   "ADAPTER_ST_QUALITY",
+   "ADAPTER_TAU_PERSIST",
+   "ADAPTER_THETA_DEPTH_HIGH",
+   "ADAPTER_THETA_DEPTH_LOW",
+   "ADAPTER_V_THRESH",
+   "AF_CHANNEL_GAP_RAD",
+   "ALPHA_ATTN",
+   "AMODAL_MAX_CONN"
+  ],
+  "never_by_prefix": {
+   "ADAPTER": 26,
+   "AMODAL": 6,
+   "BETA": 4,
+   "BUILDER": 5,
+   "COCIRCULAR": 4,
+   "EDGE": 6,
+   "ETA": 12,
+   "K": 11,
+   "KAPPA": 12,
+   "MATCH": 5,
+   "MAX": 9,
+   "MIN": 6,
+   "N": 15,
+   "ORIENTATION": 9,
+   "Q": 5,
+   "REFLEX": 30,
+   "RHO": 5,
+   "TAU": 21,
+   "THETA": 41,
+   "W": 17
+  },
+  "never_examples": [
+   "ABSORPTION_MIN_SIM",
+   "ADAPTER_ALPHA_P",
+   "ADAPTER_ANCHOR_PRIOR_MARGIN",
+   "ADAPTER_BETA_T",
+   "ADAPTER_CYCLE_THRESH_PX",
+   "ADAPTER_DEPTH_GRID_H",
+   "ADAPTER_DEPTH_GRID_W",
+   "ADAPTER_EPS_GATE",
+   "ADAPTER_EPS_VEL",
+   "ADAPTER_LK_EPS",
+   "ADAPTER_LK_LEVELS",
+   "ADAPTER_LK_MAX_ITER",
+   "ADAPTER_LK_WIN",
+   "ADAPTER_MIN_CLUSTER_SIZE",
+   "ADAPTER_M_KEYPOINTS",
+   "ADAPTER_RGB_WINDOW_RADIUS",
+   "ADAPTER_R_CLUSTER",
+   "ADAPTER_R_MAX_OBJ",
+   "ADAPTER_R_MIN",
+   "ADAPTER_R_MIN_SEP",
+   "ADAPTER_ST_BLOCK",
+   "ADAPTER_ST_MIN_DIST",
+   "ADAPTER_ST_QUALITY",
+   "ADAPTER_TAU_PERSIST",
+   "ADAPTER_THETA_DEPTH_HIGH",
+   "ADAPTER_THETA_DEPTH_LOW",
+   "ADAPTER_V_THRESH",
+   "ADAPT_CAP",
+   "ADAPT_DECAY",
+   "ADAPT_RATE",
+   "AF_CHANNEL_GAP_RAD",
+   "ALPHA_ATTN",
+   "ALPHA_GP",
+   "AMODAL_MAX_CONN",
+   "AMODAL_MAX_THETA",
+   "AMODAL_MIN_CONFIDENCE",
+   "AMODAL_MIN_RELATABILITY",
+   "AMODAL_SEARCH_RADIUS",
+   "AMODAL_SEARCH_RADIUS_MIN_PX",
+   "ANCHOR_FALLBACK_MAX_DIST"
+  ],
+  "never_named_nowhere": 225,
+  "never_owned_by_unreachable": 153,
+  "never_read_by_shipped": 378,
+  "never_rows": [
+   "ABSORPTION_MIN_SIM",
+   "ADAPTER_ALPHA_P",
+   "ADAPTER_ANCHOR_PRIOR_MARGIN",
+   "ADAPTER_BETA_T",
+   "ADAPTER_CYCLE_THRESH_PX",
+   "ADAPTER_DEPTH_GRID_H",
+   "ADAPTER_DEPTH_GRID_W",
+   "ADAPTER_EPS_GATE",
+   "ADAPTER_EPS_VEL",
+   "ADAPTER_LK_EPS",
+   "ADAPTER_LK_LEVELS",
+   "ADAPTER_LK_MAX_ITER",
+   "ADAPTER_LK_WIN",
+   "ADAPTER_MIN_CLUSTER_SIZE",
+   "ADAPTER_M_KEYPOINTS",
+   "ADAPTER_RGB_WINDOW_RADIUS",
+   "ADAPTER_R_CLUSTER",
+   "ADAPTER_R_MAX_OBJ",
+   "ADAPTER_R_MIN",
+   "ADAPTER_R_MIN_SEP",
+   "ADAPTER_ST_BLOCK",
+   "ADAPTER_ST_MIN_DIST",
+   "ADAPTER_ST_QUALITY",
+   "ADAPTER_TAU_PERSIST",
+   "ADAPTER_THETA_DEPTH_HIGH",
+   "ADAPTER_THETA_DEPTH_LOW",
+   "ADAPTER_V_THRESH",
+   "ADAPT_CAP",
+   "ADAPT_DECAY",
+   "ADAPT_RATE",
+   "AF_CHANNEL_GAP_RAD",
+   "ALPHA_ATTN",
+   "ALPHA_GP",
+   "AMODAL_MAX_CONN",
+   "AMODAL_MAX_THETA",
+   "AMODAL_MIN_CONFIDENCE",
+   "AMODAL_MIN_RELATABILITY",
+   "AMODAL_SEARCH_RADIUS",
+   "AMODAL_SEARCH_RADIUS_MIN_PX",
+   "ANCHOR_FALLBACK_MAX_DIST",
+   "ATTENTION_BETA_FEAT",
+   "BAR_DP_ENTER_THRESHOLD",
+   "BAR_P_A_ENTER_THRESHOLD",
+   "BAR_P_NOT_A_ENTER_THRESHOLD",
+   "BETA_CTX",
+   "BETA_GP",
+   "BETA_TEMPORAL",
+   "BETA_TOP_DOWN",
+   "BOUNDARY_LENS_RADIUS_MULT",
+   "BUILDER_ALPHA",
+   "BUILDER_BETA",
+   "BUILDER_CANDIDATE_MAX",
+   "BUILDER_EXPANSIONS_PER_STEP",
+   "BUILDER_GAMMA",
+   "B_MAX",
+   "CF_MAX",
+   "CHAIN_MAX_ANGLE_DEV",
+   "CHAIN_MAX_GAP",
+   "CHAIN_MIN_POLYLINE",
+   "CHROMA_SALIENCE_MIN",
+   "CLOSURE_Z_BOOST",
+   "COCIRCULAR_R_MAX",
+   "COCIRCULAR_R_MIN",
+   "COCIRCULAR_SEARCH_RADIUS",
+   "COCIRCULAR_SIGMA_KAPPA",
+   "COLOR_QUANT_BINS",
+   "CORE_MIN_SIZE",
+   "CORE_MIN_TOLERANCE",
+   "CORE_SIZE_CAP_EDGES",
+   "CORE_SIZE_CAP_NODES",
+   "CO_MOTION_MIN_FRAMES",
+   "CURVATURE_N_SAMPLES",
+   "C_CTX",
+   "C_PLAN",
+   "C_PLAN_MAX",
+   "C_SUBGOAL",
+   "DEGREE_RADIUS_MULT",
+   "DEG_MAX",
+   "DEG_MAX_3D",
+   "DELTA_ACT",
+   "DELTA_GP",
+   "EDGE_COST",
+   "EDGE_N_CONTRAST",
+   "EDGE_N_ORIENT",
+   "EDGE_N_SHARPNESS",
+   "EDGE_TYPES_WITH_LAYER_1",
+   "EDGE_TYPE_NAMES",
+   "ENDSTOP_HALF_LENGTH_PX",
+   "ENDSTOP_N_SAMPLES",
+   "ENDSTOP_THRESHOLD",
+   "ENERGY_MASK_MIN",
+   "EPS_EDGE",
+   "EPS_HYST_NEC_MAX",
+   "EPS_REF",
+   "ETA_CF_SURPRISE",
+   "ETA_CONFLICT",
+   "ETA_DECAY",
+   "ETA_EBAF",
+   "ETA_FATIGUE",
+   "ETA_FATIGUE_DECAY",
+   "ETA_FRESH",
+   "ETA_HYSTERESIS",
+   "ETA_LAYER",
+   "ETA_PLAN_PERSIST",
+   "ETA_SUPPORT",
+   "ETA_SURPRISE",
+   "FAMILY_FORMING_EDGE_TYPES",
+   "FERTILE_ADMIT_MARGIN",
+   "FERTILE_MIN_POPULATION",
+   "FERTILE_RETIGHTEN_MARGIN",
+   "FERT_INHERIT_TOP_K",
+   "FRONTIER_CACHE_TTL",
+   "FRONTIER_HORIZON",
+   "FRONTIER_MAX",
+   "F_RECURSIVE_DEPTH",
+   "GAIN_THETA_REDUCTION",
+   "GAMMA_GP",
+   "GAP_QUEUE_MAX",
+   "GP_MAX",
+   "HASH_BITS",
+   "HASH_BITS_CANONICAL",
+   "HYPOTHESIS_MATCH_MIN",
+   "HYPOTHESIS_MAX_BOXES",
+   "H_FIRE",
+   "H_SITUATION",
+   "IT_OVERLAP_MAX",
+   "JUNCTION_T_PERP_TOL",
+   "KAPPA_BORDER_OWNERSHIP",
+   "KAPPA_CLUSTER_OBJ",
+   "KAPPA_CLUSTER_PART",
+   "KAPPA_EDGE_HOMEOSTASIS",
+   "KAPPA_EMA",
+   "KAPPA_EMA_FRONTIER",
+   "KAPPA_FRONTIER",
+   "KAPPA_PROTECT",
+   "KAPPA_REF",
+   "KAPPA_REL",
+   "KAPPA_RELIABILITY",
+   "KAPPA_SUPPORT",
+   "K_FERTILE",
+   "K_FERTILE_REVISION",
+   "K_IT_SPARSE",
+   "K_MAIN",
+   "K_MAIN_REVISION",
+   "K_NEIGHBOR_SCAN",
+   "K_PLAN",
+   "K_PLAN_SCAN",
+   "K_PRUNE_FRONTIER",
+   "K_PRUNE_FRONTIER_REVISION",
+   "K_SEED",
+   "LABEL_HISTORY_MAXLEN",
+   "LAMBDA_ACT",
+   "LAMBDA_DIST",
+   "LAMBDA_RECURSIVE",
+   "LUM_SALIENCE_MULT",
+   "MASS_TIEBREAKER",
+   "MATCH_MIN_CONSENSUS_SUPPORT",
+   "MATCH_NULL_CALIBRATED",
+   "MATCH_RELATION_WALKER",
+   "MATCH_SEARCH_MAX_EXPANSIONS",
+   "MATCH_SEARCH_MAX_OPS",
+   "MAX_ANCHORS_PER_CANDIDATE",
+   "MAX_EXPANSIONS",
+   "MAX_IDENTITIES_PER_BUCKET",
+   "MAX_PENDING",
+   "MAX_REGIONS",
+   "MAX_SIMILARITY_NEIGHBORS",
+   "MAX_SITUATION_SIZE",
+   "MAX_SURPRISE_PER_STEP",
+   "MAX_SURPRISE_QUEUE",
+   "MIN_MATCHED_EDGES",
+   "MIN_MATCHED_EDGES_FLOOR",
+   "MIN_MATCHED_EDGES_PCT",
+   "MIN_MATCHED_ELEMENTS",
+   "MIN_MATCHED_ELEMENTS_FLOOR",
+   "MIN_MATCHED_ELEMENTS_PCT",
+   "MIRROR_SIMILARITY",
+   "MOTION_BOUNDARY_THRESHOLD",
+   "MOTION_DIR_BINS",
+   "M_LAYER_MAX",
+   "M_PLATEAU",
+   "NEGATIVES_PER_MIN",
+   "NODE_DETECTION_BLOAT_FACTOR",
+   "NODE_DETECTION_SWEEP_PERIOD",
+   "NON_FAMILY_FORMING_EDGE_TYPES",
+   "NU_NOVEL",
+   "N_ANCHOR_MAX",
+   "N_ANCHOR_MAX_3D",
+   "N_CTX_MAX",
+   "N_EDGE",
+   "N_EDGE_MAX",
+   "N_FORCE_FLAT",
+   "N_MOTOR_FAIL_MAX",
+   "N_OUTCOME_MAX",
+   "N_POT_MAX",
+   "N_PROTO_MAX",
+   "N_PROTO_MAX_EBAF",
+   "N_REVIVE_MIN",
+   "N_SIMILARITY_ACTIVATE",
+   "N_SLOT_CAND_MAX",
+   "N_STEP_MIN",
+   "OMEGA_FRONTIER",
+   "OMEGA_PROBE",
+   "ONSET_AGE_NORM",
+   "ORIENTATION_BEND_THETA_CENTER",
+   "ORIENTATION_BEND_THETA_MAX",
+   "ORIENTATION_BEND_THETA_MIN",
+   "ORIENTATION_JUNCTION_THETA_CENTER",
+   "ORIENTATION_JUNCTION_THETA_MAX",
+   "ORIENTATION_JUNCTION_THETA_MIN",
+   "ORIENTATION_NEIGHBOR_MULT",
+   "ORIENTATION_N_PHASE",
+   "ORIENTATION_N_SF",
+   "PAD_DIST",
+   "PARALLEL_MAX_OFFSET",
+   "PARALLEL_MIN_OFFSET",
+   "PARALLEL_SIGMA_THETA",
+   "PARALLEL_THETA_TOL",
+   "PERIODICITY_MIN_INTERVALS",
+   "PHI_MAX",
+   "PI_ABANDON_BASELINE",
+   "PI_ABANDON_MAX",
+   "PI_ABANDON_MIN",
+   "POOL_SCALES",
+   "POOL_SHIFT",
+   "POSITION_NORM_RANGE",
+   "QUERY_CACHE_TTL",
+   "Q_D",
+   "Q_DELTA",
+   "Q_P",
+   "Q_R",
+   "Q_S",
+   "REFLEX_ALPHA_P",
+   "REFLEX_BETA_G",
+   "REFLEX_BETA_VEL",
+   "REFLEX_DELTA_HYST",
+   "REFLEX_DELTA_RANK",
+   "REFLEX_EPS_DEAD_MOTOR",
+   "REFLEX_EPS_M",
+   "REFLEX_EPS_V",
+   "REFLEX_ETA_DEAD",
+   "REFLEX_GAMMA_MIN",
+   "REFLEX_KAPPA_C",
+   "REFLEX_KAPPA_V",
+   "REFLEX_K_DIR_MAX",
+   "REFLEX_L_REF",
+   "REFLEX_M_EXP",
+   "REFLEX_PSI_CLIP",
+   "REFLEX_R_ENV_MIN",
+   "REFLEX_TAU_KIN_SAT",
+   "REFLEX_THETA_G",
+   "REFLEX_THETA_VEL",
+   "REFLEX_T_DWELL",
+   "REFLEX_T_RETAIN",
+   "REFLEX_V0",
+   "REFLEX_V_BASE",
+   "REFLEX_V_MAX",
+   "REFLEX_V_THRESH",
+   "REFLEX_W_C",
+   "REFLEX_W_D",
+   "REFLEX_W_N",
+   "REFLEX_W_V",
+   "REL_AGREE_W_REF",
+   "REL_AGREE_W_TGT",
+   "RF_MAX",
+   "RF_MIN_FERTILE",
+   "RHO_ACT_TARGET",
+   "RHO_EDGE_TARGET",
+   "RHO_GOAL_TARGET",
+   "RHO_REVERSAL",
+   "RHO_SPAWN_STAR_DEFAULT",
+   "SALIENCY_TOP_FRAC",
+   "SELF_BINDER_TYPE_NAMES",
+   "SETTLE_MAX_ITERS",
+   "SETTLE_STABILITY_EPS",
+   "SETTLE_TOP_K",
+   "SIGMA_ACT_NOISE",
+   "SIGMA_NOISE",
+   "SIMILARITY_EDGE_CAP",
+   "SIMILARITY_EDGE_THRESHOLD",
+   "SIMILARITY_STATE_CAP",
+   "STALL_THRESHOLD",
+   "STRUCT_ALIGN_REFINE_ROUNDS",
+   "STRUCT_SIM_MIN_OVERLAP",
+   "STUCK_PLAN_STEPS",
+   "SYMMETRY_RADIUS",
+   "S_MAX",
+   "TAU_ACTIVE_DRIFT_FRACTION",
+   "TAU_EPISTEMIC_MAX",
+   "TAU_EPISTEMIC_REVISION",
+   "TAU_EXCURSION_MAX",
+   "TAU_EXCURSION_REVISION",
+   "TAU_FAIL",
+   "TAU_FAIL_MAX",
+   "TAU_FORGET",
+   "TAU_FRESH",
+   "TAU_MEANING",
+   "TAU_MIN",
+   "TAU_NAV_REFRACTORY",
+   "TAU_PLAN_MAX",
+   "TAU_PROTO_DECAY",
+   "TAU_PROTO_DECAY_REVISION",
+   "TAU_PROVISIONAL",
+   "TAU_RECOMPUTE_CADENCE",
+   "TAU_SAMPLE_SIZE",
+   "TAU_SATIETY",
+   "TAU_SITUATION_COACT",
+   "TAU_TOMBSTONE",
+   "TEMPLATE_NODE_ID_BASE",
+   "TEXTURE_CALIBRATION",
+   "TEXTURE_DELTA_EMA_BETA",
+   "TEXTURE_DEPTH_VAR_MAX",
+   "THETA_ABSTRACT",
+   "THETA_ACT_MIN",
+   "THETA_ANCHOR_CAUSAL",
+   "THETA_ANCHOR_SUBGRAPH_DEFAULT",
+   "THETA_ANCHOR_SUBGRAPH_SINGLE",
+   "THETA_BASIN_FULL_RECOMPUTE",
+   "THETA_CATEGORY_DIVERSITY",
+   "THETA_CATEGORY_INSTANCES",
+   "THETA_CF_COMMIT",
+   "THETA_CLEANUP",
+   "THETA_CONF_SUBGRAPH",
+   "THETA_CONTRAST_COMMIT",
+   "THETA_CONTRAST_STABLE",
+   "THETA_CURIOUS",
+   "THETA_DEPTH_HIGH_3D_TABLETOP",
+   "THETA_DEPTH_LOW_3D_TABLETOP",
+   "THETA_DOMINANCE",
+   "THETA_EXPLORATION",
+   "THETA_FERTILE_PERCENTILE",
+   "THETA_FIRED_COVERAGE",
+   "THETA_FRONTIER",
+   "THETA_FRONTIER_FLOOR",
+   "THETA_FRONTIER_MAX",
+   "THETA_GIST_MIN",
+   "THETA_GROWTH_PLATEAU",
+   "THETA_IDENTIFY_DELTA",
+   "THETA_MCS_BY_FAMILY",
+   "THETA_MCS_CATEGORY",
+   "THETA_MCS_DEFAULT",
+   "THETA_MIN_PRESENT_RATIO",
+   "THETA_OPP_SUBGRAPH",
+   "THETA_PAIR_TRIALS",
+   "THETA_PROTO_EF",
+   "THETA_PRUNE_FRONTIER",
+   "THETA_SITUATION",
+   "THETA_SITUATION_EDGE",
+   "THETA_SPAN_SUBGRAPH",
+   "THETA_STERILE",
+   "THETA_SURPRISE",
+   "THETA_TARGET_CONTAINMENT",
+   "THETA_TRUST_NEIGHBORHOOD",
+   "TOPOLOGY_RADIUS_MULT",
+   "TRANSITION_ONSET_LAG",
+   "TRANSPOSITION_TABLE_MAX",
+   "U_CAP",
+   "U_STAY_DISCOUNT",
+   "VALID_DIST_NORM_MODES",
+   "W_ABSTRACT",
+   "W_CHUNK",
+   "W_CM",
+   "W_CONSOL",
+   "W_FERT",
+   "W_FERT_INHERIT",
+   "W_MOTOR",
+   "W_PLAN_CHUNK",
+   "W_PROTECT",
+   "W_REAL",
+   "W_SEEDING_MAX",
+   "W_SITUATION_RECENCY",
+   "W_STALE",
+   "W_STALL",
+   "W_STALL_REVISION",
+   "W_SUCCESSOR",
+   "W_T",
+   "XI_ATTEMPT",
+   "XI_ENTROPY"
+  ],
+  "read_by_shipped": 234
+ },
+ "classes": {
+  "examples": [
+   "ORIENTATION_RICH_12_5",
+   "TEXTURE_RICH_12_5"
+  ],
+  "never_named_in_shipped": 2,
+  "registered_classes": 67,
+  "rows": {
+   "BORDER_OWNERSHIP": {
+    "read_by_shipped_code": true
+   },
+   "BOUNDARY": {
+    "read_by_shipped_code": true
+   },
+   "BOUNDARY_ANCHORED": {
+    "read_by_shipped_code": true
+   },
+   "BOUNDARY_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "COLOR": {
+    "read_by_shipped_code": true
+   },
+   "COLOR_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "COLOR_LEGACY": {
+    "read_by_shipped_code": true
+   },
+   "COLOR_LEGACY_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "CONTACT": {
+    "read_by_shipped_code": true
+   },
+   "CONTOUR": {
+    "read_by_shipped_code": true
+   },
+   "CONTOUR_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "CONTOUR_FRAGMENT": {
+    "read_by_shipped_code": true
+   },
+   "CONTOUR_PEAK": {
+    "read_by_shipped_code": true
+   },
+   "CONTRAST": {
+    "read_by_shipped_code": true
+   },
+   "CORNER": {
+    "read_by_shipped_code": true
+   },
+   "CORNER_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "CO_MOTION": {
+    "read_by_shipped_code": true
+   },
+   "CURVE_COMPLEX": {
+    "read_by_shipped_code": true
+   },
+   "CURVE_COMPLEX_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "DEGREE": {
+    "read_by_shipped_code": true
+   },
+   "EDGE": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CONTAINMENT": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CONTINUITY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_JUNCTION": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_MATERIAL": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_OCCLUSION": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_PROXIMITY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_SHAPE": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_SURFACE": {
+    "read_by_shipped_code": true
+   },
+   "ENDSTOPPED": {
+    "read_by_shipped_code": true
+   },
+   "ENDSTOPPED_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "ILLUSORY_CONTOUR": {
+    "read_by_shipped_code": true
+   },
+   "ILLUSORY_CONTOUR_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "JUNCTION": {
+    "read_by_shipped_code": true
+   },
+   "JUNCTION_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "MOTION": {
+    "read_by_shipped_code": true
+   },
+   "MOTION_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "MOTION_POPULATION": {
+    "read_by_shipped_code": true
+   },
+   "ONSET": {
+    "read_by_shipped_code": true
+   },
+   "ORIENTATION": {
+    "read_by_shipped_code": true
+   },
+   "ORIENTATION_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "ORIENTATION_GABOR": {
+    "read_by_shipped_code": true
+   },
+   "ORIENTATION_GABOR_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "ORIENTATION_POL": {
+    "read_by_shipped_code": true
+   },
+   "ORIENTATION_RICH_12_5": {
+    "read_by_shipped_code": false
+   },
+   "ORIENTATION_RICH_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "ORIENTATION_SEGMENT": {
+    "read_by_shipped_code": true
+   },
+   "PEAK_CHAIN": {
+    "read_by_shipped_code": true
+   },
+   "PERIODICITY": {
+    "read_by_shipped_code": true
+   },
+   "PERSISTENCE": {
+    "read_by_shipped_code": true
+   },
+   "POLARITY": {
+    "read_by_shipped_code": true
+   },
+   "POSITION": {
+    "read_by_shipped_code": true
+   },
+   "REGION_SHAPE": {
+    "read_by_shipped_code": true
+   },
+   "REGION_SHAPE_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "RELATIVE_POSITION": {
+    "read_by_shipped_code": true
+   },
+   "SEQUENCE": {
+    "read_by_shipped_code": true
+   },
+   "SIZE": {
+    "read_by_shipped_code": true
+   },
+   "STRUCTURE": {
+    "read_by_shipped_code": true
+   },
+   "SURFACE_FRAGMENT": {
+    "read_by_shipped_code": true
+   },
+   "SURFACE_PATCH": {
+    "read_by_shipped_code": true
+   },
+   "SURFACE_PATCH_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "TEXTURE": {
+    "read_by_shipped_code": true
+   },
+   "TEXTURE_BOUNDARY": {
+    "read_by_shipped_code": true
+   },
+   "TEXTURE_BOUNDARY_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "TEXTURE_RICH_12_5": {
+    "read_by_shipped_code": false
+   },
+   "TEXTURE_RICH_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "TOPOLOGY": {
+    "read_by_shipped_code": true
+   }
+  }
+ },
+ "edge_wiring": {
+  "edge_types_emitted": 24,
+  "only_writer_and_table": [
+   "TEXTURE_BOUNDARY_EDGE",
+   "REGION_CONTENT",
+   "BORDER_OWNERSHIP_EDGE",
+   "COLOR_OPPONENT_BORDER",
+   "CONTOUR_ORIENTATION",
+   "TOPOLOGY",
+   "CURVATURE_SIGN_CONTINUITY",
+   "COCIRCULAR",
+   "RADIALITY",
+   "LINE_TERMINATION",
+   "AMODAL_LINK",
+   "SHARED_BOUNDARY",
+   "ORIENTATION_BEND",
+   "SYMMETRY",
+   "PART_CONTAINMENT",
+   "ORIENTATION_JUNCTION"
+  ],
+  "rows": {
+   "AMODAL_LINK": {
+    "decision": [],
+    "emitted": 18,
+    "spelled_by": [
+     "matching.category_bridge",
+     "orchestration.binder"
+    ]
+   },
+   "BORDER_OWNERSHIP_EDGE": {
+    "decision": [],
+    "emitted": 292,
+    "spelled_by": [
+     "orchestration.binder"
+    ]
+   },
+   "COCIRCULAR": {
+    "decision": [],
+    "emitted": 29,
+    "spelled_by": [
+     "matching.category_bridge",
+     "matching.placement_fragment",
+     "orchestration.binder",
+     "perception.contour_field"
+    ]
+   },
+   "COLOR_OPPONENT_BORDER": {
+    "decision": [],
+    "emitted": 255,
+    "spelled_by": [
+     "matching.category_bridge",
+     "orchestration.binder"
+    ]
+   },
+   "CONTACT": {
+    "decision": [
+     "matching.perceptual_selection"
+    ],
+    "emitted": 7,
+    "spelled_by": [
+     "core.registries",
+     "lenses.base",
+     "matching.category_bridge",
+     "matching.perceptual_selection",
+     "orchestration.binder",
+     "perception.anti_phase",
+     "perception.fragment_ownership",
+     "perception.observation"
+    ]
+   },
+   "CONTOUR_CONTINUITY": {
+    "decision": [
+     "matching.alignment"
+    ],
+    "emitted": 45,
+    "spelled_by": [
+     "lenses.v2",
+     "lenses.v4",
+     "matching.alignment",
+     "matching.category_bridge",
+     "orchestration.binder",
+     "perception.complex_links",
+     "perception.front_end_mechanisms"
+    ]
+   },
+   "CONTOUR_ORIENTATION": {
+    "decision": [],
+    "emitted": 115,
+    "spelled_by": [
+     "lenses.chain_lens",
+     "matching.category_bridge",
+     "matching.relation_frame",
+     "orchestration.binder"
+    ]
+   },
+   "CO_LOCATED": {
+    "decision": [
+     "matching.feature_attachment",
+     "matching.perceptual_selection"
+    ],
+    "emitted": 285,
+    "spelled_by": [
+     "eth80_frontend",
+     "matching.category_bridge",
+     "matching.feature_attachment",
+     "matching.perceptual_selection",
+     "matching.relation_frame",
+     "orchestration.binder"
+    ]
+   },
+   "CURVATURE": {
+    "decision": [
+     "matching.placement_shape"
+    ],
+    "emitted": 1,
+    "spelled_by": [
+     "lenses.derived",
+     "lenses.derived_common",
+     "lenses.v2",
+     "lenses.v4",
+     "matching.category_bridge",
+     "matching.placement_shape",
+     "orchestration.binder",
+     "perception.chain_formation",
+     "perception.contour_field"
+    ]
+   },
+   "CURVATURE_SIGN_CONTINUITY": {
+    "decision": [],
+    "emitted": 31,
+    "spelled_by": [
+     "matching.category_bridge",
+     "orchestration.binder"
+    ]
+   },
+   "CURVE_CONTAINMENT": {
+    "decision": [
+     "matching.feature_attachment",
+     "matching.placement"
+    ],
+    "emitted": 7,
+    "spelled_by": [
+     "matching.category_bridge",
+     "matching.feature_attachment",
+     "matching.placement",
+     "orchestration.binder",
+     "perception.front_end_mechanisms"
+    ]
+   },
+   "DEGREE": {
+    "decision": [
+     "matching.alignment"
+    ],
+    "emitted": 3,
+    "spelled_by": [
+     "core.registries",
+     "lenses.base",
+     "lenses.derived_common",
+     "matching.alignment",
+     "orchestration.binder",
+     "perception.chain_formation",
+     "perception.floor"
+    ]
+   },
+   "LINE_TERMINATION": {
+    "decision": [],
+    "emitted": 23,
+    "spelled_by": [
+     "lenses.derived_base",
+     "matching.category_bridge",
+     "orchestration.binder"
+    ]
+   },
+   "ORIENTATION_BEND": {
+    "decision": [],
+    "emitted": 11,
+    "spelled_by": [
+     "lenses.base",
+     "lenses.derived_common",
+     "lenses.v2",
+     "matching.category_bridge",
+     "orchestration.binder"
+    ]
+   },
+   "ORIENTATION_CONTINUITY": {
+    "decision": [
+     "matching.alignment",
+     "matching.placement"
+    ],
+    "emitted": 46,
+    "spelled_by": [
+     "lenses.derived_common",
+     "lenses.v2",
+     "matching.alignment",
+     "matching.category_bridge",
+     "matching.placement",
+     "matching.relation_frame",
+     "orchestration.binder"
+    ]
+   },
+   "ORIENTATION_JUNCTION": {
+    "decision": [],
+    "emitted": 1,
+    "spelled_by": [
+     "lenses.derived_common",
+     "lenses.v2",
+     "matching.category_bridge",
+     "orchestration.binder",
+     "perception.front_end_mechanisms"
+    ]
+   },
+   "PARALLEL": {
+    "decision": [
+     "matching.placement_recognise"
+    ],
+    "emitted": 8,
+    "spelled_by": [
+     "matching.category_bridge",
+     "matching.placement_recognise",
+     "orchestration.binder",
+     "perception.attachment"
+    ]
+   },
+   "PART_CONTAINMENT": {
+    "decision": [],
+    "emitted": 1,
+    "spelled_by": [
+     "matching.category_bridge",
+     "orchestration.binder"
+    ]
+   },
+   "RADIALITY": {
+    "decision": [],
+    "emitted": 26,
+    "spelled_by": [
+     "matching.category_bridge",
+     "orchestration.binder"
+    ]
+   },
+   "REGION_CONTENT": {
+    "decision": [],
+    "emitted": 302,
+    "spelled_by": [
+     "matching.category_bridge",
+     "matching.relation_frame",
+     "orchestration.binder"
+    ]
+   },
+   "SHARED_BOUNDARY": {
+    "decision": [],
+    "emitted": 13,
+    "spelled_by": [
+     "matching.category_bridge",
+     "orchestration.binder"
+    ]
+   },
+   "SYMMETRY": {
+    "decision": [],
+    "emitted": 2,
+    "spelled_by": [
+     "core.slots",
+     "matching.category_bridge",
+     "orchestration.binder"
+    ]
+   },
+   "TEXTURE_BOUNDARY_EDGE": {
+    "decision": [],
+    "emitted": 1133,
+    "spelled_by": [
+     "orchestration.binder"
+    ]
+   },
+   "TOPOLOGY": {
+    "decision": [],
+    "emitted": 32,
+    "spelled_by": [
+     "core.registries",
+     "lenses.base",
+     "orchestration.binder",
+     "perception.floor"
+    ]
+   }
+  },
+  "seen_by_a_decision_module": 8
+ },
+ "edges": {
+  "edge_classes": 36,
+  "examples": [],
+  "never_named_in_shipped": 0,
+  "rows": {
+   "EDGE_AMODAL_LINK": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_BINOCULAR_DISPARITY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_BORDER_OWNERSHIP": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_BOUNDARY_ATTACHMENT": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_BOUNDARY_SUCCESSOR": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_COCIRCULAR": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_COLOR_OPPONENT_BORDER": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CONCENTRICITY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CONTACT": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CONTOUR_CONTINUITY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CONTOUR_ORIENTATION": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CO_LOCATED": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CO_MOTION": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CROSS_SCALE_IDENTITY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CURVATURE": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CURVATURE_SIGN_CONTINUITY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_CURVE_CONTAINMENT": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_ILLUSORY_INDUCER": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_JUNCTION_CONTOUR": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_JUNCTION_ORIENTATION": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_LINE_TERMINATION": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_MOTION_OPPOSITION": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_OCCLUSION": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_ORIENTATION_BEND": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_ORIENTATION_CONTINUITY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_ORIENTATION_JUNCTION": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_PARALLEL": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_PART_CONTAINMENT": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_RADIALITY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_REGION_CONTENT": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_SHARED_BOUNDARY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_SPIRALITY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_SURFACE_FOLD": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_SURFACE_GROUPING": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_SYMMETRY": {
+    "read_by_shipped_code": true
+   },
+   "EDGE_TEXTURE_BOUNDARY": {
+    "read_by_shipped_code": true
+   }
+  }
+ },
+ "emitted": {
+  "edge_class_counts": {
+   "AMODAL_LINK": 18,
+   "BORDER_OWNERSHIP_EDGE": 292,
+   "COCIRCULAR": 29,
+   "COLOR_OPPONENT_BORDER": 255,
+   "CONTACT": 7,
+   "CONTOUR_CONTINUITY": 45,
+   "CONTOUR_ORIENTATION": 115,
+   "CO_LOCATED": 285,
+   "CURVATURE": 1,
+   "CURVATURE_SIGN_CONTINUITY": 31,
+   "CURVE_CONTAINMENT": 7,
+   "DEGREE": 3,
+   "LINE_TERMINATION": 23,
+   "ORIENTATION_BEND": 11,
+   "ORIENTATION_CONTINUITY": 46,
+   "ORIENTATION_JUNCTION": 1,
+   "PARALLEL": 8,
+   "PART_CONTAINMENT": 1,
+   "RADIALITY": 26,
+   "REGION_CONTENT": 302,
+   "SHARED_BOUNDARY": 13,
+   "SYMMETRY": 2,
+   "TEXTURE_BOUNDARY_EDGE": 1133,
+   "TOPOLOGY": 32
+  },
+  "edge_types_emitted": 24,
+  "edge_types_read_by_shipped": 9,
+  "edges": 2686,
+  "edges_touching_a_place_node": 0,
+  "node_class_counts": {
+   "Blob": 261,
+   "BorderOwnership": 62,
+   "Boundary": 138,
+   "BoundaryArc": 222,
+   "CONTOUR_PEAK": 94,
+   "Color": 122,
+   "Contour": 18,
+   "ContourFragment": 89,
+   "Corner": 11,
+   "CornerPoint": 35,
+   "CurveComplex": 7,
+   "EndStopped": 41,
+   "Onset": 1,
+   "Orientation": 49,
+   "PEAK_CHAIN": 21,
+   "Polarity": 3,
+   "Position": 82,
+   "RegionShape": 17,
+   "Surface": 12,
+   "Texture": 135,
+   "TextureBoundary": 86
+  },
+  "node_classes_emitted": 21,
+  "node_classes_read_by_shipped": 21,
+  "nodes": 1506,
+  "place_nodes": 474
+ },
+ "flags": {
+  "examples": [
+   "PLACEMENT_ASSEMBLED",
+   "PLACEMENT_CLASS_SCORE",
+   "PLACEMENT_COUNT_HITS",
+   "PLACEMENT_FRONTDOOR",
+   "PLACEMENT_M15_TRUTH_RULE",
+   "PLACEMENT_M21_COVERAGE_DRAWS",
+   "PLACEMENT_M21_COVERAGE_SEED",
+   "PLACEMENT_PREFILTER",
+   "PLACEMENT_PREFILTER_V2",
+   "PLACEMENT_VOTE_HITS",
+   "PLACEMENT_VOTE_ROT"
+  ],
+  "flags": 86,
+  "never_read_by_shipped": 11,
+  "read_by_shipped": 75,
+  "rows": {
+   "KP_GRADED_POPULATION": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": true
+   },
+   "KP_GRADED_POP_VARIANT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": "theta2-balanced"
+   },
+   "KP_GRADED_SIMILARITY": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": true
+   },
+   "KP_GRADED_VARIANT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": "wide"
+   },
+   "KP_POPULATION_PAYLOAD_STRICT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_ASSEMBLED": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": false
+   },
+   "PLACEMENT_CAND_CAP": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0
+   },
+   "PLACEMENT_CAP_ADAPTIVE": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_CAP_ADAPTIVE_K": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.125
+   },
+   "PLACEMENT_CAP_ADAPTIVE_MAX": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 64
+   },
+   "PLACEMENT_CAP_DEDUP": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_CLASS_SCORE": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": false
+   },
+   "PLACEMENT_COLLAPSE_PLACES": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_CONTEXT_ASSIGN": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_CONTEXT_ASSIGN_ITERS": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0
+   },
+   "PLACEMENT_CONTEXT_ASSIGN_LAMBDA": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.5
+   },
+   "PLACEMENT_CONTEXT_CONSENSUS": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_CONTEXT_CONSENSUS_BONUS": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.15
+   },
+   "PLACEMENT_CONTEXT_CONSENSUS_LAMBDA": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.5
+   },
+   "PLACEMENT_CONTEXT_CONSENSUS_MODES": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 1
+   },
+   "PLACEMENT_CONTEXT_CONSENSUS_SOFT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_CONTEXT_CONSENSUS_TOL": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.175
+   },
+   "PLACEMENT_CONTEXT_M17": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_CONTEXT_M17_ITERS": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 5
+   },
+   "PLACEMENT_CONTEXT_M17_MARGIN": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.0
+   },
+   "PLACEMENT_CONTEXT_M17_MAX_RIVALS": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 1
+   },
+   "PLACEMENT_CONTEXT_M17_MUTUAL": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_CONTEXT_M17_RIVAL_TOL": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.02
+   },
+   "PLACEMENT_COUNT_HITS": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": 8
+   },
+   "PLACEMENT_ENDPOINT_LENSES": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": []
+   },
+   "PLACEMENT_EXCLUDE_LENSES": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": []
+   },
+   "PLACEMENT_E_MIN_JUDGED": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0
+   },
+   "PLACEMENT_E_NORMALISED": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_FRAME_FALLBACK": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": "none"
+   },
+   "PLACEMENT_FRAME_KEYPOINT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": true
+   },
+   "PLACEMENT_FRAME_KEYPOINT_SIGMA": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": "largest"
+   },
+   "PLACEMENT_FRAME_MULTISCALE": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_FRAME_SUBPIXEL": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_FREEZE_GUARD_SUPPORT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_FRONTDOOR": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": "off"
+   },
+   "PLACEMENT_GATE_ENABLED": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_LLR_EMPTY_BIN_NEUTRAL": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_LLR_MIN_BIN_COUNT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0
+   },
+   "PLACEMENT_LLR_MONOTONE": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_LLR_TABLE_M17": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_LLR_TABLE_M18": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_LLR_TABLE_PATH": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": ""
+   },
+   "PLACEMENT_M15_PLACES": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": true
+   },
+   "PLACEMENT_M15_PLACE_LENSES": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": [
+     "Blob",
+     "BoundaryArc",
+     "CornerPoint"
+    ]
+   },
+   "PLACEMENT_M15_TRUTH_RULE": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": false
+   },
+   "PLACEMENT_M19": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_M19_K": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 24
+   },
+   "PLACEMENT_M19_W": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.25
+   },
+   "PLACEMENT_M21_COVERAGE_DRAWS": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": 5
+   },
+   "PLACEMENT_M21_COVERAGE_SEED": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": 20261118
+   },
+   "PLACEMENT_MATCHER_ENABLED": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_MATCHER_PRESENCE": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_MATCHER_STRICT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_MAX_NEIGHBOUR_CREDIT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 1.0
+   },
+   "PLACEMENT_NODE_COLOUR": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_NODE_COLOUR_W": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.1
+   },
+   "PLACEMENT_NODE_DESC": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_NODE_DESC_K": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 24
+   },
+   "PLACEMENT_NODE_DESC_MAXCELLS": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0
+   },
+   "PLACEMENT_NODE_DESC_VARIANT": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": true,
+    "value": "sorted"
+   },
+   "PLACEMENT_NODE_DESC_W": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.5
+   },
+   "PLACEMENT_PAIR_NORMALISED": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_PAYLOAD_ENABLED": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_PLACE_GRID_PX": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 1.0
+   },
+   "PLACEMENT_PREFILTER": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": false
+   },
+   "PLACEMENT_PREFILTER_V2": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": false
+   },
+   "PLACEMENT_RIDGE_ACROSS_MIN": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.5
+   },
+   "PLACEMENT_RIDGE_ACROSS_ONLY": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_SCORER_ENABLED": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_SCORE_EVIDENCE": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_SCORE_SHRINK": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 8.0
+   },
+   "PLACEMENT_SCORE_WEIGHT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.0
+   },
+   "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_SLOT_COUNT_JUDGED": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_SPACING_RADIUS": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_SPACING_TOL": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": false
+   },
+   "PLACEMENT_SUPPORT_SIGMA": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 1.0
+   },
+   "PLACEMENT_TOLERANCE": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": null
+   },
+   "PLACEMENT_VOTE_HITS": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": 3
+   },
+   "PLACEMENT_VOTE_ROT": {
+    "in_frontend_digest": false,
+    "read_by_shipped_code": false,
+    "value": true
+   },
+   "PLACEMENT_WEIGHT": {
+    "in_frontend_digest": true,
+    "read_by_shipped_code": true,
+    "value": 0.25
+   }
+  }
+ },
+ "modules": {
+  "counts": {
+   "HARNESS-ONLY": 4,
+   "ORPHAN": 19,
+   "SHIPPED": 88,
+   "SHIPPED-STR": 1,
+   "TEST-ONLY": 1
+  },
+  "dynamic": [
+   "lenses"
+  ],
+  "entries": [
+   "matching.placement_recognise",
+   "matching.placement_frontend",
+   "matching.placement_cache",
+   "matching.placement_frontdoor",
+   "matching.placement_gallery",
+   "matching.placement_recognise",
+   "matching.placement_views",
+   "matching.placement_content",
+   "matching.placement_fuse",
+   "matching.placement_matcher",
+   "matching.placement_kernel",
+   "matching.placement_shape",
+   "matching.placement_records",
+   "matching.placement_blend",
+   "matching.placement_fragment",
+   "matching.placement_anchors",
+   "eth80_frontend",
+   "orchestration.pipeline",
+   "orchestration.binder",
+   "derived_lenses",
+   "consolidator",
+   "_bootstrap",
+   "concept_graph"
+  ],
+  "lines": {
+   "HARNESS-ONLY": 1831,
+   "ORPHAN": 10291,
+   "SHIPPED": 65281,
+   "SHIPPED-STR": 10,
+   "TEST-ONLY": 1174
+  },
+  "modules": 113,
+  "rows": {
+   "_bootstrap": {
+    "lines": 93,
+    "rel": "_bootstrap.py",
+    "status": "SHIPPED"
+   },
+   "concept_graph": {
+    "lines": 3191,
+    "rel": "concept_graph.py",
+    "status": "SHIPPED"
+   },
+   "consolidator": {
+    "lines": 3666,
+    "rel": "consolidator.py",
+    "status": "SHIPPED"
+   },
+   "core": {
+    "lines": 0,
+    "rel": "core/__init__.py",
+    "status": "SHIPPED"
+   },
+   "core.derived_constants": {
+    "lines": 148,
+    "rel": "core/derived_constants.py",
+    "status": "SHIPPED"
+   },
+   "core.frontend_contract": {
+    "lines": 62,
+    "rel": "core/frontend_contract.py",
+    "status": "SHIPPED"
+   },
+   "core.graded_features": {
+    "lines": 90,
+    "rel": "core/graded_features.py",
+    "status": "SHIPPED"
+   },
+   "core.graph_types": {
+    "lines": 168,
+    "rel": "core/graph_types.py",
+    "status": "SHIPPED"
+   },
+   "core.handoff": {
+    "lines": 73,
+    "rel": "core/handoff.py",
+    "status": "SHIPPED"
+   },
+   "core.hashing": {
+    "lines": 181,
+    "rel": "core/hashing.py",
+    "status": "SHIPPED"
+   },
+   "core.junction_families": {
+    "lines": 2,
+    "rel": "core/junction_families.py",
+    "status": "SHIPPED"
+   },
+   "core.junctions": {
+    "lines": 82,
+    "rel": "core/junctions.py",
+    "status": "ORPHAN"
+   },
+   "core.keypoint_classes": {
+    "lines": 261,
+    "rel": "core/keypoint_classes.py",
+    "status": "SHIPPED"
+   },
+   "core.place_key": {
+    "lines": 116,
+    "rel": "core/place_key.py",
+    "status": "SHIPPED"
+   },
+   "core.population": {
+    "lines": 362,
+    "rel": "core/population.py",
+    "status": "SHIPPED"
+   },
+   "core.quantize": {
+    "lines": 132,
+    "rel": "core/quantize.py",
+    "status": "SHIPPED"
+   },
+   "core.registries": {
+    "lines": 1606,
+    "rel": "core/registries.py",
+    "status": "SHIPPED"
+   },
+   "core.schema": {
+    "lines": 2497,
+    "rel": "core/schema.py",
+    "status": "SHIPPED"
+   },
+   "core.slots": {
+    "lines": 371,
+    "rel": "core/slots.py",
+    "status": "SHIPPED"
+   },
+   "core.spatial": {
+    "lines": 107,
+    "rel": "core/spatial.py",
+    "status": "SHIPPED"
+   },
+   "core.types": {
+    "lines": 881,
+    "rel": "core/types.py",
+    "status": "SHIPPED"
+   },
+   "derived_lenses": {
+    "lines": 28,
+    "rel": "derived_lenses.py",
+    "status": "SHIPPED"
+   },
+   "eth80_frontend": {
+    "lines": 813,
+    "rel": "eth80_frontend.py",
+    "status": "SHIPPED"
+   },
+   "eth80_split": {
+    "lines": 127,
+    "rel": "eth80_split.py",
+    "status": "ORPHAN"
+   },
+   "lenses": {
+    "lines": 10,
+    "rel": "lenses/__init__.py",
+    "status": "SHIPPED-STR"
+   },
+   "lenses.base": {
+    "lines": 3096,
+    "rel": "lenses/base.py",
+    "status": "SHIPPED"
+   },
+   "lenses.chain_lens": {
+    "lines": 445,
+    "rel": "lenses/chain_lens.py",
+    "status": "SHIPPED"
+   },
+   "lenses.corner_lens": {
+    "lines": 239,
+    "rel": "lenses/corner_lens.py",
+    "status": "SHIPPED"
+   },
+   "lenses.derived": {
+    "lines": 198,
+    "rel": "lenses/derived.py",
+    "status": "SHIPPED"
+   },
+   "lenses.derived_base": {
+    "lines": 256,
+    "rel": "lenses/derived_base.py",
+    "status": "SHIPPED"
+   },
+   "lenses.derived_common": {
+    "lines": 1277,
+    "rel": "lenses/derived_common.py",
+    "status": "SHIPPED"
+   },
+   "lenses.keypoints": {
+    "lines": 359,
+    "rel": "lenses/keypoints.py",
+    "status": "SHIPPED"
+   },
+   "lenses.peak_lens": {
+    "lines": 95,
+    "rel": "lenses/peak_lens.py",
+    "status": "SHIPPED"
+   },
+   "lenses.surface_fragment_lens": {
+    "lines": 396,
+    "rel": "lenses/surface_fragment_lens.py",
+    "status": "ORPHAN"
+   },
+   "lenses.v2": {
+    "lines": 1734,
+    "rel": "lenses/v2.py",
+    "status": "SHIPPED"
+   },
+   "lenses.v4": {
+    "lines": 1645,
+    "rel": "lenses/v4.py",
+    "status": "SHIPPED"
+   },
+   "matching.alignment": {
+    "lines": 1302,
+    "rel": "matching/alignment.py",
+    "status": "SHIPPED"
+   },
+   "matching.calibration": {
+    "lines": 185,
+    "rel": "matching/calibration.py",
+    "status": "ORPHAN"
+   },
+   "matching.canonical_order": {
+    "lines": 88,
+    "rel": "matching/canonical_order.py",
+    "status": "ORPHAN"
+   },
+   "matching.category_bridge": {
+    "lines": 394,
+    "rel": "matching/category_bridge.py",
+    "status": "SHIPPED"
+   },
+   "matching.consensus": {
+    "lines": 305,
+    "rel": "matching/consensus.py",
+    "status": "ORPHAN"
+   },
+   "matching.feature_attachment": {
+    "lines": 78,
+    "rel": "matching/feature_attachment.py",
+    "status": "SHIPPED"
+   },
+   "matching.fuzzy": {
+    "lines": 385,
+    "rel": "matching/fuzzy.py",
+    "status": "ORPHAN"
+   },
+   "matching.graded_mcs": {
+    "lines": 1174,
+    "rel": "matching/graded_mcs.py",
+    "status": "TEST-ONLY"
+   },
+   "matching.joint_mcs": {
+    "lines": 670,
+    "rel": "matching/joint_mcs.py",
+    "status": "SHIPPED"
+   },
+   "matching.m15_manifest": {
+    "lines": 190,
+    "rel": "matching/m15_manifest.py",
+    "status": "SHIPPED"
+   },
+   "matching.m15_places": {
+    "lines": 197,
+    "rel": "matching/m15_places.py",
+    "status": "ORPHAN"
+   },
+   "matching.perceptual_selection": {
+    "lines": 155,
+    "rel": "matching/perceptual_selection.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement": {
+    "lines": 357,
+    "rel": "matching/placement.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_anchors": {
+    "lines": 124,
+    "rel": "matching/placement_anchors.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_assemble": {
+    "lines": 56,
+    "rel": "matching/placement_assemble.py",
+    "status": "HARNESS-ONLY"
+   },
+   "matching.placement_blend": {
+    "lines": 76,
+    "rel": "matching/placement_blend.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_bundle": {
+    "lines": 367,
+    "rel": "matching/placement_bundle.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_cache": {
+    "lines": 99,
+    "rel": "matching/placement_cache.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_classscore": {
+    "lines": 116,
+    "rel": "matching/placement_classscore.py",
+    "status": "HARNESS-ONLY"
+   },
+   "matching.placement_content": {
+    "lines": 252,
+    "rel": "matching/placement_content.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_context": {
+    "lines": 540,
+    "rel": "matching/placement_context.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_edges": {
+    "lines": 811,
+    "rel": "matching/placement_edges.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_fragment": {
+    "lines": 330,
+    "rel": "matching/placement_fragment.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_frontdoor": {
+    "lines": 510,
+    "rel": "matching/placement_frontdoor.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_frontend": {
+    "lines": 199,
+    "rel": "matching/placement_frontend.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_fuse": {
+    "lines": 152,
+    "rel": "matching/placement_fuse.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_gallery": {
+    "lines": 315,
+    "rel": "matching/placement_gallery.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_kernel": {
+    "lines": 166,
+    "rel": "matching/placement_kernel.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_llr": {
+    "lines": 800,
+    "rel": "matching/placement_llr.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_matcher": {
+    "lines": 858,
+    "rel": "matching/placement_matcher.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_prefilter": {
+    "lines": 308,
+    "rel": "matching/placement_prefilter.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_recognise": {
+    "lines": 660,
+    "rel": "matching/placement_recognise.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_records": {
+    "lines": 367,
+    "rel": "matching/placement_records.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_scorer": {
+    "lines": 348,
+    "rel": "matching/placement_scorer.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_shape": {
+    "lines": 424,
+    "rel": "matching/placement_shape.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_spacing": {
+    "lines": 97,
+    "rel": "matching/placement_spacing.py",
+    "status": "SHIPPED"
+   },
+   "matching.placement_truth": {
+    "lines": 145,
+    "rel": "matching/placement_truth.py",
+    "status": "HARNESS-ONLY"
+   },
+   "matching.placement_views": {
+    "lines": 165,
+    "rel": "matching/placement_views.py",
+    "status": "SHIPPED"
+   },
+   "matching.population_distance": {
+    "lines": 504,
+    "rel": "matching/population_distance.py",
+    "status": "SHIPPED"
+   },
+   "matching.relation_frame": {
+    "lines": 239,
+    "rel": "matching/relation_frame.py",
+    "status": "SHIPPED"
+   },
+   "matching.relation_walker": {
+    "lines": 1494,
+    "rel": "matching/relation_walker.py",
+    "status": "ORPHAN"
+   },
+   "matching.search": {
+    "lines": 244,
+    "rel": "matching/search.py",
+    "status": "ORPHAN"
+   },
+   "matching.sig_sim_cache": {
+    "lines": 161,
+    "rel": "matching/sig_sim_cache.py",
+    "status": "SHIPPED"
+   },
+   "matching.signature_matrix": {
+    "lines": 377,
+    "rel": "matching/signature_matrix.py",
+    "status": "ORPHAN"
+   },
+   "matching.structural_similarity": {
+    "lines": 1861,
+    "rel": "matching/structural_similarity.py",
+    "status": "SHIPPED"
+   },
+   "orchestration.binder": {
+    "lines": 7436,
+    "rel": "orchestration/binder.py",
+    "status": "SHIPPED"
+   },
+   "orchestration.pipeline": {
+    "lines": 4749,
+    "rel": "orchestration/pipeline.py",
+    "status": "SHIPPED"
+   },
+   "perception.anti_phase": {
+    "lines": 325,
+    "rel": "perception/anti_phase.py",
+    "status": "SHIPPED"
+   },
+   "perception.attachment": {
+    "lines": 571,
+    "rel": "perception/attachment.py",
+    "status": "SHIPPED"
+   },
+   "perception.chain_flanks": {
+    "lines": 329,
+    "rel": "perception/chain_flanks.py",
+    "status": "SHIPPED"
+   },
+   "perception.chain_formation": {
+    "lines": 2411,
+    "rel": "perception/chain_formation.py",
+    "status": "SHIPPED"
+   },
+   "perception.chain_polylines": {
+    "lines": 595,
+    "rel": "perception/chain_polylines.py",
+    "status": "SHIPPED"
+   },
+   "perception.complex_links": {
+    "lines": 203,
+    "rel": "perception/complex_links.py",
+    "status": "SHIPPED"
+   },
+   "perception.contour_field": {
+    "lines": 1928,
+    "rel": "perception/contour_field.py",
+    "status": "SHIPPED"
+   },
+   "perception.contour_peak": {
+    "lines": 405,
+    "rel": "perception/contour_peak.py",
+    "status": "SHIPPED"
+   },
+   "perception.contour_relations": {
+    "lines": 790,
+    "rel": "perception/contour_relations.py",
+    "status": "ORPHAN"
+   },
+   "perception.contour_structure": {
+    "lines": 640,
+    "rel": "perception/contour_structure.py",
+    "status": "SHIPPED"
+   },
+   "perception.depth": {
+    "lines": 353,
+    "rel": "perception/depth.py",
+    "status": "SHIPPED"
+   },
+   "perception.filters": {
+    "lines": 332,
+    "rel": "perception/filters.py",
+    "status": "SHIPPED"
+   },
+   "perception.floor": {
+    "lines": 1080,
+    "rel": "perception/floor.py",
+    "status": "SHIPPED"
+   },
+   "perception.fragment_ownership": {
+    "lines": 699,
+    "rel": "perception/fragment_ownership.py",
+    "status": "SHIPPED"
+   },
+   "perception.frames": {
+    "lines": 382,
+    "rel": "perception/frames.py",
+    "status": "ORPHAN"
+   },
+   "perception.front_end_mechanisms": {
+    "lines": 1093,
+    "rel": "perception/front_end_mechanisms.py",
+    "status": "SHIPPED"
+   },
+   "perception.interior_field": {
+    "lines": 395,
+    "rel": "perception/interior_field.py",
+    "status": "SHIPPED"
+   },
+   "perception.noise_floor": {
+    "lines": 47,
+    "rel": "perception/noise_floor.py",
+    "status": "SHIPPED"
+   },
+   "perception.observation": {
+    "lines": 701,
+    "rel": "perception/observation.py",
+    "status": "SHIPPED"
+   },
+   "perception.observation_2d": {
+    "lines": 1117,
+    "rel": "perception/observation_2d.py",
+    "status": "SHIPPED"
+   },
+   "perception.ownership": {
+    "lines": 242,
+    "rel": "perception/ownership.py",
+    "status": "SHIPPED"
+   },
+   "perception.polar": {
+    "lines": 164,
+    "rel": "perception/polar.py",
+    "status": "SHIPPED"
+   },
+   "perception.psychophysics": {
+    "lines": 486,
+    "rel": "perception/psychophysics.py",
+    "status": "ORPHAN"
+   },
+   "perception.relatable_completion": {
+    "lines": 1181,
+    "rel": "perception/relatable_completion.py",
+    "status": "ORPHAN"
+   },
+   "perception.rich": {
+    "lines": 1395,
+    "rel": "perception/rich.py",
+    "status": "SHIPPED"
+   },
+   "perception.ring_hypothesis": {
+    "lines": 740,
+    "rel": "perception/ring_hypothesis.py",
+    "status": "ORPHAN"
+   },
+   "perception.surface_fragment_cache": {
+    "lines": 151,
+    "rel": "perception/surface_fragment_cache.py",
+    "status": "ORPHAN"
+   },
+   "perception.surface_fragments": {
+    "lines": 2638,
+    "rel": "perception/surface_fragments.py",
+    "status": "ORPHAN"
+   },
+   "perception.synthetic3d": {
+    "lines": 1514,
+    "rel": "perception/synthetic3d.py",
+    "status": "HARNESS-ONLY"
+   },
+   "sensory_floor": {
+    "lines": 43,
+    "rel": "sensory_floor.py",
+    "status": "ORPHAN"
+   }
+  },
+  "top_harness_only": [
+   [
+    "perception.synthetic3d",
+    1514
+   ],
+   [
+    "matching.placement_truth",
+    145
+   ],
+   [
+    "matching.placement_classscore",
+    116
+   ],
+   [
+    "matching.placement_assemble",
+    56
+   ]
+  ],
+  "top_orphans": [
+   [
+    "perception.surface_fragments",
+    2638
+   ],
+   [
+    "matching.relation_walker",
+    1494
+   ],
+   [
+    "perception.relatable_completion",
+    1181
+   ],
+   [
+    "perception.contour_relations",
+    790
+   ],
+   [
+    "perception.ring_hypothesis",
+    740
+   ],
+   [
+    "perception.psychophysics",
+    486
+   ],
+   [
+    "lenses.surface_fragment_lens",
+    396
+   ],
+   [
+    "matching.fuzzy",
+    385
+   ],
+   [
+    "perception.frames",
+    382
+   ],
+   [
+    "matching.signature_matrix",
+    377
+   ],
+   [
+    "matching.consensus",
+    305
+   ],
+   [
+    "matching.search",
+    244
+   ],
+   [
+    "matching.m15_places",
+    197
+   ],
+   [
+    "matching.calibration",
+    185
+   ],
+   [
+    "perception.surface_fragment_cache",
+    151
+   ],
+   [
+    "eth80_split",
+    127
+   ],
+   [
+    "matching.canonical_order",
+    88
+   ],
+   [
+    "core.junctions",
+    82
+   ],
+   [
+    "sensory_floor",
+    43
+   ]
+  ],
+  "top_test_only": [
+   [
+    "matching.graded_mcs",
+    1174
+   ]
+  ],
+  "total_lines": 78587
+ }
+}

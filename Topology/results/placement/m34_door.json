@@ -1,0 +1,65 @@
+{
+ "bar": 0.05,
+ "mde_stated": 0.153,
+ "pooled": {
+  "baseline": 0.6625,
+  "ci95": [
+   0.0125,
+   0.1125
+  ],
+  "fused": 0.725,
+  "mde": 0.07625531730785413,
+  "mean_gain": 0.0625,
+  "n": 80
+ },
+ "rrf_k": 60,
+ "verdict": "clears",
+ "view_weights": {
+  "appearance": 1.0,
+  "colour": 0.5,
+  "counted": 1.0,
+  "fragment": 0.5
+ },
+ "views": {
+  "fit_a": {
+   "baseline_all80": 0.6625,
+   "baseline_recall8": 0.675,
+   "broke": 0,
+   "fixed": 5,
+   "fused_all80": 0.7875,
+   "fused_recall8": 0.8,
+   "gain": 0.125,
+   "n_fit": 40,
+   "per_class_gain": {
+    "apple": 0.0,
+    "car": 0.0,
+    "cow": 0.4,
+    "cup": 0.0,
+    "dog": 0.2,
+    "horse": 0.2,
+    "pear": 0.0,
+    "tomato": 0.2
+   }
+  },
+  "fit_b": {
+   "baseline_all80": 0.625,
+   "baseline_recall8": 0.65,
+   "broke": 0,
+   "fixed": 0,
+   "fused_all80": 0.625,
+   "fused_recall8": 0.65,
+   "gain": 0.0,
+   "n_fit": 40,
+   "per_class_gain": {
+    "apple": 0.0,
+    "car": 0.0,
+    "cow": 0.0,
+    "cup": 0.0,
+    "dog": 0.0,
+    "horse": 0.0,
+    "pear": 0.0,
+    "tomato": 0.0
+   }
+  }
+ }
+}

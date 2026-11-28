@@ -1,0 +1,158 @@
+{
+ "identity": 6,
+ "n": 6,
+ "queries": [
+  {
+   "measured_top8": [
+    5,
+    9,
+    4,
+    7,
+    0,
+    79,
+    2,
+    34
+   ],
+   "object": "apple/1",
+   "resolved_from_path": true,
+   "same_order": true,
+   "shipped_top8": [
+    5,
+    9,
+    4,
+    7,
+    0,
+    79,
+    2,
+    34
+   ]
+  },
+  {
+   "measured_top8": [
+    1,
+    73,
+    7,
+    63,
+    6,
+    54,
+    59,
+    39
+   ],
+   "object": "apple/10",
+   "resolved_from_path": true,
+   "same_order": true,
+   "shipped_top8": [
+    1,
+    73,
+    7,
+    63,
+    6,
+    54,
+    59,
+    39
+   ]
+  },
+  {
+   "measured_top8": [
+    0,
+    66,
+    7,
+    34,
+    77,
+    73,
+    2,
+    39
+   ],
+   "object": "apple/2",
+   "resolved_from_path": true,
+   "same_order": true,
+   "shipped_top8": [
+    0,
+    66,
+    7,
+    34,
+    77,
+    73,
+    2,
+    39
+   ]
+  },
+  {
+   "measured_top8": [
+    3,
+    4,
+    73,
+    10,
+    7,
+    5,
+    8,
+    9
+   ],
+   "object": "apple/3",
+   "resolved_from_path": true,
+   "same_order": true,
+   "shipped_top8": [
+    3,
+    4,
+    73,
+    10,
+    7,
+    5,
+    8,
+    9
+   ]
+  },
+  {
+   "measured_top8": [
+    4,
+    7,
+    8,
+    35,
+    9,
+    5,
+    3,
+    0
+   ],
+   "object": "apple/4",
+   "resolved_from_path": true,
+   "same_order": true,
+   "shipped_top8": [
+    4,
+    7,
+    8,
+    35,
+    9,
+    5,
+    3,
+    0
+   ]
+  },
+  {
+   "measured_top8": [
+    9,
+    8,
+    66,
+    7,
+    4,
+    0,
+    2,
+    5
+   ],
+   "object": "apple/5",
+   "resolved_from_path": true,
+   "same_order": true,
+   "shipped_top8": [
+    9,
+    8,
+    66,
+    7,
+    4,
+    0,
+    2,
+    5
+   ]
+  }
+ ],
+ "resolved": 6,
+ "verdict": "wired"
+}

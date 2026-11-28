@@ -24,6 +24,10 @@ Topology/cache/
 # needs; the graded columns are the only lossy part, and `Topology/m33_records.py --check` proves
 # 80/80 shortlists at both read views, cosine delta 0.0, and no top-8 order change.
 !data/placement_records_m32.npz
+# ... and M34's fragment anchors (small): the one thing a fragment needs that the record does not
+# carry -- where the contour part nodes were.  Without this file the shipped door cannot compute the
+# channel its bundle fuses, and a fresh checkout would rebuild 320 graphs to get it back.
+!data/placement_anchors_m34.npz
 Topology/results/placement/_graphcache/
 
 # M16: the candidate-level bank is 138 MB (GitHub refused it at the pre-receive
