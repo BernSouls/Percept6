@@ -1,0 +1,34 @@
+{
+ "baseline_G_same": 0.5046503331677049,
+ "delta": 0.09088534699129824,
+ "delta_ci": [
+  0.041863619757628284,
+  0.13986667079328036
+ ],
+ "distinguishable_from_0.10": false,
+ "excludes_zero": true,
+ "note": "8 objects: the interval is wide by construction, which is the measurement",
+ "objects": [
+  "apple/1",
+  "car/1",
+  "cow/1",
+  "cup/1",
+  "dog/1",
+  "horse/1",
+  "pear/1",
+  "tomato/1"
+ ],
+ "per_object_delta": [
+  -0.020196300490751273,
+  0.13909431206062267,
+  0.24017786783744244,
+  0.09777919230497212,
+  0.06797730829420978,
+  0.06535344208474403,
+  0.0732954545454545,
+  0.03941908713692943
+ ],
+ "resamples": 10000,
+ "seed": 20261118,
+ "unclipped_G_same": 0.5955356801590032
+}

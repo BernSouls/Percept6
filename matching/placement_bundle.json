@@ -14,13 +14,63 @@
    "shape_same_class_gauge_baseline": 0.505,
    "shape_same_class_gauge_unclipped": 0.596
   },
+  "measured_m33": {
+   "curvature_channel": {
+    "aggregation": "object_mean",
+    "bar": 0.05,
+    "channel_recall8": [
+     0.225,
+     0.263
+    ],
+    "channel_share_ge_0.99": 0.908,
+    "ci_excludes_zero": false,
+    "fields": [
+     "sharp_x",
+     "sharp_y",
+     "curv_x",
+     "curv_y"
+    ],
+    "fit_recall8_gain_ci": [
+     0.0,
+     0.0875
+    ],
+    "fit_recall8_gain_mean": 0.0375,
+    "fused4_fit_a": 0.738,
+    "fused4_fit_b": 0.625,
+    "gauge_delta": 0.091,
+    "gauge_delta_ci": [
+     0.042,
+     0.14
+    ],
+    "gauge_distinguishable_from_bar": false,
+    "icc_by_column": {
+     "curv_x": 0.013,
+     "curv_y": 0.009,
+     "sharp_x": 0.096,
+     "sharp_y": 0.142
+    },
+    "shipped_fit_a": 0.662,
+    "shipped_fit_b": 0.625,
+    "up_down_tied_fit_a": [
+     3,
+     0,
+     37
+    ],
+    "up_down_tied_fit_b": [
+     0,
+     0,
+     40
+    ]
+   },
+   "note": "M33 registered curvature at object level as a fourth door channel (half vote, like colour), measured it on the same cells, and did NOT ship it: the FIT gain is +0.0375 against a +0.050 bar and its object-clustered CI includes zero, and the channel is itself flat (90.8% of scores >= 0.99).  Mechanism: 80-99% of every curvature column's variance is WITHIN an object (ICC <= 0.20); the profile transfers across views (decile correlation 0.56-0.79) but identity does not.  Both weights remain zero; the shipped score is unchanged."
+  },
   "note": "M32 shipped NOTHING into the blend: the colour distance removed the flattening (share >= 0.99 fell from 1.000 to 0.416, the truth-impostor gap grew 460x) but lost rank to lightness, and the unclipped shape columns gained +0.091 of a pre-registered +0.10.  Both weights are zero, so the deployed score is reproduced exactly (test_m32_blend.py::test_zero_weights_is_the_deployed_matrix).",
   "weights": {
    "w_colour": 0.0,
    "w_shape": 0.0
   }
  },
- "code_digest": "f15eabde22d313a4128881e97782a29536ab4d9606b199e3fbe2f9d078ff34b3",
+ "code_digest": "3cf30de6f1189bb32a509206c7a3e1757771ad5ed1f74e55a01a249bef6c5ec0",
  "content": {
   "digest": "3c730dbbe84ef43c",
   "kind": "colour_rings",

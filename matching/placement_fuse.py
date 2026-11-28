@@ -34,10 +34,16 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 
 #: The shipped door's own channel weights.  Colour's default is 0.0 -- OFF.
-DEFAULT_WEIGHTS: Dict[str, float] = {"counted": 1.0, "appearance": 1.0, "colour": 0.0}
+#: [M33] `shape` is the fourth channel slot.  Its default weight is 0.0 -- OFF -- so a door that
+#: does not ask for it computes exactly the arithmetic it computed before (identity tested).
+DEFAULT_WEIGHTS: Dict[str, float] = {"counted": 1.0, "appearance": 1.0, "colour": 0.0,
+                                    "shape": 0.0}
 
 #: A1's stated discount, used when a caller asks for the colour channel.
 COLOUR_WEIGHT = 0.5
+#: [M33] the same discount for the curvature channel, fixed before any number: a channel that has
+#: never been read in the shipped path may reorder the head, it may not outvote the configuration.
+SHAPE_WEIGHT = 0.5
 RRF_K = 60
 LENSES: Tuple[str, ...] = ("Blob", "BoundaryArc", "CornerPoint")
 
@@ -101,8 +107,9 @@ def colour_channel(gallery: Sequence[Dict[str, Any]], query: Sequence[Dict[str, 
 
 def fuse(counted: np.ndarray, appearance: np.ndarray,
          colour: Optional[np.ndarray] = None,
-         weights: Optional[Dict[str, float]] = None, k: int = RRF_K) -> np.ndarray:
-    """The door's fused score.  No colour, no weights -> the shipped door's own arithmetic."""
+         weights: Optional[Dict[str, float]] = None, k: int = RRF_K,
+         shape: Optional[np.ndarray] = None) -> np.ndarray:
+    """The door's fused score.  No colour, no shape, no weights -> the shipped arithmetic."""
     w = dict(DEFAULT_WEIGHTS)
     if weights:
         w.update({str(a): float(b) for a, b in weights.items()})
@@ -111,6 +118,9 @@ def fuse(counted: np.ndarray, appearance: np.ndarray,
     if colour is not None and float(w.get("colour", 0.0)) != 0.0:
         mats.append(np.asarray(colour, dtype=np.float64))
         ws.append(float(w["colour"]))
+    if shape is not None and float(w.get("shape", 0.0)) != 0.0:
+        mats.append(np.asarray(shape, dtype=np.float64))
+        ws.append(float(w["shape"]))
     return rrf_weighted(mats, ws, k=k)
 
 
@@ -122,7 +132,7 @@ def effective_weights(bundle: Any = None) -> Dict[str, float]:
     w = dict(DEFAULT_WEIGHTS)
     block = getattr(bundle, "fusion", None) if bundle is not None else None
     if isinstance(block, dict):
-        for key in ("counted", "appearance", "colour"):
+        for key in ("counted", "appearance", "colour", "shape"):
             if key in block:
                 w[key] = float(block[key])
     for key, v in w.items():

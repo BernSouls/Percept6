@@ -1,0 +1,20 @@
+{
+ "records": "placement_records_m32.npz",
+ "reference": "records_m32_f64.npz",
+ "views": {
+  "035-045": {
+   "kernel_max_delta": 6.125503326792625e-09,
+   "kernel_mean_delta": 3.306009788497932e-10,
+   "top1_changed": 0,
+   "top8_orders_changed": 0,
+   "top8_sets_changed": 0
+  },
+  "045-180": {
+   "kernel_max_delta": 5.2978362807820645e-09,
+   "kernel_mean_delta": 3.395546410885075e-10,
+   "top1_changed": 0,
+   "top8_orders_changed": 0,
+   "top8_sets_changed": 0
+  }
+ }
+}

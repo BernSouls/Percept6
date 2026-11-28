@@ -76,10 +76,13 @@ walks the AST of every core package and fails on either.
 | `Topology/m32_saturation.py` (M32 item 2) | matching/placement_content, placement_shape, placement_records -- the flattening census |
 | `Topology/m32_records.py` (M32 items 3/4) | matching/placement_records, placement_shape, placement_content -- the v30 record file and its `--check` |
 | `Topology/m32_colour.py` (M32 item 3) | placement_content, placement_fuse, placement_frontdoor -- the distance, the three aggregators, the FIT/confirm cells |
+| `Topology/m33_records.py` (M33 item 1) | matching/placement_records, m27_export_records -- the mixed-precision record file, its size, and the door's proof at both views |
+| `Topology/m33_curvature.py` (M33 items 2/3) | matching/placement_shape, placement_fuse, placement_records -- the registered arm, the bootstrap, the mechanism |
 | `Topology/m32_shape.py` (M32 item 4) | m26_records, placement_kernel, placement_shape -- the M28 gauge through the unclipped columns |
 | the report-producing M20-M23 harnesses | placement_m20_eth80, m22_eth80, m23_eth80, m23_stages, m21_* , m20_fit, m22_power, m12_realphotos |
 | the test suite (`tests/`) | 20 Topology modules, all inside the two lists above |
 | M32's archived one-offs | `m26_census`, `m26_matcher`, `m27_door`, `m27_drift`, `m27_profile`, `m28_*`, `m29_representation`, `m30_door`, `m30_shape`, `m31_arms`, `m31_shape`, `m31_wire` -- in `archive/Topology/`, see `archive/ARCHIVE_INDEX.md` "Mission 32" |
+| the committed record file | `data/placement_records_m32.npz` (38.03 MB, v30, graded columns float32) -- exempted from `.gitignore` on purpose; `tests/test_m33_records.py` fails if it is not in git or stops reproducing the door |
 | result files cited by the README / the reports | `m12_perf_baseline.json`, `m20_splits.json`, `m22_*.json`, `m23_*.json`, `m23_read_rows.jsonl`, `m23_read_pairs.jsonl`, MISSION14..23 `.md` |
 
 ## 4. The rule that decides the archive

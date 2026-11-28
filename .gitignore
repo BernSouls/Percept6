@@ -19,6 +19,11 @@ Topology/cache/
 !data/placement_records_m28.npz
 # ... and M30's, which adds the five graded shape columns (v29, 37.4 MB, budget 40 MB).
 !data/placement_records_m30.npz
+# ... and M33's, which is the file the shipped path's readers actually use: v30, nine graded shape
+# columns stored as float32 (38.03 MB, budget 40 MB).  It is the ONE record file a fresh checkout
+# needs; the graded columns are the only lossy part, and `Topology/m33_records.py --check` proves
+# 80/80 shortlists at both read views, cosine delta 0.0, and no top-8 order change.
+!data/placement_records_m32.npz
 Topology/results/placement/_graphcache/
 
 # M16: the candidate-level bank is 138 MB (GitHub refused it at the pre-receive

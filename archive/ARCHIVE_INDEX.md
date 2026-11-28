@@ -34,6 +34,12 @@ grouped by mission; within a group the reason is the same shape because the rule
 
 
 
+**Mission 33 moved nothing here.**  Its three harnesses (`m33_records.py`, `m33_curvature.py`, and
+the M32 ones it reuses) are live in `Topology/` and listed in `KEEP_MAP.md` §3; the mission archived
+no file and deleted none.  It did add something to the repository that is not a script:
+`data/placement_records_m32.npz` is now COMMITTED (38.03 MB, exempted from `.gitignore`), because a
+fresh checkout must be able to load the record file without an eight-minute rebuild.
+
 ## Mission 32 -- 16 files
 
 **Mission 32 moved 16 scripts here and nothing else.**  The rule is unchanged (`KEEP_MAP.md` §4):

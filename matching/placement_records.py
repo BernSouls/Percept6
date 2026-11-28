@@ -95,6 +95,16 @@ N_SHAPE = len(SHAPE_FIELDS)          # M32: 9 (5 shipped + the four curvature co
 #: shortlists stop matching the live ones.  Measured: 12.8 MB in float64, well inside the budget.
 DTYPE = np.float64
 
+#: [M33 item 1] The STORED width per element class.  Everything the door buckets on stays float64:
+#: `rows_*` is re-quantised into keys at load and 1.6 -> 1.60000002 moves a bucket (M27 measured 2 of
+#: 80 shortlists moving under float32 keys), and `dz_*`/`mz_*` are distance inputs.  The GRADED
+#: columns carry continuous measurements nobody buckets on, so they are stored as float32:
+#: `shape_*` (nine graded shape columns) only.  The colour rings stay float64 on purpose -- at that
+#: precision the record file is 38.03 MB, inside the 40 MB commit limit, so the shipped cosine stays
+#: BIT-IDENTICAL and the file is lossy only where loss is measurable and proven harmless.
+GRADED_DTYPE = np.float32
+GRADED_ARRAYS: Tuple[str, ...] = ("shape",)
+
 
 def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str],
            views: Sequence[str]) -> Dict[str, np.ndarray]:
@@ -179,9 +189,25 @@ def export(cells: Sequence[Tuple[str, str, Dict[str, Any]]], keys: Sequence[str]
     return out
 
 
-def save(path: str, arrays: Dict[str, np.ndarray]) -> str:
+def save(path: str, arrays: Dict[str, np.ndarray], graded_dtype: Any = "exact") -> str:
+    """Write the record file (compressed).
+
+    [M33] ``graded_dtype`` casts the GRADED arrays (``GRADED_ARRAYS``: the ``shape_*`` blocks) to
+    the given width before writing.  The DEFAULT is ``"exact"``: nothing is cast, and a round trip
+    through the file is lossless to the last bit.  The committed file is written with
+    ``graded_dtype=GRADED_DTYPE`` (float32), which is what makes it 38.03 MB instead of 41.67 MB;
+    that is a deliberate act at the call site, not a default a later writer can inherit by accident.
+    """
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-    np.savez_compressed(path, **arrays)
+    dt = None if (graded_dtype is None or graded_dtype == "exact") else graded_dtype
+    out: Dict[str, np.ndarray] = {}
+    for k, v in arrays.items():
+        if any(k.startswith(name + "_") for name in GRADED_ARRAYS) and getattr(v, "dtype", None) is not None \
+                and np.issubdtype(v.dtype, np.floating) and dt is not None:
+            out[k] = v.astype(dt)
+        else:
+            out[k] = v
+    np.savez_compressed(path, **out)
     return path
 
 

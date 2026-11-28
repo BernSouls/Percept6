@@ -357,6 +357,63 @@ def kernel_block(A: np.ndarray, B: np.ndarray, sig: Sequence[float],
     return np.exp(-0.5 * np.maximum(d2, 0.0))
 
 
+#: [M33 item 2] The channel: the four curvature columns, EXCLUDED from everything else.  The five
+#: detection-strength columns are left out because M32 measured them DILUTING the four (all nine =
+#: 0.558 same-class against the four alone at 0.596).
+CURVATURE_FIELDS: Tuple[str, ...] = ("sharp_x", "sharp_y", "curv_x", "curv_y")
+
+
+def curvature_matrix(gallery: Sequence[Dict[str, Any]], query: Sequence[Dict[str, Any]],
+                     how: str = "object_mean",
+                     weights: Optional[Sequence[float]] = None) -> np.ndarray:
+    """(n_query, n_gallery) curvature scores, OBJECT-LEVEL, from the place records alone.
+
+    For one query object and one gallery object the score is the MEAN over the query's places of
+    the best same-lens match in the gallery object, read through the kernel form with the pool's
+    own column spread.  That is the aggregation that read G_same 0.671 in M32's gauge (against
+    0.596 at place level); `max` is kept for comparison and reports the place-level form.
+
+    ``gallery``/``query`` are sequences of ``{"places": [{"lens", "sharp_x", ...}]}`` in object
+    order -- the same shape `placement_fuse.colour_channel` takes.
+    """
+    if how not in ("object_mean", "max"):
+        raise ValueError("curvature aggregation %r is not object_mean or max" % (how,))
+    idx = [FIELDS.index(f) for f in CURVATURE_FIELDS]
+    n_g, n_q = len(gallery), len(query)
+    out = np.zeros((n_q, n_g), dtype=np.float64)
+    pool = np.asarray([[float(p.get(f) or 0.0) for f in CURVATURE_FIELDS]
+                       for entry in gallery for p in entry.get("places", ())], dtype=np.float64)
+    if pool.size == 0:
+        return out
+    sig = scales(pool)
+    for lens in ("Blob", "BoundaryArc", "CornerPoint"):
+        G: List[np.ndarray] = []
+        for entry in gallery:
+            rows = [[float(p.get(f) or 0.0) for f in CURVATURE_FIELDS]
+                    for p in entry.get("places", ()) if p.get("lens") == lens]
+            G.append(np.asarray(rows, dtype=np.float64).reshape(-1, len(CURVATURE_FIELDS)))
+        if all(x.shape[0] == 0 for x in G):
+            continue
+        # gallery places stacked in object order, one reduceat bound per object
+        stacked = np.vstack([g for g in G if g.shape[0]])
+        owner = np.concatenate([np.full(g.shape[0], j, dtype=np.int64)
+                                for j, g in enumerate(G) if g.shape[0]])
+        bounds = np.searchsorted(owner, np.arange(n_g + 1))
+        for qi, entry in enumerate(query):
+            rows = [[float(p.get(f) or 0.0) for f in CURVATURE_FIELDS]
+                    for p in entry.get("places", ()) if p.get("lens") == lens]
+            if not rows:
+                continue
+            S = kernel_block(np.asarray(rows, dtype=np.float64), stacked, sig, weights)
+            per_obj = np.maximum.reduceat(S, bounds[:-1], axis=1)     # (n_q_places, n_g)
+            if how == "max":
+                out[qi] = np.maximum(out[qi], per_obj.max(axis=0))
+            else:
+                out[qi] = np.maximum(out[qi], per_obj.mean(axis=0))
+    del idx
+    return out
+
+
 # Register on import.  A class that is not in the registries returns 0.0 -- not a small number --
 # so every reader of these five fields must have them registered before it compares anything.  The
 # call is idempotent and never raises (a refusal is counted in REFUSALS and the fields simply read

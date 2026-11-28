@@ -9,19 +9,19 @@
   "1": {
    "pairs": 4,
    "reference": true,
-   "seconds": 125.5
+   "seconds": 127.7
   },
   "2": {
    "compared": 4,
    "max_abs_diff": 0.0,
    "pairs": 4,
-   "seconds": 49.5
+   "seconds": 94.3
   },
   "4": {
    "compared": 4,
    "max_abs_diff": 0.0,
    "pairs": 4,
-   "seconds": 90.4
+   "seconds": 52.5
   }
  }
 }

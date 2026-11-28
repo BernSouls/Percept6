@@ -44,6 +44,17 @@ lifted the same-class shape gauge from 0.505 to 0.596, short of the +0.10 bar.  
 (`matching/placement_blend.py`) therefore ships at **w_shape = w_colour = 0**, which reproduces the
 deployed score exactly, and the bundle records why (`channels` block).
 
+**M33 registered the curvature channel at OBJECT level** (`Topology/m33_curvature.py`; four columns,
+kernel form, fourth door channel at half vote) and measured it on the same cells: **+0.0375 mean FIT
+recall@8** (3 objects up, 0 down, at one view; 0/0 at the other), object-clustered CI **[0.000,
+0.0875] including zero**, against a +0.050 bar — so it does not ship either, and the mechanism is
+the COLUMNS rather than the aggregation: **80–99 % of every curvature column's variance is within an
+object** (ICC 0.009–0.197), so the profile transfers across views (decile correlation 0.56–0.79) but
+the identity does not.  The record file is now **committed at 38.03 MB** (nine graded columns at
+float32, everything the door buckets on exact), which turns a fresh checkout's eight-minute rebuild
+into **21 s** of loading with 80/80 shortlists identical at both read views and a cosine delta of
+0.0 (`MISSION33_REPORT.md`).
+
 ## Layout
 
 * `matching/` — the shipped mechanisms: door, places, matcher, bundle, records.
