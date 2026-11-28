@@ -127,6 +127,14 @@ def _validate(bundle: PlacementBundle) -> None:
     if bundle.rerank != "plain":
         raise PB.BundleRefusal("the shipped order is the matcher's plain re-order; this code does "
                                "not implement %r" % (bundle.rerank))
+    if str(getattr(bundle, "door_kind", "counted")) == "bag":
+        from matching import placement_bag as BAG
+        BAG.load_edges()                     # a bag door without its reference ruler is a refusal
+        if not bundle.colour_rings:
+            raise PB.BundleRefusal(
+                "the bundle ships door.kind = bag but content.kind = %r: the descriptor it reads "
+                "is the place colour content, so a bag door requires colour_rings"
+                % (bundle.content_kind,))
     if str(getattr(bundle, "door_kind", "counted")) == "fused3":
         if not bundle.colour_rings:
             raise PB.BundleRefusal(
@@ -405,6 +413,18 @@ def build_gallery(items: Iterable[Any], *, bundle: Optional[PlacementBundle] = N
     if float(b.fragment_weight) != 0.0:
         from matching import placement_anchors as PA
         GL.attach_fragment_anchors(gal, PA.load())
+    # [M35] the bag door reads the OBJECT descriptor: build it here, from the records the gallery
+    # already carries, so `recognise` does not rebuild 160 descriptors per query.  A cache hit
+    # returns the same Gallery object, so attach AFTER the call.
+    if str(getattr(b, "door_kind", "counted")) == "bag":
+        from matching import placement_bag as BAG
+        from matching import placement_shape as PS
+        edges = BAG.load_edges()
+        gal.bag_features = []
+        for r, p in zip(gal.flat_records(), gal.flat_paths()):
+            if any("eigratio" not in x for x in r["places"]):
+                PS.attach(r, _FE.load_image(p))       # the same enrichment a live query gets
+            gal.bag_features.append(BAG.describe(r, edges))
     return gal
 
 
@@ -479,11 +499,15 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
     s_eff = int(b.shortlist if s is None else s)
     n_obj, n_views = gallery.n, gallery.n_views
     t_all = time.time()
+    _dk = str(getattr(b, "door_kind", "counted"))
     with _FlagScope(_bundle_flags(b)):
         t0 = time.time()
-        q_app = (np.asarray(appearance, dtype=np.float64) if appearance is not None
-                 else FD.appearance_feature(qpath))
-        app_flat = np.asarray([q_app], dtype=np.float64) @ gallery.appearance.T
+        if _dk == "bag":                       # [M35] the bag door reads records, not appearance
+            app_flat = np.zeros((1, n_obj * n_views), dtype=np.float64)
+        else:
+            q_app = (np.asarray(appearance, dtype=np.float64) if appearance is not None
+                     else FD.appearance_feature(qpath))
+            app_flat = np.asarray([q_app], dtype=np.float64) @ gallery.appearance.T
         t_app = time.time() - t0
         t0 = time.time()
         ckind = "colour_rings" if b.colour_rings else None
@@ -497,7 +521,24 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
         t_rec = time.time() - t0
         t0 = time.time()
         dkind = str(getattr(b, "door_kind", "counted"))
-        if dkind == "graded":
+        bag_flat = None
+        if dkind == "bag":
+            from matching import placement_bag as BAG
+            from matching import placement_shape as PS
+            edges = BAG.load_edges()
+            need = [p for p in qrec["places"] if "eigratio" not in p]
+            if need:                       # a live path: attach the graded columns from the image
+                PS.attach(qrec, FE.load_image(qpath))
+            q_feat = BAG.describe(qrec, edges)
+            gal_feats = getattr(gallery, "bag_features", None)
+            if gal_feats is None or len(gal_feats) != n_obj * n_views:
+                gal_feats = [BAG.describe(r, edges) for r in gallery.flat_records()]
+                gallery.bag_features = gal_feats
+            fused = BAG.door_scores(q_feat, gal_feats, n_obj, n_views)[None, :]
+            cnt_flat, _diag = np.zeros((1, n_obj * n_views)), {}
+            colour_flat = None
+            fragment_flat = None
+        elif dkind == "graded":
             cnt_flat, _diag = FD.graded_scores(gallery.index, [qrec],
                                                **dict(getattr(b, "door_params", {}) or {}))
         else:
@@ -544,7 +585,9 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
     app = _max_over_views(app_flat, n_obj, n_views)
     cnt = _max_over_views(cnt_flat, n_obj, n_views)
     which = _argmax_over_views(cnt_flat, n_obj, n_views)
-    if str(getattr(b, "door_kind", "counted")) == "fused3":
+    if str(getattr(b, "door_kind", "counted")) == "bag":
+        pass                                        # `fused` is already the bag door's score
+    elif str(getattr(b, "door_kind", "counted")) == "fused3":
         from matching import placement_fuse as FU
         colour = _max_over_views(colour_flat, n_obj, n_views)
         frag = (_max_over_views(fragment_flat, n_obj, n_views)
@@ -608,6 +651,56 @@ def recognise(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle]
                   seconds={"appearance": t_app, "query_record": t_rec, "door": t_door,
                            "matcher": t_mat, "total": time.time() - t_all},
                   views=list(gallery.views), bundle=b.as_dict())
+
+
+# --------------------------------------------------------------------------- the class output
+def recognise_class(query: Any, gallery: Gallery, *, bundle: Optional[PlacementBundle] = None,
+                    record: Optional[Dict[str, Any]] = None, top: int = 2,
+                    exclude: Optional[str] = None,
+                    arm: Optional[Sequence[str]] = None) -> Dict[str, Any]:
+    """Rank the gallery's CLASSES for ``query``: the mean of a class's top-`top` instance scores.
+
+    [M35 item 4] The descriptor is the object bag at the ALL arm -- every block, equal block weight
+    (`matching.placement_bag.ARMS["ALL"]`) -- so the class output does not re-register a descriptor
+    that item 2 did not measure.  The class of an object is its gallery key's first path component
+    (`"apple/1"` -> `"apple"`); the query's own object is EXCLUDED when the query is a `(key, path)`
+    pair or `exclude` names it, because "is the nearest class the right class" must not be answered
+    by the query itself (its own descriptor scores 1.0 and would pin its own class).
+
+    Returns ``{"classes": [(class, score), ...], "top": class, "scores": {...},
+    "objects": (n_obj,) instance scores, "excluded": key-or-None}``.
+    """
+    from matching import placement_bag as BAG
+    b = bundle or PB.PlacementBundle.load()
+    _validate(b)
+    qkey = None
+    if isinstance(query, (tuple, list)) and len(query) >= 2:
+        qkey = str(query[0])
+    qpath = str(query[1]) if isinstance(query, (tuple, list)) else str(query)
+    ex = exclude or qkey
+    with _FlagScope(_bundle_flags(b)):
+        edges = BAG.load_edges()
+        qrec = (dict(record) if record is not None
+                else _library()[0].place_record(qpath, tag="classquery",
+                                                content=("colour_rings" if b.colour_rings else None)))
+        gal_feats = getattr(gallery, "bag_features", None)
+        if gal_feats is None or not gal_feats:
+            gal_feats = [BAG.describe(r, edges) for r in gallery.flat_records()]
+            gallery.bag_features = gal_feats
+        q_feat = BAG.describe(qrec, edges)
+        arm_used = tuple(arm or BAG.ARMS["ALL"])
+        obj = BAG.door_scores(q_feat, gal_feats, gallery.n, gallery.n_views, arm=arm_used,
+                              weighting=(BAG.WEIGHTING.get("ALL") if arm is None else None))
+    classes = [str(k).split("/")[0] for k in gallery.keys]
+    if ex is not None and ex in gallery.keys:
+        obj = np.array(obj, dtype=np.float64)
+        obj[gallery.keys.index(ex)] = np.nan
+    keep = np.isfinite(obj)
+    ranked = BAG.class_scores(obj[keep], np.asarray(classes, dtype=object)[keep], top=top)
+    return {"classes": ranked, "top": ranked[0][0] if ranked else "",
+            "scores": {c: v for c, v in ranked}, "objects": obj.tolist(),
+            "excluded": ex, "top_n": int(top), "arm": list(arm_used),
+            "bundle": b.as_dict()}
 
 
 # --------------------------------------------------------------------------- operator CLI

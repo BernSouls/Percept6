@@ -97,8 +97,8 @@
    "AMODAL_SEARCH_RADIUS_MIN_PX",
    "ANCHOR_FALLBACK_MAX_DIST"
   ],
-  "never_named_nowhere": 225,
-  "never_owned_by_unreachable": 153,
+  "never_named_nowhere": 228,
+  "never_owned_by_unreachable": 150,
   "never_read_by_shipped": 378,
   "never_rows": [
    "ABSORPTION_MIN_SIM",
@@ -1609,8 +1609,8 @@
  "modules": {
   "counts": {
    "HARNESS-ONLY": 4,
-   "ORPHAN": 19,
-   "SHIPPED": 88,
+   "ORPHAN": 7,
+   "SHIPPED": 89,
    "SHIPPED-STR": 1,
    "TEST-ONLY": 1
   },
@@ -1644,12 +1644,12 @@
   ],
   "lines": {
    "HARNESS-ONLY": 1831,
-   "ORPHAN": 10291,
-   "SHIPPED": 65281,
+   "ORPHAN": 4148,
+   "SHIPPED": 65817,
    "SHIPPED-STR": 10,
    "TEST-ONLY": 1174
   },
-  "modules": 113,
+  "modules": 102,
   "rows": {
    "_bootstrap": {
     "lines": 93,
@@ -1705,11 +1705,6 @@
     "lines": 2,
     "rel": "core/junction_families.py",
     "status": "SHIPPED"
-   },
-   "core.junctions": {
-    "lines": 82,
-    "rel": "core/junctions.py",
-    "status": "ORPHAN"
    },
    "core.keypoint_classes": {
     "lines": 261,
@@ -1841,30 +1836,15 @@
     "rel": "matching/calibration.py",
     "status": "ORPHAN"
    },
-   "matching.canonical_order": {
-    "lines": 88,
-    "rel": "matching/canonical_order.py",
-    "status": "ORPHAN"
-   },
    "matching.category_bridge": {
     "lines": 394,
     "rel": "matching/category_bridge.py",
     "status": "SHIPPED"
    },
-   "matching.consensus": {
-    "lines": 305,
-    "rel": "matching/consensus.py",
-    "status": "ORPHAN"
-   },
    "matching.feature_attachment": {
     "lines": 78,
     "rel": "matching/feature_attachment.py",
     "status": "SHIPPED"
-   },
-   "matching.fuzzy": {
-    "lines": 385,
-    "rel": "matching/fuzzy.py",
-    "status": "ORPHAN"
    },
    "matching.graded_mcs": {
     "lines": 1174,
@@ -1880,11 +1860,6 @@
     "lines": 190,
     "rel": "matching/m15_manifest.py",
     "status": "SHIPPED"
-   },
-   "matching.m15_places": {
-    "lines": 197,
-    "rel": "matching/m15_places.py",
-    "status": "ORPHAN"
    },
    "matching.perceptual_selection": {
     "lines": 155,
@@ -1905,6 +1880,11 @@
     "lines": 56,
     "rel": "matching/placement_assemble.py",
     "status": "HARNESS-ONLY"
+   },
+   "matching.placement_bag": {
+    "lines": 440,
+    "rel": "matching/placement_bag.py",
+    "status": "SHIPPED"
    },
    "matching.placement_blend": {
     "lines": 76,
@@ -1962,7 +1942,7 @@
     "status": "SHIPPED"
    },
    "matching.placement_gallery": {
-    "lines": 315,
+    "lines": 318,
     "rel": "matching/placement_gallery.py",
     "status": "SHIPPED"
    },
@@ -1987,7 +1967,7 @@
     "status": "SHIPPED"
    },
    "matching.placement_recognise": {
-    "lines": 660,
+    "lines": 753,
     "rel": "matching/placement_recognise.py",
     "status": "SHIPPED"
    },
@@ -2030,16 +2010,6 @@
     "lines": 239,
     "rel": "matching/relation_frame.py",
     "status": "SHIPPED"
-   },
-   "matching.relation_walker": {
-    "lines": 1494,
-    "rel": "matching/relation_walker.py",
-    "status": "ORPHAN"
-   },
-   "matching.search": {
-    "lines": 244,
-    "rel": "matching/search.py",
-    "status": "ORPHAN"
    },
    "matching.sig_sim_cache": {
     "lines": 161,
@@ -2106,11 +2076,6 @@
     "rel": "perception/contour_peak.py",
     "status": "SHIPPED"
    },
-   "perception.contour_relations": {
-    "lines": 790,
-    "rel": "perception/contour_relations.py",
-    "status": "ORPHAN"
-   },
    "perception.contour_structure": {
     "lines": 640,
     "rel": "perception/contour_structure.py",
@@ -2176,30 +2141,10 @@
     "rel": "perception/polar.py",
     "status": "SHIPPED"
    },
-   "perception.psychophysics": {
-    "lines": 486,
-    "rel": "perception/psychophysics.py",
-    "status": "ORPHAN"
-   },
-   "perception.relatable_completion": {
-    "lines": 1181,
-    "rel": "perception/relatable_completion.py",
-    "status": "ORPHAN"
-   },
    "perception.rich": {
     "lines": 1395,
     "rel": "perception/rich.py",
     "status": "SHIPPED"
-   },
-   "perception.ring_hypothesis": {
-    "lines": 740,
-    "rel": "perception/ring_hypothesis.py",
-    "status": "ORPHAN"
-   },
-   "perception.surface_fragment_cache": {
-    "lines": 151,
-    "rel": "perception/surface_fragment_cache.py",
-    "status": "ORPHAN"
    },
    "perception.surface_fragments": {
     "lines": 2638,
@@ -2241,32 +2186,8 @@
     2638
    ],
    [
-    "matching.relation_walker",
-    1494
-   ],
-   [
-    "perception.relatable_completion",
-    1181
-   ],
-   [
-    "perception.contour_relations",
-    790
-   ],
-   [
-    "perception.ring_hypothesis",
-    740
-   ],
-   [
-    "perception.psychophysics",
-    486
-   ],
-   [
     "lenses.surface_fragment_lens",
     396
-   ],
-   [
-    "matching.fuzzy",
-    385
    ],
    [
     "perception.frames",
@@ -2277,36 +2198,12 @@
     377
    ],
    [
-    "matching.consensus",
-    305
-   ],
-   [
-    "matching.search",
-    244
-   ],
-   [
-    "matching.m15_places",
-    197
-   ],
-   [
     "matching.calibration",
     185
    ],
    [
-    "perception.surface_fragment_cache",
-    151
-   ],
-   [
     "eth80_split",
     127
-   ],
-   [
-    "matching.canonical_order",
-    88
-   ],
-   [
-    "core.junctions",
-    82
    ],
    [
     "sensory_floor",
@@ -2319,6 +2216,6 @@
     1174
    ]
   ],
-  "total_lines": 78587
+  "total_lines": 72980
  }
 }

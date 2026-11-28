@@ -1,0 +1,206 @@
+{
+ "bar": 0.025,
+ "channel_alone": {
+  "all22": {
+   "035-045": {
+    "n": 40,
+    "recall8_all80": 0.725,
+    "recall8_fit": 0.7,
+    "recall8_n": 28
+   },
+   "045-180": {
+    "n": 40,
+    "recall8_all80": 0.6375,
+    "recall8_fit": 0.625,
+    "recall8_n": 25
+   }
+  },
+  "colour_means": {
+   "035-045": {
+    "n": 40,
+    "recall8_all80": 0.8,
+    "recall8_fit": 0.825,
+    "recall8_n": 33
+   },
+   "045-180": {
+    "n": 40,
+    "recall8_all80": 0.65,
+    "recall8_fit": 0.6,
+    "recall8_n": 24
+   }
+  },
+  "curvature": {
+   "035-045": {
+    "n": 40,
+    "recall8_all80": 0.6,
+    "recall8_fit": 0.6,
+    "recall8_n": 24
+   },
+   "045-180": {
+    "n": 40,
+    "recall8_all80": 0.5875,
+    "recall8_fit": 0.65,
+    "recall8_n": 26
+   }
+  },
+  "geometry": {
+   "035-045": {
+    "n": 40,
+    "recall8_all80": 0.2125,
+    "recall8_fit": 0.275,
+    "recall8_n": 11
+   },
+   "045-180": {
+    "n": 40,
+    "recall8_all80": 0.25,
+    "recall8_fit": 0.275,
+    "recall8_n": 11
+   }
+  },
+  "no_colour": {
+   "035-045": {
+    "n": 40,
+    "recall8_all80": 0.4875,
+    "recall8_fit": 0.575,
+    "recall8_n": 23
+   },
+   "045-180": {
+    "n": 40,
+    "recall8_all80": 0.45,
+    "recall8_fit": 0.45,
+    "recall8_n": 18
+   }
+  }
+ },
+ "door": {
+  "035-045": {
+   "bag+all22": {
+    "gain_fit": 0.0,
+    "paired_ci": [
+     0.0,
+     0.0
+    ],
+    "recall8_conf": 1.0,
+    "recall8_fit": 1.0,
+    "top1_fit": 0.6
+   },
+   "bag+colour_means": {
+    "gain_fit": 0.0,
+    "paired_ci": [
+     0.0,
+     0.0
+    ],
+    "recall8_conf": 0.975,
+    "recall8_fit": 1.0,
+    "top1_fit": 0.55
+   },
+   "bag_alone": {
+    "recall8_fit": 1.0,
+    "top1_fit": 0.625
+   }
+  },
+  "045-180": {
+   "bag+all22": {
+    "gain_fit": 0.0,
+    "paired_ci": [
+     -0.075,
+     0.075
+    ],
+    "recall8_conf": 0.95,
+    "recall8_fit": 0.925,
+    "top1_fit": 0.35
+   },
+   "bag+colour_means": {
+    "gain_fit": -0.025,
+    "paired_ci": [
+     -0.075,
+     0.0
+    ],
+    "recall8_conf": 0.95,
+    "recall8_fit": 0.9,
+    "top1_fit": 0.375
+   },
+   "bag_alone": {
+    "recall8_fit": 0.925,
+    "top1_fit": 0.5
+   }
+  }
+ },
+ "variants": {
+  "all22": [
+   "0",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7",
+   "8",
+   "9",
+   "10",
+   "11",
+   "12",
+   "13",
+   "14",
+   "15",
+   "16",
+   "17",
+   "18",
+   "19",
+   "20",
+   "21"
+  ],
+  "colour_means": [
+   "16",
+   "17",
+   "18",
+   "19",
+   "20",
+   "21"
+  ],
+  "curvature": [
+   "8",
+   "9",
+   "10",
+   "11",
+   "12",
+   "13",
+   "14",
+   "15"
+  ],
+  "geometry": [
+   "0",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7"
+  ],
+  "no_colour": [
+   "0",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7",
+   "8",
+   "9",
+   "10",
+   "11",
+   "12",
+   "13",
+   "14",
+   "15"
+  ]
+ },
+ "verdict": {
+  "adds": false,
+  "bar": 0.025,
+  "gain_fit": 0.0
+ }
+}

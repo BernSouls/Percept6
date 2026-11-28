@@ -181,9 +181,9 @@ class PlacementBundle:
             raise BundleRefusal("bundle at %s names a shortlist rule %r this tree does not "
                                 "implement (have: fixed, adaptive)"
                                 % (p, d.get("shortlist_rule")))
-        if str(d["door"].get("kind", "counted")) not in ("counted", "graded", "fused3"):
+        if str(d["door"].get("kind", "counted")) not in ("counted", "graded", "fused3", "bag"):
             raise BundleRefusal("bundle at %s names a door kind %r this tree does not implement "
-                                "(have: counted, graded, fused3)" % (p, d["door"].get("kind")))
+                                "(have: counted, graded, fused3, bag)" % (p, d["door"].get("kind")))
         have = str(d["code_digest"])
         want = compute_code_digest()
         if have != want:

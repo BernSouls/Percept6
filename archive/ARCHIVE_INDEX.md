@@ -34,6 +34,47 @@ grouped by mission; within a group the reason is the same shape because the rule
 
 
 
+
+## Mission 35 -- 12 files
+
+**Mission 35 moved 12 modules here and nothing else.**  The candidates were the 19 ORPHAN modules the
+M34 census named, **excluding everything under `lenses/`** (the mission's rule).  Before each move the
+module's DOTTED name and its BARE name were grepped over `.py`, `.json` and `.md` (excluding `archive/`,
+`.cache` and `.venv`) and its imports were resolved by AST with relative imports resolved against the
+file's package -- a bare-name grep alone cannot tell `import fuzzy` from the word "fuzzy".  The two
+`__import__` sites the mission names (`placement_recognise.py:252`, `placement_records.py:313`) import
+only `numpy`, `scipy` and `PIL`.  The suite was run after each of the three batches and was green each
+time (272 passed, 6 skipped).  `parameters/` untouched; the `core.registries` lens/population listing is
+identical before and after.
+
+| file | mission | why it is here | where its result is reported |
+|---|---|---|---|
+| `matching/relation_walker.py` | M35 | nothing in the kept tree imports it (0 AST references); a complete relation-grown matcher that the shipped path never reached | `Topology/results/placement/MISSION34_REPORT.md` §7 (census) |
+| `matching/fuzzy.py` | M35 | nothing imports it (0 AST references); its own docstring says the tree's other matchers superseded it | same |
+| `matching/consensus.py` | M35 | nothing imports it (0 AST references) | same |
+| `matching/search.py` | M35 | nothing imports it (0 AST references) | same |
+| `matching/m15_places.py` | M35 | nothing imports it (0 AST references); the truth rule it held was moved to `matching/placement_truth.py` in M24 | same |
+| `matching/canonical_order.py` | M35 | nothing imports it (0 AST references); the `perception/front_end_mechanisms.py` hits are dict keys, not imports | same |
+| `perception/relatable_completion.py` | M35 | nothing imports it; it imports `perception/contour_relations`, which moves with it | same |
+| `perception/contour_relations.py` | M35 | only `relatable_completion` imported it, and both moved in the same batch | same |
+| `perception/ring_hypothesis.py` | M35 | nothing imports it (0 AST references) | same |
+| `perception/psychophysics.py` | M35 | nothing imports it (0 AST references) | same |
+| `perception/surface_fragment_cache.py` | M35 | nothing imports it (0 AST references) | same |
+| `core/junctions.py` | M35 | nothing imports it (0 AST references) | same |
+
+**Six candidates were LEFT IN PLACE, on purpose, each because moving it would leave a KEPT module with
+a broken import:** `perception/surface_fragments.py` (2,638 lines -- imported by
+`lenses/surface_fragment_lens.py`, and `lenses/` is excluded from this mission's candidates),
+`perception/frames.py` (382 -- same lens), `matching/signature_matrix.py` (377 -- imported by
+`memory/cores.py`), `matching/calibration.py` (185 -- imported by `memory/cores.py`),
+`eth80_split.py` (127 -- imported by `eth80_frontend.py`) and `sensory_floor.py` (43 -- imported by
+`concept_graph.py`, `consolidator.py` and `dynamics/activation.py`).
+
+**Legacy flags.**  The M34 census generated a list of **225 parameter flags named nowhere** in the
+tree (and 234 read / 378 never read overall).  They are left exactly as they are and are recorded here
+as **legacy**: `parameters/` is untouched by this mission, so the front-end switch digest -- and the
+graph cache key it forms -- does not move.
+
 **Mission 34 moved nothing here.**  Its six harnesses (`m34_fragments.py`, `m34_door.py`,
 `m34_rerank.py`, `m34_audit.py`, `m34_anchors.py`, `m34_wire.py`) are live in `Topology/` and listed
 in `KEEP_MAP.md` §3.  It archived nothing and deleted nothing -- but it did find 19 orphan modules

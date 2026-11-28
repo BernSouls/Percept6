@@ -21,6 +21,8 @@ The shipped system is: **content-count door + appearance, RRF k = 60, flat short
 | `matching/placement_cache.py` | **core (new, moved)** | content-hash graph cache -- was `Topology/placement_cache.py`, which now re-exports it |
 | `matching/placement_frontdoor.py` | core (was already) | PlaceIndex, count_scores (the shipped door), graded_scores (M26, `door.kind = "graded"`), relaxed_scores (M27 item 4b, experimental), appearance, rank_fuse |
 | `matching/placement_records.py` | **core (M27)** | the compact committed form of the 320 place records (`data/placement_records_m27.npz`), the loader the door reads, and `placed_workers()` (the default worker count) |
+| `matching/placement_bag.py` | **core (M35)** | the OBJECT descriptor (COLOUR/SHAPE/LAYOUT/CFG blocks, Hellinger-normalised), the arm registry, the bag door's score, `class_scores`; the shipped door since M35 |
+| `matching/placement_bag_edges.json` | **core (M35)** | the descriptor's bin edges, computed once from the reference view's own values, with provenance; a missing file is a refusal |
 | `matching/placement_prefilter.py` | core | `load_params`, `bag_v2`, `standardize`, `score_bags_v2` |
 | `matching/placement_edges.py` | core | `node_frames_keypoint` (the place frames) |
 | `matching/placement_matcher.py` | core | `build_side_cached`; its `_image_digest` now calls core's `key_for` |
@@ -65,6 +67,7 @@ walks the AST of every core package and fails on either.
 | `Topology/m27_door.py` (M27 item 4) | m26_records, placement_frontdoor, placement_kernel, core/keypoint_classes -- the two door variants |
 | `scripts/bootstrap_cache.py` (M27 item 1d) | the whole environment restore, with per-step seconds |
 | `Topology/m28_determinism.py` (M28 item 1b) | placement_frontend -- the same 10 pairs at 1, 2, 4 workers and threads = 1 |
+| `Topology/m35_bag.py` (M35 items 1-6) | m26_records, placement_bag, placement_records, placement_recognise, placement_fragment, placement_anchors, placement_fuse -- the ruler, the item-1 replication, the class test, the door candidates, the class output, the fragment ablation, the matcher pairs and the 1/2/4-worker determinism |
 | `Topology/m28_gauge.py` (M28 items 4/5) | m26_records, placement_kernel, placement_content -- the G gauge and the four candidates |
 | `Topology/m28_records.py` (M28 item 6) | matching/placement_records, placement_content -- the content record file and its equivalence check |
 | `Topology/m28_door.py` (M28 item 6) | m26_records, placement_records, placement_content -- the two content door variants |

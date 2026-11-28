@@ -1,0 +1,214 @@
+{
+ "chance_recall8": 0.1,
+ "chance_top1": 0.0125,
+ "objects": 80,
+ "views": {
+  "022-000": {
+   "ALL": {
+    "median_rank": 0.0,
+    "recall8": 1.0,
+    "recall8_fit": 1.0,
+    "recall8_n": 80,
+    "top1": 0.8,
+    "top1_fit": 0.8,
+    "top1_n": 64
+   },
+   "CFG": {
+    "median_rank": 15.0,
+    "recall8": 0.3,
+    "recall8_fit": 0.35,
+    "recall8_n": 24,
+    "top1": 0.1,
+    "top1_fit": 0.075,
+    "top1_n": 8
+   },
+   "COLOUR": {
+    "median_rank": 0.0,
+    "recall8": 1.0,
+    "recall8_fit": 1.0,
+    "recall8_n": 80,
+    "top1": 0.8125,
+    "top1_fit": 0.8,
+    "top1_n": 65
+   },
+   "COLOUR+SHAPE_equal": {
+    "recall8_n": 80,
+    "top1_n": 68
+   },
+   "COLOUR-FREE": {
+    "median_rank": 1.0,
+    "recall8": 0.8625,
+    "recall8_fit": 0.9,
+    "recall8_n": 69,
+    "top1": 0.4875,
+    "top1_fit": 0.55,
+    "top1_n": 39
+   },
+   "GEOMETRY": {
+    "median_rank": 5.5,
+    "recall8": 0.5625,
+    "recall8_fit": 0.575,
+    "recall8_n": 45,
+    "top1": 0.2625,
+    "top1_fit": 0.275,
+    "top1_n": 21
+   },
+   "LAYOUT": {
+    "median_rank": 5.0,
+    "recall8": 0.575,
+    "recall8_fit": 0.575,
+    "recall8_n": 46,
+    "top1": 0.2375,
+    "top1_fit": 0.225,
+    "top1_n": 19
+   },
+   "SHAPE": {
+    "median_rank": 0.0,
+    "recall8": 0.925,
+    "recall8_fit": 0.975,
+    "recall8_n": 74,
+    "top1": 0.5875,
+    "top1_fit": 0.575,
+    "top1_n": 47
+   }
+  },
+  "035-045": {
+   "ALL": {
+    "median_rank": 0.0,
+    "recall8": 0.975,
+    "recall8_fit": 0.975,
+    "recall8_n": 78,
+    "top1": 0.6,
+    "top1_fit": 0.6,
+    "top1_n": 48
+   },
+   "CFG": {
+    "median_rank": 17.0,
+    "recall8": 0.3875,
+    "recall8_fit": 0.35,
+    "recall8_n": 31,
+    "top1": 0.1,
+    "top1_fit": 0.075,
+    "top1_n": 8
+   },
+   "COLOUR": {
+    "median_rank": 0.0,
+    "recall8": 1.0,
+    "recall8_fit": 1.0,
+    "recall8_n": 80,
+    "top1": 0.725,
+    "top1_fit": 0.625,
+    "top1_n": 58
+   },
+   "COLOUR+SHAPE_equal": {
+    "recall8_n": 79,
+    "top1_n": 54
+   },
+   "COLOUR-FREE": {
+    "median_rank": 3.5,
+    "recall8": 0.6125,
+    "recall8_fit": 0.65,
+    "recall8_n": 49,
+    "top1": 0.2125,
+    "top1_fit": 0.225,
+    "top1_n": 17
+   },
+   "GEOMETRY": {
+    "median_rank": 10.5,
+    "recall8": 0.4625,
+    "recall8_fit": 0.475,
+    "recall8_n": 37,
+    "top1": 0.1625,
+    "top1_fit": 0.1,
+    "top1_n": 13
+   },
+   "LAYOUT": {
+    "median_rank": 12.0,
+    "recall8": 0.325,
+    "recall8_fit": 0.4,
+    "recall8_n": 26,
+    "top1": 0.0875,
+    "top1_fit": 0.1,
+    "top1_n": 7
+   },
+   "SHAPE": {
+    "median_rank": 5.0,
+    "recall8": 0.6,
+    "recall8_fit": 0.55,
+    "recall8_n": 48,
+    "top1": 0.2125,
+    "top1_fit": 0.175,
+    "top1_n": 17
+   }
+  },
+  "045-180": {
+   "ALL": {
+    "median_rank": 1.0,
+    "recall8": 0.8625,
+    "recall8_fit": 0.85,
+    "recall8_n": 69,
+    "top1": 0.4625,
+    "top1_fit": 0.5,
+    "top1_n": 37
+   },
+   "CFG": {
+    "median_rank": 26.0,
+    "recall8": 0.2125,
+    "recall8_fit": 0.175,
+    "recall8_n": 17,
+    "top1": 0.0375,
+    "top1_fit": 0.0,
+    "top1_n": 3
+   },
+   "COLOUR": {
+    "median_rank": 0.0,
+    "recall8": 0.95,
+    "recall8_fit": 0.925,
+    "recall8_n": 76,
+    "top1": 0.5375,
+    "top1_fit": 0.5,
+    "top1_n": 43
+   },
+   "COLOUR+SHAPE_equal": {
+    "recall8_n": 75,
+    "top1_n": 42
+   },
+   "COLOUR-FREE": {
+    "median_rank": 4.5,
+    "recall8": 0.5875,
+    "recall8_fit": 0.625,
+    "recall8_n": 47,
+    "top1": 0.2125,
+    "top1_fit": 0.225,
+    "top1_n": 17
+   },
+   "GEOMETRY": {
+    "median_rank": 22.0,
+    "recall8": 0.2875,
+    "recall8_fit": 0.275,
+    "recall8_n": 23,
+    "top1": 0.1,
+    "top1_fit": 0.1,
+    "top1_n": 8
+   },
+   "LAYOUT": {
+    "median_rank": 22.0,
+    "recall8": 0.2375,
+    "recall8_fit": 0.275,
+    "recall8_n": 19,
+    "top1": 0.0625,
+    "top1_fit": 0.05,
+    "top1_n": 5
+   },
+   "SHAPE": {
+    "median_rank": 4.0,
+    "recall8": 0.6,
+    "recall8_fit": 0.575,
+    "recall8_n": 48,
+    "top1": 0.2625,
+    "top1_fit": 0.25,
+    "top1_n": 21
+   }
+  }
+ }
+}

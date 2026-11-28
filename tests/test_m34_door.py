@@ -46,8 +46,11 @@ def test_fuse_without_the_fragment_channel_is_the_previous_arithmetic() -> None:
 def test_bundle_ships_the_fragment_channel_at_the_stated_discount() -> None:
     from matching import placement_bundle as PB
     b = PB.PlacementBundle.load()
-    assert b.door_kind == "fused3"
-    assert b.fragment_weight == PB.json.load(open(PB.BUNDLE_PATH))["fusion"]["fragment"] == 0.5
+    assert b.door_kind == "bag"          # [M35] the bag door ships; fused3 is legacy
+    # [M35 item 5] the fragment channel was measured ON TOP of the bag door and did not add its
+    # +0.025 FIT recall@8, so its weight is 0 -- the code and the anchors stay committed.
+    assert float(b.fragment_weight) == 0.0
+    assert PB.json.load(open(PB.BUNDLE_PATH))["fusion"]["fragment"] == 0.0
     assert b.fusion_weight == 0.5                       # colour keeps its own discount
     assert "placement_fragment.py" in " ".join(PB.CODE_MODULES)
 

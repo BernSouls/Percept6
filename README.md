@@ -19,11 +19,17 @@ door_only = recognise("query.png", gallery, matcher=False)  # the door's own ord
 result.ranking, result.shortlist, result.scores
 ```
 
-The **fused door** (`door.kind = "fused3"`) is a reciprocal-rank fusion of three channels — the
-counted place matches, the whole-image appearance descriptor, and the six CIELAB ring means each
-place carries (`content.kind = "colour_rings"`, `matching/placement_content.py`) — with the colour
-channel at weight 0.5 and `k = 60`.  It hands the top **8** objects to the M19 matcher
-(`matching/joint_mcs.py`).  Everything above is frozen in `matching/placement_bundle.json` and
+The **bag door** (`door.kind = "bag"`, M35) scores an object by the HISTOGRAM of its places'
+measurements — an object is a distribution, not a max.  Three blocks read the record alone: the ab
+plane of ring 1 (5×5), the ab plane of ring 2 (5×5) and ring-1 lightness (6 bins); each block is
+L1-normalised then square-rooted, the group score is the mean of the blocks' dot products, and the
+object score is the max over the gallery's stored views (`matching/placement_bag.py`, bin edges in
+`matching/placement_bag_edges.json` with provenance).  It hands the top **8** objects to the M19
+matcher (`matching/joint_mcs.py`), which ships as flag `verify` because it could not be shown to add
+its +0.075 on this door.  `matching/placement_recognise.recognise_class(query, gallery)` gives the
+class answer (mean of a class's top-2 instance scores, own object excluded).  The fused three-channel
+door (`door.kind = "fused3"`, RRF of counted + appearance + colour at 0.5, `k = 60`) stays
+implemented as the legacy path.  Everything above is frozen in `matching/placement_bundle.json` and
 refused at load time if this tree cannot honour it; nothing falls back silently.
 
 Measured (`MISSION30_REPORT.md`, A1; 80 objects, chance 0.100): the fused door reads **0.675 /
@@ -81,6 +87,30 @@ orphan** — including 3,185 lines of fragment machinery nobody had wired — an
 the front end emits, **16 reach no module that turns a graph into a number** while **474 places reach
 no edge at all**.  That verdict is in `MISSION34_REPORT.md` §7, and it is the reason the fragment
 channel ships wired rather than measured and shelved.
+
+**M35 made the object the unit and re-chose the door by measurement** (`MISSION35_REPORT.md`).  A
+colour histogram over an object's places recalls **1.000 / 0.925** of the FIT half at `-035-045` /
+`-045-180` (chance 0.100) against **0.800 / 0.650** for the fused door that shipped in M34 — a paired
+**+0.2375, CI [0.1375, 0.3375]**, confirmation +0.300, on a door of ONE channel.  Adding the old
+channels back *hurts* (0.950 / 0.800): RRF can only dilute a channel that is already right.  The
+four-block descriptor (COLOUR / SHAPE / LAYOUT / CFG, 11 blocks, 745 numbers) was registered before
+any number and tested for CLASS: geometry alone — place layout in the object's own frame plus the
+neighbourhood shell profile, **no appearance term** — reads class AUC **0.679 [0.641, 0.716]** and
+**0.622 [0.583, 0.659]** at the two hard views, so **geometry does cluster by class**, and it beats
+colour exactly where colour fails (**car** 0.90 vs 0.51; **cup** 0.80 vs 0.69) while losing where
+colour is strong (**pear** 0.54 vs 0.90).  The blocks are complementary (ALL − COLOUR **+0.053** and
+**+0.055**, both CIs excluding zero) and ALL is the best class arm at every view
+(0.806 / 0.791 / 0.783).  The class output reads **0.650 / 0.575 / 0.500** with CIs that include
+M23's 0.500 — shipped, not claimed as an improvement.  The fragment channel was re-measured **on top
+of the new door** and adds **+0.000** FIT recall@8 (bar +0.025), so its weight is **0.0** (code and
+anchors stay); its own ablation withdraws M34's "composition" reading — the eight arrangement fields
+alone are at chance (0.275) and the six **part-level colour means** alone beat all 22 (0.825 vs 0.700
+at `-035-045`).  The matcher's contribution on this door is a **named ceiling**: 640 uncached pairs
+≈ 6 h of one core, not finished in the window, so the door's order is final and the matcher is
+`verify`.  The tree is closed too: **12 orphan modules, 6,143 lines** moved to `archive/` (suite green
+after each of three batches) and **6 left in place** because moving them would break a kept import
+(`lenses/` is excluded).  Limits: 80 objects, plain backgrounds, no real scenes; a lighting change
+moves every colour bin; the next lever is a second dataset whose classes do not differ in colour.
 
 ## Layout
 

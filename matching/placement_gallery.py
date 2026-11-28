@@ -124,6 +124,9 @@ class Gallery:
     #: `flat_records()`.  None means "this gallery carries no anchors", and a bundle that fuses the
     #: fragment channel then refuses rather than scoring the channel as 0.
     fragment_anchors: Optional[List[Any]] = None
+    #: [M35] per stored cell, that cell's object descriptor blocks (`matching.placement_bag`),
+    #: object-major like `flat_records()`.  None means "not built"; a bag door builds it.
+    bag_features: Optional[List[Any]] = None
 
     @property
     def n(self) -> int:

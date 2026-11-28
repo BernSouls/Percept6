@@ -1,0 +1,80 @@
+{
+ "arm": [
+  "COLOUR",
+  "SHAPE",
+  "LAYOUT",
+  "CFG"
+ ],
+ "chance_class_top1": 0.125,
+ "m23": 0.5,
+ "top": 2,
+ "views": {
+  "022-000": {
+   "ci": [
+    0.55,
+    0.75
+   ],
+   "class_top1": 0.65,
+   "class_top1_conf": 0.725,
+   "class_top1_fit": 0.575,
+   "mean_rank_of_truth": 0.6125,
+   "n": 80,
+   "n_hit": 52,
+   "per_class": {
+    "apple": 0.6,
+    "car": 0.9,
+    "cow": 0.6,
+    "cup": 0.8,
+    "dog": 0.4,
+    "horse": 0.3,
+    "pear": 0.7,
+    "tomato": 0.9
+   }
+  },
+  "035-045": {
+   "ci": [
+    0.4625,
+    0.6875
+   ],
+   "class_top1": 0.575,
+   "class_top1_conf": 0.65,
+   "class_top1_fit": 0.5,
+   "mean_rank_of_truth": 0.8,
+   "n": 80,
+   "n_hit": 46,
+   "per_class": {
+    "apple": 0.7,
+    "car": 0.6,
+    "cow": 0.7,
+    "cup": 0.8,
+    "dog": 0.4,
+    "horse": 0.2,
+    "pear": 0.3,
+    "tomato": 0.9
+   }
+  },
+  "045-180": {
+   "ci": [
+    0.3875,
+    0.6125
+   ],
+   "class_top1": 0.5,
+   "class_top1_conf": 0.525,
+   "class_top1_fit": 0.475,
+   "mean_rank_of_truth": 0.9125,
+   "n": 80,
+   "n_hit": 40,
+   "per_class": {
+    "apple": 0.4,
+    "car": 0.8,
+    "cow": 0.5,
+    "cup": 0.8,
+    "dog": 0.4,
+    "horse": 0.1,
+    "pear": 0.1,
+    "tomato": 0.9
+   }
+  }
+ },
+ "weighting": "block"
+}

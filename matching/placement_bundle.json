@@ -70,7 +70,7 @@
    "w_shape": 0.0
   }
  },
- "code_digest": "27c6a3b756e4ef8f5ecafc3ed8a05fb8228e2f9e6121a4b9be548be31cad9466",
+ "code_digest": "f19540f56e0e08602a69bb1f1884a7790d3c7e2dfb0a22f329d1440b6cb47c1f",
  "content": {
   "digest": "3c730dbbe84ef43c",
   "kind": "colour_rings",
@@ -82,12 +82,21 @@
  },
  "date": "2026-11-27",
  "door": {
-  "kind": "fused3",
+  "kind": "bag",
   "n_hits": 8,
   "note": "the counted door: each query place counts its n_hits nearest pool places by the frozen configuration ruler, one vote per object; the object score is count / sqrt(n_query_places * n_object_places)",
   "params": {
-   "colour_weight": 0.5,
-   "n_hits": 8
+   "arm": "COLOUR",
+   "blocks": {
+    "L1": 6,
+    "ab1": 25,
+    "ab2": 25
+   },
+   "chosen_on": "FIT recall@8, then top-1, ties -> fewer channels (M35 item 3): 1.000/0.925 r@8 FIT vs the shipped fused3 0.800/0.650",
+   "edges": "matching/placement_bag_edges.json",
+   "edges_sha256": "f00aa2743c5357c3",
+   "note": "the bag door reads the OBJECT descriptor in matching/placement_bag.py from the place records alone; door.kind = fused3 stays implemented as the legacy path (placement_fuse) and is no longer what the bundle ships",
+   "rules": "each block L1-normalised then square-rooted; the group score is the mean of its blocks' dot products; the object score is the max over the gallery's stored views"
   }
  },
  "frontend": {
@@ -113,7 +122,8 @@
   "appearance": 1.0,
   "colour": 0.5,
   "counted": 1.0,
-  "fragment": 0.5
+  "fragment": 0.0,
+  "note_m35": "M35 item 5: the fragment channel was measured on top of the bag door and did not add its +0.025 FIT recall@8 (the bag door already recalls 1.000 / 0.925 of the FIT half at the two hard views); the weight is 0 and the code and the anchors stay."
  },
  "margin_tau": 0.0,
  "matcher": {
@@ -413,7 +423,7 @@
   },
   "note": "documentation only: this block is not part of code_digest and freeze() overwrites it"
  },
- "mission": "M31",
+ "mission": "M35",
  "name": "placement-shipped-v1",
  "provenance": {
   "entry_point": "matching/placement_recognise.py",

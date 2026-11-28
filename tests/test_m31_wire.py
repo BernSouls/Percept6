@@ -41,9 +41,11 @@ def _have_records() -> bool:
 
 class TestBundle(unittest.TestCase):
     def test_bundle_ships_the_fused_door(self):
+        # [M35] the shipped door is the object-level bag door; `fused3` stays implemented as the
+        # legacy path (the fusion weights below are still the ones that path reads).
         from matching import placement_bundle as PB
         b = PB.PlacementBundle.load()
-        self.assertEqual(b.door_kind, "fused3")
+        self.assertEqual(b.door_kind, "bag")
         self.assertAlmostEqual(b.fusion_weight, 0.5, places=12)
         self.assertEqual(int(b.rrf_k), 60)
         self.assertEqual(int(b.shortlist), 8)
@@ -70,7 +72,8 @@ class TestBundle(unittest.TestCase):
     def test_colour_weight_zero_is_the_two_channel_door(self):
         from matching import placement_bundle as PB
         from matching import placement_recognise as PR
-        b = PB.PlacementBundle.load()
+        # [M35] same as above: the fused door is exercised explicitly, it is no longer what ships.
+        b = dataclasses.replace(PB.PlacementBundle.load(), door_kind="fused3", door_params={})
         zero = dataclasses.replace(b, door_params={**dict(b.door_params), "colour_weight": 0.0})
         PR._validate(zero)                       # legal: 0 is the shipped two-channel door
         self.assertEqual(zero.fusion_weight, 0.0)
@@ -181,7 +184,10 @@ class TestProductDoor(unittest.TestCase):
         from matching import placement_frontdoor as FD
         from matching import placement_fuse as FU
         from matching import placement_recognise as PR2
-        b = PB.PlacementBundle.load()
+        # [M35] the shipped bundle now names the OBJECT-LEVEL bag door.  This test's claim is about
+        # the FUSED door's arithmetic, which is still implemented (legacy), so it runs that kind
+        # explicitly: reverting `fuse` (or the colour channel it reads) still goes red here.
+        b = dataclasses.replace(PB.PlacementBundle.load(), door_kind="fused3", door_params={})
         cells = 0
         for view in VIEWS:
             for o in self.objs:
@@ -217,7 +223,8 @@ class TestProductDoor(unittest.TestCase):
         from matching import placement_bundle as PB
         from matching import placement_frontdoor as FD
         from matching import placement_recognise as PR2
-        b = PB.PlacementBundle.load()
+        # [M35] same as above: the fused door is exercised explicitly, it is no longer what ships.
+        b = dataclasses.replace(PB.PlacementBundle.load(), door_kind="fused3", door_params={})
         zero = dataclasses.replace(b, door_params={**dict(b.door_params), "colour_weight": 0.0})
         for view in VIEWS:
             for o in self.objs:
