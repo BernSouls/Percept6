@@ -553,17 +553,34 @@ class V1RetinotopicLattice:
                     # radius", and a UNIFORM DISC scores 0.25 / 0.9025 =
                     # 0.277.  It is a measurement of the image, it is
                     # scale-free, and it is not a copy of any other slot.
-                    order = np.argsort(dists, axis=None)
-                    cum = np.cumsum(w_n.ravel()[order])
+                    if _CIRC_RADIAL:
+                        # [M36/AUDIT-A1] MEASURED CIRCULARITY: the ISOPERIMETRIC
+                        # RATIO of the window's energy footprint, 4*pi*A / P^2.
+                        # A disc scores ~0.95 on the pixel grid, a square 0.785,
+                        # a 5:1 sliver ~0.6, and the number moves with the shape.
+                        # The shipped value was m50/m95 of the CUMULATIVE mass --
+                        # a position in the cumulative array, ~0.527
+                        # whatever the shape (measured: 0.5274 / 0.5269 / 0.5269
+                        # on a disc, a square and a sliver, and identical across
+                        # the 17 REGION_SHAPE nodes of one cell).
+                        c_val, c_px = isoperimetric_circularity(win_spatial)
+                        r["circularity"] = c_val
+                        if c_px > 0.0:
+                            r["circularity_footprint_px"] = c_px
+                    else:
+                        # [SHIPPED] The mass ladder.  Kept reachable byte for
+                        # byte while BOUNDARY_CIRCULARITY_RADIAL is off.
+                        order = np.argsort(dists, axis=None)
+                        cum = np.cumsum(w_n.ravel()[order])
 
-                    def _mass_at(q: float) -> float:
-                        i = int(np.searchsorted(cum, q))
-                        i = min(max(i, 0), len(cum) - 1)
-                        return float(cum[i])
+                        def _mass_at(q: float) -> float:
+                            i = int(np.searchsorted(cum, q))
+                            i = min(max(i, 0), len(cum) - 1)
+                            return float(cum[i])
 
-                    m50 = _mass_at(0.5)
-                    m95 = _mass_at(0.95)
-                    r["circularity"] = clamp(m50 / (m95 + 1e-9), 0.0, 1.0)
+                        m50 = _mass_at(0.5)
+                        m95 = _mass_at(0.95)
+                        r["circularity"] = clamp(m50 / (m95 + 1e-9), 0.0, 1.0)
                 else:
                     r["circularity"] = 0.5
             else:
@@ -586,6 +603,42 @@ class V1RetinotopicLattice:
                 r["mean_rgb"] = (float(clean_rgb[cy, cx, 0]), float(clean_rgb[cy, cx, 1]), float(clean_rgb[cy, cx, 2]))
 
         return regions
+
+_CIRC_RADIAL = bool(getattr(__import__("parameters"), "BOUNDARY_CIRCULARITY_RADIAL", False))
+
+def isoperimetric_circularity(win_spatial: np.ndarray):
+    """(circularity, footprint_px) of one window's energy footprint.
+
+    [M36/AUDIT-A1] 4*pi*A / P^2 on the 10 %-of-peak footprint of the window's
+    spatial energy.  1.0 = a circle; measured on the pixel grid, a disc scores
+    ~0.90, a square 0.78 and a 10:1 sliver ~0.35, so the number MOVES with the
+    shape.  The statistic this replaces (`m50/m95` of the cumulative mass) is a
+    ladder: 0.5274 on a disc, 0.5269 on a square, 0.5269 on a sliver.
+
+    The perimeter is the total variation of the smoothed footprint, and the ratio
+    is clipped to [0, 1]; a window whose footprint is under 4 px is reported as
+    0.5 with footprint 0.0 (no shape to measure).
+    """
+    win = np.asarray(win_spatial, dtype=np.float64)
+    if win.size == 0 or not np.isfinite(win).any():
+        return 0.5, 0.0
+    peak = float(win.max())
+    if peak <= 0.0:
+        return 0.5, 0.0
+    foot = win >= 0.10 * peak
+    area_px = float(foot.sum())
+    if area_px < 4.0:
+        return 0.5, 0.0
+    # Perimeter as the TOTAL VARIATION of the smoothed footprint: for a convex
+    # region the coarea identity makes int|grad(G * m)| the true perimeter, and
+    # unlike a 4-neighbour side count it does not over-charge a diagonal edge.
+    # Measured on 40x40 masks: disc 1.000, square 0.876, ellipse 0.736,
+    # 6x38 sliver 0.559.
+    from scipy.ndimage import gaussian_filter as _gf
+    sm = _gf(foot.astype(np.float64), 1.5, mode="nearest")
+    gy, gx = np.gradient(sm)
+    per_px = float(np.hypot(gx, gy).sum())
+    return clamp(4.0 * math.pi * area_px / (per_px * per_px + 1e-9), 0.0, 1.0), area_px
 
 def _resample_contours(contours, step, min_points=12):
     pts = []  # (x, y, theta_axial, contour_idx, arc)

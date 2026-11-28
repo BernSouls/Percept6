@@ -11,6 +11,9 @@ import itertools
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Set, Tuple
 import parameters as P
+
+import lenses._anchors as _anchors  # [M36/AUDIT-C2]
+_LENS_ANCHOR_RES = bool(getattr(__import__("parameters"), "LENS_ANCHOR_RESOLUTION", False))
 from core.place_key import salted_sig_hash  # noqa: F401
 from core.hashing import (  # noqa: F401
     _detection_sort_key,
@@ -81,6 +84,33 @@ _CURVE_COMPLEX_SPEC = {s.name: s for s in POPULATION_SLOTS["CURVE_COMPLEX"]}
 _REGION_SHAPE_SPEC = {s.name: s for s in POPULATION_SLOTS["REGION_SHAPE"]}
 _ILLUSORY_SPEC = {s.name: s for s in POPULATION_SLOTS["ILLUSORY_CONTOUR"]}
 
+
+_AREA_FROM_SHAPE = bool(getattr(__import__("parameters"), "LENS_AREA_FROM_SHAPE", False))
+
+
+def _image_area(observation) -> float:
+    """[M36/AUDIT-B1] THE FRAME AREA, FROM THE ATTRIBUTE THE FRAME ACTUALLY HAS.
+
+    `getattr(observation, "image_area", 0.0) or 1.0` never found `image_area`:
+    `Observation2D` exposes `image_shape` (and no `image_area`), so the divisor was
+    always the fallback 1.0, `log10(area / 1.0) >= 0` for every region, and the
+    area slot saturated on its top bin on 98/98 measured observations.  ON, the area
+    comes from the shape; an observation with neither attribute still falls back to
+    1.0 rather than raising.
+    """
+    if not _AREA_FROM_SHAPE:
+        return float(getattr(observation, "image_area", 0.0)) or 1.0
+    area = getattr(observation, "image_area", None)
+    if area:
+        return float(area)
+    shape = getattr(observation, "image_shape", None)
+    try:
+        h, w = int(shape[0]), int(shape[1])
+        if h > 0 and w > 0:
+            return float(h * w)
+    except (TypeError, IndexError, ValueError):
+        pass
+    return 1.0
 
 def _level_bin(spec, level: float) -> float:
     """A SOURCE detection's LEVEL, written back through the unit table.
@@ -413,7 +443,7 @@ def _region_shape_measurements(poly, observation, closed):
         hist = [h / total_L for h in hist]
     hist_values = [math.sqrt(h) for h in hist]
 
-    img_area = float(getattr(observation, "image_area", 0.0)) or 1.0
+    img_area = _image_area(observation)
     area_norm = math.log10(max(area / img_area, 1e-6))
 
     _cx = sum(p[0] for p in poly) / n_pts
@@ -456,6 +486,9 @@ class SurfaceLens(HigherLens):
         bo_by: Dict[Any, List[Any]] = defaultdict(list)
         for d in current_detections.get("BorderOwnership", []):
             bo_by[d.alpha].append(d)
+        _bo_list = [d for group in bo_by.values() for d in group]
+        _color_list = list(current_detections.get("Color", []))
+        _tex_list = list(current_detections.get("Texture", []))
 
         # The FRAGMENT source: one surface per PEAK_CHAIN (a contour
         # fragment). There is no region and no entity any more -- the
@@ -555,9 +588,25 @@ class SurfaceLens(HigherLens):
                             flank = fld
                     except Exception:
                         flank = None
-                bo_field = bo_by.get(anchor, [])
-                c_det = color_by.get(anchor)
-                t_det = tex_by.get(anchor)
+                if _LENS_ANCHOR_RES:
+                    # [M36/AUDIT-C2] EACH LOOKUP GOES THROUGH ITS PRODUCER'S BAND.
+                    # `anchor` is a PEAK_CHAIN anchor (1e9 + 1e5 + k); `bo_by` is
+                    # keyed by CONTOUR_PEAK anchors (1e9 + i) and `color_by`/
+                    # `tex_by` by region ids, so all three .get() calls above miss
+                    # on EVERY row.  The chain's own member peaks give its
+                    # BorderOwnership rows; the nearest region-keyed Colour/Texture
+                    # gives its material.
+                    _pos = (anchor_positions or {}).get(anchor)
+                    bo_field = _anchors.bo_for_chain(
+                        det, bo_by, anchor_positions, bo_dets=_bo_list)
+                    c_det = _anchors.nearest(_color_list, _pos, anchor_positions,
+                                             name="surface.color")
+                    t_det = _anchors.nearest(_tex_list, _pos, anchor_positions,
+                                             name="surface.texture")
+                else:
+                    bo_field = bo_by.get(anchor, [])
+                    c_det = color_by.get(anchor)
+                    t_det = tex_by.get(anchor)
                 emitted.append(self._emit_one(
                     t, anchor, 1.0, bo_field, c_det, t_det,
                     flank, current_detections, observation,

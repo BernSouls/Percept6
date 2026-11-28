@@ -306,10 +306,30 @@ def _l6_address(binder) -> Dict[str, Any]:
         ni = int(nid)
         nodes.add(ni)
         if ni not in sigs:
-            sigs[ni] = (getattr(d, "k", "?"),)
+            if _L6_SIGMA_CONTENT:
+                # [M36/AUDIT-A3] THE ADDRESS CARRIES THE NODE'S OWN MEASUREMENT.
+                # `(kind,)` is the class alone, so two graphs with the same node
+                # and edge types and completely different geometry hashed to the
+                # SAME address: `compute_vector_addresses` reads element 1 as the
+                # TypedSignature and feeds it to `_content_vector`, and element 1
+                # was never there.  The signature (quantized bins + population) is
+                # the graded content the matcher compares, so it is what the
+                # address now encodes.
+                sigs[ni] = (getattr(d, "k", "?"), getattr(d, "sigma", None))
+            else:
+                sigs[ni] = (getattr(d, "k", "?"),)
     edges = []
-    if hasattr(binder, "cg") and isinstance(getattr(binder.cg, "edges", None), dict):
-        for k, v in binder.cg.edges.items():
+    _cg_edges = getattr(getattr(binder, "cg", None), "edges", None)
+    if _L6_SIGMA_CONTENT and isinstance(_cg_edges, (set, frozenset, list, tuple)):
+        # [M36/AUDIT-A3] A FROZENSET OF (parent, child, type) IS THE SAME EDGE SET.
+        # `ConceptGraph.edges` is a dict, but a cell's `subgraph.edges` is a
+        # frozenset; the isinstance(dict) guard silently dropped every edge on
+        # that path, leaving the address pure type content with no neighbours.
+        for item in _cg_edges:
+            if isinstance(item, tuple) and len(item) >= 3:
+                edges.append((int(item[0]), int(item[1]), item[2]))
+    elif isinstance(_cg_edges, dict):
+        for k, v in _cg_edges.items():
             if isinstance(k, tuple) and len(k) >= 2:
                 et = getattr(v, "edge_type", getattr(v, "type", k[2] if len(k) > 2 else "?"))
                 edges.append((k[0], k[1], et))
@@ -324,6 +344,9 @@ def _l6_address(binder) -> Dict[str, Any]:
         "unique_k3": len(set(addrs[3].values())),
         "canonical_order": True,
     }
+
+
+_L6_SIGMA_CONTENT = bool(getattr(__import__("parameters"), "FE_L6_SIGMA_CONTENT", False))
 
 
 def _l6_vector_address(binder) -> Dict[str, Any]:
@@ -349,11 +372,31 @@ def _l6_vector_address(binder) -> Dict[str, Any]:
         ni = int(nid)
         nodes.add(ni)
         if ni not in sigs:
-            sigs[ni] = (getattr(d, "k", "?"),)
+            if _L6_SIGMA_CONTENT:
+                # [M36/AUDIT-A3] THE ADDRESS CARRIES THE NODE'S OWN MEASUREMENT.
+                # `(kind,)` is the class alone, so two graphs with the same node
+                # and edge types and completely different geometry hashed to the
+                # SAME address: `compute_vector_addresses` reads element 1 as the
+                # TypedSignature and feeds it to `_content_vector`, and element 1
+                # was never there.  The signature (quantized bins + population) is
+                # the graded content the matcher compares, so it is what the
+                # address now encodes.
+                sigs[ni] = (getattr(d, "k", "?"), getattr(d, "sigma", None))
+            else:
+                sigs[ni] = (getattr(d, "k", "?"),)
     edges = []
     weights: Dict[Tuple[int, int, Any], float] = {}
-    if hasattr(binder, "cg") and isinstance(getattr(binder.cg, "edges", None), dict):
-        for k, v in binder.cg.edges.items():
+    _cg_edges = getattr(getattr(binder, "cg", None), "edges", None)
+    if _L6_SIGMA_CONTENT and isinstance(_cg_edges, (set, frozenset, list, tuple)):
+        # [M36/AUDIT-A3] A FROZENSET OF (parent, child, type) IS THE SAME EDGE SET.
+        # `ConceptGraph.edges` is a dict, but a cell's `subgraph.edges` is a
+        # frozenset; the isinstance(dict) guard silently dropped every edge on
+        # that path, leaving the address pure type content with no neighbours.
+        for item in _cg_edges:
+            if isinstance(item, tuple) and len(item) >= 3:
+                edges.append((int(item[0]), int(item[1]), item[2]))
+    elif isinstance(_cg_edges, dict):
+        for k, v in _cg_edges.items():
             if isinstance(k, tuple) and len(k) >= 2:
                 et = getattr(v, "edge_type", getattr(v, "type",
                                                      k[2] if len(k) > 2 else "?"))
@@ -387,6 +430,17 @@ CONTENT_TOKEN_LENSES = frozenset({
     "RegionShape",
     "IllusoryContour",
 })
+
+#: [M36/AUDIT-C1] THE PLACE LAYERS ARE CONTENT TOKENS TOO.  A cell mints
+#: Blob / BoundaryArc / CornerPoint nodes (518 of 1,506 nodes on the shipped
+#: cell) and NOT ONE of the 2,686 edges touches a place: the content-token set
+#: omitted them, so `_content_node_positions` skipped every place and the L3
+#: spine / L4 junction stages could never see them.  On, the three keypoint
+#: classes join the content set (their alpha is the keypoint's own (x, y, ...)
+#: tuple, which `attachment._xy` resolves like any other anchor).
+PLACE_TOKEN_LENSES = frozenset({"Blob", "BoundaryArc", "CornerPoint"})
+if bool(getattr(P, "FE_CONTENT_PLACES", False)):
+    CONTENT_TOKEN_LENSES = frozenset(CONTENT_TOKEN_LENSES | PLACE_TOKEN_LENSES)
 
 
 def _content_node_positions(binder) -> Dict[int, Tuple[float, float]]:

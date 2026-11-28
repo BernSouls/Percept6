@@ -10,6 +10,9 @@ import math
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Set, Tuple
 import parameters as P
+
+import lenses._anchors as _anchors  # [M36/AUDIT-C2]
+_LENS_ANCHOR_RES = bool(getattr(__import__("parameters"), "LENS_ANCHOR_RESOLUTION", False))
 from perception.ownership import ownership_signed
 from core.place_key import salted_sig_hash  # noqa: F401
 from core.hashing import (  # noqa: F401
@@ -616,6 +619,8 @@ class ContourLens(HigherLens):
             key=_detection_sort_key,
         ):
             bo_by_anchor.setdefault(det.alpha, det)
+        _bo_list = sorted(current_detections.get("BorderOwnership", []),
+                         key=_detection_sort_key)
 
         # 1. Build G_c by explicit incident-edge iteration. Per-node
         # get_outgoing/get_incoming avoids inventing a graph-wide iterator;
@@ -689,7 +694,16 @@ class ContourLens(HigherLens):
                     ((math.atan2(dy, dx) % (2 * math.pi)) * 8)
                     / (2 * math.pi)
                 ))
-                bo_det = bo_by_anchor.get(a_u)
+                if _LENS_ANCHOR_RES:
+                    # [M36/AUDIT-C2] `a_u` is an ORIENTATION anchor (a region id);
+                    # `bo_by_anchor` is keyed by CONTOUR_PEAK anchors (1e9 + i),
+                    # so the direct lookup below is always None and this whole
+                    # ownership test was dead.  Resolve through the peak band by
+                    # position instead.
+                    bo_det = _anchors.bo_for_region(
+                        a_u, _bo_list, anchor_positions, name="contour.bo")
+                else:
+                    bo_det = bo_by_anchor.get(a_u)
                 if bo_det is None or len(bo_det.sigma.quantized) < 1:
                     continue
                 if bo_det.sigma.relation == "FIGURE_SIDE_FIELD":

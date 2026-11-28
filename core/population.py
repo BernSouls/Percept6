@@ -273,7 +273,18 @@ def centered_cosine(a: Sequence[float], b: Sequence[float]) -> float:
 def axis_similarity(a: Sequence[float], b: Sequence[float]) -> float:
     """Chance-corrected overlap of one axis, in [0, 1]: the non-negative part of
     the Pearson correlation of the activity vectors. Identical -> 1.0, unrelated
-    (orthogonal or disjoint) -> 0.0."""
+    (orthogonal or disjoint) -> 0.0.
+
+    [M36/AUDIT] THE IDENTITY CASE IS TESTED FIRST.  A FLAT activity vector (a region
+    whose marginal is uniform, i.e. an *uninformative* axis) has a zero centred
+    vector, so the correlation is undefined and the old code fell through to 0.0:
+    two IDENTICAL signatures compared to **0.0**, and a detection did not match
+    itself.  Measured on a REGION_SHAPE population that is uniform on every axis:
+    self-similarity 0.0.  Identical vectors now score 1.0 -- the docstring's own
+    contract -- and the chance correction still applies to everything else.
+    """
+    if len(a) == len(b) and list(a) == list(b):
+        return 1.0
     c = centered_cosine(a, b)
     return c if c > 0.0 else 0.0
 

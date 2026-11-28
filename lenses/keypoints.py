@@ -54,6 +54,8 @@ SCALE_OCTAVES: float = 0.6          # 2 ** 0.6 = 1.52x
 
 DEFAULT_SIGMAS: Tuple[float, ...] = (1.0, 1.6, 2.5, 4.0)
 
+_KP_RATIO = bool(getattr(__import__("parameters"), "KP_ANISOTROPY_RATIO", False))
+
 
 @dataclass(frozen=True)
 class Keypoint:
@@ -264,8 +266,18 @@ def detect(image: Any, sigmas: Sequence[float] = DEFAULT_SIGMAS,
                                           float(jxy[y, x]))
                 # ACROSS the boundary is reliable, ALONG it is not: the
                 # variance is inflated along theta and tightened across it.
-                across = 0.5 * (vx + vy)
-                along = min(1.0, across + 4.0)
+                if _KP_RATIO:
+                    # [M36/AUDIT-B3] THE TWO VARIANCES ARE THE TWO AXES.
+                    # `0.5*(vx+vy)` with `min(1.0, across + 4.0)` was a constant:
+                    # vx, vy in [1e-3, 1] make across <= 1.0 and across + 4.0 >= 4,
+                    # so `along` was 1.0 for EVERY keypoint (measured: 0 of 2,218
+                    # values below 1).  The pair is `var_x`, `var_y`, so this emits
+                    # the two measured per-axis variances instead of their mean and
+                    # a constant.
+                    across, along = float(vx), float(vy)
+                else:
+                    across = 0.5 * (vx + vy)
+                    along = min(1.0, across + 4.0)
                 out.append(Keypoint("edge", x + ox, y + oy, float(sigma),
                                     theta + np.pi / 2.0, coh, float(val),
                                     across, along, 1,

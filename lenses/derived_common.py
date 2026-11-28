@@ -185,6 +185,33 @@ JUNCTION_EMITTED_KINDS: Tuple[str, ...] = (
 ) + JUNCTION_FAMILY_KINDS + JUNCTION_FAMILY_EXTENSIONS
 
 
+_AREA_FROM_SHAPE = bool(getattr(__import__("parameters"), "LENS_AREA_FROM_SHAPE", False))
+
+
+def _image_area(observation) -> float:
+    """[M36/AUDIT-B1] THE FRAME AREA, FROM THE ATTRIBUTE THE FRAME ACTUALLY HAS.
+
+    `getattr(observation, "image_area", 0.0) or 1.0` never found `image_area`:
+    `Observation2D` exposes `image_shape` (and no `image_area`), so the divisor was
+    always the fallback 1.0, `log10(area / 1.0) >= 0` for every region, and the
+    area slot saturated on its top bin on 98/98 measured observations.  ON, the area
+    comes from the shape; an observation with neither attribute still falls back to
+    1.0 rather than raising.
+    """
+    if not _AREA_FROM_SHAPE:
+        return float(getattr(observation, "image_area", 0.0)) or 1.0
+    area = getattr(observation, "image_area", None)
+    if area:
+        return float(area)
+    shape = getattr(observation, "image_shape", None)
+    try:
+        h, w = int(shape[0]), int(shape[1])
+        if h > 0 and w > 0:
+            return float(h * w)
+    except (TypeError, IndexError, ValueError):
+        pass
+    return 1.0
+
 def is_junction_kind(kind: Any) -> bool:
     """True for every kind that belongs to the junction tier.
 
@@ -1232,7 +1259,7 @@ def polyline_shape_descriptor(poly, observation, closed: bool = True):
         for h in hist
     )
 
-    img_area = float(getattr(observation, "image_area", 0.0)) or 1.0
+    img_area = _image_area(observation)
     area_norm = math.log10(max(area / img_area, 1e-6))
     area_bin = float(qi(area_norm, P.REGION_SHAPE_AREA_BINS, -6.0, 0.0))
 

@@ -4553,3 +4553,101 @@ PLACEMENT_LLR_TABLE_PATH: str = os.environ.get("PLACEMENT_LLR_TABLE_PATH", "")
 #: RAISES.  Strict is the deployment gate; tolerant is never silent.
 KP_POPULATION_PAYLOAD_STRICT: bool = os.environ.get(
     "KP_POPULATION_PAYLOAD_STRICT", "0") != "0"
+
+# ---------------------------------------------------------------------------
+# [M36 / AUDIT] MEASUREMENT-CORRECTNESS SWITCHES.
+#
+# Every switch here is OFF by default, which keeps the shipped numbers reachable
+# byte for byte; ON is the audited measurement.  Each one replaces a quantity that
+# was measured, found to be a constant ladder or an artefact of the wrong space,
+# and is covered by a test that goes RED when the fix is reverted.
+# ---------------------------------------------------------------------------
+
+#: [M36/AUDIT-A1] BOUNDARY CIRCULARITY IN THE RADIAL SPACE.  `circularity` was
+#: `m50 / m95` where both came from `_mass_at(q) = cum[searchsorted(cum, q)]` --
+#: a position in the CUMULATIVE energy array, which for a filled contour window is
+#: a near-uniform ramp whatever the shape.  Measured: 0.5274 / 0.5269 / 0.5269 on
+#: a disc, a square and a 5:1 sliver, and identical across 17 REGION_SHAPE nodes of
+#: one cell.  ON, `circularity` is the isoperimetric ratio 4*pi*A/P^2 (1.0 = circle,
+#: 0.785 = square, 0.63 = 5:1 sliver), the shape quantity the slot claims to carry.
+BOUNDARY_CIRCULARITY_RADIAL: bool = os.environ.get(
+    "BOUNDARY_CIRCULARITY_RADIAL", "0") != "0"
+
+#: [M36/AUDIT-A2] REGULARITY AS AN AUTOCORRELATION.  `_compute_regularity` divided
+#: by the DC term and read the AC/DC ratio, so a PERFECTLY PERIODIC texture with
+#: amplitude a scores 2a/(mean+2a) and never approaches 1.0 unless the amplitude
+#: dwarfs the mean.  ON, regularity is the mean-subtracted normalised autocorrelation
+#: (Pearson) at the peak lag, clipped to [0, 1] -- 1.0 for any exact periodicity.
+RICH_REGULARITY_CORRELATION: bool = os.environ.get(
+    "RICH_REGULARITY_CORRELATION", "0") != "0"
+
+#: [M36/AUDIT-A5] TEXTURE CONTRAST IS GRADED, NOT ABSENT, ON A UNIFORM PATCH.  A
+#: patch with fewer than two significant cells reported `contrast_energy = ABSENT
+#: (-1e9)` and `bin = -1`, so its contrast was DISCARDED rather than scored, and a
+#: uniform patch compared as "absent" even against another uniform patch.  ON, the
+#: contrast of a patch with no significant cells is measured as the residual energy
+#: (`std/mean`, i.e. 0.0) and lands in bin 0.
+RICH_TEXTURE_ABSENT: bool = os.environ.get("RICH_TEXTURE_ABSENT", "0") != "0"
+
+#: [M36/AUDIT-A4] ROUGHNESS ON A SCALE THAT IS THE DISTRIBUTION'S OWN.
+#: `roughness` was `var(joint_p) * 100`, the variance of the (theta, sf) energy
+#: distribution times a bare 100.  It has no reference, it is INVERTED (the
+#: maximally rough uniform distribution scores 0.0 while one cell holding 60 % of
+#: the energy already scores 0.877) and it clips: on the shipped cell 17.2 % of
+#: the 256 regions sat at exactly 1.0.  ON, roughness is the normalised entropy
+#: H(p)/log N in [0, 1] -- 1.0 = the energy is spread over every orientation and
+#: scale, 0.0 = one cell holds it all -- which is what the slot's name says and
+#: what the x100 was trying to be.
+RICH_ROUGHNESS_FULL_SCALE: bool = os.environ.get(
+    "RICH_ROUGHNESS_FULL_SCALE", "0") != "0"
+
+#: [M36/AUDIT-B3] KEYPOINT ANISOTROPY AS A RATIO.  The keypoint frame emitted
+#: `along = min(1.0, 0.5*(vx+vy) + 4.0)`: `vx`/`vy` are error VARIANCES >= 1e-3, so the
+#: sum is >= 2e-3 and the +4.0 pins every candidate at 1.0 (0 of 2,218 measured
+#: values below 1.0).  ON, `along = slimness = max(|vx|,|vy|) / min(|vx|,|vy|)`, a
+#: ratio, so a round keypoint is 1.0 and a ridge is > 1.0.
+KP_ANISOTROPY_RATIO: bool = os.environ.get("KP_ANISOTROPY_RATIO", "0") != "0"
+
+#: [M36/AUDIT-B1] LENS AREA FROM THE OBSERVATION'S REAL SHAPE.  `RegionShapeLens`
+#: and `RegionShape` (derived_common) read `getattr(observation, "image_area", 0.0)
+#: or 1.0`; `Observation2D` has NO `image_area` attribute (it exposes `image_shape`),
+#: so the divisor was always 1.0, `log10(area/1.0) >= 0` for every region, and the
+#: area slot saturated on its top bin for 98 of 98 measured observations.  ON, the
+#: area comes from `image_shape[0] * image_shape[1]`.
+LENS_AREA_FROM_SHAPE: bool = os.environ.get("LENS_AREA_FROM_SHAPE", "0") != "0"
+
+#: [M36/AUDIT-C2] ONE ANCHOR NAMESPACE PER LOOKUP.  `SurfaceLens` looked up
+#: `color_by[anchor]` / `tex_by[anchor]` / `bo_by[anchor]` with the anchor of a
+#: PEAK_CHAIN detection (PEAK_ANCHOR_BASE + CHAIN_ANCHOR_OFFSET + k), while those
+#: three maps are keyed by region ids and by PEAK_ANCHOR_BASE + i.  The integer bands
+#: are disjoint by construction (offsets 1e5 apart, a cell has < 100 peaks), so all
+#: three lookups MISSED on every row; `ContourLens` looked up `bo_by_anchor[a_u]`
+#: (a BorderOwnership/peak anchor) with an ORIENTATION anchor for the same reason.
+#: ON, each lookup resolves through its own producer's anchor band via
+#: `lenses/_anchors.py` (peak -> chain membership; region -> peak by containment),
+#: and the zero-hit case is COUNTED (`lenses._anchors.ANCHOR_RESOLUTION`).
+LENS_ANCHOR_RESOLUTION: bool = os.environ.get("LENS_ANCHOR_RESOLUTION", "0") != "0"
+
+#: [M36/AUDIT-A3] THE L6 ADDRESS CARRIES ITS MEASUREMENT AND ITS EDGES.  The L6
+#: vector address encoded `sigs[ni] = (kind,)`: the node's class alone, so two
+#: graphs with the same node/edge types and different geometry hashed to the same
+#: address (the content vector was never built), and `edges` were read out of a
+#: `dict` that only exists on the binder path, so a cell's frozenset edges were
+#: dropped entirely.  ON, the component is `(kind, sigma-or-1.0)` and edges are read
+#: from either a dict or an iterable.
+FE_L6_SIGMA_CONTENT: bool = os.environ.get("FE_L6_SIGMA_CONTENT", "0") != "0"
+
+#: [M36/AUDIT-C1] PLACES ARE CONTENT TOKENS.  `CONTENT_TOKEN_LENSES` listed
+#: Texture/Color/RegionShape/Surface/BorderOwnership/ContourFragment but NOT the
+#: place layers (Blob/BoundaryArc/CornerPoint), so 518 of a cell's 1,506 nodes --
+#: every place node -- could never enter an L1/L3 address.  ON, the place classes
+#: are listed (their `alpha` is `u`, the same region id the region layers use).
+FE_CONTENT_PLACES: bool = os.environ.get("FE_CONTENT_PLACES", "0") != "0"
+
+#: [M36/AUDIT-A4b] DECLARED BUT NOT WIRED.  An earlier reading of the audit held
+#: that `_l3_spine` chained detections of different content classes to each other;
+#: the shipped `_l3_spine` does not read `d.kind` at all (it links mutual nearest
+#: neighbours among the content-token positions), so there is no mixed-class gate
+#: to add and this flag is deliberately inert.  Kept named so the audit's claim has
+#: a visible verdict rather than a silent absence.
+FE_SPINE_KIND_GATE: bool = os.environ.get("FE_SPINE_KIND_GATE", "0") != "0"

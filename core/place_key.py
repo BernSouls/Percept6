@@ -24,6 +24,8 @@ it is stable across processes and independent of dict order.
 from __future__ import annotations
 
 import hashlib
+
+import numpy as np
 from typing import Any, Iterable, Tuple
 
 #: Lenses minted per PLACE.  Everything else keeps the signature-class key,
@@ -66,14 +68,23 @@ def is_place_lens(lens: str) -> bool:
 
 
 def _anchor_bytes(anchor: Any) -> bytes:
-    """Canonical bytes for an anchor, independent of dict/iteration order."""
+    """Canonical bytes for an anchor, independent of dict/iteration order.
+
+    [M36/AUDIT] ``isinstance(np.int64(42), int)`` is False, so a numpy index fell
+    through to ``b"s" + str(...)`` and produced DIFFERENT bytes from the same value
+    as a Python int (b"i42" vs b"s42").  A salted node whose anchor came out of an
+    ``np.nonzero`` therefore minted a twin that no lookup using a Python int could
+    find.  The integer test now covers the numpy scalar types too, so one value has
+    one byte string whichever way it was produced (and ``True``/``False`` still do
+    not decode as integers: ``bool`` is tested first).
+    """
     if isinstance(anchor, tuple):
         return b"T(" + b"|".join(_anchor_bytes(a) for a in anchor) + b")"
     if isinstance(anchor, (list,)):
         return b"L(" + b"|".join(_anchor_bytes(a) for a in anchor) + b")"
     if isinstance(anchor, bool):
         return b"b" + (b"1" if anchor else b"0")
-    if isinstance(anchor, int):
+    if isinstance(anchor, (int, np.integer)):
         return b"i%d" % int(anchor)
     if isinstance(anchor, float):
         return b"f%.6f" % float(anchor)

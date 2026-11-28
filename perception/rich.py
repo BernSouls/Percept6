@@ -1179,6 +1179,77 @@ def _compute_coarseness(window):
     return float(min(1.0, max(0.0, period_px / extent)))
 
 
+_RICH_ROUGHNESS = bool(getattr(__import__("parameters"), "RICH_ROUGHNESS_FULL_SCALE", False))
+_RICH_TEXTURE_ABSENT = bool(getattr(__import__("parameters"), "RICH_TEXTURE_ABSENT", False))
+_RICH_REG_CORR = bool(getattr(__import__("parameters"), "RICH_REGULARITY_CORRELATION", False))
+#: The autocorrelation must go NEGATIVE before a later peak counts as a PERIOD.
+#: A smooth (non-periodic) window decays towards zero and never changes sign.
+_REG_TROUGH = -0.05
+#: A peak below this is the noise floor, not a period.
+_REG_PEAK_MIN = 0.25
+
+
+
+def _regularity_periodicity(window) -> float:
+    """[M36/AUDIT-A2] REGULARITY THAT CANNOT BE FOOLED BY A MEAN OR BY SMOOTHNESS.
+
+    The shipped statistic was the peak of the UNNORMALISED autocorrelation divided
+    by its DC term.  The DC term is the sum of squares, i.e. dominated by the mean,
+    so the ratio is ~1 for anything bright, and the "peak" of a smooth blob -- which
+    has no period at all -- sits at the shortest available lag.  Measured with the
+    shipped code on 24x24 windows: white noise at mean 100 sigma 5 -> **0.959**, a
+    PERFECT 6-px grating -> 0.875, a smooth Gaussian blob -> **0.987**.  The slot
+    ranked a featureless blob the most "regular" thing it saw.
+
+    What is measured now: the autocorrelation of the MEAN-SUBTRACTED, variance-
+    normalised window (a Pearson correlation, so the DC term cannot ride along),
+    read along both image axes, and the value at the first peak that comes AFTER
+    the profile has gone negative.  A negative lag correlation followed by a
+    positive peak is what "periodic" means (the signal repeats after an opposite
+    phase); a smooth blob's profile decays monotonically towards zero and never
+    goes negative, so it scores 0; white noise has no peak, so it scores 0; an
+    exact grating scores 1.
+    """
+    agg = np.asarray(window, dtype=np.float64).sum(axis=(0, 1))
+    h, w = agg.shape
+    if h < 6 or w < 6:
+        return 0.0
+    e = agg - float(agg.mean())
+    var = float((e * e).sum())
+    if var <= 1e-12:
+        return 0.0
+    hp, wp = 2 * h, 2 * w
+    F = np.fft.rfft2(e, s=(hp, wp))
+    ac = np.fft.fftshift(np.fft.irfft2(F * np.conj(F), s=(hp, wp))) / var
+    cy, cx = hp // 2, wp // 2
+
+    def _profile(axis: str) -> float:
+        rmax = int((h if axis == "y" else w) // 2)
+        vals = []
+        n = h if axis == "y" else w
+        for lag in range(1, rmax + 1):
+            if axis == "y":
+                a, b = ac[cy + lag, cx], ac[cy - lag, cx]
+            else:
+                a, b = ac[cy, cx + lag], ac[cy, cx - lag]
+            # Linear (not circular) autocorrelation: each lag is supported on
+            # (n - lag)/n of the samples, so the finite-window estimate is
+            # rescaled by the overlap.  Without this a 6-px period in a 24-px
+            # window reads 0.75 instead of 1.0.
+            vals.append(0.5 * float(a + b) * (float(n) / float(n - lag)))
+        trough = -1
+        for i, v in enumerate(vals):
+            if v < _REG_TROUGH:
+                trough = i
+                break
+        if trough < 0:
+            return 0.0
+        best = max(vals[trough + 1:], default=0.0)
+        return float(best) if best > _REG_PEAK_MIN else 0.0
+
+    return float(min(1.0, max(0.0, max(_profile("y"), _profile("x")))))
+
+
 def _compute_regularity(window):
     """How PERIODIC a region's response is: the peak of its NORMALISED
     autocorrelation.
@@ -1198,6 +1269,8 @@ def _compute_regularity(window):
     """
     if window.size == 0:
         return 0.0
+    if _RICH_REG_CORR:
+        return _regularity_periodicity(window)
     agg = window.sum(axis=(0, 1))
     h, w = agg.shape
     hp = 1 << (h - 1).bit_length()
@@ -1365,17 +1438,51 @@ def compute_texture_rich(
 
     roughness = float(np.var(joint_p))
 
-    contrast_energy = tot_energy / (tot_energy + lum_mean + 1e-6)
+    # [M36/AUDIT-A4] ROUGHNESS ON A SCALE THAT IS THE DISTRIBUTION'S OWN.
+    # `var(joint_p) * 100` has no reference: a UNIFORM distribution over the
+    # (theta, sf) grid already gives var = 1/N - 1/N^2 (0.024 for a 40-cell
+    # grid, i.e. 2.4 after the x100), so the top of the range clips away.  On
+    # the shipped cell 17.2 % of the 256 regions were pinned at exactly 1.0.
+    # ON, roughness is the NORMALISED ENTROPY of the same distribution,
+    # H(p)/log N in [0, 1]: 1.0 = the energy is spread over every orientation
+    # and scale, 0.0 = one cell holds it all.
+    if _RICH_ROUGHNESS:
+        _jp = np.asarray(joint_p, dtype=np.float64).ravel()
+        _jp = _jp[_jp > 0.0]
+        _n = int(np.asarray(joint_p).size)
+        if _jp.size > 1 and _n > 1:
+            h_ent = float(-( _jp * np.log(_jp)).sum()) / math.log(float(_n))
+            roughness_slot = clamp(h_ent, 0.0, 1.0)
+        else:
+            roughness_slot = 0.0
+    else:
+        roughness_slot = clamp(roughness * 100.0, 0.0, 1.0)
 
-    # [O3] GATE ON MORE THAN ONE STATISTIC.  Texture is only emitted when
-    # at least two cells show a significant periodic peak; a single cell
-    # (noise, one edge, one bar) must not manufacture "texture" on its own.
-    if n_significant_cells < 2:
-        contrast_energy = ABSENT  # clamp -> 0 -> no emission
+    # [M36/AUDIT-A5] CONTRAST IS AN ENERGY DENSITY, NOT AN ENERGY TOTAL.
+    # `tot_energy / (tot_energy + lum_mean)` compares a SUM over the window's
+    # cells with a per-pixel luminance, so once the Gabor energy passes a few
+    # hundred the ratio pins at 1.  Measured on the shipped cell: of the 256
+    # windows, 202 scored exactly ABSENT and the other 54 all fell in
+    # [0.99894, 0.99999] -- the slot had TWO values.  ON, the energy is
+    # normalised by the window's pixel count first, so the ratio compares
+    # like with like and keeps its range.
+    if _RICH_TEXTURE_ABSENT:
+        n_px = max(1, int(H) * int(W))
+        e_px = float(tot_energy) / float(n_px)
+        contrast_energy = e_px / (e_px + float(lum_mean) + 1e-6)
+        if not np.isfinite(contrast_energy):
+            contrast_energy = ABSENT
+    else:
+        contrast_energy = tot_energy / (tot_energy + lum_mean + 1e-6)
+        # [O3] GATE ON MORE THAN ONE STATISTIC.  Texture is only emitted when
+        # at least two cells show a significant periodic peak; a single cell
+        # (noise, one edge, one bar) must not manufacture "texture" on its own.
+        if n_significant_cells < 2:
+            contrast_energy = ABSENT  # clamp -> 0 -> no emission
     slots.extend([
         clamp(orient_conc, 0.0, 1.0),
         clamp(sf_centroid, 0.0, 1.0),
-        clamp(roughness * 100.0, 0.0, 1.0),
+        roughness_slot,
         clamp(contrast_energy, 0.0, 1.0),
     ])
     return tuple(slots)

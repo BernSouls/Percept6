@@ -154,6 +154,19 @@ _FRONTEND_SWITCHES = (
                       "PLACEMENT_LLR_TABLE_PATH",
                       "PLACEMENT_LLR_TABLE_M18",
                       "KP_POPULATION_PAYLOAD_STRICT",
+                      # [M36 / AUDIT] the audited-measurement switches.  Each one
+                      # changes a slot value a node carries (and therefore every
+                      # edge weight and match derived from it), so a cached graph
+                      # built under one value must never be served under another.
+                      "BOUNDARY_CIRCULARITY_RADIAL",
+                      "RICH_REGULARITY_CORRELATION",
+                      "RICH_TEXTURE_ABSENT",
+                      "RICH_ROUGHNESS_FULL_SCALE",
+                      "KP_ANISOTROPY_RATIO",
+                      "LENS_AREA_FROM_SHAPE",
+                      "LENS_ANCHOR_RESOLUTION",
+                      "FE_L6_SIGMA_CONTENT",
+                      "FE_CONTENT_PLACES",
                       "PLACEMENT_M15_PLACES",
                       "PLACEMENT_M15_PLACE_LENSES",
                       "PLACEMENT_SLOT_ADMIT_CHECKABLE_FIRST",
