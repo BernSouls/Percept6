@@ -102,6 +102,9 @@ Cells: gallery = all 80 objects at `-000-000`; queries = the FIT objects at `-03
 | | V2 coverage | 0.100 | 0.013 | 0.900 | 0.000000 | 0.487 | 0.138 | 0 / 6 / 34 |
 | | V3 chamfer | 0.100 | 0.013 | 0.175 | 0.000000 | 0.487 | 0.138 | 0 / 6 / 34 |
 
+Truth-rank medians say the same thing without a threshold: the shipped colour channel puts the true
+object at rank **4.0 / 4.5** of 80, V1 at **5.0 / 5.0**, and V2/V3 at **39.5 / 39.5** — chance is 40.
+
 **Verdict: none passes.**  Mean FIT fused3 recall@8 gain over the current door: V1 **−0.0225**,
 V2 **−0.1625**, V3 **−0.1625**; the bar was +0.050.  Blame, split exactly as the mission asked:
 
